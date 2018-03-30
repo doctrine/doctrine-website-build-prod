@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Doctrine Performance Revisited - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <meta name="robots" content="index, follow">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/blog">Blog</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Doctrine Performance Revisited</li>
+        </ol>
+    </nav>
+
+    <article>
+        <header>
+            <h2>Doctrine Performance Revisited <small>post</small></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2010-03-17
+                            by
+                                    beberlei
+                                    </p>
+
+        <div>
+            <p>In our ever-lasting quest to provide a powerful, flexible and yet
+performant ORM experience we are often confronted with benchmarks
+and have been talking about performance topics since last year in
+several talks at many different conferences, and Roman has
+<a href="http://www.doctrine-project.org/blog/php-benchmarking-mythbusters">talked about his opinion on such benchmarks on this blog</a>.</p>
+<p>Recently Francois Zaninotto, lead developer of the soon to be
+released Propel 1.5 (currently in beta)
+<a href="http://propel.posterous.com/how-fast-is-propel-15">wrote a blog post</a>
+comparing performance mainly of the different Propel 1.x versions
+with and without caching and against a PDO benchmark. The benchmark
+also contains a test for Doctrine 1.2.</p>
+<p>It is important to note that the PDO test only shows the &quot;baseline&quot;
+performance, that is, it does not even remotely &quot;do the same thing&quot;
+as the others. No object creation, no hydration of objects from
+result rows, no identity management, no change tracking, nothing.
+So dont get the numbers wrong. If you would want to get at least
+remotely the same result as the ORMs provide with a raw PDO/SQL
+&quot;benchmark&quot;, you would need quite some custom coding and, if you
+dont want to copy/paste all day, introduce some abstraction.</p>
+<p>The following scenarios are compared in the benchmark:</p>
+<ul><li class="dash"> Scenario 1: Create a new Model object, set its columns, and save
+       it. Tests Model object speed, and INSERT SQL generation.</li>
+<li class="dash"> Scenario 2: Lookup a record by its primary key. Tests basic
+       query and hydration.</li>
+<li class="dash"> Scenario 3: Lookup a record using a complex query. Tests object
+       query speed.</li>
+<li class="dash"> Scenario 4: Lookup 5 records on a simple criterion. Tests
+       hydration speed.</li>
+<li class="dash"> Scenario 5: Lookup a record and hydrate it together with its
+       related record in another table. Tests join hydration speed.</li>
+</ul>
+
+<p>I reproduced the complete table of results here for comparison
+since my machine is generating very different overall times than
+the ones generated by Francois. Each Scenario is executed several
+times and the sum of execution times is printed. After each run the
+identity maps are wiped so that objects are not reused. All the
+tests use an SQLite In-Memory database, are run on PHP 5.3 and
+<em>of course</em> use an opcode cache (APC).</p>
+<p>A first version of the corresponding Doctrine 2 benchmarks was
+added today
+<a href="http://code.google.com/p/php-orm-benchmark/source/browse/#svn/trunk/doctrine_2">to the SVN repository by Roman</a>
+They can all be run from your machine directly after checkout.</p>
+<p>Here are my results:</p>
+
+<pre><code class="">| Insert | findPk | complex| hydrate|  with  |
+|--------|--------|--------|--------|--------|
+|    132 |    149 |    112 |    107 |    109 |
+|    953 |    436 |    133 |    270 |    280 |
+|    926 |    428 |    143 |    264 |    282 |
+|    923 |    558 |    171 |    356 |    385 |
+|    932 |    463 |    189 |    342 |    327 |
+|   1673 |   2661 |    449 |   1710 |   1832 |
+|   1903 |   1179 |    550 |    957 |    722 |
+|    165 |    426 |    412 |   1048 |   1042 |
+|    176 |    423 |    148 |    606 |    383 |
+</code></pre>
+<p>These are the key observations for the Doctrine 2 results.</p>
+<a id="title.1"></a><h1>Doctrine 2 Insert Performance</h1>
+<p>This is mainly a result of the rather strange test. Its basically a
+mass-insert. All the insert tests seem to use a single database
+transaction, so its comparable to a mass-insert on a single
+request. As such the result is not surprising since we know that
+Doctrine 2 can effectively batch inserts. Mind you that
+mass-inserts are not really a focus of an ORM and not a realistic
+scenario in most applications. So take this test with a grain of
+salt, its a mass-insert test. If you're looking for the ORM with
+the fastest mass-inserts, you can stop now, you found it.</p>
+<a id="title.2"></a><h1>Doctrine 2 Find By Primary Key Performance</h1>
+<p>Doctrine 2 Find Entity By Primary Key performance seems to be
+roughly three times as slow as handcrafted PDO (that doesnt do
+anything besides executing the query, mind you...). The good
+results in this test, especially compared to Doctrine 1, come from
+the fact that there is not much abstraction for all kinds of
+find\*() operations going on. SQL is created, executed and the
+results turned into objects without much hoopla.</p>
+<a id="title.3"></a><h1>Doctrine 2 Complex Query Performance</h1>
+<p>The complex query is a scalar count query. See the Doctrine 2 code
+for this scenario:</p>
+<pre><code class="php">&lt;?php
+$authors = $this-&gt;em-&gt;createQuery(
+    'SELECT count(a.id) AS num FROM Author a WHERE a.id &gt; ?1 OR CONCAT(a.firstName, a.lastName) = ?2'
+)-&gt;setParameter(1, $this-&gt;authors[array_rand($this-&gt;authors)]-&gt;id)
+ -&gt;setParameter(2, 'John Doe')
+ -&gt;getSingleScalarResult();
+</code></pre>
+<p>The getSingleScalarResult() method that executes the query uses a
+very minimalistic hydration mode that only grabs the first value of
+the first result column. Therefore in combination with the DQL to
+SQL Query Parser Cache (Doctrine2WithCacheTestSuite) we get a
+result almost as fast result as the PDO handcrafted scenario,
+because we essentially get the transformed SQL query from the cache
+for this DQL, execute it and grab the value.</p>
+<a id="title.4"></a><h1>Hydration Performance (Scenario 4 and 5)</h1>
+<p>In the field of hydration Doctrine 2 is either equally fast or
+seems &quot;only&quot; up to 40% slower than Propel 1.4 or Propel 1.5 based
+on the two scenarios. The main reason here is really only that
+since Doctrine 2 provides transparent persistence, it can not give
+lazy-loading through base classes, instead it needs to inject proxy
+objects as stubs into the entities. That simply means Doctrine
+needs to create more objects than propel, thats it. Note that once
+the objects would actually be lazy-loaded, Propel would need to
+create these objects, too. The difference is that Doctrine needs to
+create them beforehand. When they lazy-load, no new object is
+created, the proxies simply populate themselves with the data.</p>
+<p>A main difference, however, is that the hydration code of Doctrine
+is completely generic. That means this same code can handle all
+kinds of different SQL results correctly, no matter how many nested
+joins, scalar values, aggregate values there are in the result and
+it can even deal with strangely ordered collections in result sets
+(You get such stuff with multiple order by clauses on different
+fields which order in different directions. Combine such ordering
+with joining collections and you get a pretty funky SQL result
+set).</p>
+<p>The general approach in algorithms from the Doctrine 1.2 Hydrators
+were re-used in Doctrine 2. However, optimizations in the data
+structures and use of the fastest internal php methods (as fast as
+you can get with php, you know ;)) made it possible to optimize the
+code to yield the shown results.</p>
+<p>Interesting here is maybe that Doctrine 2 without caching is all in
+all still a lot faster than Doctrine 1 with caching, so this looks
+like a good improvement. Furthermore, the query cache in Doctrine 2
+is very effective and almost completely removes all the overhead of
+DQL. The query cache is what allows us to provide this extremely
+powerful abstraction that is immensely flexible. If you dont like
+DQL yet, you should read up on domain-specific languages and object
+query languages in particular. It's a gem and cornerstone of this
+project and if you dont like it we can't help you.</p>
+<a id="title.5"></a><h1>Hydration with non Object Results</h1>
+<p>Putting aside the boring Propel comparisons, lets get to something
+Doctrine-specific. Because we know that read performance is very
+important and object instances are not necessary all the time,
+Doctrine 2, just like Doctrine 1, provides many different levels of
+abstraction in-between objects and raw PDO/SQL result sets that you
+can go up and down as you wish.</p>
+<p>The main two intermediate levels are array graphs and flat, scalar
+result sets (which are still not the same as the raw SQL result
+sets because type conversions and column name to field name
+conversions still take place).</p>
+<p>These alternative result formats perform as follows:</p>
+
+<pre><code class="">| Insert | findPk | complex| hydrate|  with  |
+|--------|--------|--------|--------|--------|
+|    172 |    421 |    145 |    332 |    285 |
+|    175 |    424 |    145 |    251 |    245 |
+|    174 |    423 |    148 |    483 |    628 |
+</code></pre>
+<p>The first method &quot;Without Proxies&quot; still creates object instances,
+however, it does not replace loose ends of the object graph with
+lazy-load proxies. Be careful with such optimizations in practice
+because partial objects can be fragile to work with. The important
+point here is that different levels of optimization are there when
+needed, before you need to finally drop all abstraction and deal
+with PDO/SQL directly (which is not bad, you know, just often not
+very convenient, flexible and/or robust against refactorings or
+schema changes).</p>
+<p>The Array Hydration (getArrayResult()) returns a nested array
+structure that is comparable to an object graph. Most of the time
+you can think of it as a performant read-only &quot;view&quot; of an object
+graph. In the case of Books with Authors the result looks like:</p>
+
+<pre><code class="">array(1) {
+  [0]=&gt;
+  &amp;array(5) {
+    [&quot;id&quot;]=&gt;
+    int(1)
+    [&quot;title&quot;]=&gt;
+    string(6) &quot;Hello0&quot;
+    [&quot;isbn&quot;]=&gt;
+    string(4) &quot;1234&quot;
+    [&quot;price&quot;]=&gt;
+    float(0)
+    [&quot;author&quot;]=&gt;
+    &amp;array(4) {
+      [&quot;id&quot;]=&gt;
+      int(1143)
+      [&quot;firstName&quot;]=&gt;
+      string(8) &quot;John1142&quot;
+      [&quot;lastName&quot;]=&gt;
+      string(7) &quot;Doe1142&quot;
+      [&quot;email&quot;]=&gt;
+      NULL
+    }
+  }
+</code></pre>
+<p>These array graphs can be built from basically any query. Its
+backed by roughly the same algorithm that allows the arbitrary
+object hydration with indefinite joins and even scalar and
+aggregate values in between.</p>
+<p>In the case where your objects implement ArrayAccess, you can often
+use object and array results interchangeably without the need to
+update view code.</p>
+<a id="title.6"></a><h1>Conclusion</h1>
+<p>What that all means is mainly that if you have an application that
+looks (almost) exactly like the benchmarking code used here, then
+you (maybe) got some useful numbers to look at, otherwise ... not.</p>
+<p>Apart from that we hope this convinces you that we're not wasting
+your CPU cycles on purpose. Doctrine 2 is a huge balancing act
+between flexibility, features and performance and it worked out
+well so far.</p>
+
+        </div>
+                
+                    <nav class="article">
+                <ul class="pagination">
+                                            <li class="page-item"><a class="page-link previous" href="https://new.doctrine-project.org/2010/03/15/what-to-expect-from-doctrine-1" title="What to expect from Doctrine 1"><span class="title">Previous: What to expect from Doctrine 1</span></a></li>
+                                                                <li class="page-item"><a class="page-link next" href="https://new.doctrine-project.org/2010/03/21/doctrine-2-give-me-my-constructor-back" title="Doctrine 2: Give me my constructor back"><span class="title">Next: Doctrine 2: Give me my constructor back</span></a></li>
+                                    </ul>
+            </nav>
+            </article>
+
+
+
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

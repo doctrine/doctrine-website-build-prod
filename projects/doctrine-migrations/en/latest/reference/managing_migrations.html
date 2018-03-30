@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Managing Migrations - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/migrations/">Migrations</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-migrations/en/latest/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Managing Migrations</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-migrations/en/latest/reference/managing_migrations.html" class="badge badge-primary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-migrations/en/1.6/reference/managing_migrations.html" class="badge badge-secondary">1.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-migrations/en/1.5/reference/managing_migrations.html" class="badge badge-secondary">1.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Managing Migrations<i class="fas fa-link"></i></a></h1>
+<p>Now that we have a new migration class present, lets run the status task to see
+if it is there:</p>
+<pre><code class="bash">$ ./doctrine migrations:status
+
+ == Configuration
+
+    &gt;&gt; Name:                                               Doctrine Sandbox Migrations
+    &gt;&gt; Database Driver:                                    pdo_mysql
+    &gt;&gt; Database Name:                                      testdb
+    &gt;&gt; Configuration Source:                               /Users/jwage/Sites/doctrine2git/tools/sandbox/migrations.xml
+    &gt;&gt; Version Table Name:                                 doctrine_migration_versions
+    &gt;&gt; Migrations Namespace:                               DoctrineMigrations
+    &gt;&gt; Migrations Directory:                               /Users/jwage/Sites/doctrine2git/tools/sandbox/DoctrineMigrations
+    &gt;&gt; Current Version:                                    2010-04-16 13:04:22 (20100416130422)
+    &gt;&gt; Latest Version:                                     2010-04-16 13:04:22 (20100416130422)
+    &gt;&gt; Executed Migrations:                                0
+    &gt;&gt; Available Migrations:                               1
+    &gt;&gt; New Migrations:                                     1
+
+ == Migration Versions
+
+    &gt;&gt; 2010-04-16 13:04:01 (20100416130401)                not migrated
+</code></pre>
+<p>As you can see we have a new version present and it is ready to be executed. The
+problem is it does not have anything in it so nothing would be executed! Let's
+add some code to it and add a new table:</p>
+<pre><code class="php">namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Migrations\AbstractMigration,
+    Doctrine\DBAL\Schema\Schema;
+
+class Version20100416130401 extends AbstractMigration
+{
+    public function up(Schema $schema)
+    {
+        $table = $schema-&gt;createTable('users');
+        $table-&gt;addColumn('username', 'string');
+        $table-&gt;addColumn('password', 'string');
+    }
+
+    public function down(Schema $schema)
+    {
+        $schema-&gt;dropTable('users');
+    }
+}
+</code></pre>
+<p>Now we are ready to give it a test! First lets just do a dry-run to make sure
+it produces the SQL we expect:</p>
+<pre><code class="bash">$ ./doctrine migrations:migrate --dry-run
+Are you sure you wish to continue?
+y
+Executing dry run of migration up to 20100416130452 from 0
+
+  &gt;&gt; migrating 20100416130452
+
+     -&gt; CREATE TABLE users (username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL) ENGINE = InnoDB
+</code></pre>
+<p>Everything looks good so we can remove the <em>--dry-run</em> option and actually execute
+the migration:</p>
+<pre><code class="bash">$ ./doctrine migrations:migrate
+Are you sure you wish to continue?
+y
+Migrating up to 20100416130452 from 0
+
+  &gt;&gt; migrating 20100416130452
+
+     -&gt; CREATE TABLE users (username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL) ENGINE = InnoDB
+
+  &gt;&gt; migrated
+</code></pre>
+<p>Alternately, if you wish to run the migrations in an unattended mode, we can add the <em>--no--interaction</em> option and then
+execute the migrations without any extra prompting from Doctrine.</p>
+<pre><code class="bash">$ ./doctrine migrations:migrate --no-interaction
+Migrating up to 20100416130452 from 0
+
+  &gt;&gt; migrating 20100416130452
+
+     -&gt; CREATE TABLE users (username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL) ENGINE = InnoDB
+
+  &gt;&gt; migrated
+</code></pre>
+<p>By checking the status again after using either method you will see everything is updated:</p>
+<pre><code class="bash">$ ./doctrine migrations:status
+
+ == Configuration
+
+    &gt;&gt; Name:                                               Doctrine Sandbox Migrations
+    &gt;&gt; Database Driver:                                    pdo_mysql
+    &gt;&gt; Database Name:                                      testdb
+    &gt;&gt; Configuration Source:                               /Users/jwage/Sites/doctrine2git/tools/sandbox/migrations.xml
+    &gt;&gt; Version Table Name:                                 doctrine_migration_versions
+    &gt;&gt; Migrations Namespace:                               DoctrineMigrations
+    &gt;&gt; Migrations Directory:                               /Users/jwage/Sites/doctrine2git/tools/sandbox/DoctrineMigrations
+    &gt;&gt; Current Version:                                    2010-04-16 13:04:52 (20100416130452)
+    &gt;&gt; Latest Version:                                     2010-04-16 13:04:52 (20100416130452)
+    &gt;&gt; Executed Migrations:                                1
+    &gt;&gt; Available Migrations:                               1
+    &gt;&gt; New Migrations:                                     0
+
+ == Migration Versions
+
+    &gt;&gt; 2010-04-16 13:04:01 (20100416130452)                migrated
+</code></pre>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Reverting Migrations<i class="fas fa-link"></i></a></h2>
+<p>You maybe noticed in the last example that we defined a <em>down()</em> method which
+drops the users table that we created. This method allows us to easily revert
+changes the schema has been migrated to. The <em>migrate</em> command takes a <em>version</em>
+argument which you can use to roll back your schema to a specific version of
+your migrations:</p>
+<pre><code class="bash">$ ./doctrine migrations:migrate first
+Are you sure you wish to continue?
+y
+Migrating down to 0 from 20100416130422
+
+  -- reverting 20100416130422
+
+     -&gt; DROP TABLE addresses
+
+  -- reverted
+
+  -- reverting 20100416130401
+
+     -&gt; DROP TABLE users
+
+  -- reverted
+</code></pre>
+<p>Now our database is back to where we originally started. Give it a check with
+the status command:</p>
+<pre><code class="bash">$ ./doctrine migrations:status
+
+ == Configuration
+
+    &gt;&gt; Name:                                               Doctrine Sandbox Migrations
+    &gt;&gt; Database Driver:                                    pdo_mysql
+    &gt;&gt; Database Name:                                      testdb
+    &gt;&gt; Configuration Source:                               /Users/jwage/Sites/doctrine2git/tools/sandbox/migrations.xml
+    &gt;&gt; Version Table Name:                                 doctrine_migration_versions
+    &gt;&gt; Migrations Namespace:                               DoctrineMigrations
+    &gt;&gt; Migrations Directory:                               /Users/jwage/Sites/doctrine2git/tools/sandbox/DoctrineMigrations
+    &gt;&gt; Current Version:                                    0
+    &gt;&gt; Latest Version:                                     2010-04-16 13:04:22 (20100416130422)
+    &gt;&gt; Executed Migrations:                                0
+    &gt;&gt; Available Migrations:                               2
+    &gt;&gt; New Migrations:                                     2
+
+ == Migration Versions
+
+    &gt;&gt; 2010-04-16 13:04:01 (20100416130401)                not migrated
+    &gt;&gt; 2010-04-16 13:04:22 (20100416130422)                not migrated
+</code></pre>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">Aliases<i class="fas fa-link"></i></a></h2>
+<p>There are some shortcut for convenience (first, prev, next, latest).
+So that you don't have to know the name of the migration.
+You can just call</p>
+<pre><code class="bash">$ ./doctrine migrations:migrate prev
+</code></pre>
+<h2 class="section-header" id="title.1.3"><a href="#title.1.3">Writing Migration SQL Files<i class="fas fa-link"></i></a></h2>
+<p>You can optionally choose to not execute a migration directly on a database and
+instead output all the SQL statements to a file. This is possible by using the
+<em>--write-sql</em> option of the <em>migrate</em> command:</p>
+<pre><code class="bash">$ ./doctrine migrations:migrate --write-sql
+Executing dry run of migration up to 20100416130422 from 0
+
+  &gt;&gt; migrating 20100416130401
+
+     -&gt; CREATE TABLE users (username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL) ENGINE = InnoDB
+
+  &gt;&gt; migrating 20100416130422
+
+     -&gt; CREATE TABLE addresses (id INT NOT NULL, street VARCHAR(255) NOT NULL, PRIMARY KEY(id)) ENGINE = InnoDB
+
+Writing migration file to &quot;/path/to/sandbox/doctrine_migration_20100416130405.sql&quot;
+</code></pre>
+<p>Now if you have a look at the <em>doctrine_migration_20100416130405.sql</em> file you will see the would be
+executed SQL outputted in a nice format:</p>
+<pre><code class="bash"># Doctrine Migration File Generated on 2010-04-16 13:04:05
+# Migrating from 0 to 20100416130422
+
+# Version 20100416130401
+CREATE TABLE users (username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL) ENGINE = InnoDB;
+
+# Version 20100416130422
+CREATE TABLE addresses (id INT NOT NULL, street VARCHAR(255) NOT NULL, PRIMARY KEY(id)) ENGINE = InnoDB;
+</code></pre>
+<a id="managing-versions-table"></a>
+<h2 class="section-header" id="title.1.4"><a href="#title.1.4">Managing the Version Table<i class="fas fa-link"></i></a></h2>
+<p>Sometimes you may need to manually change something in the database table which
+manages the versions for some migrations. For this you can use the version task.
+You can easily add a version like this:</p>
+<pre><code class="bash">$ ./doctrine migrations:version YYYYMMDDHHMMSS --add
+</code></pre>
+<p>Or you can delete that version:</p>
+<pre><code class="bash">$ ./doctrine migrations:version YYYYMMDDHHMMSS --delete
+</code></pre>
+<p>The command does not execute any migrations code, it simply adds the specified
+version to the database.</p>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>The QueryBuilder - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/orm/">ORM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-orm/en/2.6/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">The QueryBuilder</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/latest/reference/query-builder.html" class="badge badge-secondary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.6/reference/query-builder.html" class="badge badge-primary">2.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.5/reference/query-builder.html" class="badge badge-secondary">2.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">The QueryBuilder<i class="fas fa-link"></i></a></h1>
+<p>A <code>QueryBuilder</code> provides an API that is designed for
+conditionally constructing a DQL query in several steps.</p>
+<p>It provides a set of classes and methods that is able to
+programmatically build queries, and also provides a fluent API.
+This means that you can change between one methodology to the other
+as you want, or just pick a preferred one.</p>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Constructing a new QueryBuilder object<i class="fas fa-link"></i></a></h2>
+<p>The same way you build a normal Query, you build a <code>QueryBuilder</code>
+object. Here is an example of how to build a <code>QueryBuilder</code>
+object:</p>
+<pre><code class="php">&lt;?php
+// $em instanceof EntityManager
+
+// example1: creating a QueryBuilder instance
+$qb = $em-&gt;createQueryBuilder();
+</code></pre>
+<p>An instance of QueryBuilder has several informative methods.  One
+good example is to inspect what type of object the
+<code>QueryBuilder</code> is.</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+
+// example2: retrieving type of QueryBuilder
+echo $qb-&gt;getType(); // Prints: 0
+</code></pre>
+<p>There're currently 3 possible return values for <code>getType()</code>:</p>
+<ul><li class="dash"> <code>QueryBuilder::SELECT</code>, which returns value 0</li>
+<li class="dash"> <code>QueryBuilder::DELETE</code>, returning value 1</li>
+<li class="dash"> <code>QueryBuilder::UPDATE</code>, which returns value 2</li>
+</ul>
+
+<p>It is possible to retrieve the associated <code>EntityManager</code> of the
+current <code>QueryBuilder</code>, its DQL and also a <code>Query</code> object when
+you finish building your DQL.</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+
+// example3: retrieve the associated EntityManager
+$em = $qb-&gt;getEntityManager();
+
+// example4: retrieve the DQL string of what was defined in QueryBuilder
+$dql = $qb-&gt;getDql();
+
+// example5: retrieve the associated Query object with the processed DQL
+$q = $qb-&gt;getQuery();
+</code></pre>
+<p>Internally, <code>QueryBuilder</code> works with a DQL cache to increase
+performance. Any changes that may affect the generated DQL actually
+modifies the state of <code>QueryBuilder</code> to a stage we call
+STATE\_DIRTY. One <code>QueryBuilder</code> can be in two different states:</p>
+<ul><li class="dash"> <code>QueryBuilder::STATE_CLEAN</code>, which means DQL haven't been
+   altered since last retrieval or nothing were added since its
+   instantiation</li>
+<li class="dash"> <code>QueryBuilder::STATE_DIRTY</code>, means DQL query must (and will)
+   be processed on next retrieval</li>
+</ul>
+
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">Working with QueryBuilder<i class="fas fa-link"></i></a></h2>
+<h3 class="section-header" id="title.1.2.1"><a href="#title.1.2.1">High level API methods<i class="fas fa-link"></i></a></h3>
+<p>To simplify even more the way you build a query in Doctrine, you can take
+advantage of Helper methods. For all base code, there is a set of
+useful methods to simplify a programmer's life. To illustrate how
+to work with them, here is the same example 6 re-written using
+<code>QueryBuilder</code> helper methods:</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+
+$qb-&gt;select('u')
+   -&gt;from('User', 'u')
+   -&gt;where('u.id = ?1')
+   -&gt;orderBy('u.name', 'ASC');
+</code></pre>
+<p><code>QueryBuilder</code> helper methods are considered the standard way to
+build DQL queries. Although it is supported, using string-based
+queries should be avoided.  You are greatly encouraged to use
+<code>$qb-&gt;expr()-&gt;*</code> methods. Here is a converted example 8 to
+suggested standard way to build queries:</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+
+$qb-&gt;select(array('u')) // string 'u' is converted to array internally
+   -&gt;from('User', 'u')
+   -&gt;where($qb-&gt;expr()-&gt;orX(
+       $qb-&gt;expr()-&gt;eq('u.id', '?1'),
+       $qb-&gt;expr()-&gt;like('u.nickname', '?2')
+   ))
+   -&gt;orderBy('u.surname', 'ASC');
+</code></pre>
+<p>Here is a complete list of helper methods available in <code>QueryBuilder</code>:</p>
+<pre><code class="php">&lt;?php
+class QueryBuilder
+{
+    // Example - $qb-&gt;select('u')
+    // Example - $qb-&gt;select(array('u', 'p'))
+    // Example - $qb-&gt;select($qb-&gt;expr()-&gt;select('u', 'p'))
+    public function select($select = null);
+
+    // addSelect does not override previous calls to select
+    //
+    // Example - $qb-&gt;select('u');
+    //              -&gt;addSelect('p.area_code');
+    public function addSelect($select = null);
+
+    // Example - $qb-&gt;delete('User', 'u')
+    public function delete($delete = null, $alias = null);
+
+    // Example - $qb-&gt;update('Group', 'g')
+    public function update($update = null, $alias = null);
+
+    // Example - $qb-&gt;set('u.firstName', $qb-&gt;expr()-&gt;literal('Arnold'))
+    // Example - $qb-&gt;set('u.numChilds', 'u.numChilds + ?1')
+    // Example - $qb-&gt;set('u.numChilds', $qb-&gt;expr()-&gt;sum('u.numChilds', '?1'))
+    public function set($key, $value);
+
+    // Example - $qb-&gt;from('Phonenumber', 'p')
+    // Example - $qb-&gt;from('Phonenumber', 'p', 'p.id')
+    public function from($from, $alias, $indexBy = null);
+
+    // Example - $qb-&gt;join('u.Group', 'g', Expr\Join::WITH, $qb-&gt;expr()-&gt;eq('u.status_id', '?1'))
+    // Example - $qb-&gt;join('u.Group', 'g', 'WITH', 'u.status = ?1')
+    // Example - $qb-&gt;join('u.Group', 'g', 'WITH', 'u.status = ?1', 'g.id')
+    public function join($join, $alias, $conditionType = null, $condition = null, $indexBy = null);
+
+    // Example - $qb-&gt;innerJoin('u.Group', 'g', Expr\Join::WITH, $qb-&gt;expr()-&gt;eq('u.status_id', '?1'))
+    // Example - $qb-&gt;innerJoin('u.Group', 'g', 'WITH', 'u.status = ?1')
+    // Example - $qb-&gt;innerJoin('u.Group', 'g', 'WITH', 'u.status = ?1', 'g.id')
+    public function innerJoin($join, $alias, $conditionType = null, $condition = null, $indexBy = null);
+
+    // Example - $qb-&gt;leftJoin('u.Phonenumbers', 'p', Expr\Join::WITH, $qb-&gt;expr()-&gt;eq('p.area_code', 55))
+    // Example - $qb-&gt;leftJoin('u.Phonenumbers', 'p', 'WITH', 'p.area_code = 55')
+    // Example - $qb-&gt;leftJoin('u.Phonenumbers', 'p', 'WITH', 'p.area_code = 55', 'p.id')
+    public function leftJoin($join, $alias, $conditionType = null, $condition = null, $indexBy = null);
+
+    // NOTE: -&gt;where() overrides all previously set conditions
+    //
+    // Example - $qb-&gt;where('u.firstName = ?1', $qb-&gt;expr()-&gt;eq('u.surname', '?2'))
+    // Example - $qb-&gt;where($qb-&gt;expr()-&gt;andX($qb-&gt;expr()-&gt;eq('u.firstName', '?1'), $qb-&gt;expr()-&gt;eq('u.surname', '?2')))
+    // Example - $qb-&gt;where('u.firstName = ?1 AND u.surname = ?2')
+    public function where($where);
+
+    // NOTE: -&gt;andWhere() can be used directly, without any -&gt;where() before
+    //
+    // Example - $qb-&gt;andWhere($qb-&gt;expr()-&gt;orX($qb-&gt;expr()-&gt;lte('u.age', 40), 'u.numChild = 0'))
+    public function andWhere($where);
+
+    // Example - $qb-&gt;orWhere($qb-&gt;expr()-&gt;between('u.id', 1, 10));
+    public function orWhere($where);
+
+    // NOTE: -&gt; groupBy() overrides all previously set grouping conditions
+    //
+    // Example - $qb-&gt;groupBy('u.id')
+    public function groupBy($groupBy);
+
+    // Example - $qb-&gt;addGroupBy('g.name')
+    public function addGroupBy($groupBy);
+
+    // NOTE: -&gt; having() overrides all previously set having conditions
+    //
+    // Example - $qb-&gt;having('u.salary &gt;= ?1')
+    // Example - $qb-&gt;having($qb-&gt;expr()-&gt;gte('u.salary', '?1'))
+    public function having($having);
+
+    // Example - $qb-&gt;andHaving($qb-&gt;expr()-&gt;gt($qb-&gt;expr()-&gt;count('u.numChild'), 0))
+    public function andHaving($having);
+
+    // Example - $qb-&gt;orHaving($qb-&gt;expr()-&gt;lte('g.managerLevel', '100'))
+    public function orHaving($having);
+
+    // NOTE: -&gt; orderBy() overrides all previously set ordering conditions
+    //
+    // Example - $qb-&gt;orderBy('u.surname', 'DESC')
+    public function orderBy($sort, $order = null);
+
+    // Example - $qb-&gt;addOrderBy('u.firstName')
+    public function addOrderBy($sort, $order = null); // Default $order = 'ASC'
+}
+</code></pre>
+<h3 class="section-header" id="title.1.2.2"><a href="#title.1.2.2">Binding parameters to your query<i class="fas fa-link"></i></a></h3>
+<p>Doctrine supports dynamic binding of parameters to your query,
+similar to preparing queries. You can use both strings and numbers
+as placeholders, although both have a slightly different syntax.
+Additionally, you must make your choice: Mixing both styles is not
+allowed. Binding parameters can simply be achieved as follows:</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+
+$qb-&gt;select('u')
+   -&gt;from('User', 'u')
+   -&gt;where('u.id = ?1')
+   -&gt;orderBy('u.name', 'ASC')
+   -&gt;setParameter(1, 100); // Sets ?1 to 100, and thus we will fetch a user with u.id = 100
+</code></pre>
+<p>You are not forced to enumerate your placeholders as the
+alternative syntax is available:</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+
+$qb-&gt;select('u')
+   -&gt;from('User', 'u')
+   -&gt;where('u.id = :identifier')
+   -&gt;orderBy('u.name', 'ASC')
+   -&gt;setParameter('identifier', 100); // Sets :identifier to 100, and thus we will fetch a user with u.id = 100
+</code></pre>
+<p>Note that numeric placeholders start with a ? followed by a number
+while the named placeholders start with a : followed by a string.</p>
+<p>Calling <code>setParameter()</code> automatically infers which type you are setting as
+value. This works for integers, arrays of strings/integers, DateTime instances
+and for managed entities. If you want to set a type explicitly you can call
+the third argument to <code>setParameter()</code> explicitly. It accepts either a DBAL
+Doctrine\DBAL\ParameterType::* or a DBAL Type name for conversion.</p>
+<p>If you've got several parameters to bind to your query, you can
+also use setParameters() instead of setParameter() with the
+following syntax:</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+
+// Query here...
+$qb-&gt;setParameters(array(1 =&gt; 'value for ?1', 2 =&gt; 'value for ?2'));
+</code></pre>
+<p>Getting already bound parameters is easy - simply use the above
+mentioned syntax with &quot;getParameter()&quot; or &quot;getParameters()&quot;:</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+
+// See example above
+$params = $qb-&gt;getParameters();
+// $params instanceof \Doctrine\Common\Collections\ArrayCollection
+
+// Equivalent to
+$param = $qb-&gt;getParameter(1);
+// $param instanceof \Doctrine\ORM\Query\Parameter
+</code></pre>
+<p>Note: If you try to get a parameter that was not bound yet,
+getParameter() simply returns NULL.</p>
+<p>The API of a Query Parameter is:</p>
+<pre><code class="php">namespace Doctrine\ORM\Query;
+
+class Parameter
+{
+    public function getName();
+    public function getValue();
+    public function getType();
+    public function setValue($value, $type = null);
+}
+</code></pre>
+<h3 class="section-header" id="title.1.2.3"><a href="#title.1.2.3">Limiting the Result<i class="fas fa-link"></i></a></h3>
+<p>To limit a result the query builder has some methods in common with
+the Query object which can be retrieved from <code>EntityManager#createQuery()</code>.</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+$offset = (int)$_GET['offset'];
+$limit = (int)$_GET['limit'];
+
+$qb-&gt;add('select', 'u')
+   -&gt;add('from', 'User u')
+   -&gt;add('orderBy', 'u.name ASC')
+   -&gt;setFirstResult( $offset )
+   -&gt;setMaxResults( $limit );
+</code></pre>
+<h3 class="section-header" id="title.1.2.4"><a href="#title.1.2.4">Executing a Query<i class="fas fa-link"></i></a></h3>
+<p>The QueryBuilder is a builder object only -  it has no means of actually
+executing the Query. Additionally a set of parameters such as query hints
+cannot be set on the QueryBuilder itself. This is why you always have to convert
+a querybuilder instance into a Query object:</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+$query = $qb-&gt;getQuery();
+
+// Set additional Query options
+$query-&gt;setQueryHint('foo', 'bar');
+$query-&gt;useResultCache('my_cache_id');
+
+// Execute Query
+$result = $query-&gt;getResult();
+$single = $query-&gt;getSingleResult();
+$array = $query-&gt;getArrayResult();
+$scalar = $query-&gt;getScalarResult();
+$singleScalar = $query-&gt;getSingleScalarResult();
+</code></pre>
+<h3 class="section-header" id="title.1.2.5"><a href="#title.1.2.5">The Expr class<i class="fas fa-link"></i></a></h3>
+<p>To workaround some of the issues that <code>add()</code> method may cause,
+Doctrine created a class that can be considered as a helper for
+building expressions. This class is called <code>Expr</code>, which provides a
+set of useful methods to help build expressions:</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+
+// example8: QueryBuilder port of:
+// &quot;SELECT u FROM User u WHERE u.id = ? OR u.nickname LIKE ? ORDER BY u.name ASC&quot; using Expr class
+$qb-&gt;add('select', new Expr\Select(array('u')))
+   -&gt;add('from', new Expr\From('User', 'u'))
+   -&gt;add('where', $qb-&gt;expr()-&gt;orX(
+       $qb-&gt;expr()-&gt;eq('u.id', '?1'),
+       $qb-&gt;expr()-&gt;like('u.nickname', '?2')
+   ))
+   -&gt;add('orderBy', new Expr\OrderBy('u.name', 'ASC'));
+</code></pre>
+<p>Although it still sounds complex, the ability to programmatically
+create conditions are the main feature of <code>Expr</code>. Here it is a
+complete list of supported helper methods available:</p>
+<pre><code class="php">&lt;?php
+class Expr
+{
+    /** Conditional objects **/
+
+    // Example - $qb-&gt;expr()-&gt;andX($cond1 [, $condN])-&gt;add(...)-&gt;...
+    public function andX($x = null); // Returns Expr\AndX instance
+
+    // Example - $qb-&gt;expr()-&gt;orX($cond1 [, $condN])-&gt;add(...)-&gt;...
+    public function orX($x = null); // Returns Expr\OrX instance
+
+    /** Comparison objects **/
+
+    // Example - $qb-&gt;expr()-&gt;eq('u.id', '?1') =&gt; u.id = ?1
+    public function eq($x, $y); // Returns Expr\Comparison instance
+
+    // Example - $qb-&gt;expr()-&gt;neq('u.id', '?1') =&gt; u.id &lt;&gt; ?1
+    public function neq($x, $y); // Returns Expr\Comparison instance
+
+    // Example - $qb-&gt;expr()-&gt;lt('u.id', '?1') =&gt; u.id &lt; ?1
+    public function lt($x, $y); // Returns Expr\Comparison instance
+
+    // Example - $qb-&gt;expr()-&gt;lte('u.id', '?1') =&gt; u.id &lt;= ?1
+    public function lte($x, $y); // Returns Expr\Comparison instance
+
+    // Example - $qb-&gt;expr()-&gt;gt('u.id', '?1') =&gt; u.id &gt; ?1
+    public function gt($x, $y); // Returns Expr\Comparison instance
+
+    // Example - $qb-&gt;expr()-&gt;gte('u.id', '?1') =&gt; u.id &gt;= ?1
+    public function gte($x, $y); // Returns Expr\Comparison instance
+
+    // Example - $qb-&gt;expr()-&gt;isNull('u.id') =&gt; u.id IS NULL
+    public function isNull($x); // Returns string
+
+    // Example - $qb-&gt;expr()-&gt;isNotNull('u.id') =&gt; u.id IS NOT NULL
+    public function isNotNull($x); // Returns string
+
+    /** Arithmetic objects **/
+
+    // Example - $qb-&gt;expr()-&gt;prod('u.id', '2') =&gt; u.id * 2
+    public function prod($x, $y); // Returns Expr\Math instance
+
+    // Example - $qb-&gt;expr()-&gt;diff('u.id', '2') =&gt; u.id - 2
+    public function diff($x, $y); // Returns Expr\Math instance
+
+    // Example - $qb-&gt;expr()-&gt;sum('u.id', '2') =&gt; u.id + 2
+    public function sum($x, $y); // Returns Expr\Math instance
+
+    // Example - $qb-&gt;expr()-&gt;quot('u.id', '2') =&gt; u.id / 2
+    public function quot($x, $y); // Returns Expr\Math instance
+
+    /** Pseudo-function objects **/
+
+    // Example - $qb-&gt;expr()-&gt;exists($qb2-&gt;getDql())
+    public function exists($subquery); // Returns Expr\Func instance
+
+    // Example - $qb-&gt;expr()-&gt;all($qb2-&gt;getDql())
+    public function all($subquery); // Returns Expr\Func instance
+
+    // Example - $qb-&gt;expr()-&gt;some($qb2-&gt;getDql())
+    public function some($subquery); // Returns Expr\Func instance
+
+    // Example - $qb-&gt;expr()-&gt;any($qb2-&gt;getDql())
+    public function any($subquery); // Returns Expr\Func instance
+
+    // Example - $qb-&gt;expr()-&gt;not($qb-&gt;expr()-&gt;eq('u.id', '?1'))
+    public function not($restriction); // Returns Expr\Func instance
+
+    // Example - $qb-&gt;expr()-&gt;in('u.id', array(1, 2, 3))
+    // Make sure that you do NOT use something similar to $qb-&gt;expr()-&gt;in('value', array('stringvalue')) as this will cause Doctrine to throw an Exception.
+    // Instead, use $qb-&gt;expr()-&gt;in('value', array('?1')) and bind your parameter to ?1 (see section above)
+    public function in($x, $y); // Returns Expr\Func instance
+
+    // Example - $qb-&gt;expr()-&gt;notIn('u.id', '2')
+    public function notIn($x, $y); // Returns Expr\Func instance
+
+    // Example - $qb-&gt;expr()-&gt;like('u.firstname', $qb-&gt;expr()-&gt;literal('Gui%'))
+    public function like($x, $y); // Returns Expr\Comparison instance
+
+    // Example - $qb-&gt;expr()-&gt;notLike('u.firstname', $qb-&gt;expr()-&gt;literal('Gui%'))
+    public function notLike($x, $y); // Returns Expr\Comparison instance
+
+    // Example - $qb-&gt;expr()-&gt;between('u.id', '1', '10')
+    public function between($val, $x, $y); // Returns Expr\Func
+
+    /** Function objects **/
+
+    // Example - $qb-&gt;expr()-&gt;trim('u.firstname')
+    public function trim($x); // Returns Expr\Func
+
+    // Example - $qb-&gt;expr()-&gt;concat('u.firstname', $qb-&gt;expr()-&gt;concat($qb-&gt;expr()-&gt;literal(' '), 'u.lastname'))
+    public function concat($x, $y); // Returns Expr\Func
+
+    // Example - $qb-&gt;expr()-&gt;substring('u.firstname', 0, 1)
+    public function substring($x, $from, $len); // Returns Expr\Func
+
+    // Example - $qb-&gt;expr()-&gt;lower('u.firstname')
+    public function lower($x); // Returns Expr\Func
+
+    // Example - $qb-&gt;expr()-&gt;upper('u.firstname')
+    public function upper($x); // Returns Expr\Func
+
+    // Example - $qb-&gt;expr()-&gt;length('u.firstname')
+    public function length($x); // Returns Expr\Func
+
+    // Example - $qb-&gt;expr()-&gt;avg('u.age')
+    public function avg($x); // Returns Expr\Func
+
+    // Example - $qb-&gt;expr()-&gt;max('u.age')
+    public function max($x); // Returns Expr\Func
+
+    // Example - $qb-&gt;expr()-&gt;min('u.age')
+    public function min($x); // Returns Expr\Func
+
+    // Example - $qb-&gt;expr()-&gt;abs('u.currentBalance')
+    public function abs($x); // Returns Expr\Func
+
+    // Example - $qb-&gt;expr()-&gt;sqrt('u.currentBalance')
+    public function sqrt($x); // Returns Expr\Func
+
+    // Example - $qb-&gt;expr()-&gt;count('u.firstname')
+    public function count($x); // Returns Expr\Func
+
+    // Example - $qb-&gt;expr()-&gt;countDistinct('u.surname')
+    public function countDistinct($x); // Returns Expr\Func
+}
+</code></pre>
+<h3 class="section-header" id="title.1.2.6"><a href="#title.1.2.6">Adding a Criteria to a Query<i class="fas fa-link"></i></a></h3>
+<p>You can also add a <a href="filtering-collections.html">Criteria</a> to a QueryBuilder by
+using <code>addCriteria</code>:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\Common\Collections\Criteria;
+// ...
+
+$criteria = Criteria::create()
+    -&gt;orderBy(['firstName', 'ASC']);
+
+// $qb instanceof QueryBuilder
+$qb-&gt;addCriteria($criteria);
+// then execute your query like normal
+</code></pre>
+<h3 class="section-header" id="title.1.2.7"><a href="#title.1.2.7">Low Level API<i class="fas fa-link"></i></a></h3>
+<p>Now we will describe the low level method of creating queries.
+It may be useful to work at this level for optimization purposes,
+but most of the time it is preferred to work at a higher level of
+abstraction.</p>
+<p>All helper methods in <code>QueryBuilder</code> actually rely on a single
+one: <code>add()</code>. This method is responsible of building every piece
+of DQL. It takes 3 parameters: <code>$dqlPartName</code>, <code>$dqlPart</code> and
+<code>$append</code> (default=false)</p>
+<ul><li class="dash"> <code>$dqlPartName</code>: Where the <code>$dqlPart</code> should be placed.
+   Possible values: select, from, where, groupBy, having, orderBy</li>
+<li class="dash"> <code>$dqlPart</code>: What should be placed in <code>$dqlPartName</code>. Accepts
+   a string or any instance of <code>Doctrine\ORM\Query\Expr\*</code></li>
+<li class="dash"> <code>$append</code>: Optional flag (default=false) if the <code>$dqlPart</code>
+   should override all previously defined items in <code>$dqlPartName</code> or
+   not (no effect on the <code>where</code> and <code>having</code> DQL query parts,
+   which always override all previously defined items)</li>
+</ul>
+
+<p>-</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+
+// example6: how to define:
+// &quot;SELECT u FROM User u WHERE u.id = ? ORDER BY u.name ASC&quot;
+// using QueryBuilder string support
+$qb-&gt;add('select', 'u')
+   -&gt;add('from', 'User u')
+   -&gt;add('where', 'u.id = ?1')
+   -&gt;add('orderBy', 'u.name ASC');
+</code></pre>
+<h3 class="section-header" id="title.1.2.8"><a href="#title.1.2.8">Expr\* classes<i class="fas fa-link"></i></a></h3>
+<p>When you call <code>add()</code> with string, it internally evaluates to an
+instance of <code>Doctrine\ORM\Query\Expr\Expr\*</code> class. Here is the
+same query of example 6 written using
+<code>Doctrine\ORM\Query\Expr\Expr\*</code> classes:</p>
+<pre><code class="php">&lt;?php
+// $qb instanceof QueryBuilder
+
+// example7: how to define:
+// &quot;SELECT u FROM User u WHERE u.id = ? ORDER BY u.name ASC&quot;
+// using QueryBuilder using Expr\* instances
+$qb-&gt;add('select', new Expr\Select(array('u')))
+   -&gt;add('from', new Expr\From('User', 'u'))
+   -&gt;add('where', new Expr\Comparison('u.id', '=', '?1'))
+   -&gt;add('orderBy', new Expr\OrderBy('u.name', 'ASC'));
+</code></pre>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

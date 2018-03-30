@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Working with Associations - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/orm/">ORM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-orm/en/latest/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Working with Associations</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/latest/reference/working-with-associations.html" class="badge badge-primary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.6/reference/working-with-associations.html" class="badge badge-secondary">2.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.5/reference/working-with-associations.html" class="badge badge-secondary">2.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Working with Associations<i class="fas fa-link"></i></a></h1>
+<p>Associations between entities are represented just like in regular
+object-oriented PHP code using references to other objects or
+collections of objects.</p>
+<p>Changes to associations in your code are not synchronized to the
+database directly, only when calling <code>EntityManager#flush()</code>.</p>
+<p>There are other concepts you should know about when working
+with associations in Doctrine:</p>
+<ul><li class="dash"> If an entity is removed from a collection, the association is
+   removed, not the entity itself. A collection of entities always
+   only represents the association to the containing entities, not the
+   entity itself.</li>
+<li class="dash"> When a bidirectional assocation is updated, Doctrine only checks
+   on one of both sides for these changes. This is called the <a href="unitofwork-associations.html">owning side</a>
+   of the association.</li>
+<li class="dash"> A property with a reference to many entities has to be instances of the
+   <code>Doctrine\Common\Collections\Collection</code> interface.</li>
+</ul>
+
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Association Example Entities<i class="fas fa-link"></i></a></h2>
+<p>We will use a simple comment system with Users and Comments as
+entities to show examples of association management. See the PHP
+docblocks of each association in the following example for
+information about its type and if it's the owning or inverse side.</p>
+<pre><code class="php">&lt;?php
+/** @Entity */
+class User
+{
+    /** @Id @GeneratedValue @Column(type=&quot;string&quot;) */
+    private $id;
+
+    /**
+     * Bidirectional - Many users have Many favorite comments (OWNING SIDE)
+     *
+     * @ManyToMany(targetEntity=&quot;Comment&quot;, inversedBy=&quot;userFavorites&quot;)
+     * @JoinTable(name=&quot;user_favorite_comments&quot;)
+     */
+    private $favorites;
+
+    /**
+     * Unidirectional - Many users have marked many comments as read
+     *
+     * @ManyToMany(targetEntity=&quot;Comment&quot;)
+     * @JoinTable(name=&quot;user_read_comments&quot;)
+     */
+    private $commentsRead;
+
+    /**
+     * Bidirectional - One-To-Many (INVERSE SIDE)
+     *
+     * @OneToMany(targetEntity=&quot;Comment&quot;, mappedBy=&quot;author&quot;)
+     */
+    private $commentsAuthored;
+
+    /**
+     * Unidirectional - Many-To-One
+     *
+     * @ManyToOne(targetEntity=&quot;Comment&quot;)
+     */
+    private $firstComment;
+}
+
+/** @Entity */
+class Comment
+{
+    /** @Id @GeneratedValue @Column(type=&quot;string&quot;) */
+    private $id;
+
+    /**
+     * Bidirectional - Many comments are favorited by many users (INVERSE SIDE)
+     *
+     * @ManyToMany(targetEntity=&quot;User&quot;, mappedBy=&quot;favorites&quot;)
+     */
+    private $userFavorites;
+
+    /**
+     * Bidirectional - Many Comments are authored by one user (OWNING SIDE)
+     *
+     * @ManyToOne(targetEntity=&quot;User&quot;, inversedBy=&quot;commentsAuthored&quot;)
+     */
+     private $author;
+}
+</code></pre>
+<p>This two entities generate the following MySQL Schema (Foreign Key
+definitions omitted):</p>
+<pre><code class="sql">CREATE TABLE User (
+    id VARCHAR(255) NOT NULL,
+    firstComment_id VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+
+CREATE TABLE Comment (
+    id VARCHAR(255) NOT NULL,
+    author_id VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+
+CREATE TABLE user_favorite_comments (
+    user_id VARCHAR(255) NOT NULL,
+    favorite_comment_id VARCHAR(255) NOT NULL,
+    PRIMARY KEY(user_id, favorite_comment_id)
+) ENGINE = InnoDB;
+
+CREATE TABLE user_read_comments (
+    user_id VARCHAR(255) NOT NULL,
+    comment_id VARCHAR(255) NOT NULL,
+    PRIMARY KEY(user_id, comment_id)
+) ENGINE = InnoDB;
+</code></pre>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">Establishing Associations<i class="fas fa-link"></i></a></h2>
+<p>Establishing an association between two entities is
+straight-forward. Here are some examples for the unidirectional
+relations of the <code>User</code>:</p>
+<pre><code class="php">&lt;?php
+class User
+{
+    // ...
+    public function getReadComments() {
+         return $this-&gt;commentsRead;
+    }
+
+    public function setFirstComment(Comment $c) {
+        $this-&gt;firstComment = $c;
+    }
+}
+</code></pre>
+<p>The interaction code would then look like in the following snippet
+(<code>$em</code> here is an instance of the EntityManager):</p>
+<pre><code class="php">&lt;?php
+$user = $em-&gt;find('User', $userId);
+
+// unidirectional many to many
+$comment = $em-&gt;find('Comment', $readCommentId);
+$user-&gt;getReadComments()-&gt;add($comment);
+
+$em-&gt;flush();
+
+// unidirectional many to one
+$myFirstComment = new Comment();
+$user-&gt;setFirstComment($myFirstComment);
+
+$em-&gt;persist($myFirstComment);
+$em-&gt;flush();
+</code></pre>
+<p>In the case of bi-directional associations you have to update the
+fields on both sides:</p>
+<pre><code class="php">&lt;?php
+class User
+{
+    // ..
+
+    public function getAuthoredComments() {
+        return $this-&gt;commentsAuthored;
+    }
+
+    public function getFavoriteComments() {
+        return $this-&gt;favorites;
+    }
+}
+
+class Comment
+{
+    // ...
+
+    public function getUserFavorites() {
+        return $this-&gt;userFavorites;
+    }
+
+    public function setAuthor(User $author = null) {
+        $this-&gt;author = $author;
+    }
+}
+
+// Many-to-Many
+$user-&gt;getFavorites()-&gt;add($favoriteComment);
+$favoriteComment-&gt;getUserFavorites()-&gt;add($user);
+
+$em-&gt;flush();
+
+// Many-To-One / One-To-Many Bidirectional
+$newComment = new Comment();
+$user-&gt;getAuthoredComments()-&gt;add($newComment);
+$newComment-&gt;setAuthor($user);
+
+$em-&gt;persist($newComment);
+$em-&gt;flush();
+</code></pre>
+<p>Notice how always both sides of the bidirectional association are
+updated. The previous unidirectional associations were simpler to
+handle.</p>
+<h2 class="section-header" id="title.1.3"><a href="#title.1.3">Removing Associations<i class="fas fa-link"></i></a></h2>
+<p>Removing an association between two entities is similarly
+straight-forward. There are two strategies to do so, by key and by
+element. Here are some examples:</p>
+<pre><code class="php">&lt;?php
+// Remove by Elements
+$user-&gt;getComments()-&gt;removeElement($comment);
+$comment-&gt;setAuthor(null);
+
+$user-&gt;getFavorites()-&gt;removeElement($comment);
+$comment-&gt;getUserFavorites()-&gt;removeElement($user);
+
+// Remove by Key
+$user-&gt;getComments()-&gt;remove($ithComment);
+$comment-&gt;setAuthor(null);
+</code></pre>
+<p>You need to call <code>$em-&gt;flush()</code> to make persist these changes in
+the database permanently.</p>
+<p>Notice how both sides of the bidirectional association are always
+updated. Unidirectional associations are consequently simpler to
+handle.</p>
+<p>Also note that if you use type-hinting in your methods, you will
+have to specify a nullable type, i.e. <code>setAddress(?Address $address)</code>,
+otherwise <code>setAddress(null)</code> will fail to remove the association.
+Another way to deal with this is to provide a special method, like
+<code>removeAddress()</code>. This can also provide better encapsulation as
+it hides the internal meaning of not having an address.</p>
+<p>When working with collections, keep in mind that a Collection is
+essentially an ordered map (just like a PHP array). That is why the
+<code>remove</code> operation accepts an index/key. <code>removeElement</code> is a
+separate method that has O(n) complexity using <code>array_search</code>,
+where n is the size of the map.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Since Doctrine always only looks at the owning side of a
+bidirectional association for updates, it is not necessary for
+write operations that an inverse collection of a bidirectional
+one-to-many or many-to-many association is updated. This knowledge
+can often be used to improve performance by avoiding the loading of
+the inverse collection.</p>
+</div>
+<p>You can also clear the contents of a whole collection using the
+<code>Collections::clear()</code> method. You should be aware that using
+this method can lead to a straight and optimized database delete or
+update call during the flush operation that is not aware of
+entities that have been re-added to the collection.</p>
+<p>Say you clear a collection of tags by calling
+<code>$post-&gt;getTags()-&gt;clear();</code> and then call
+<code>$post-&gt;getTags()-&gt;add($tag)</code>. This will not recognize the tag having
+already been added previously and will consequently issue two separate database
+calls.</p>
+<h2 class="section-header" id="title.1.4"><a href="#title.1.4">Association Management Methods<i class="fas fa-link"></i></a></h2>
+<p>It is generally a good idea to encapsulate proper association
+management inside the entity classes. This makes it easier to use
+the class correctly and can encapsulate details about how the
+association is maintained.</p>
+<p>The following code shows updates to the previous User and Comment
+example that encapsulate much of the association management code:</p>
+<pre><code class="php">&lt;?php
+class User
+{
+    //...
+    public function markCommentRead(Comment $comment) {
+        // Collections implement ArrayAccess
+        $this-&gt;commentsRead[] = $comment;
+    }
+
+    public function addComment(Comment $comment) {
+        if (count($this-&gt;commentsAuthored) == 0) {
+            $this-&gt;setFirstComment($comment);
+        }
+        $this-&gt;comments[] = $comment;
+        $comment-&gt;setAuthor($this);
+    }
+
+    private function setFirstComment(Comment $c) {
+        $this-&gt;firstComment = $c;
+    }
+
+    public function addFavorite(Comment $comment) {
+        $this-&gt;favorites-&gt;add($comment);
+        $comment-&gt;addUserFavorite($this);
+    }
+
+    public function removeFavorite(Comment $comment) {
+        $this-&gt;favorites-&gt;removeElement($comment);
+        $comment-&gt;removeUserFavorite($this);
+    }
+}
+
+class Comment
+{
+    // ..
+
+    public function addUserFavorite(User $user) {
+        $this-&gt;userFavorites[] = $user;
+    }
+
+    public function removeUserFavorite(User $user) {
+        $this-&gt;userFavorites-&gt;removeElement($user);
+    }
+}
+</code></pre>
+<p>You will notice that <code>addUserFavorite</code> and <code>removeUserFavorite</code>
+do not call <code>addFavorite</code> and <code>removeFavorite</code>, thus the
+bidirectional association is strictly-speaking still incomplete.
+However if you would naively add the <code>addFavorite</code> in
+<code>addUserFavorite</code>, you end up with an infinite loop, so more work
+is needed. As you can see, proper bidirectional association
+management in plain OOP is a non-trivial task and encapsulating all
+the details inside the classes can be challenging.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>If you want to make sure that your collections are perfectly
+encapsulated you should not return them from a
+<code>getCollectionName()</code> method directly, but call
+<code>$collection-&gt;toArray()</code>. This way a client programmer for the
+entity cannot circumvent the logic you implement on your entity for
+association management. For example:</p>
+</div>
+<pre><code class="php">&lt;?php
+class User {
+    public function getReadComments() {
+        return $this-&gt;commentsRead-&gt;toArray();
+    }
+}
+</code></pre>
+<p>This will however always initialize the collection, with all the
+performance penalties given the size. In some scenarios of large
+collections it might even be a good idea to completely hide the
+read access behind methods on the EntityRepository.</p>
+<p>There is no single, best way for association management. It greatly
+depends on the requirements of your concrete domain model as well
+as your preferences.</p>
+<h2 class="section-header" id="title.1.5"><a href="#title.1.5">Synchronizing Bidirectional Collections<i class="fas fa-link"></i></a></h2>
+<p>In the case of Many-To-Many associations you as the developer have the
+responsibility of keeping the collections on the owning and inverse side
+in sync when you apply changes to them. Doctrine can only
+guarantee a consistent state for the hydration, not for your client
+code.</p>
+<p>Using the User-Comment entities from above, a very simple example
+can show the possible caveats you can encounter:</p>
+<pre><code class="php">&lt;?php
+$user-&gt;getFavorites()-&gt;add($favoriteComment);
+// not calling $favoriteComment-&gt;getUserFavorites()-&gt;add($user);
+
+$user-&gt;getFavorites()-&gt;contains($favoriteComment); // TRUE
+$favoriteComment-&gt;getUserFavorites()-&gt;contains($user); // FALSE
+</code></pre>
+<p>There are two approaches to handle this problem in your code:</p>
+<ol><li>Ignore updating the inverse side of bidirectional collections,
+   BUT never read from them in requests that changed their state. In
+   the next request Doctrine hydrates the consistent collection state
+   again.</li>
+<li>Always keep the bidirectional collections in sync through
+   association management methods. Reads of the Collections directly
+   after changes are consistent then.</li>
+</ol>
+
+<a id="transitive-persistence"></a>
+<h2 class="section-header" id="title.1.6"><a href="#title.1.6">Transitive persistence / Cascade Operations<i class="fas fa-link"></i></a></h2>
+<p>Doctrine 2 provides a mechanism for transitive persistence through cascading of certain operations.
+Each association to another entity or a collection of
+entities can be configured to automatically cascade the following operations to the associated entities:
+<code>persist</code>, <code>remove</code>, <code>refresh</code> or <code>all</code>.</p>
+<p>The main use case for <code>cascade: persist</code> is to avoid &quot;exposing&quot; associated entities to your PHP application.
+Continuing with the User-Comment example of this chapter, this is how the creation of a new user and a new
+comment might look like in your controller (without <code>cascade: persist</code>):</p>
+<pre><code class="php">&lt;?php
+$user = new User();
+$myFirstComment = new Comment();
+$user-&gt;addComment($myFirstComment);
+
+$em-&gt;persist($user);
+$em-&gt;persist($myFirstComment); // required, if `cascade: persist` is not set
+$em-&gt;flush();
+</code></pre>
+<p>Note that the Comment entity is instantiated right here in the controller.
+To avoid this, <code>cascade: persist</code> allows you to &quot;hide&quot; the Comment entity from the controller,
+only accessing it through the User entity:</p>
+<pre><code class="php">&lt;?php
+// User entity
+class User
+{
+    private $id;
+    private $comments;
+
+    public function __construct()
+    {
+        $this-&gt;id = User::new();
+        $this-&gt;comments = new ArrayCollection();
+    }
+
+    public function comment(string $text, DateTimeInterface $time) : void
+    {
+        $newComment = Comment::create($text, $time);
+        $newComment-&gt;setUser($this);
+        $this-&gt;comments-&gt;add($newComment);
+    }
+
+    // ...
+}
+</code></pre>
+<p>If you then set up the cascading to the <code>User#commentsAuthored</code> property...</p>
+<pre><code class="php">&lt;?php
+class User
+{
+    //...
+    /**
+     * Bidirectional - One-To-Many (INVERSE SIDE)
+     *
+     * @OneToMany(targetEntity=&quot;Comment&quot;, mappedBy=&quot;author&quot;, cascade={&quot;persist&quot;, &quot;remove&quot;})
+     */
+    private $commentsAuthored;
+    //...
+}
+</code></pre>
+<p>...you can now create a user and an associated comment like this:</p>
+<pre><code class="php">&lt;?php
+$user = new User();
+$user-&gt;comment('Lorem ipsum', new DateTime());
+
+$em-&gt;persist($user);
+$em-&gt;flush();
+</code></pre>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The idea of <code>cascade: persist</code> is not to save you any lines of code in the controller.
+If you instantiate the comment object in the controller (i.e. don't set up the user entity as shown above),
+even with <code>cascade: persist</code> you still have to call <code>$myFirstComment-&gt;setUser($user);</code>.</p>
+</div>
+<p>Thanks to <code>cascade: remove</code>, you can easily delete a user and all linked comments without having to loop through them:</p>
+<pre><code class="php">&lt;?php
+$user = $em-&gt;find('User', $deleteUserId);
+
+$em-&gt;remove($user);
+$em-&gt;flush();
+</code></pre>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Cascade operations are performed in memory. That means collections and related entities
+are fetched into memory (even if they are marked as lazy) when
+the cascade operation is about to be performed. This approach allows
+entity lifecycle events to be performed for each of these operations.</p>
+<p>However, pulling object graphs into memory on cascade can cause considerable performance
+overhead, especially when the cascaded collections are large. Make sure
+to weigh the benefits and downsides of each cascade operation that you define.</p>
+<p>To rely on the database level cascade operations for the delete operation instead, you can
+configure each join column with <a href="working-with-objects.html">the onDelete option</a>.</p>
+</div>
+<p>Even though automatic cascading is convenient, it should be used
+with care. Do not blindly apply <code>cascade=all</code> to all associations as
+it will unnecessarily degrade the performance of your application.
+For each cascade operation that gets activated, Doctrine also
+applies that operation to the association, be it single or
+collection valued.</p>
+<h3 class="section-header" id="title.1.6.1"><a href="#title.1.6.1">Persistence by Reachability: Cascade Persist<i class="fas fa-link"></i></a></h3>
+<p>There are additional semantics that apply to the Cascade Persist
+operation. During each <code>flush()</code> operation Doctrine detects if there
+are new entities in any collection and three possible cases can
+happen:</p>
+<ol><li>New entities in a collection marked as <code>cascade: persist</code> will be
+   directly persisted by Doctrine.</li>
+<li>New entities in a collection not marked as <code>cascade: persist</code> will
+   produce an Exception and rollback the <code>flush()</code> operation.</li>
+<li>Collections without new entities are skipped.</li>
+</ol>
+
+<p>This concept is called Persistence by Reachability: New entities
+that are found on already managed entities are automatically
+persisted as long as the association is defined as <code>cascade: persist</code>.</p>
+<h2 class="section-header" id="title.1.7"><a href="#title.1.7">Orphan Removal<i class="fas fa-link"></i></a></h2>
+<p>There is another concept of cascading that is relevant only when removing entities
+from collections. If an Entity of type <code>A</code> contains references to privately
+owned Entities <code>B</code> then if the reference from <code>A</code> to <code>B</code> is removed the
+entity <code>B</code> should also be removed, because it is not used anymore.</p>
+<p>OrphanRemoval works with one-to-one, one-to-many and many-to-many associations.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>When using the <code>orphanRemoval=true</code> option Doctrine makes the assumption
+that the entities are privately owned and will <strong>NOT</strong> be reused by other entities.
+If you neglect this assumption your entities will get deleted by Doctrine even if
+you assigned the orphaned entity to another one.</p>
+</div>
+<p>As a better example consider an Addressbook application where you have Contacts, Addresses
+and StandingData:</p>
+<pre><code class="php">&lt;?php
+
+namespace Addressbook;
+
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * @Entity
+ */
+class Contact
+{
+    /** @Id @Column(type=&quot;integer&quot;) @GeneratedValue */
+    private $id;
+
+    /** @OneToOne(targetEntity=&quot;StandingData&quot;, orphanRemoval=true) */
+    private $standingData;
+
+    /** @OneToMany(targetEntity=&quot;Address&quot;, mappedBy=&quot;contact&quot;, orphanRemoval=true) */
+    private $addresses;
+
+    public function __construct()
+    {
+        $this-&gt;addresses = new ArrayCollection();
+    }
+
+    public function newStandingData(StandingData $sd)
+    {
+        $this-&gt;standingData = $sd;
+    }
+
+    public function removeAddress($pos)
+    {
+        unset($this-&gt;addresses[$pos]);
+    }
+}
+</code></pre>
+<p>Now two examples of what happens when you remove the references:</p>
+<pre><code class="php">&lt;?php
+
+$contact = $em-&gt;find(&quot;Addressbook\Contact&quot;, $contactId);
+$contact-&gt;newStandingData(new StandingData(&quot;Firstname&quot;, &quot;Lastname&quot;, &quot;Street&quot;));
+$contact-&gt;removeAddress(1);
+
+$em-&gt;flush();
+</code></pre>
+<p>In this case you have not only changed the <code>Contact</code> entity itself but
+you have also removed the references for standing data and as well as one
+address reference. When flush is called not only are the references removed
+but both the old standing data and the one address entity are also deleted
+from the database.</p>
+<a id="filtering-collections"></a>
+<h2 class="section-header" id="title.1.8"><a href="#title.1.8">Filtering Collections<i class="fas fa-link"></i></a></h2>
+<p>Collections have a filtering API that allows to slice parts of data from
+a collection. If the collection has not been loaded from the database yet,
+the filtering API can work on the SQL level to make optimized access to
+large collections.</p>
+<pre><code class="php">&lt;?php
+
+use Doctrine\Common\Collections\Criteria;
+
+$group          = $entityManager-&gt;find('Group', $groupId);
+$userCollection = $group-&gt;getUsers();
+
+$criteria = Criteria::create()
+    -&gt;where(Criteria::expr()-&gt;eq(&quot;birthday&quot;, &quot;1982-02-17&quot;))
+    -&gt;orderBy(array(&quot;username&quot; =&gt; Criteria::ASC))
+    -&gt;setFirstResult(0)
+    -&gt;setMaxResults(20)
+;
+
+$birthdayUsers = $userCollection-&gt;matching($criteria);
+</code></pre>
+<div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i><p>You can move the access of slices of collections into dedicated methods of
+an entity. For example <code>Group#getTodaysBirthdayUsers()</code>.</p>
+</div>
+<p>The Criteria has a limited matching language that works both on the
+SQL and on the PHP collection level. This means you can use collection matching
+interchangeably, independent of in-memory or sql-backed collections.</p>
+<pre><code class="php">&lt;?php
+
+use Doctrine\Common\Collections;
+
+class Criteria
+{
+    /**
+     * @return Criteria
+     */
+    static public function create();
+    /**
+     * @param Expression $where
+     * @return Criteria
+     */
+    public function where(Expression $where);
+    /**
+     * @param Expression $where
+     * @return Criteria
+     */
+    public function andWhere(Expression $where);
+    /**
+     * @param Expression $where
+     * @return Criteria
+     */
+    public function orWhere(Expression $where);
+    /**
+     * @param array $orderings
+     * @return Criteria
+     */
+    public function orderBy(array $orderings);
+    /**
+     * @param int $firstResult
+     * @return Criteria
+     */
+    public function setFirstResult($firstResult);
+    /**
+     * @param int $maxResults
+     * @return Criteria
+     */
+    public function setMaxResults($maxResults);
+    public function getOrderings();
+    public function getWhereExpression();
+    public function getFirstResult();
+    public function getMaxResults();
+}
+</code></pre>
+<p>You can build expressions through the ExpressionBuilder. It has the following
+methods:</p>
+<ul><li><code>andX($arg1, $arg2, ...)</code></li>
+<li><code>orX($arg1, $arg2, ...)</code></li>
+<li><code>eq($field, $value)</code></li>
+<li><code>gt($field, $value)</code></li>
+<li><code>lt($field, $value)</code></li>
+<li><code>lte($field, $value)</code></li>
+<li><code>gte($field, $value)</code></li>
+<li><code>neq($field, $value)</code></li>
+<li><code>isNull($field)</code></li>
+<li><code>in($field, array $values)</code></li>
+<li><code>notIn($field, array $values)</code></li>
+<li><code>contains($field, $value)</code></li>
+<li><code>startsWith($field, $value)</code></li>
+<li><code>endsWith($field, $value)</code></li>
+</ul>
+
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>There is a limitation on the compatibility of Criteria comparisons.
+You have to use scalar values only as the value in a comparison or
+the behaviour between different backends is not the same.</p>
+</div>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

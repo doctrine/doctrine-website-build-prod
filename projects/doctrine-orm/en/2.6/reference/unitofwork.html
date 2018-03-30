@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Doctrine Internals explained - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/orm/">ORM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-orm/en/2.6/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Doctrine Internals explained</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/latest/reference/unitofwork.html" class="badge badge-secondary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.6/reference/unitofwork.html" class="badge badge-primary">2.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.5/reference/unitofwork.html" class="badge badge-secondary">2.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Doctrine Internals explained<i class="fas fa-link"></i></a></h1>
+<p>Object relational mapping is a complex topic and sufficiently understanding how Doctrine works internally helps you use its full power.</p>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">How Doctrine keeps track of Objects<i class="fas fa-link"></i></a></h2>
+<p>Doctrine uses the Identity Map pattern to track objects. Whenever you fetch an
+object from the database, Doctrine will keep a reference to this object inside
+its UnitOfWork. The array holding all the entity references is two-levels deep
+and has the keys &quot;root entity name&quot; and &quot;id&quot;. Since Doctrine allows composite
+keys the id is a sorted, serialized version of all the key columns.</p>
+<p>This allows Doctrine room for optimizations. If you call the EntityManager and
+ask for an entity with a specific ID twice, it will return the same instance:</p>
+<pre><code class="php">public function testIdentityMap()
+{
+    $objectA = $this-&gt;entityManager-&gt;find('EntityName', 1);
+    $objectB = $this-&gt;entityManager-&gt;find('EntityName', 1);
+
+    $this-&gt;assertSame($objectA, $objectB)
+}
+</code></pre>
+<p>Only one SELECT query will be fired against the database here. In the second
+<code>EntityManager#find()</code> call Doctrine will check the identity map first and
+doesn't need to make that database roundtrip.</p>
+<p>Even if you get a proxy object first then fetch the object by the same id you
+will still end up with the same reference:</p>
+<pre><code class="php">public function testIdentityMapReference()
+{
+    /** @var EntityName|\ProxyManager\Proxy\GhostObjectInterface $objectA */
+    $objectA = $this-&gt;entityManager-&gt;getReference(EntityName::class, 1);
+
+    self::assertInstanceOf(\ProxyManager\Proxy\GhostObjectInterface::class, $objectA);
+    self::assertFalse($objectA-&gt;isProxyInitialized());
+
+    $objectB = $this-&gt;entityManager-&gt;find(EntityName::class, 1);
+
+    self::assertSame($objectA, $objectB)
+}
+</code></pre>
+<p>The identity map being indexed by primary keys only allows shortcuts when you
+ask for objects by primary key. Assume you have the following <code>persons</code>
+table:</p>
+
+<pre><code class="">id | name
+-------------
+1  | Benjamin
+2  | Bud
+</code></pre>
+<p>Take the following example where two
+consecutive calls are made against a repository to fetch an entity by a set of
+criteria:</p>
+<pre><code class="php">public function testIdentityMapRepositoryFindBy()
+{
+    $repository = $this-&gt;entityManager-&gt;getRepository('Person');
+    $objectA = $repository-&gt;findOneBy(array('name' =&gt; 'Benjamin'));
+    $objectB = $repository-&gt;findOneBy(array('name' =&gt; 'Benjamin'));
+
+    $this-&gt;assertSame($objectA, $objectB);
+}
+</code></pre>
+<p>This query will still return the same references and `$objectA` and `$objectB`
+are indeed referencing the same object. However when checking your SQL logs you
+will realize that two queries have been executed against the database. Doctrine
+only knows objects by id, so a query for different criteria has to go to the
+database, even if it was executed just before.</p>
+<p>But instead of creating a second Person object Doctrine first gets the primary
+key from the row and check if it already has an object inside the UnitOfWork
+with that primary key. In our example it finds an object and decides to return
+this instead of creating a new one.</p>
+<p>The identity map has a second use-case. When you call <code>EntityManager#flush</code>
+Doctrine will ask the identity map for all objects that are currently managed.
+This means you don't have to call <code>EntityManager#persist</code> over and over again
+to pass known objects to the EntityManager. This is a NO-OP for known entities,
+but leads to much code written that is confusing to other developers.</p>
+<p>The following code WILL update your database with the changes made to the
+<code>Person</code> object, even if you did not call <code>EntityManager#persist</code>:</p>
+<pre><code class="php">&lt;?php
+$user = $entityManager-&gt;find(&quot;Person&quot;, 1);
+$user-&gt;setName(&quot;Guilherme&quot;);
+$entityManager-&gt;flush();
+</code></pre>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">How Doctrine Detects Changes<i class="fas fa-link"></i></a></h2>
+<p>Doctrine is a data-mapper that tries to achieve persistence-ignorance (PI).
+This means you map php objects into a relational database that don't
+necessarily know about the database at all. A natural question would now be,
+&quot;how does Doctrine even detect objects have changed?&quot;.</p>
+<p>For this Doctrine keeps a second map inside the UnitOfWork. Whenever you fetch
+an object from the database Doctrine will keep a copy of all the properties and
+associations inside the UnitOfWork. Because variables in the PHP language are
+subject to &quot;copy-on-write&quot; the memory usage of a PHP request that only reads
+objects from the database is the same as if Doctrine did not keep this variable
+copy. Only if you start changing variables PHP will create new variables internally
+that consume new memory.</p>
+<p>Now whenever you call <code>EntityManager#flush</code> Doctrine will iterate over the
+Identity Map and for each object compares the original property and association
+values with the values that are currently set on the object. If changes are
+detected then the object is queued for a SQL UPDATE operation. Only the fields
+that actually changed are updated.</p>
+<p>This process has an obvious performance impact. The larger the size of the
+UnitOfWork is, the longer this computation takes. There are several ways to
+optimize the performance of the Flush Operation:</p>
+<ul><li class="dash">Mark entities as read only. These entities can only be inserted or removed,
+  but are never updated. They are omitted in the changeset calculation.</li>
+<li class="dash">Temporarily mark entities as read only. If you have a very large UnitOfWork
+  but know that a large set of entities has not changed, just mark them as read
+  only with <code>$entityManager-&gt;getUnitOfWork()-&gt;markReadOnly($entity)</code>.</li>
+<li class="dash">Use <a href="change-tracking-policies.html">Change Tracking Policies</a> to use more
+  explicit strategies of notifying the UnitOfWork what objects/properties
+  changed.</li>
+</ul>
+
+<h2 class="section-header" id="title.1.3"><a href="#title.1.3">Query Internals<i class="fas fa-link"></i></a></h2>
+<h2 class="section-header" id="title.1.4"><a href="#title.1.4">The different ORM Layers<i class="fas fa-link"></i></a></h2>
+<p>Doctrine ships with a set of layers with different responsibilities. This
+section gives a short explanation of each layer.</p>
+<h3 class="section-header" id="title.1.4.1"><a href="#title.1.4.1">Hydration<i class="fas fa-link"></i></a></h3>
+<p>Responsible for creating a final result from a raw database statement and a
+result-set mapping object. The developer can choose which kind of result he
+wishes to be hydrated. Default result-types include:</p>
+<ul><li class="dash">SQL to Entities</li>
+<li class="dash">SQL to structured Arrays</li>
+<li class="dash">SQL to simple scalar result arrays</li>
+<li class="dash">SQL to a single result variable</li>
+</ul>
+
+<p>Hydration to entities and arrays is one of most complex parts of Doctrine
+algorithm-wise. It can build results with for example:</p>
+<ul><li class="dash">Single table selects</li>
+<li class="dash">Joins with n:1 or 1:n cardinality, grouping belonging to the same parent.</li>
+<li class="dash">Mixed results of objects and scalar values</li>
+<li class="dash">Hydration of results by a given scalar value as key.</li>
+</ul>
+
+<h3 class="section-header" id="title.1.4.2"><a href="#title.1.4.2">Persisters<i class="fas fa-link"></i></a></h3>
+<p>tbr</p>
+<h3 class="section-header" id="title.1.4.3"><a href="#title.1.4.3">UnitOfWork<i class="fas fa-link"></i></a></h3>
+<p>tbr</p>
+<h3 class="section-header" id="title.1.4.4"><a href="#title.1.4.4">ResultSetMapping<i class="fas fa-link"></i></a></h3>
+<p>tbr</p>
+<h3 class="section-header" id="title.1.4.5"><a href="#title.1.4.5">DQL Parser<i class="fas fa-link"></i></a></h3>
+<p>tbr</p>
+<h3 class="section-header" id="title.1.4.6"><a href="#title.1.4.6">SQLWalker<i class="fas fa-link"></i></a></h3>
+<p>tbr</p>
+<h3 class="section-header" id="title.1.4.7"><a href="#title.1.4.7">EntityManager<i class="fas fa-link"></i></a></h3>
+<p>tbr</p>
+<h3 class="section-header" id="title.1.4.8"><a href="#title.1.4.8">ClassMetadataFactory<i class="fas fa-link"></i></a></h3>
+<p>tbr</p>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

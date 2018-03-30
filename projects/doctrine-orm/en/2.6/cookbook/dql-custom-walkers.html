@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Extending DQL in Doctrine 2: Custom AST Walkers - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/orm/">ORM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-orm/en/2.6/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Extending DQL in Doctrine 2: Custom AST Walkers</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/latest/cookbook/dql-custom-walkers.html" class="badge badge-secondary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.6/cookbook/dql-custom-walkers.html" class="badge badge-primary">2.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.5/cookbook/dql-custom-walkers.html" class="badge badge-secondary">2.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Extending DQL in Doctrine 2: Custom AST Walkers<i class="fas fa-link"></i></a></h1>
+<div class="section-author"><p>The Doctrine Query Language (DQL) is a proprietary sql-dialect that
+substitutes tables and columns for Entity names and their fields.
+Using DQL you write a query against the database using your
+entities. With the help of the metadata you can write very concise,
+compact and powerful queries that are then translated into SQL by
+the Doctrine ORM.</p></div>
+<p>In Doctrine 1 the DQL language was not implemented using a real
+parser. This made modifications of the DQL by the user impossible.
+Doctrine 2 in contrast has a real parser for the DQL language,
+which transforms the DQL statement into an
+<a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">Abstract Syntax Tree</a>
+and generates the appropriate SQL statement for it. Since this
+process is deterministic Doctrine heavily caches the SQL that is
+generated from any given DQL query, which reduces the performance
+overhead of the parsing process to zero.</p>
+<p>You can modify the Abstract syntax tree by hooking into DQL parsing
+process by adding a Custom Tree Walker. A walker is an interface
+that walks each node of the Abstract syntax tree, thereby
+generating the SQL statement.</p>
+<p>There are two types of custom tree walkers that you can hook into
+the DQL parser:</p>
+<ul><li class="dash"> An output walker. This one actually generates the SQL, and there
+   is only ever one of them. We implemented the default SqlWalker
+   implementation for it.</li>
+<li class="dash"> A tree walker. There can be many tree walkers, they cannot
+   generate the sql, however they can modify the AST before its
+   rendered to sql.</li>
+</ul>
+
+<p>Now this is all awfully technical, so let me come to some use-cases
+fast to keep you motivated. Using walker implementation you can for
+example:</p>
+<ul><li class="dash"> Modify the AST to generate a Count Query to be used with a
+   paginator for any given DQL query.</li>
+<li class="dash"> Modify the Output Walker to generate vendor-specific SQL
+   (instead of ANSI).</li>
+<li class="dash"> Modify the AST to add additional where clauses for specific
+   entities (example ACL, country-specific content...)</li>
+<li class="dash"> Modify the Output walker to pretty print the SQL for debugging
+   purposes.</li>
+</ul>
+
+<p>In this cookbook-entry I will show examples on the first two
+points. There are probably much more use-cases.</p>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Generic count query for pagination<i class="fas fa-link"></i></a></h2>
+<p>Say you have a blog and posts all with one category and one author.
+A query for the front-page or any archive page might look something
+like:</p>
+<pre><code class="sql">SELECT p, c, a FROM BlogPost p JOIN p.category c JOIN p.author a WHERE ...
+</code></pre>
+<p>Now in this query the blog post is the root entity, meaning its the
+one that is hydrated directly from the query and returned as an
+array of blog posts. In contrast the comment and author are loaded
+for deeper use in the object tree.</p>
+<p>A pagination for this query would want to approximate the number of
+posts that match the WHERE clause of this query to be able to
+predict the number of pages to show to the user. A draft of the DQL
+query for pagination would look like:</p>
+<pre><code class="sql">SELECT count(DISTINCT p.id) FROM BlogPost p JOIN p.category c JOIN p.author a WHERE ...
+</code></pre>
+<p>Now you could go and write each of these queries by hand, or you
+can use a tree walker to modify the AST for you. Lets see how the
+API would look for this use-case:</p>
+<pre><code class="php">&lt;?php
+$pageNum = 1;
+$query = $em-&gt;createQuery($dql);
+$query-&gt;setFirstResult( ($pageNum-1) * 20)-&gt;setMaxResults(20);
+
+$totalResults = Paginate::count($query);
+$results = $query-&gt;getResult();
+</code></pre>
+<p>The <code>Paginate::count(Query $query)</code> looks like:</p>
+<pre><code class="php">&lt;?php
+class Paginate
+{
+    static public function count(Query $query)
+    {
+        /** @var Query $countQuery */
+        $countQuery = clone $query;
+
+        $countQuery-&gt;setHint(Query::HINT_CUSTOM_TREE_WALKERS, array('DoctrineExtensions\Paginate\CountSqlWalker'));
+        $countQuery-&gt;setFirstResult(null)-&gt;setMaxResults(null);
+
+        return $countQuery-&gt;getSingleScalarResult();
+    }
+}
+</code></pre>
+<p>It clones the query, resets the limit clause first and max results
+and registers the <code>CountSqlWalker</code> custom tree walker which
+will modify the AST to execute a count query. The walkers
+implementation is:</p>
+<pre><code class="php">&lt;?php
+class CountSqlWalker extends TreeWalkerAdapter
+{
+    /**
+     * Walks down a SelectStatement AST node, thereby generating the appropriate SQL.
+     *
+     * @return string The SQL.
+     */
+    public function walkSelectStatement(SelectStatement $AST)
+    {
+        $parent = null;
+        $parentName = null;
+        foreach ($this-&gt;getQueryComponents() as $dqlAlias =&gt; $qComp) {
+            if ($qComp['parent'] === null &amp;&amp; $qComp['nestingLevel'] == 0) {
+                $parent = $qComp;
+                $parentName = $dqlAlias;
+                break;
+            }
+        }
+
+        $pathExpression = new PathExpression(
+            PathExpression::TYPE_STATE_FIELD | PathExpression::TYPE_SINGLE_VALUED_ASSOCIATION, $parentName,
+            $parent['metadata']-&gt;getSingleIdentifierFieldName()
+        );
+        $pathExpression-&gt;type = PathExpression::TYPE_STATE_FIELD;
+
+        $AST-&gt;selectClause-&gt;selectExpressions = array(
+            new SelectExpression(
+                new AggregateExpression('count', $pathExpression, true), null
+            )
+        );
+    }
+}
+</code></pre>
+<p>This will delete any given select expressions and replace them with
+a distinct count query for the root entities primary key. This will
+only work if your entity has only one identifier field (composite
+keys won't work).</p>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">Modify the Output Walker to generate Vendor specific SQL<i class="fas fa-link"></i></a></h2>
+<p>Most RMDBS have vendor-specific features for optimizing select
+query execution plans. You can write your own output walker to
+introduce certain keywords using the Query Hint API. A query hint
+can be set via <code>Query::setHint($name, $value)</code> as shown in the
+previous example with the <code>HINT_CUSTOM_TREE_WALKERS</code> query hint.</p>
+<p>We will implement a custom Output Walker that allows to specify the
+SQL\_NO\_CACHE query hint.</p>
+<pre><code class="php">&lt;?php
+$dql = &quot;SELECT p, c, a FROM BlogPost p JOIN p.category c JOIN p.author a WHERE ...&quot;;
+$query = $m-&gt;createQuery($dql);
+$query-&gt;setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'DoctrineExtensions\Query\MysqlWalker');
+$query-&gt;setHint(&quot;mysqlWalker.sqlNoCache&quot;, true);
+$results = $query-&gt;getResult();
+</code></pre>
+<p>Our <code>MysqlWalker</code> will extend the default <code>SqlWalker</code>. We will
+modify the generation of the SELECT clause, adding the
+SQL\_NO\_CACHE on those queries that need it:</p>
+<pre><code class="php">&lt;?php
+class MysqlWalker extends SqlWalker
+{
+     /**
+     * Walks down a SelectClause AST node, thereby generating the appropriate SQL.
+     *
+     * @param $selectClause
+     * @return string The SQL.
+     */
+    public function walkSelectClause($selectClause)
+    {
+        $sql = parent::walkSelectClause($selectClause);
+
+        if ($this-&gt;getQuery()-&gt;getHint('mysqlWalker.sqlNoCache') === true) {
+            if ($selectClause-&gt;isDistinct) {
+                $sql = str_replace('SELECT DISTINCT', 'SELECT DISTINCT SQL_NO_CACHE', $sql);
+            } else {
+                $sql = str_replace('SELECT', 'SELECT SQL_NO_CACHE', $sql);
+            }
+        }
+
+        return $sql;
+    }
+}
+</code></pre>
+<p>Writing extensions to the Output Walker requires a very deep
+understanding of the DQL Parser and Walkers, but may offer your
+huge benefits with using vendor specific features. This would still
+allow you write DQL queries instead of NativeQueries to make use of
+vendor specific features.</p>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

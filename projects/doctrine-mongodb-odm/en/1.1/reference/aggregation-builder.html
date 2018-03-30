@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Aggregation builder - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-mongodb-odm/en/1.1/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Aggregation builder</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-mongodb-odm/en/latest/reference/aggregation-builder.html" class="badge badge-secondary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-mongodb-odm/en/1.2/reference/aggregation-builder.html" class="badge badge-secondary">1.2</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-mongodb-odm/en/1.1/reference/aggregation-builder.html" class="badge badge-primary">1.1</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Aggregation builder<i class="fas fa-link"></i></a></h1>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>This feature is introduced in version 1.2</p>
+</div>
+<p>The aggregation framework provides an easy way to process records and return
+computed results. The aggregation builder helps to build complex aggregation
+pipelines.</p>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Creating an Aggregation Builder<i class="fas fa-link"></i></a></h2>
+<p>You can easily create a new <code>Aggregation\Builder</code> object with the
+<code>DocumentManager::createAggregationBuilder()</code> method:</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\User::class);
+</code></pre>
+<p>The first argument indicates the document for which you want to create the
+builder.</p>
+<h3 class="section-header" id="title.1.1.1"><a href="#title.1.1.1">Adding pipeline stages<i class="fas fa-link"></i></a></h3>
+<p>To add a pipeline stage to the builder, call the corresponding method on the
+builder object:</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;match()
+        -&gt;field('purchaseDate')
+        -&gt;gte($from)
+        -&gt;lt($to)
+        -&gt;field('user')
+        -&gt;references($user)
+    -&gt;group()
+        -&gt;field('id')
+        -&gt;expression('$user')
+        -&gt;field('numPurchases')
+        -&gt;sum(1)
+        -&gt;field('amount')
+        -&gt;sum('$amount');
+</code></pre>
+<p>Just like the query builder, the aggregation builder takes care of converting
+<code>DateTime</code> objects into <code>MongoDate</code> objects.</p>
+<h3 class="section-header" id="title.1.1.2"><a href="#title.1.1.2">Nesting expressions<i class="fas fa-link"></i></a></h3>
+<p>You can create more complex aggregation stages by using the <code>expr()</code> method in
+the aggregation builder.</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;match()
+        -&gt;field('purchaseDate')
+        -&gt;gte($from)
+        -&gt;lt($to)
+        -&gt;field('user')
+        -&gt;references($user)
+    -&gt;group()
+        -&gt;field('id')
+        -&gt;expression(
+            $builder-&gt;expr()
+                -&gt;field('month')
+                -&gt;month('purchaseDate')
+                -&gt;field('year')
+                -&gt;year('purchaseDate')
+        )
+        -&gt;field('numPurchases')
+        -&gt;sum(1)
+        -&gt;field('amount')
+        -&gt;sum('$amount');
+</code></pre>
+<p>This aggregation would group all purchases by their month and year by projecting
+those values into an embedded object for the <code>id</code> field. For example:</p>
+<pre><code class="json">{
+    _id: {
+        month: 1,
+        year: 2016
+    },
+    numPurchases: 1,
+    amount: 27.89
+}
+</code></pre>
+<h3 class="section-header" id="title.1.1.3"><a href="#title.1.1.3">Executing an aggregation pipeline<i class="fas fa-link"></i></a></h3>
+<p>You can execute a pipeline using the <code>execute()</code> method. This will run the
+aggregation pipeline and return a cursor for you to iterate over the results:</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\User::class);
+$result = $builder-&gt;execute();
+</code></pre>
+<p>If you instead want to look at the built aggregation pipeline, call the
+<code>Builder::getPipeline()</code> method.</p>
+<h3 class="section-header" id="title.1.1.4"><a href="#title.1.1.4">Hydration<i class="fas fa-link"></i></a></h3>
+<p>By default, aggregation results are returned as PHP arrays. This is because the
+result of an aggregation pipeline may look completely different from the source
+document. In order to get hydrated aggregation results, you first have to map
+a <code>QueryResultDocument</code>. These are written like regular mapped documents, but
+they can't be persisted to the database.</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+
+namespace Documents;
+
+/** @QueryResultDocument */
+class UserPurchases
+{
+    /** @ReferenceOne(targetDocument=&quot;User&quot;, name=&quot;_id&quot;) */
+    private $user;
+
+    /** @Field(type=&quot;int&quot;) */
+    private $numPurchases;
+
+    /** @Field(type=&quot;float&quot;) */
+    private $amount;
+}
+</code></pre>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;doctrine-mongo-mapping xmlns=&quot;http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping&quot;
+                  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+                  xsi:schemaLocation=&quot;http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                  http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd&quot;&gt;
+    &lt;query-result-document name=&quot;Documents\UserPurchases&quot;&gt;
+        &lt;field fieldName=&quot;numPurchases&quot; type=&quot;int&quot; /&gt;
+        &lt;field fieldName=&quot;amount&quot; type=&quot;float&quot; /&gt;
+        &lt;reference-one field=&quot;user&quot; target-document=&quot;Documents\User&quot; name=&quot;_id&quot; /&gt;
+    &lt;/query-result-document&gt;
+&lt;/doctrine-mongo-mapping&gt;
+</code></pre>
+</div>
+<p>Once you have mapped the document, use the <code>hydrate()</code> method to tell the
+aggregation builder about this document:</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;hydrate(\Documents\UserPurchases::class)
+    -&gt;match()
+        -&gt;field('purchaseDate')
+        -&gt;gte($from)
+        -&gt;lt($to)
+        -&gt;field('user')
+        -&gt;references($user)
+    -&gt;group()
+        -&gt;field('id')
+        -&gt;expression('$user')
+        -&gt;field('numPurchases')
+        -&gt;sum(1)
+        -&gt;field('amount')
+        -&gt;sum('$amount');
+</code></pre>
+<p>When you run the queries, all results will be returned as instances of the
+specified document.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Query result documents can use all features regular documents can use: you
+can map embedded documents, define references, and even use discriminators
+to get different result documents according to the aggregation result.</p>
+</div>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">Aggregation pipeline stages<i class="fas fa-link"></i></a></h2>
+<p>MongoDB provides the following aggregation pipeline stages:</p>
+<ul><li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/addFields/">$addFields</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/bucket/">$bucket</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/bucketAuto/">$bucketAuto</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/collStats/">$collStats</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/count/">$count</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/facet/">$facet</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/">$geoNear</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/graphLookup/">$graphLookup</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/group/">$group</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/indexStats/">$indexStats</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/limit/">$limit</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/">$lookup</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/match/">$match</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/out/">$out</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/project/">$project</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/redact/">$redact</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/replaceRoot/">$replaceRoot</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/sample/">$sample</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/skip/">$skip</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/project/">$sort</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/sortByCount/">$sortByCount</a></li>
+<li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/unwind/">$unwind</a></li>
+</ul>
+
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The <code>$lookup</code>, <code>$sample</code> and <code>$indexStats</code> stages were added in MongoDB
+3.2. The <code>$addFields</code>, <code>$bucket</code>, <code>$bucketAuto</code>, <code>$sortByCount</code>,
+<code>$replaceRoot</code>, <code>$facet</code>, <code>$graphLookup</code>, <code>$coun</code> and <code>$collStats</code>
+stages were added in MongoDB 3.4.</p>
+</div>
+<h3 class="section-header" id="title.1.2.1"><a href="#title.1.2.1">$addFields<i class="fas fa-link"></i></a></h3>
+<p>Adds new fields to documents. <code>$addFields</code> outputs documents that contain all
+existing fields from the input documents and newly added fields.</p>
+<p>The <code>$addFields</code> stage is equivalent to a <code>$project</code> stage that explicitly
+specifies all existing fields in the input documents and adds the new fields.</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;addFields()
+        -&gt;field('purchaseYear')
+        -&gt;year('$purchaseDate');
+</code></pre>
+<h3 class="section-header" id="title.1.2.2"><a href="#title.1.2.2">$bucket<i class="fas fa-link"></i></a></h3>
+<p>Categorizes incoming documents into groups, called buckets, based on a specified
+expression and bucket boundaries.</p>
+<p>Each bucket is represented as a document in the output. The document for each
+bucket contains an _id field, whose value specifies the inclusive lower bound of
+the bucket and a count field that contains the number of documents in the bucket.
+The count field is included by default when the output is not specified.</p>
+<p><code>$bucket</code> only produces output documents for buckets that contain at least one
+input document.</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;bucket()
+        -&gt;groupBy('$itemCount')
+        -&gt;boundaries(1, 2, 3, 4, 5, '5+')
+        -&gt;defaultBucket('5+')
+        -&gt;output()
+            -&gt;field('lowestValue')
+            -&gt;min('$value')
+            -&gt;field('highestValue')
+            -&gt;max('$value')
+;
+</code></pre>
+<h3 class="section-header" id="title.1.2.3"><a href="#title.1.2.3">$bucketAuto<i class="fas fa-link"></i></a></h3>
+<p>Similar to <code>$bucket</code>, except that boundaries are automatically determined in
+an attempt to evenly distribute the documents into the specified number of
+buckets.</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;bucketAuto()
+        -&gt;groupBy('$itemCount')
+        -&gt;buckets(5)
+        -&gt;output()
+            -&gt;field('lowestValue')
+            -&gt;min('$value')
+            -&gt;field('highestValue')
+            -&gt;max('$value')
+;
+</code></pre>
+<h3 class="section-header" id="title.1.2.4"><a href="#title.1.2.4">$collStats<i class="fas fa-link"></i></a></h3>
+<p>The <code>$collStats</code> stage returns statistics regarding a collection or view.</p>
+<h3 class="section-header" id="title.1.2.5"><a href="#title.1.2.5">$count<i class="fas fa-link"></i></a></h3>
+<p>Returns a document that contains a count of the number of documents input to the
+stage.</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;match()
+        -&gt;field('itemCount')
+        -&gt;eq(1)
+    -&gt;count('numSingleItemOrders')
+;
+</code></pre>
+<p>The example above returns a single document with the <code>numSingleItemOrders</code>
+containing the number of orders found.</p>
+<h3 class="section-header" id="title.1.2.6"><a href="#title.1.2.6">$facet<i class="fas fa-link"></i></a></h3>
+<p>Processes multiple aggregation pipelines within a single stage on the same set
+of input documents. Each sub-pipeline has its own field in the output document
+where its results are stored as an array of documents.</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;facet()
+        -&gt;field('groupedByItemCount')
+        -&gt;pipeline(
+            $dm-&gt;createAggregationBuilder(\Documents\Orders::class)-&gt;group()
+                -&gt;field('id')
+                -&gt;expression('$itemCount')
+                -&gt;field('lowestValue')
+                -&gt;min('$value')
+                -&gt;field('highestValue')
+                -&gt;max('$value')
+                -&gt;field('totalValue')
+                -&gt;sum('$value')
+                -&gt;field('averageValue')
+                -&gt;avg('$value')
+        )
+        -&gt;field('groupedByYear')
+        -&gt;pipeline(
+            $dm-&gt;createAggregationBuilder(\Documents\Orders::class)-&gt;group()
+                -&gt;field('id')
+                -&gt;year('purchaseDate')
+                -&gt;field('lowestValue')
+                -&gt;min('$value')
+                -&gt;field('highestValue')
+                -&gt;max('$value')
+                -&gt;field('totalValue')
+                -&gt;sum('$value')
+                -&gt;field('averageValue')
+                -&gt;avg('$value')
+        )
+;
+</code></pre>
+<h3 class="section-header" id="title.1.2.7"><a href="#title.1.2.7">$geoNear<i class="fas fa-link"></i></a></h3>
+<p>The <code>$geoNear</code> stage finds and outputs documents in order of nearest to
+farthest from a specified point.</p>
+<pre><code class="php">&lt;?php
+
+$builder = $this-&gt;dm-&gt;createAggregationBuilder(\Documents\City::class);
+$builder
+    -&gt;geoNear(120, 40)
+    -&gt;spherical(true)
+    -&gt;distanceField('distance')
+    // Convert radians to kilometers (use 3963.192 for miles)
+    -&gt;distanceMultiplier(6378.137);
+</code></pre>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The <code>$geoNear</code> stage must be the first stage in the pipeline and the
+collection must contain a single geospatial index. You must include the
+<code>distanceField</code> option for the stage to work.</p>
+</div>
+<h3 class="section-header" id="title.1.2.8"><a href="#title.1.2.8">$graphLookup<i class="fas fa-link"></i></a></h3>
+<p>Performs a recursive search on a collection, with options for restricting the
+search by recursion depth and query filter. The <code>$graphLookup</code> stage can be
+used to resolve association graphs and flatten them into a single list.</p>
+<pre><code class="php">&lt;?php
+
+$builder = $this-&gt;dm-&gt;createAggregationBuilder(\Documents\Traveller::class);
+$builder
+    -&gt;graphLookup('nearestAirport')
+        -&gt;connectFromField('connections')
+        -&gt;maxDepth(2)
+        -&gt;depthField('numConnections')
+        -&gt;alias('destinations');
+</code></pre>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The target document of the reference used in <code>connectFromField</code> must be
+the very same document. The aggregation builder will throw an exception if
+you try to resolve a different document.</p>
+</div>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Due to a limitation in MongoDB, the <code>$graphLookup</code> stage can not be used
+with references that are stored as DBRef. To use references in a
+<code>$graphLookup</code> stage, store the reference as ID or <code>ref</code>. This is
+explained in the <a href="reference-mapping.html">Reference mapping</a> chapter.</p>
+</div>
+<a id="aggregation_builder_group"></a>
+<h3 class="section-header" id="title.1.2.9"><a href="#title.1.2.9">$group<i class="fas fa-link"></i></a></h3>
+<p>The <code>$group</code> stage is used to do calculations based on previously matched
+documents:</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;match()
+        -&gt;field('user')
+        -&gt;references($user)
+    -&gt;group()
+        -&gt;field('id')
+        -&gt;expression(
+            $builder-&gt;expr()
+                -&gt;field('month')
+                -&gt;month('purchaseDate')
+                -&gt;field('year')
+                -&gt;year('purchaseDate')
+        )
+        -&gt;field('numPurchases')
+        -&gt;sum(1)
+        -&gt;field('amount')
+        -&gt;sum('$amount');
+</code></pre>
+<h3 class="section-header" id="title.1.2.10"><a href="#title.1.2.10">$indexStats<i class="fas fa-link"></i></a></h3>
+<p>The <code>$indexStats</code> stage returns statistics regarding the use of each index for
+the collection. More information can be found in the <a href="https://docs.mongodb.com/manual/reference/operator/aggregation/indexStats/">official Documentation</a></p>
+<h3 class="section-header" id="title.1.2.11"><a href="#title.1.2.11">$lookup<i class="fas fa-link"></i></a></h3>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The <code>$lookup</code> stage was introduced in MongoDB 3.2. Using it on older servers
+will result in an error.</p>
+</div>
+<p>The <code>$lookup</code> stage is used to fetch documents from different collections in
+pipeline stages. Take the following relationship for example:</p>
+<pre><code class="php">&lt;?php
+
+/**
+ * @ReferenceMany(
+ *     targetDocument=&quot;Documents\Item&quot;,
+ *     cascade=&quot;all&quot;,
+ *     storeAs=&quot;id&quot;
+ * )
+ */
+private $items;
+</code></pre>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;lookup('items')
+        -&gt;alias('items');
+</code></pre>
+<p>The resulting array will contain all matched item documents in an array. This has
+to be considered when looking up one-to-one relationships:</p>
+<pre><code class="php">&lt;?php
+
+/**
+ * @ReferenceOne(
+ *     targetDocument=&quot;Documents\Item&quot;,
+ *     cascade=&quot;all&quot;,
+ *     storeAs=&quot;id&quot;
+ * )
+ */
+private $items;
+</code></pre>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;lookup('user')
+        -&gt;alias('user')
+    -&gt;unwind('$user');
+</code></pre>
+<p>MongoDB will always return an array, even if the lookup only returned a single
+document. Thus, when looking up one-to-one references the result must be flattened
+using the <code>$unwind</code> operator.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Due to a limitation in MongoDB, the <code>$lookup</code> stage can not be used with
+references that are stored as DBRef. To use references in a <code>$lookup</code>
+stage, store the reference as ID or <code>ref</code>. This is explained in the
+<a href="reference-mapping.html">Reference mapping</a> chapter.</p>
+</div>
+<p>You can also configure your lookup manually if you don't have it mapped in your
+document:</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;lookup('unmappedCollection')
+        -&gt;localField('_id')
+        -&gt;foreignField('userId')
+        -&gt;alias('items');
+</code></pre>
+<h3 class="section-header" id="title.1.2.12"><a href="#title.1.2.12">$match<i class="fas fa-link"></i></a></h3>
+<p>The <code>$match</code> stage lets you filter documents according to certain criteria. It
+works just like the query builder:</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;match()
+        -&gt;field('purchaseDate')
+        -&gt;gte($from)
+        -&gt;lt($to)
+        -&gt;field('user')
+        -&gt;references($user);
+</code></pre>
+<p>You can also use fields defined in previous stages:</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;project()
+        -&gt;excludeFields(['_id'])
+        -&gt;includeFields(['purchaseDate', 'user'])
+        -&gt;field('purchaseYear')
+        -&gt;year('$purchaseDate')
+    -&gt;match()
+        -&gt;field('purchaseYear')
+        -&gt;equals(2016);
+</code></pre>
+<h3 class="section-header" id="title.1.2.13"><a href="#title.1.2.13">$out<i class="fas fa-link"></i></a></h3>
+<p>The <code>$out</code> stage is used to store the result of the aggregation pipeline in a
+collection instead of returning an iterable cursor of results. This must be the
+last stage in an aggregation pipeline.</p>
+<p>If the collection specified by the <code>$out</code> operation already exists, then upon
+completion of the aggregation, the existing collection is atomically replaced.
+Any indexes that existed on the collection are left intact. If the aggregation
+fails, the <code>$out</code> operation does not remove the data from an existing
+collection.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The aggregation pipeline will fail to complete if the result would violate
+any unique index constraints, including those on the <code>id</code> field.</p>
+</div>
+<h3 class="section-header" id="title.1.2.14"><a href="#title.1.2.14">$project<i class="fas fa-link"></i></a></h3>
+<p>The <code>$project</code> stage lets you reshape the current document or define a completely
+new one:</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;project()
+        -&gt;excludeFields(['_id'])
+        -&gt;includeFields(['purchaseDate', 'user'])
+        -&gt;field('purchaseYear')
+        -&gt;year('$purchaseDate');
+</code></pre>
+<h3 class="section-header" id="title.1.2.15"><a href="#title.1.2.15">$redact<i class="fas fa-link"></i></a></h3>
+<p>The redact stage can be used to restrict the contents of the documents based on
+information stored in the documents themselves. You can read more about the
+<code>$redact</code> stage in the <a href="https://docs.mongodb.com/manual/reference/operator/aggregation/redact/">MongoDB documentation</a>.</p>
+<p>The following example taken from the official documentation checks the <code>level</code>
+field on all document levels and evaluates it to grant or deny access:</p>
+<pre><code class="json">{
+    _id: 1,
+    level: 1,
+    acct_id: &quot;xyz123&quot;,
+    cc: {
+        level: 5,
+        type: &quot;yy&quot;,
+        num: 000000000000,
+        exp_date: ISODate(&quot;2015-11-01T00:00:00.000Z&quot;),
+        billing_addr: {
+            level: 5,
+            addr1: &quot;123 ABC Street&quot;,
+            city: &quot;Some City&quot;
+        },
+        shipping_addr: [
+            {
+                level: 3,
+                addr1: &quot;987 XYZ Ave&quot;,
+                city: &quot;Some City&quot;
+            },
+            {
+                level: 3,
+                addr1: &quot;PO Box 0123&quot;,
+                city: &quot;Some City&quot;
+            }
+        ]
+    },
+    status: &quot;A&quot;
+}
+</code></pre>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;redact()
+        -&gt;cond(
+            $builder-&gt;expr()-&gt;gte('$$level', 5),
+            '$$PRUNE',
+            '$$DESCEND'
+        )
+</code></pre>
+<h3 class="section-header" id="title.1.2.16"><a href="#title.1.2.16">$replaceRoot<i class="fas fa-link"></i></a></h3>
+<p>Promotes a specified document to the top level and replaces all other fields.
+The operation replaces all existing fields in the input document, including the
+<code>_id</code> field. You can promote an existing embedded document to the top level,
+or create a new document for promotion.</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;replaceRoot('$embeddedField');
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;replaceRoot()
+        -&gt;field('averagePricePerItem')
+        -&gt;divide('$value', '$itemCount');
+</code></pre>
+<h3 class="section-header" id="title.1.2.17"><a href="#title.1.2.17">$sample<i class="fas fa-link"></i></a></h3>
+<p>The sample stage can be used to randomly select a subset of documents in the
+aggregation pipeline. It behaves like the <code>$limit</code> stage, but instead of
+returning the first <code>n</code> documents it returns <code>n</code> random documents.</p>
+<h3 class="section-header" id="title.1.2.18"><a href="#title.1.2.18">$sort, $limit and $skip<i class="fas fa-link"></i></a></h3>
+<p>The <code>$sort</code>, <code>$limit</code> and <code>$skip</code> stages behave like the corresponding
+query options, allowing you to control the order and subset of results returned
+by the aggregation pipeline.</p>
+<h3 class="section-header" id="title.1.2.19"><a href="#title.1.2.19">$sortByCount<i class="fas fa-link"></i></a></h3>
+<p>Groups incoming documents based on the value of a specified expression, then
+computes the count of documents in each distinct group.</p>
+<p>Each output document contains two fields: an _id field containing the distinct
+grouping value, and a count field containing the number of documents belonging
+to that grouping or category.</p>
+<p>The documents are sorted by count in descending order.</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder-&gt;sortByCount('$items');
+</code></pre>
+<p>The example above is equivalent to the following pipeline:</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);
+$builder
+    -&gt;group()
+        -&gt;field('_id')
+        -&gt;expression('$items')
+        -&gt;field('count')
+        -&gt;sum(1)
+    -&gt;sort(['count' =&gt; -1])
+;
+</code></pre>
+<h3 class="section-header" id="title.1.2.20"><a href="#title.1.2.20">$unwind<i class="fas fa-link"></i></a></h3>
+<p>The <code>$unwind</code> stage flattens an array in a document, returning a copy for each
+item. Take this sample document:</p>
+<pre><code class="json">{
+    _id: {
+        month: 1,
+        year: 2016
+    },
+    purchaseDates: [
+        '2016-01-07',
+        '2016-03-10',
+        '2016-06-25'
+    ]
+}
+</code></pre>
+<p>To flatten the <code>purchaseDates</code> array, we would apply the following pipeline
+stage:</p>
+<pre><code class="php">&lt;?php
+
+$builder = $dm-&gt;createAggregationBuilder(\Documents\User::class);
+$builder-&gt;unwind('$purchaseDates');
+</code></pre>
+<p>The stage would return three documents, each containing a single purchase date:</p>
+<pre><code class="json">{
+    _id: {
+        month: 1,
+        year: 2016
+    },
+    purchaseDates: '2016-01-07'
+},
+{
+    _id: {
+        month: 1,
+        year: 2016
+    },
+    purchaseDates: '2016-03-10'
+},
+{
+    _id: {
+        month: 1,
+        year: 2016
+    },
+    purchaseDates: '2016-06-25'
+}
+</code></pre>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

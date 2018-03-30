@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Data Retrieval And Manipulation - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/dbal/">DBAL</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-dbal/en/2.5/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Data Retrieval And Manipulation</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-dbal/en/latest/reference/data-retrieval-and-manipulation.html" class="badge badge-secondary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-dbal/en/2.6/reference/data-retrieval-and-manipulation.html" class="badge badge-secondary">2.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-dbal/en/2.5/reference/data-retrieval-and-manipulation.html" class="badge badge-primary">2.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Data Retrieval And Manipulation<i class="fas fa-link"></i></a></h1>
+<p>Doctrine DBAL follows the PDO API very closely. If you have worked with PDO
+before you will get to know Doctrine DBAL very quickly. On top of the API provided
+by PDO there are tons of convenience functions in Doctrine DBAL.</p>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Data Retrieval<i class="fas fa-link"></i></a></h2>
+<p>Using a database implies retrieval of data. It is the primary use-case of a database.
+For this purpose each database vendor exposes a Client API that can be integrated into
+programming languages. PHP has a generic abstraction layer for this
+kind of API called PDO (PHP Data Objects). However because of disagreements
+between the PHP community there are often native extensions for each database
+vendor that are much more maintained (OCI8 for example).</p>
+<p>Doctrine DBAL API builds on top of PDO and integrates native extensions by
+wrapping them into the PDO API as well. If you already have an open connection
+through the <code>Doctrine\DBAL\DriverManager::getConnection()</code> method you
+can start using this API for data retrieval easily.</p>
+<p>Start writing an SQL query and pass it to the <code>query()</code> method of your
+connection:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\DBAL\DriverManager;
+
+$conn = DriverManager::getConnection($params, $config);
+
+$sql = &quot;SELECT * FROM articles&quot;;
+$stmt = $conn-&gt;query($sql); // Simple, but has several drawbacks
+</code></pre>
+<p>The query method executes the SQL and returns a database statement object.
+A database statement object can be iterated to retrieve all the rows that matched
+the query until there are no more rows:</p>
+<pre><code class="php">&lt;?php
+
+while ($row = $stmt-&gt;fetch()) {
+    echo $row['headline'];
+}
+</code></pre>
+<p>The query method is the most simple one for fetching data, but it also has
+several drawbacks:</p>
+<ul><li class="dash">  There is no way to add dynamic parameters to the SQL query without modifying
+    <code>$sql</code> itself. This can easily lead to a category of security
+    holes called <strong>SQL injection</strong>, where a third party can modify the SQL executed
+    and even execute their own queries through clever exploiting of the security hole.</li>
+<li class="dash">  <strong>Quoting</strong> dynamic parameters for an SQL query is tedious work and requires lots
+    of use of the <code>Doctrine\DBAL\Connection#quote()</code> method, which makes the
+    original SQL query hard to read/understand.</li>
+<li class="dash">  Databases optimize SQL queries before they are executed. Using the query method
+    you will trigger the optimization process over and over again, although
+    it could re-use this information easily using a technique called <strong>prepared statements</strong>.</li>
+</ul>
+
+<p>These three arguments and some more technical details hopefully convinced you to investigate
+prepared statements for accessing your database.</p>
+<h3 class="section-header" id="title.1.1.1"><a href="#title.1.1.1">Dynamic Parameters and Prepared Statements<i class="fas fa-link"></i></a></h3>
+<p>Consider the previous query, now parameterized to fetch only a single article by id.
+Using <strong>ext/mysql</strong> (still the primary choice of MySQL access for many developers) you had to escape
+every value passed into the query using <code>mysql_real_escape_string()</code> to avoid SQL injection:</p>
+<pre><code class="php">&lt;?php
+$sql = &quot;SELECT * FROM articles WHERE id = '&quot; . mysql_real_escape_string($id, $link) . &quot;'&quot;;
+$rs = mysql_query($sql);
+</code></pre>
+<p>If you start adding more and more parameters to a query (for example in UPDATE or INSERT statements)
+this approach might lead to complex to maintain SQL queries. The reason is simple, the actual
+SQL query is not clearly separated from the input parameters. Prepared statements separate
+these two concepts by requiring the developer to add <strong>placeholders</strong> to the SQL query (prepare) which
+are then replaced by their actual values in a second step (execute).</p>
+<pre><code class="php">&lt;?php
+// $conn instanceof Doctrine\DBAL\Connection
+
+$sql = &quot;SELECT * FROM articles WHERE id = ?&quot;;
+$stmt = $conn-&gt;prepare($sql);
+$stmt-&gt;bindValue(1, $id);
+$stmt-&gt;execute();
+</code></pre>
+<p>Placeholders in prepared statements are either simple positional question marks (?) or named labels starting with
+a double-colon (:name1). You cannot mix the positional and the named approach. The approach
+using question marks is called positional, because the values are bound in order from left to right
+to any question mark found in the previously prepared SQL query. That is why you specify the
+position of the variable to bind into the <code>bindValue()</code> method:</p>
+<pre><code class="php">&lt;?php
+// $conn instanceof Doctrine\DBAL\Connection
+
+$sql = &quot;SELECT * FROM articles WHERE id = ? AND status = ?&quot;;
+$stmt = $conn-&gt;prepare($sql);
+$stmt-&gt;bindValue(1, $id);
+$stmt-&gt;bindValue(2, $status);
+$stmt-&gt;execute();
+</code></pre>
+<p>Named parameters have the advantage that their labels can be re-used and only need to be bound once:</p>
+<pre><code class="php">&lt;?php
+// $conn instanceof Doctrine\DBAL\Connection
+
+$sql = &quot;SELECT * FROM users WHERE name = :name OR username = :name&quot;;
+$stmt = $conn-&gt;prepare($sql);
+$stmt-&gt;bindValue(&quot;name&quot;, $name);
+$stmt-&gt;execute();
+</code></pre>
+<p>The following section describes the API of Doctrine DBAL with regard to prepared statements.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Support for positional and named prepared statements varies between the different
+database extensions. PDO implements its own client side parser so that both approaches
+are feasible for all PDO drivers. OCI8/Oracle only supports named parameters, but
+Doctrine implements a client side parser to allow positional parameters also.</p>
+</div>
+<h3 class="section-header" id="title.1.1.2"><a href="#title.1.1.2">Using Prepared Statements<i class="fas fa-link"></i></a></h3>
+<p>There are three low-level methods on <code>Doctrine\DBAL\Connection</code> that allow you to
+use prepared statements:</p>
+<ul><li class="dash">  <code>prepare($sql)</code> - Create a prepared statement of the type <code>Doctrine\DBAL\Statement</code>.
+    Using this method is preferred if you want to re-use the statement to execute several
+    queries with the same SQL statement only with different parameters.</li>
+<li class="dash">  <code>executeQuery($sql, $params, $types)</code> - Create a prepared statement for the passed
+    SQL query, bind the given params with their binding types and execute the query.
+    This method returns the executed prepared statement for iteration and is useful
+    for SELECT statements.</li>
+<li class="dash">  <code>executeUpdate($sql, $params, $types)</code> - Create a prepared statement for the passed
+    SQL query, bind the given params with their binding types and execute the query.
+    This method returns the number of affected rows by the executed query and is useful
+    for UPDATE, DELETE and INSERT statements.</li>
+</ul>
+
+<p>A simple usage of prepare was shown in the previous section, however it is useful to
+dig into the features of a <code>Doctrine\DBAL\Statement</code> a little bit more. There are essentially
+two different types of methods available on a statement. Methods for binding parameters and types
+and methods to retrieve data from a statement.</p>
+<ul><li class="dash">  <code>bindValue($pos, $value, $type)</code> - Bind a given value to the positional or named parameter
+    in the prepared statement.</li>
+<li class="dash">  <code>bindParam($pos, &amp;$param, $type)</code> - Bind a given reference to the positional or
+    named parameter in the prepared statement.</li>
+</ul>
+
+<p>If you are finished with binding parameters you have to call <code>execute()</code> on the statement, which
+will trigger a query to the database. After the query is finished you can access the results
+of this query using the fetch API of a statement:</p>
+<ul><li class="dash">  <code>fetch($fetchStyle)</code> - Retrieves the next row from the statement or false if there are none.
+    Moves the pointer forward one row, so that consecutive calls will always return the next row.</li>
+<li class="dash">  <code>fetchColumn($column)</code> - Retrieves only one column of the next row specified by column index.
+    Moves the pointer forward one row, so that consecutive calls will always return the next row.</li>
+<li class="dash">  <code>fetchAll($fetchStyle)</code> - Retrieves all rows from the statement.</li>
+</ul>
+
+<p>The fetch API of a prepared statement obviously works only for <code>SELECT</code> queries.</p>
+<p>If you find it tedious to write all the prepared statement code you can alternatively use
+the <code>Doctrine\DBAL\Connection#executeQuery()</code> and <code>Doctrine\DBAL\Connection#executeUpdate()</code>
+methods. See the API section below on details how to use them.</p>
+<p>Additionally there are lots of convenience methods for data-retrieval and manipulation
+on the Connection, which are all described in the API section below.</p>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">Binding Types<i class="fas fa-link"></i></a></h2>
+<p>Doctrine DBAL extends PDOs handling of binding types in prepared statements
+considerably. Besides <code>Doctrine\DBAL\ParameterType</code> constants, you
+can make use of two very powerful additional features.</p>
+<h3 class="section-header" id="title.1.2.1"><a href="#title.1.2.1">Doctrine\DBAL\Types Conversion<i class="fas fa-link"></i></a></h3>
+<p>If you don't specify an integer (through one of <code>Doctrine\DBAL\ParameterType</code> constants) to
+any of the parameter binding methods but a string, Doctrine DBAL will
+ask the type abstraction layer to convert the passed value from
+its PHP to a database representation. This way you can pass <code>\DateTime</code>
+instances to a prepared statement and have Doctrine convert them
+to the appropriate vendors database format:</p>
+<pre><code class="php">&lt;?php
+$date = new \DateTime(&quot;2011-03-05 14:00:21&quot;);
+$stmt = $conn-&gt;prepare(&quot;SELECT * FROM articles WHERE publish_date &gt; ?&quot;);
+$stmt-&gt;bindValue(1, $date, &quot;datetime&quot;);
+$stmt-&gt;execute();
+</code></pre>
+<p>If you take a look at <code>Doctrine\DBAL\Types\DateTimeType</code> you will see that
+parts of the conversion are delegated to a method on the current database platform,
+which means this code works independent of the database you are using.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Be aware this type conversion only works with <code>Statement#bindValue()</code>,
+<code>Connection#executeQuery()</code> and <code>Connection#executeUpdate()</code>. It
+is not supported to pass a doctrine type name to <code>Statement#bindParam()</code>,
+because this would not work with binding by reference.</p>
+</div>
+<h3 class="section-header" id="title.1.2.2"><a href="#title.1.2.2">List of Parameters Conversion<i class="fas fa-link"></i></a></h3>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>This is a Doctrine 2.1 feature.</p>
+</div>
+<p>One rather annoying bit of missing functionality in SQL is the support for lists of parameters.
+You cannot bind an array of values into a single prepared statement parameter. Consider
+the following very common SQL statement:</p>
+<pre><code class="sql">SELECT * FROM articles WHERE id IN (?)
+</code></pre>
+<p>Since you are using an <code>IN</code> expression you would really like to use it in the following way
+(and I guess everybody has tried to do this once in his life, before realizing it doesn't work):</p>
+<pre><code class="php">&lt;?php
+$stmt = $conn-&gt;prepare('SELECT * FROM articles WHERE id IN (?)');
+// THIS WILL NOT WORK:
+$stmt-&gt;bindValue(1, array(1, 2, 3, 4, 5, 6));
+$stmt-&gt;execute();
+</code></pre>
+<p>Implementing a generic way to handle this kind of query is tedious work. This is why most
+developers fallback to inserting the parameters directly into the query, which can open
+SQL injection possibilities if not handled carefully.</p>
+<p>Doctrine DBAL implements a very powerful parsing process that will make this kind of prepared
+statement possible natively in the binding type system.
+The parsing necessarily comes with a performance overhead, but only if you really use a list of parameters.
+There are two special binding types that describe a list of integers or strings:</p>
+<ul><li class="dash">  <code>\Doctrine\DBAL\Connection::PARAM_INT_ARRAY</code></li>
+<li class="dash">  <code>\Doctrine\DBAL\Connection::PARAM_STR_ARRAY</code></li>
+</ul>
+
+<p>Using one of these constants as a type you can activate the SQLParser inside Doctrine that rewrites
+the SQL and flattens the specified values into the set of parameters. Consider our previous example:</p>
+<pre><code class="php">&lt;?php
+$stmt = $conn-&gt;executeQuery('SELECT * FROM articles WHERE id IN (?)',
+    array(array(1, 2, 3, 4, 5, 6)),
+    array(\Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+);
+</code></pre>
+<p>The SQL statement passed to <code>Connection#executeQuery</code> is not the one actually passed to the
+database. It is internally rewritten to look like the following explicit code that could
+be specified as well:</p>
+<pre><code class="php">&lt;?php
+// Same SQL WITHOUT usage of Doctrine\DBAL\Connection::PARAM_INT_ARRAY
+$stmt = $conn-&gt;executeQuery('SELECT * FROM articles WHERE id IN (?, ?, ?, ?, ?, ?)',
+    array(1, 2, 3, 4, 5, 6),
+    array(
+        ParameterType::INTEGER,
+        ParameterType::INTEGER,
+        ParameterType::INTEGER,
+        ParameterType::INTEGER,
+        ParameterType::INTEGER,
+        ParameterType::INTEGER,
+    )
+);
+</code></pre>
+<p>This is much more complicated and is ugly to write generically.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The parameter list support only works with <code>Doctrine\DBAL\Connection::executeQuery()</code>
+and <code>Doctrine\DBAL\Connection::executeUpdate()</code>, NOT with the binding methods of
+a prepared statement.</p>
+</div>
+<h2 class="section-header" id="title.1.3"><a href="#title.1.3">API<i class="fas fa-link"></i></a></h2>
+<p>The DBAL contains several methods for executing queries against
+your configured database for data retrieval and manipulation. Below
+we'll introduce these methods and provide some examples for each of
+them.</p>
+<h3 class="section-header" id="title.1.3.1"><a href="#title.1.3.1">prepare()<i class="fas fa-link"></i></a></h3>
+<p>Prepare a given SQL statement and return the
+<code>\Doctrine\DBAL\Driver\Statement</code> instance:</p>
+<pre><code class="php">&lt;?php
+$statement = $conn-&gt;prepare('SELECT * FROM user');
+$statement-&gt;execute();
+$users = $statement-&gt;fetchAll();
+
+/*
+array(
+  0 =&gt; array(
+    'username' =&gt; 'jwage',
+    'password' =&gt; 'changeme'
+  )
+)
+*/
+</code></pre>
+<h3 class="section-header" id="title.1.3.2"><a href="#title.1.3.2">executeUpdate()<i class="fas fa-link"></i></a></h3>
+<p>Executes a prepared statement with the given SQL and parameters and
+returns the affected rows count:</p>
+<pre><code class="php">&lt;?php
+$count = $conn-&gt;executeUpdate('UPDATE user SET username = ? WHERE id = ?', array('jwage', 1));
+echo $count; // 1
+</code></pre>
+<p>The <code>$types</code> variable contains the PDO or Doctrine Type constants
+to perform necessary type conversions between actual input
+parameters and expected database values. See the
+<a href="mappingMatrix.html">Types</a> section for more information.</p>
+<h3 class="section-header" id="title.1.3.3"><a href="#title.1.3.3">executeQuery()<i class="fas fa-link"></i></a></h3>
+<p>Creates a prepared statement for the given SQL and passes the
+parameters to the execute method, then returning the statement:</p>
+<pre><code class="php">&lt;?php
+$statement = $conn-&gt;executeQuery('SELECT * FROM user WHERE username = ?', array('jwage'));
+$user = $statement-&gt;fetch();
+
+/*
+array(
+  0 =&gt; 'jwage',
+  1 =&gt; 'changeme'
+)
+*/
+</code></pre>
+<p>The <code>$types</code> variable contains the PDO or Doctrine Type constants
+to perform necessary type conversions between actual input
+parameters and expected database values. See the
+<a href="mappingMatrix.html">Types</a> section for more information.</p>
+<h3 class="section-header" id="title.1.3.4"><a href="#title.1.3.4">fetchAll()<i class="fas fa-link"></i></a></h3>
+<p>Execute the query and fetch all results into an array:</p>
+<pre><code class="php">&lt;?php
+$users = $conn-&gt;fetchAll('SELECT * FROM user');
+
+/*
+array(
+  0 =&gt; array(
+    'username' =&gt; 'jwage',
+    'password' =&gt; 'changeme'
+  )
+)
+*/
+</code></pre>
+<h3 class="section-header" id="title.1.3.5"><a href="#title.1.3.5">fetchArray()<i class="fas fa-link"></i></a></h3>
+<p>Numeric index retrieval of first result row of the given query:</p>
+<pre><code class="php">&lt;?php
+$user = $conn-&gt;fetchArray('SELECT * FROM user WHERE username = ?', array('jwage'));
+
+/*
+array(
+  0 =&gt; 'jwage',
+  1 =&gt; 'changeme'
+)
+*/
+</code></pre>
+<h3 class="section-header" id="title.1.3.6"><a href="#title.1.3.6">fetchColumn()<i class="fas fa-link"></i></a></h3>
+<p>Retrieve only the given column of the first result row.</p>
+<pre><code class="php">&lt;?php
+$username = $conn-&gt;fetchColumn('SELECT username FROM user WHERE id = ?', array(1), 0);
+echo $username; // jwage
+</code></pre>
+<h3 class="section-header" id="title.1.3.7"><a href="#title.1.3.7">fetchAssoc()<i class="fas fa-link"></i></a></h3>
+<p>Retrieve assoc row of the first result row.</p>
+<pre><code class="php">&lt;?php
+$user = $conn-&gt;fetchAssoc('SELECT * FROM user WHERE username = ?', array('jwage'));
+/*
+array(
+  'username' =&gt; 'jwage',
+  'password' =&gt; 'changeme'
+)
+*/
+</code></pre>
+<p>There are also convenience methods for data manipulation queries:</p>
+<h3 class="section-header" id="title.1.3.8"><a href="#title.1.3.8">delete()<i class="fas fa-link"></i></a></h3>
+<p>Delete all rows of a table matching the given identifier, where
+keys are column names.</p>
+<pre><code class="php">&lt;?php
+$conn-&gt;delete('user', array('id' =&gt; 1));
+// DELETE FROM user WHERE id = ? (1)
+</code></pre>
+<h3 class="section-header" id="title.1.3.9"><a href="#title.1.3.9">insert()<i class="fas fa-link"></i></a></h3>
+<p>Insert a row into the given table name using the key value pairs of
+data.</p>
+<pre><code class="php">&lt;?php
+$conn-&gt;insert('user', array('username' =&gt; 'jwage'));
+// INSERT INTO user (username) VALUES (?) (jwage)
+</code></pre>
+<h3 class="section-header" id="title.1.3.10"><a href="#title.1.3.10">update()<i class="fas fa-link"></i></a></h3>
+<p>Update all rows for the matching key value identifiers with the
+given data.</p>
+<pre><code class="php">&lt;?php
+$conn-&gt;update('user', array('username' =&gt; 'jwage'), array('id' =&gt; 1));
+// UPDATE user (username) VALUES (?) WHERE id = ? (jwage, 1)
+</code></pre>
+<p>By default the Doctrine DBAL does no escaping. Escaping is a very
+tricky business to do automatically, therefore there is none by
+default. The ORM internally escapes all your values, because it has
+lots of metadata available about the current context. When you use
+the Doctrine DBAL as standalone, you have to take care of this
+yourself. The following methods help you with it:</p>
+<h3 class="section-header" id="title.1.3.11"><a href="#title.1.3.11">quote()<i class="fas fa-link"></i></a></h3>
+<p>Quote a value:</p>
+<pre><code class="php">&lt;?php
+
+use Doctrine\DBAL\ParameterType;
+
+$quoted = $conn-&gt;quote('value');
+$quoted = $conn-&gt;quote('1234', ParameterType::INTEGER);
+</code></pre>
+<h3 class="section-header" id="title.1.3.12"><a href="#title.1.3.12">quoteIdentifier()<i class="fas fa-link"></i></a></h3>
+<p>Quote an identifier according to the platform details.</p>
+<pre><code class="php">&lt;?php
+$quoted = $conn-&gt;quoteIdentifier('id');
+</code></pre>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

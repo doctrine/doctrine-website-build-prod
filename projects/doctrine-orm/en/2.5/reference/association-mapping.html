@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Association Mapping - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/orm/">ORM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-orm/en/2.5/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Association Mapping</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/latest/reference/association-mapping.html" class="badge badge-secondary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.6/reference/association-mapping.html" class="badge badge-secondary">2.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.5/reference/association-mapping.html" class="badge badge-primary">2.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Association Mapping<i class="fas fa-link"></i></a></h1>
+<p>This chapter explains mapping associations between objects.</p>
+<p>Instead of working with foreign keys in your code, you will always work with
+references to objects instead and Doctrine will convert those references
+to foreign keys internally.</p>
+<ul><li class="dash">A reference to a single object is represented by a foreign key.</li>
+<li class="dash">A collection of objects is represented by many foreign keys pointing to the object holding the collection</li>
+</ul>
+
+<p>This chapter is split into three different sections.</p>
+<ul><li class="dash">A list of all the possible association mapping use-cases is given.</li>
+<li class="dash"><a href="association_mapping_defaults.html"></a> are explained that simplify the use-case examples.</li>
+<li class="dash"><a href="collections.html"></a> are introduced that contain entities in associations.</li>
+</ul>
+
+<p>One tip for working with relations is to read the relation from left to right, where the left word refers to the current Entity. For example:</p>
+<ul><li class="dash">OneToMany - One instance of the current Entity has Many instances (references) to the refered Entity.</li>
+<li class="dash">ManyToOne - Many instances of the current Entity refer to One instance of the refered Entity.</li>
+<li class="dash">OneToOne - One instance of the current Entity refers to One instance of the refered Entity.</li>
+</ul>
+
+<p>See below for all the possible relations.</p>
+<p>An association is considered to be unidirectional if only one side of the association has
+a property referring to the other side.</p>
+<p>To gain a full understanding of associations you should also read about <a href="unitofwork-associations.html">owning and
+inverse sides of associations</a></p>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Many-To-One, Unidirectional<i class="fas fa-link"></i></a></h2>
+<p>A many-to-one association is the most common association between objects. Example: Many Users have One Address:</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/** @Entity */
+class User
+{
+    // ...
+
+    /**
+     * @ManyToOne(targetEntity=&quot;Address&quot;)
+     * @JoinColumn(name=&quot;address_id&quot;, referencedColumnName=&quot;id&quot;)
+     */
+    private $address;
+}
+
+/** @Entity */
+class Address
+{
+    // ...
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity name=&quot;User&quot;&gt;
+        &lt;many-to-one field=&quot;address&quot; target-entity=&quot;Address&quot;&gt;
+            &lt;join-column name=&quot;address_id&quot; referenced-column-name=&quot;id&quot; /&gt;
+        &lt;/many-to-one&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The above <code>@JoinColumn</code> is optional as it would default
+to <code>address_id</code> and <code>id</code> anyways. You can omit it and let it
+use the defaults.</p>
+</div>
+<p>Generated MySQL Schema:</p>
+<pre><code class="sql">CREATE TABLE User (
+    id INT AUTO_INCREMENT NOT NULL,
+    address_id INT DEFAULT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+
+CREATE TABLE Address (
+    id INT AUTO_INCREMENT NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+
+ALTER TABLE User ADD FOREIGN KEY (address_id) REFERENCES Address(id);
+</code></pre>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">One-To-One, Unidirectional<i class="fas fa-link"></i></a></h2>
+<p>Here is an example of a one-to-one association with a <code>Product</code> entity that
+references one <code>Shipment</code> entity.</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/** @Entity */
+class Product
+{
+    // ...
+
+    /**
+     * One Product has One Shipment.
+     * @OneToOne(targetEntity=&quot;Shipment&quot;)
+     * @JoinColumn(name=&quot;shipment_id&quot;, referencedColumnName=&quot;id&quot;)
+     */
+    private $shipment;
+
+    // ...
+}
+
+/** @Entity */
+class Shipment
+{
+    // ...
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity class=&quot;Product&quot;&gt;
+        &lt;one-to-one field=&quot;shipment&quot; target-entity=&quot;Shipment&quot;&gt;
+            &lt;join-column name=&quot;shipment_id&quot; referenced-column-name=&quot;id&quot; /&gt;
+        &lt;/one-to-one&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>Note that the @JoinColumn is not really necessary in this example,
+as the defaults would be the same.</p>
+<p>Generated MySQL Schema:</p>
+<pre><code class="sql">CREATE TABLE Product (
+    id INT AUTO_INCREMENT NOT NULL,
+    shipment_id INT DEFAULT NULL,
+    UNIQUE INDEX UNIQ_6FBC94267FE4B2B (shipment_id),
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+CREATE TABLE Shipment (
+    id INT AUTO_INCREMENT NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+ALTER TABLE Product ADD FOREIGN KEY (shipment_id) REFERENCES Shipment(id);
+</code></pre>
+<h2 class="section-header" id="title.1.3"><a href="#title.1.3">One-To-One, Bidirectional<i class="fas fa-link"></i></a></h2>
+<p>Here is a one-to-one relationship between a <code>Customer</code> and a
+<code>Cart</code>. The <code>Cart</code> has a reference back to the <code>Customer</code> so
+it is bidirectional.</p>
+<p>Here we see the <code>mappedBy</code> and <code>inversedBy</code> annotations for the first time.
+They are used to tell Doctrine which property on the other side refers to the
+object.</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/** @Entity */
+class Customer
+{
+    // ...
+
+    /**
+     * One Customer has One Cart.
+     * @OneToOne(targetEntity=&quot;Cart&quot;, mappedBy=&quot;customer&quot;)
+     */
+    private $cart;
+
+    // ...
+}
+
+/** @Entity */
+class Cart
+{
+    // ...
+
+    /**
+     * One Cart has One Customer.
+     * @OneToOne(targetEntity=&quot;Customer&quot;, inversedBy=&quot;cart&quot;)
+     * @JoinColumn(name=&quot;customer_id&quot;, referencedColumnName=&quot;id&quot;)
+     */
+    private $customer;
+
+    // ...
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity name=&quot;Customer&quot;&gt;
+        &lt;one-to-one field=&quot;cart&quot; target-entity=&quot;Cart&quot; mapped-by=&quot;customer&quot; /&gt;
+    &lt;/entity&gt;
+    &lt;entity name=&quot;Cart&quot;&gt;
+        &lt;one-to-one field=&quot;customer&quot; target-entity=&quot;Customer&quot; inversed-by=&quot;cart&quot;&gt;
+            &lt;join-column name=&quot;customer_id&quot; referenced-column-name=&quot;id&quot; /&gt;
+        &lt;/one-to-one&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>Note that the @JoinColumn is not really necessary in this example,
+as the defaults would be the same.</p>
+<p>Generated MySQL Schema:</p>
+<pre><code class="sql">CREATE TABLE Cart (
+    id INT AUTO_INCREMENT NOT NULL,
+    customer_id INT DEFAULT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+CREATE TABLE Customer (
+    id INT AUTO_INCREMENT NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+ALTER TABLE Cart ADD FOREIGN KEY (customer_id) REFERENCES Customer(id);
+</code></pre>
+<p>We had a choice of sides on which to place the <code>inversedBy</code> attribute. Because it
+is on the <code>Cart</code>, that is the owning side of the relation, and thus holds the
+foreign key.</p>
+<h2 class="section-header" id="title.1.4"><a href="#title.1.4">One-To-One, Self-referencing<i class="fas fa-link"></i></a></h2>
+<p>You can define a self-referencing one-to-one relationships like
+below.</p>
+<pre><code class="php">&lt;?php
+/** @Entity */
+class Student
+{
+    // ...
+
+    /**
+     * One Student has One Student.
+     * @OneToOne(targetEntity=&quot;Student&quot;)
+     * @JoinColumn(name=&quot;mentor_id&quot;, referencedColumnName=&quot;id&quot;)
+     */
+    private $mentor;
+
+    // ...
+}
+</code></pre>
+<p>Note that the @JoinColumn is not really necessary in this example,
+as the defaults would be the same.</p>
+<p>With the generated MySQL Schema:</p>
+<pre><code class="sql">CREATE TABLE Student (
+    id INT AUTO_INCREMENT NOT NULL,
+    mentor_id INT DEFAULT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+ALTER TABLE Student ADD FOREIGN KEY (mentor_id) REFERENCES Student(id);
+</code></pre>
+<h2 class="section-header" id="title.1.5"><a href="#title.1.5">One-To-Many, Bidirectional<i class="fas fa-link"></i></a></h2>
+<p>A one-to-many association has to be bidirectional, unless you are using a
+join table. This is because the many side in a one-to-many association holds
+the foreign key, making it the owning side. Doctrine needs the many side
+defined in order to understand the association.</p>
+<p>This bidirectional mapping requires the <code>mappedBy</code> attribute on the
+&quot;one&quot; side and the <code>inversedBy</code> attribute on the &quot;many&quot; side.</p>
+<p>This means there is no difference between a bidirectional one-to-many and a
+bidirectional many-to-one.</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+use Doctrine\Common\Collections\ArrayCollection;
+
+/** @Entity */
+class Product
+{
+    // ...
+    /**
+     * One Product has Many Features.
+     * @OneToMany(targetEntity=&quot;Feature&quot;, mappedBy=&quot;product&quot;)
+     */
+    private $features;
+    // ...
+
+    public function __construct() {
+        $this-&gt;features = new ArrayCollection();
+    }
+}
+
+/** @Entity */
+class Feature
+{
+    // ...
+    /**
+     * Many Features have One Product.
+     * @ManyToOne(targetEntity=&quot;Product&quot;, inversedBy=&quot;features&quot;)
+     * @JoinColumn(name=&quot;product_id&quot;, referencedColumnName=&quot;id&quot;)
+     */
+    private $product;
+    // ...
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity name=&quot;Product&quot;&gt;
+        &lt;one-to-many field=&quot;features&quot; target-entity=&quot;Feature&quot; mapped-by=&quot;product&quot; /&gt;
+    &lt;/entity&gt;
+    &lt;entity name=&quot;Feature&quot;&gt;
+        &lt;many-to-one field=&quot;product&quot; target-entity=&quot;Product&quot; inversed-by=&quot;features&quot;&gt;
+            &lt;join-column name=&quot;product_id&quot; referenced-column-name=&quot;id&quot; /&gt;
+        &lt;/many-to-one&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>Note that the @JoinColumn is not really necessary in this example,
+as the defaults would be the same.</p>
+<p>Generated MySQL Schema:</p>
+<pre><code class="sql">CREATE TABLE Product (
+    id INT AUTO_INCREMENT NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+CREATE TABLE Feature (
+    id INT AUTO_INCREMENT NOT NULL,
+    product_id INT DEFAULT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+ALTER TABLE Feature ADD FOREIGN KEY (product_id) REFERENCES Product(id);
+</code></pre>
+<h2 class="section-header" id="title.1.6"><a href="#title.1.6">One-To-Many, Unidirectional with Join Table<i class="fas fa-link"></i></a></h2>
+<p>A unidirectional one-to-many association can be mapped through a
+join table. From Doctrine's point of view, it is simply mapped as a
+unidirectional many-to-many whereby a unique constraint on one of
+the join columns enforces the one-to-many cardinality.</p>
+<p>The following example sets up such a unidirectional one-to-many association:</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/** @Entity */
+class User
+{
+    // ...
+
+    /**
+     * Many User have Many Phonenumbers.
+     * @ManyToMany(targetEntity=&quot;Phonenumber&quot;)
+     * @JoinTable(name=&quot;users_phonenumbers&quot;,
+     *      joinColumns={@JoinColumn(name=&quot;user_id&quot;, referencedColumnName=&quot;id&quot;)},
+     *      inverseJoinColumns={@JoinColumn(name=&quot;phonenumber_id&quot;, referencedColumnName=&quot;id&quot;, unique=true)}
+     *      )
+     */
+    private $phonenumbers;
+
+    public function __construct()
+    {
+        $this-&gt;phonenumbers = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    // ...
+}
+
+/** @Entity */
+class Phonenumber
+{
+    // ...
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity name=&quot;User&quot;&gt;
+        &lt;many-to-many field=&quot;phonenumbers&quot; target-entity=&quot;Phonenumber&quot;&gt;
+            &lt;join-table name=&quot;users_phonenumbers&quot;&gt;
+                &lt;join-columns&gt;
+                    &lt;join-column name=&quot;user_id&quot; referenced-column-name=&quot;id&quot; /&gt;
+                &lt;/join-columns&gt;
+                &lt;inverse-join-columns&gt;
+                    &lt;join-column name=&quot;phonenumber_id&quot; referenced-column-name=&quot;id&quot; unique=&quot;true&quot; /&gt;
+                &lt;/inverse-join-columns&gt;
+            &lt;/join-table&gt;
+        &lt;/many-to-many&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>Generates the following MySQL Schema:</p>
+<pre><code class="sql">CREATE TABLE User (
+    id INT AUTO_INCREMENT NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+
+CREATE TABLE users_phonenumbers (
+    user_id INT NOT NULL,
+    phonenumber_id INT NOT NULL,
+    UNIQUE INDEX users_phonenumbers_phonenumber_id_uniq (phonenumber_id),
+    PRIMARY KEY(user_id, phonenumber_id)
+) ENGINE = InnoDB;
+
+CREATE TABLE Phonenumber (
+    id INT AUTO_INCREMENT NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+
+ALTER TABLE users_phonenumbers ADD FOREIGN KEY (user_id) REFERENCES User(id);
+ALTER TABLE users_phonenumbers ADD FOREIGN KEY (phonenumber_id) REFERENCES Phonenumber(id);
+</code></pre>
+<h2 class="section-header" id="title.1.7"><a href="#title.1.7">One-To-Many, Self-referencing<i class="fas fa-link"></i></a></h2>
+<p>You can also setup a one-to-many association that is
+self-referencing. In this example we setup a hierarchy of
+<code>Category</code> objects by creating a self referencing relationship.
+This effectively models a hierarchy of categories and from the
+database perspective is known as an adjacency list approach.</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/** @Entity */
+class Category
+{
+    // ...
+    /**
+     * One Category has Many Categories.
+     * @OneToMany(targetEntity=&quot;Category&quot;, mappedBy=&quot;parent&quot;)
+     */
+    private $children;
+
+    /**
+     * Many Categories have One Category.
+     * @ManyToOne(targetEntity=&quot;Category&quot;, inversedBy=&quot;children&quot;)
+     * @JoinColumn(name=&quot;parent_id&quot;, referencedColumnName=&quot;id&quot;)
+     */
+    private $parent;
+    // ...
+
+    public function __construct() {
+        $this-&gt;children = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity name=&quot;Category&quot;&gt;
+        &lt;one-to-many field=&quot;children&quot; target-entity=&quot;Category&quot; mapped-by=&quot;parent&quot; /&gt;
+        &lt;many-to-one field=&quot;parent&quot; target-entity=&quot;Category&quot; inversed-by=&quot;children&quot; /&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>Note that the @JoinColumn is not really necessary in this example,
+as the defaults would be the same.</p>
+<p>Generated MySQL Schema:</p>
+<pre><code class="sql">CREATE TABLE Category (
+    id INT AUTO_INCREMENT NOT NULL,
+    parent_id INT DEFAULT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+ALTER TABLE Category ADD FOREIGN KEY (parent_id) REFERENCES Category(id);
+</code></pre>
+<h2 class="section-header" id="title.1.8"><a href="#title.1.8">Many-To-Many, Unidirectional<i class="fas fa-link"></i></a></h2>
+<p>Real many-to-many associations are less common. The following
+example shows a unidirectional association between User and Group
+entities:</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/** @Entity */
+class User
+{
+    // ...
+
+    /**
+     * Many Users have Many Groups.
+     * @ManyToMany(targetEntity=&quot;Group&quot;)
+     * @JoinTable(name=&quot;users_groups&quot;,
+     *      joinColumns={@JoinColumn(name=&quot;user_id&quot;, referencedColumnName=&quot;id&quot;)},
+     *      inverseJoinColumns={@JoinColumn(name=&quot;group_id&quot;, referencedColumnName=&quot;id&quot;)}
+     *      )
+     */
+    private $groups;
+
+    // ...
+
+    public function __construct() {
+        $this-&gt;groups = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+}
+
+/** @Entity */
+class Group
+{
+    // ...
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity name=&quot;User&quot;&gt;
+        &lt;many-to-many field=&quot;groups&quot; target-entity=&quot;Group&quot;&gt;
+            &lt;join-table name=&quot;users_groups&quot;&gt;
+                &lt;join-columns&gt;
+                    &lt;join-column name=&quot;user_id&quot; referenced-column-name=&quot;id&quot; /&gt;
+                &lt;/join-columns&gt;
+                &lt;inverse-join-columns&gt;
+                    &lt;join-column name=&quot;group_id&quot; referenced-column-name=&quot;id&quot; /&gt;
+                &lt;/inverse-join-columns&gt;
+            &lt;/join-table&gt;
+        &lt;/many-to-many&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>Generated MySQL Schema:</p>
+<pre><code class="sql">CREATE TABLE User (
+    id INT AUTO_INCREMENT NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+CREATE TABLE users_groups (
+    user_id INT NOT NULL,
+    group_id INT NOT NULL,
+    PRIMARY KEY(user_id, group_id)
+) ENGINE = InnoDB;
+CREATE TABLE Group (
+    id INT AUTO_INCREMENT NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+ALTER TABLE users_groups ADD FOREIGN KEY (user_id) REFERENCES User(id);
+ALTER TABLE users_groups ADD FOREIGN KEY (group_id) REFERENCES Group(id);
+</code></pre>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Why are many-to-many associations less common? Because
+frequently you want to associate additional attributes with an
+association, in which case you introduce an association class.
+Consequently, the direct many-to-many association disappears and is
+replaced by one-to-many/many-to-one associations between the 3
+participating classes.</p>
+</div>
+<h2 class="section-header" id="title.1.9"><a href="#title.1.9">Many-To-Many, Bidirectional<i class="fas fa-link"></i></a></h2>
+<p>Here is a similar many-to-many relationship as above except this
+one is bidirectional.</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/** @Entity */
+class User
+{
+    // ...
+
+    /**
+     * Many Users have Many Groups.
+     * @ManyToMany(targetEntity=&quot;Group&quot;, inversedBy=&quot;users&quot;)
+     * @JoinTable(name=&quot;users_groups&quot;)
+     */
+    private $groups;
+
+    public function __construct() {
+        $this-&gt;groups = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    // ...
+}
+
+/** @Entity */
+class Group
+{
+    // ...
+    /**
+     * Many Groups have Many Users.
+     * @ManyToMany(targetEntity=&quot;User&quot;, mappedBy=&quot;groups&quot;)
+     */
+    private $users;
+
+    public function __construct() {
+        $this-&gt;users = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    // ...
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity name=&quot;User&quot;&gt;
+        &lt;many-to-many field=&quot;groups&quot; inversed-by=&quot;users&quot; target-entity=&quot;Group&quot;&gt;
+            &lt;join-table name=&quot;users_groups&quot;&gt;
+                &lt;join-columns&gt;
+                    &lt;join-column name=&quot;user_id&quot; referenced-column-name=&quot;id&quot; /&gt;
+                &lt;/join-columns&gt;
+                &lt;inverse-join-columns&gt;
+                    &lt;join-column name=&quot;group_id&quot; referenced-column-name=&quot;id&quot; /&gt;
+                &lt;/inverse-join-columns&gt;
+            &lt;/join-table&gt;
+        &lt;/many-to-many&gt;
+    &lt;/entity&gt;
+
+    &lt;entity name=&quot;Group&quot;&gt;
+        &lt;many-to-many field=&quot;users&quot; mapped-by=&quot;groups&quot; target-entity=&quot;User&quot;/&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>The MySQL schema is exactly the same as for the Many-To-Many
+uni-directional case above.</p>
+<h3 class="section-header" id="title.1.9.1"><a href="#title.1.9.1">Owning and Inverse Side on a ManyToMany Association<i class="fas fa-link"></i></a></h3>
+<p>For Many-To-Many associations you can chose which entity is the
+owning and which the inverse side. There is a very simple semantic
+rule to decide which side is more suitable to be the owning side
+from a developers perspective. You only have to ask yourself which
+entity is responsible for the connection management, and pick that
+as the owning side.</p>
+<p>Take an example of two entities <code>Article</code> and <code>Tag</code>. Whenever
+you want to connect an Article to a Tag and vice-versa, it is
+mostly the Article that is responsible for this relation. Whenever
+you add a new article, you want to connect it with existing or new
+tags. Your &quot;Create Article&quot; form will probably support this notion
+and allow specifying the tags directly. This is why you should pick
+the Article as owning side, as it makes the code more
+understandable:</p>
+<pre><code class="php">&lt;?php
+class Article
+{
+    private $tags;
+
+    public function addTag(Tag $tag)
+    {
+        $tag-&gt;addArticle($this); // synchronously updating inverse side
+        $this-&gt;tags[] = $tag;
+    }
+}
+
+class Tag
+{
+    private $articles;
+
+    public function addArticle(Article $article)
+    {
+        $this-&gt;articles[] = $article;
+    }
+}
+</code></pre>
+<p>This allows to group the tag adding on the <code>Article</code> side of the
+association:</p>
+<pre><code class="php">&lt;?php
+$article = new Article();
+$article-&gt;addTag($tagA);
+$article-&gt;addTag($tagB);
+</code></pre>
+<h2 class="section-header" id="title.1.10"><a href="#title.1.10">Many-To-Many, Self-referencing<i class="fas fa-link"></i></a></h2>
+<p>You can even have a self-referencing many-to-many association. A
+common scenario is where a <code>User</code> has friends and the target
+entity of that relationship is a <code>User</code> so it is self
+referencing. In this example it is bidirectional so <code>User</code> has a
+field named <code>$friendsWithMe</code> and <code>$myFriends</code>.</p>
+<pre><code class="php">&lt;?php
+/** @Entity */
+class User
+{
+    // ...
+
+    /**
+     * Many Users have Many Users.
+     * @ManyToMany(targetEntity=&quot;User&quot;, mappedBy=&quot;myFriends&quot;)
+     */
+    private $friendsWithMe;
+
+    /**
+     * Many Users have many Users.
+     * @ManyToMany(targetEntity=&quot;User&quot;, inversedBy=&quot;friendsWithMe&quot;)
+     * @JoinTable(name=&quot;friends&quot;,
+     *      joinColumns={@JoinColumn(name=&quot;user_id&quot;, referencedColumnName=&quot;id&quot;)},
+     *      inverseJoinColumns={@JoinColumn(name=&quot;friend_user_id&quot;, referencedColumnName=&quot;id&quot;)}
+     *      )
+     */
+    private $myFriends;
+
+    public function __construct() {
+        $this-&gt;friendsWithMe = new \Doctrine\Common\Collections\ArrayCollection();
+        $this-&gt;myFriends = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    // ...
+}
+</code></pre>
+<p>Generated MySQL Schema:</p>
+<pre><code class="sql">CREATE TABLE User (
+    id INT AUTO_INCREMENT NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE = InnoDB;
+CREATE TABLE friends (
+    user_id INT NOT NULL,
+    friend_user_id INT NOT NULL,
+    PRIMARY KEY(user_id, friend_user_id)
+) ENGINE = InnoDB;
+ALTER TABLE friends ADD FOREIGN KEY (user_id) REFERENCES User(id);
+ALTER TABLE friends ADD FOREIGN KEY (friend_user_id) REFERENCES User(id);
+</code></pre>
+<a id="association_mapping_defaults"></a>
+<h2 class="section-header" id="title.1.11"><a href="#title.1.11">Mapping Defaults<i class="fas fa-link"></i></a></h2>
+<p>The <code>@JoinColumn</code> and <code>@JoinTable</code> definitions are usually optional and have
+sensible default values. The defaults for a join column in a
+one-to-one/many-to-one association is as follows:</p>
+
+<pre><code class="">name: &quot;&lt;fieldname&gt;_id&quot;
+referencedColumnName: &quot;id&quot;
+</code></pre>
+<p>As an example, consider this mapping:</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/** @OneToOne(targetEntity=&quot;Shipment&quot;) */
+private $shipment;
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity class=&quot;Product&quot;&gt;
+        &lt;one-to-one field=&quot;shipment&quot; target-entity=&quot;Shipment&quot; /&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>This is essentially the same as the following, more verbose,
+mapping:</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/**
+ * One Product has One Shipment.
+ * @OneToOne(targetEntity=&quot;Shipment&quot;)
+ * @JoinColumn(name=&quot;shipment_id&quot;, referencedColumnName=&quot;id&quot;)
+ */
+private $shipment;
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity class=&quot;Product&quot;&gt;
+        &lt;one-to-one field=&quot;shipment&quot; target-entity=&quot;Shipment&quot;&gt;
+            &lt;join-column name=&quot;shipment_id&quot; referenced-column-name=&quot;id&quot; /&gt;
+        &lt;/one-to-one&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>The @JoinTable definition used for many-to-many mappings has
+similar defaults. As an example, consider this mapping:</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+class User
+{
+    //...
+    /** @ManyToMany(targetEntity=&quot;Group&quot;) */
+    private $groups;
+    //...
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity class=&quot;User&quot;&gt;
+        &lt;many-to-many field=&quot;groups&quot; target-entity=&quot;Group&quot; /&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>This is essentially the same as the following, more verbose, mapping:</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+class User
+{
+    //...
+    /**
+     * Many Users have Many Groups.
+     * @ManyToMany(targetEntity=&quot;Group&quot;)
+     * @JoinTable(name=&quot;User_Group&quot;,
+     *      joinColumns={@JoinColumn(name=&quot;User_id&quot;, referencedColumnName=&quot;id&quot;)},
+     *      inverseJoinColumns={@JoinColumn(name=&quot;Group_id&quot;, referencedColumnName=&quot;id&quot;)}
+     *      )
+     */
+    private $groups;
+    //...
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity class=&quot;User&quot;&gt;
+        &lt;many-to-many field=&quot;groups&quot; target-entity=&quot;Group&quot;&gt;
+            &lt;join-table name=&quot;User_Group&quot;&gt;
+                &lt;join-columns&gt;
+                    &lt;join-column id=&quot;User_id&quot; referenced-column-name=&quot;id&quot; /&gt;
+                &lt;/join-columns&gt;
+                &lt;inverse-join-columns&gt;
+                    &lt;join-column id=&quot;Group_id&quot; referenced-column-name=&quot;id&quot; /&gt;
+                &lt;/inverse-join-columns&gt;
+            &lt;/join-table&gt;
+        &lt;/many-to-many&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>In that case, the name of the join table defaults to a combination
+of the simple, unqualified class names of the participating
+classes, separated by an underscore character. The names of the
+join columns default to the simple, unqualified class name of the
+targeted class followed by &quot;\_id&quot;. The referencedColumnName always
+defaults to &quot;id&quot;, just as in one-to-one or many-to-one mappings.</p>
+<p>If you accept these defaults, you can reduce the mapping code to a
+minimum.</p>
+<a id="collections"></a>
+<h2 class="section-header" id="title.1.12"><a href="#title.1.12">Collections<i class="fas fa-link"></i></a></h2>
+<p>Unfortunately, PHP arrays, while being great for many things, are missing
+features that make them suitable for lazy loading in the context of an ORM.
+This is why in all the examples of many-valued associations in this manual we
+will make use of a <code>Collection</code> interface and its
+default implementation <code>ArrayCollection</code> that are both defined in the
+<code>Doctrine\Common\Collections</code> namespace. A collection implements
+the PHP interfaces <code>ArrayAccess</code>, <code>Traversable</code> and <code>Countable</code>.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The Collection interface and ArrayCollection class,
+like everything else in the Doctrine namespace, are neither part of
+the ORM, nor the DBAL, it is a plain PHP class that has no outside
+dependencies apart from dependencies on PHP itself (and the SPL).
+Therefore using this class in your model and elsewhere
+does not introduce a coupling to the ORM.</p>
+</div>
+<h2 class="section-header" id="title.1.13"><a href="#title.1.13">Initializing Collections<i class="fas fa-link"></i></a></h2>
+<p>You should always initialize the collections of your <code>@OneToMany</code>
+and <code>@ManyToMany</code> associations in the constructor of your entities:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/** @Entity */
+class User
+{
+    /**
+     * Many Users have Many Groups.
+     * @var Collection
+     * @ManyToMany(targetEntity=&quot;Group&quot;)
+     */
+    private $groups;
+
+    public function __construct()
+    {
+        $this-&gt;groups = new ArrayCollection();
+    }
+
+    public function getGroups()
+    {
+        return $this-&gt;groups;
+    }
+}
+</code></pre>
+<p>The following code will then work even if the Entity hasn't
+been associated with an EntityManager yet:</p>
+<pre><code class="php">&lt;?php
+$group = new Group();
+$user = new User();
+$user-&gt;getGroups()-&gt;add($group);
+</code></pre>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

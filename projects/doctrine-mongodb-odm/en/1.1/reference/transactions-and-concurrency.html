@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Transactions and Concurrency - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-mongodb-odm/en/1.1/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Transactions and Concurrency</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-mongodb-odm/en/latest/reference/transactions-and-concurrency.html" class="badge badge-secondary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-mongodb-odm/en/1.2/reference/transactions-and-concurrency.html" class="badge badge-secondary">1.2</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-mongodb-odm/en/1.1/reference/transactions-and-concurrency.html" class="badge badge-primary">1.1</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Transactions and Concurrency<i class="fas fa-link"></i></a></h1>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Transactions<i class="fas fa-link"></i></a></h2>
+<p>As per the <a href="https://docs.mongodb.com/manual/core/write-operations-atomicity/#atomicity-and-transactions">documentation</a>, MongoDB
+write operations are &quot;atomic on the level of a single document&quot;.</p>
+<p>Even when updating multiple documents within a single write operation,
+though the modification of each document is atomic,
+the operation as a whole is not and other operations may interleave.</p>
+<p>As stated in the <a href="https://docs.mongodb.com/manual/faq/fundamentals/#does-mongodb-support-transactions">FAQ</a>,
+&quot;MongoDB does not support multi-document transactions&quot; and neither does Doctrine MongoDB ODM.</p>
+<h3 class="section-header" id="title.1.1.1"><a href="#title.1.1.1">Limitation<i class="fas fa-link"></i></a></h3>
+<p>At the moment, Doctrine MongoDB ODM does not provide any native strategy to emulate multi-document transactions.</p>
+<h3 class="section-header" id="title.1.1.2"><a href="#title.1.1.2">Workaround<i class="fas fa-link"></i></a></h3>
+<p>To work around this limitation, one can utilize <a href="https://docs.mongodb.com/manual/tutorial/perform-two-phase-commits/">two phase commits</a>.</p>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">Concurrency<i class="fas fa-link"></i></a></h2>
+<p>Doctrine MongoDB ODM offers native support for pessimistic and optimistic locking strategies.
+This allows for very fine-grained control over what kind of locking is required for documents in your application.</p>
+<a id="transactions_and_concurrency_optimistic_locking"></a>
+<h3 class="section-header" id="title.1.2.1"><a href="#title.1.2.1">Optimistic Locking<i class="fas fa-link"></i></a></h3>
+<h4 class="section-header" id="title.1.2.1.1"><a href="#title.1.2.1.1">Approach<i class="fas fa-link"></i></a></h4>
+<p>Doctrine has integrated support for automatic optimistic locking
+via a <code>version</code> field. Any document that should be
+protected against concurrent modifications during long-running
+business transactions gets a <code>version</code> field that is either a simple
+number (mapping type: <code>int</code>) or a date (mapping type: <code>date</code>).
+When changes to the document are persisted,
+the expected version and version increment are incorporated into the update criteria and modifiers, respectively.
+If this results in no document being modified by the update (i.e. expected version did not match),
+a <code>LockException</code> is thrown, which indicates that the document was already modified by another query.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>| Versioning can only be used on <em>root</em> (top-level) documents.</p>
+</div>
+<h4 class="section-header" id="title.1.2.1.2"><a href="#title.1.2.1.2">Document Configuration<i class="fas fa-link"></i></a></h4>
+<p>The following example designates a version field using the <code>int</code> type:</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/** @Version @Field(type=&quot;int&quot;) */
+private $version;
+</code></pre>
+<pre><code class="xml">&lt;field fieldName=&quot;version&quot; version=&quot;true&quot; type=&quot;int&quot; /&gt;
+</code></pre>
+</div>
+<p>Alternatively, the <code>date</code> type may be used:</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/** @Version @Field(type=&quot;date&quot;) */
+private $version;
+</code></pre>
+<pre><code class="xml">&lt;field fieldName=&quot;version&quot; version=&quot;true&quot; type=&quot;date&quot; /&gt;
+</code></pre>
+</div>
+<h5 class="section-header" id="title.1.2.1.2.1"><a href="#title.1.2.1.2.1">Choosing the Field Type<i class="fas fa-link"></i></a></h5>
+<p>When using the <code>date</code> type in a high-concurrency environment, it is still possible to create multiple documents
+with the same version and cause a conflict. This can be avoided by using the <code>int</code> type.</p>
+<h5 class="section-header" id="title.1.2.1.2.2"><a href="#title.1.2.1.2.2">Usage<i class="fas fa-link"></i></a></h5>
+<p>When a version conflict is encountered during
+<code>DocumentManager#flush()</code>, a <code>LockException</code> is thrown.
+This exception can be caught and handled. Potential responses to a
+<code>LockException</code> are to present the conflict to the user or
+to refresh or reload objects and then retry the update.</p>
+<p>With PHP promoting a share-nothing architecture,
+the worst case scenario for a delay between rendering an update form (with existing document data)
+and modifying the document after a form submission may be your application's session timeout.
+If the document is changed within that time frame by some other request,
+it may be preferable to encounter a <code>LockException</code> when retrieving the document instead of executing the update.</p>
+<p>You can specify the expected version of a document during a query with <code>DocumentManager#find()</code>:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\ODM\MongoDB\LockMode;
+use Doctrine\ODM\MongoDB\LockException;
+use Doctrine\ODM\MongoDB\DocumentManager;
+
+$theDocumentId = 1;
+$expectedVersion = 184;
+
+/* @var $dm DocumentManager */
+
+try {
+    $document = $dm-&gt;find('User', $theDocumentId, LockMode::OPTIMISTIC, $expectedVersion);
+
+    // do the work
+
+    $dm-&gt;flush();
+} catch(LockException $e) {
+    echo &quot;Sorry, but someone else has already changed this document. Please apply the changes again!&quot;;
+}
+</code></pre>
+<p>Alternatively, an expected version may be specified for an existing document with <code>DocumentManager#lock()</code>:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\ODM\MongoDB\LockMode;
+use Doctrine\ODM\MongoDB\LockException;
+use Doctrine\ODM\MongoDB\DocumentManager;
+
+$theDocumentId = 1;
+$expectedVersion = 184;
+
+/* @var $dm DocumentManager */
+
+$document = $dm-&gt;find('User', $theDocumentId);
+
+try {
+    // assert version
+    $dm-&gt;lock($document, LockMode::OPTIMISTIC, $expectedVersion);
+
+} catch(LockException $e) {
+    echo &quot;Sorry, but someone else has already changed this document. Please apply the changes again!&quot;;
+}
+</code></pre>
+<h4 class="section-header" id="title.1.2.1.3"><a href="#title.1.2.1.3">Important Implementation Notes<i class="fas fa-link"></i></a></h4>
+<p>You can easily get the optimistic locking workflow wrong if you
+compare the wrong versions.</p>
+<h5 class="section-header" id="title.1.2.1.3.1"><a href="#title.1.2.1.3.1">Workflow<i class="fas fa-link"></i></a></h5>
+<p>Say you have Alice and Bob editing a
+hypothetical blog post:</p>
+<ul><li class="dash"> Alice reads the headline of the blog post being &quot;Foo&quot;, at
+   optimistic lock version 1 (GET Request)</li>
+<li class="dash"> Bob reads the headline of the blog post being &quot;Foo&quot;, at
+   optimistic lock version 1 (GET Request)</li>
+<li class="dash"> Bob updates the headline to &quot;Bar&quot;, upgrading the optimistic lock
+   version to 2 (POST Request of a Form)</li>
+<li class="dash"> Alice updates the headline to &quot;Baz&quot;, ... (POST Request of a
+   Form)</li>
+</ul>
+
+<p>At the last stage of this scenario the blog post has to be read
+again from the database before Alice's headline can be applied. At
+this point you will want to check if the blog post is still at
+version 1 (which it is not in this scenario).</p>
+<p>In order to correctly utilize optimistic locking, you <em>must</em> add the version as hidden form field or,
+for more security, session attribute.
+Otherwise, you cannot verify that the version at the time of update is the same as what was originally read
+from the database when Alice performed her original GET request for the blog post.
+Without correlating the version across form submissions, the application could lose updates.</p>
+<h5 class="section-header" id="title.1.2.1.3.2"><a href="#title.1.2.1.3.2">Example Code<i class="fas fa-link"></i></a></h5>
+<p>The form (GET Request):</p>
+<pre><code class="php">&lt;?php
+use Doctrine\ODM\MongoDB\DocumentManager;
+
+/* @var $dm DocumentManager */
+
+$post = $dm-&gt;find('BlogPost', 123456);
+
+echo '&lt;input type=&quot;hidden&quot; name=&quot;id&quot; value=&quot;' . $post-&gt;getId() . '&quot; /&gt;';
+echo '&lt;input type=&quot;hidden&quot; name=&quot;version&quot; value=&quot;' . $post-&gt;getCurrentVersion() . '&quot; /&gt;';
+</code></pre>
+<p>And the change headline action (POST Request):</p>
+<pre><code class="php">&lt;?php
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\LockMode;
+
+/* @var $dm DocumentManager */
+
+$postId = (int)$_POST['id'];
+$postVersion = (int)$_POST['version'];
+
+$post = $dm-&gt;find('BlogPost', $postId, LockMode::OPTIMISTIC, $postVersion);
+</code></pre>
+<a id="transactions_and_concurrency_pessimistic_locking"></a>
+<h3 class="section-header" id="title.1.2.2"><a href="#title.1.2.2">Pessimistic Locking<i class="fas fa-link"></i></a></h3>
+<p>Doctrine MongoDB ODM also supports pessimistic locking via a configurable <code>lock</code> field.
+This functionality is implemented entirely by Doctrine; MongoDB has no native support for pessimistic locking.</p>
+<h4 class="section-header" id="title.1.2.2.1"><a href="#title.1.2.2.1">Document Configuration<i class="fas fa-link"></i></a></h4>
+<p>Pessimistic locking requires a document to designate a lock field using the <code>int</code> type:</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/** @Lock @Field(type=&quot;int&quot;) */
+private $lock;
+</code></pre>
+<pre><code class="xml">&lt;field fieldName=&quot;lock&quot; lock=&quot;true&quot; type=&quot;int&quot; /&gt;
+</code></pre>
+</div>
+<h4 class="section-header" id="title.1.2.2.2"><a href="#title.1.2.2.2">Lock Modes<i class="fas fa-link"></i></a></h4>
+<p>Doctrine MongoDB ODM currently supports two pessimistic lock modes:</p>
+<ul><li class="dash"> Pessimistic Write
+   (<code>\Doctrine\ODM\MongoDB\LockMode::PESSIMISTIC_WRITE</code>): locks the
+   underlying document for concurrent read and write operations.</li>
+<li class="dash"> Pessimistic Read (<code>\Doctrine\ODM\MongoDB\LockMode::PESSIMISTIC_READ</code>):
+   locks other concurrent requests that attempt to update or lock documents
+   in write mode.</li>
+</ul>
+
+<h4 class="section-header" id="title.1.2.2.3"><a href="#title.1.2.2.3">Usage<i class="fas fa-link"></i></a></h4>
+<p>You can use pessimistic locks in two different scenarios:</p>
+<ol><li>Using
+   <code>DocumentManager#find($className, $id, \Doctrine\ODM\MongoDB\LockMode::PESSIMISTIC_WRITE)</code>
+   or
+   <code>DocumentManager#find($className, $id, \Doctrine\ODM\MongoDB\LockMode::PESSIMISTIC_READ)</code></li>
+<li>Using
+   <code>DocumentManager#lock($document, \Doctrine\ODM\MongoDB\LockMode::PESSIMISTIC_WRITE)</code>
+   or
+   <code>DocumentManager#lock($document, \Doctrine\ODM\MongoDB\LockMode::PESSIMISTIC_READ)</code></li>
+</ol>
+
+<div class="alert warning bg-light-yellow text-dark border"><i class="fas fa-exclamation-circle text-warning mr-2"></i><p>
+
+| <a href="https://en.wikipedia.org/wiki/Deadlock">Deadlock</a> situations are also possible.
+  Suppose process P1 needs resource R1 and has locked resource R2
+  and that another process P2 has locked resource R1 but also needs resource R2.
+  If both processes continue waiting for the respective resources, the application will be stuck.
+  When loading a document, Doctrine can immediately throw an exception if it is already locked.
+  A deadlock could be created by endlessly retrying attempts to acquire the lock.
+  One can avoid a possible deadlock by designating a maximum number of retry attempts
+  and automatically releasing any active locks with the request ends,
+  thereby allowing a process to end gracefully while another completes its task.</p>
+</div>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

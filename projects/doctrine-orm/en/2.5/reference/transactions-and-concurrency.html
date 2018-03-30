@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Transactions and Concurrency - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/orm/">ORM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-orm/en/2.5/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Transactions and Concurrency</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/latest/reference/transactions-and-concurrency.html" class="badge badge-secondary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.6/reference/transactions-and-concurrency.html" class="badge badge-secondary">2.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.5/reference/transactions-and-concurrency.html" class="badge badge-primary">2.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Transactions and Concurrency<i class="fas fa-link"></i></a></h1>
+<a id="transactions-and-concurrency_transaction-demarcation"></a>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Transaction Demarcation<i class="fas fa-link"></i></a></h2>
+<p>Transaction demarcation is the task of defining your transaction
+boundaries. Proper transaction demarcation is very important
+because if not done properly it can negatively affect the
+performance of your application. Many databases and database
+abstraction layers like PDO by default operate in auto-commit mode,
+which means that every single SQL statement is wrapped in a small
+transaction. Without any explicit transaction demarcation from your
+side, this quickly results in poor performance because transactions
+are not cheap.</p>
+<p>For the most part, Doctrine 2 already takes care of proper
+transaction demarcation for you: All the write operations
+(INSERT/UPDATE/DELETE) are queued until <code>EntityManager#flush()</code>
+is invoked which wraps all of these changes in a single
+transaction.</p>
+<p>However, Doctrine 2 also allows (and encourages) you to take over
+and control transaction demarcation yourself.</p>
+<p>These are two ways to deal with transactions when using the
+Doctrine ORM and are now described in more detail.</p>
+<a id="transactions-and-concurrency_approach-implicitly"></a>
+<h3 class="section-header" id="title.1.1.1"><a href="#title.1.1.1">Approach 1: Implicitly<i class="fas fa-link"></i></a></h3>
+<p>The first approach is to use the implicit transaction handling
+provided by the Doctrine ORM EntityManager. Given the following
+code snippet, without any explicit transaction demarcation:</p>
+<pre><code class="php">&lt;?php
+// $em instanceof EntityManager
+$user = new User;
+$user-&gt;setName('George');
+$em-&gt;persist($user);
+$em-&gt;flush();
+</code></pre>
+<p>Since we do not do any custom transaction demarcation in the above
+code, <code>EntityManager#flush()</code> will begin and commit/rollback a
+transaction. This behavior is made possible by the aggregation of
+the DML operations by the Doctrine ORM and is sufficient if all the
+data manipulation that is part of a unit of work happens through
+the domain model and thus the ORM.</p>
+<a id="transactions-and-concurrency_approach-explicitly"></a>
+<h3 class="section-header" id="title.1.1.2"><a href="#title.1.1.2">Approach 2: Explicitly<i class="fas fa-link"></i></a></h3>
+<p>The explicit alternative is to use the <code>Doctrine\DBAL\Connection</code>
+API directly to control the transaction boundaries. The code then
+looks like this:</p>
+<pre><code class="php">&lt;?php
+// $em instanceof EntityManager
+$em-&gt;getConnection()-&gt;beginTransaction(); // suspend auto-commit
+try {
+    //... do some work
+    $user = new User;
+    $user-&gt;setName('George');
+    $em-&gt;persist($user);
+    $em-&gt;flush();
+    $em-&gt;getConnection()-&gt;commit();
+} catch (Exception $e) {
+    $em-&gt;getConnection()-&gt;rollBack();
+    throw $e;
+}
+</code></pre>
+<p>Explicit transaction demarcation is required when you want to
+include custom DBAL operations in a unit of work or when you want
+to make use of some methods of the <code>EntityManager</code> API that
+require an active transaction. Such methods will throw a
+<code>TransactionRequiredException</code> to inform you of that
+requirement.</p>
+<p>A more convenient alternative for explicit transaction demarcation is the use
+of provided control abstractions in the form of
+<code>Connection#transactional($func)</code> and <code>EntityManager#transactional($func)</code>.
+When used, these control abstractions ensure that you never forget to rollback
+the transaction, in addition to the obvious code reduction. An example that is
+functionally equivalent to the previously shown code looks as follows:</p>
+<pre><code class="php">&lt;?php
+// $em instanceof EntityManager
+$em-&gt;transactional(function($em) {
+    //... do some work
+    $user = new User;
+    $user-&gt;setName('George');
+    $em-&gt;persist($user);
+});
+</code></pre>
+<p>The difference between <code>Connection#transactional($func)</code> and
+<code>EntityManager#transactional($func)</code> is that the latter
+abstraction flushes the <code>EntityManager</code> prior to transaction
+commit.</p>
+<a id="transactions-and-concurrency_exception-handling"></a>
+<h3 class="section-header" id="title.1.1.3"><a href="#title.1.1.3">Exception Handling<i class="fas fa-link"></i></a></h3>
+<p>When using implicit transaction demarcation and an exception occurs
+during <code>EntityManager#flush()</code>, the transaction is automatically
+rolled back and the <code>EntityManager</code> closed.</p>
+<p>When using explicit transaction demarcation and an exception
+occurs, the transaction should be rolled back immediately and the
+<code>EntityManager</code> closed by invoking <code>EntityManager#close()</code> and
+subsequently discarded, as demonstrated in the example above. This
+can be handled elegantly by the control abstractions shown earlier.
+Note that when catching <code>Exception</code> you should generally re-throw
+the exception. If you intend to recover from some exceptions, catch
+them explicitly in earlier catch blocks (but do not forget to
+rollback the transaction and close the <code>EntityManager</code> there as
+well). All other best practices of exception handling apply
+similarly (i.e. either log or re-throw, not both, etc.).</p>
+<p>As a result of this procedure, all previously managed or removed
+instances of the <code>EntityManager</code> become detached. The state of
+the detached objects will be the state at the point at which the
+transaction was rolled back. The state of the objects is in no way
+rolled back and thus the objects are now out of synch with the
+database. The application can continue to use the detached objects,
+knowing that their state is potentially no longer accurate.</p>
+<p>If you intend to start another unit of work after an exception has
+occurred you should do that with a new <code>EntityManager</code>.</p>
+<a id="transactions-and-concurrency_locking-support"></a>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">Locking Support<i class="fas fa-link"></i></a></h2>
+<p>Doctrine 2 offers support for Pessimistic- and Optimistic-locking
+strategies natively. This allows to take very fine-grained control
+over what kind of locking is required for your Entities in your
+application.</p>
+<a id="transactions-and-concurrency_optimistic-locking"></a>
+<h3 class="section-header" id="title.1.2.1"><a href="#title.1.2.1">Optimistic Locking<i class="fas fa-link"></i></a></h3>
+<p>Database transactions are fine for concurrency control during a
+single request. However, a database transaction should not span
+across requests, the so-called &quot;user think time&quot;. Therefore a
+long-running &quot;business transaction&quot; that spans multiple requests
+needs to involve several database transactions. Thus, database
+transactions alone can no longer control concurrency during such a
+long-running business transaction. Concurrency control becomes the
+partial responsibility of the application itself.</p>
+<p>Doctrine has integrated support for automatic optimistic locking
+via a version field. In this approach any entity that should be
+protected against concurrent modifications during long-running
+business transactions gets a version field that is either a simple
+number (mapping type: integer) or a timestamp (mapping type:
+datetime). When changes to such an entity are persisted at the end
+of a long-running conversation the version of the entity is
+compared to the version in the database and if they don't match, an
+<code>OptimisticLockException</code> is thrown, indicating that the entity
+has been modified by someone else already.</p>
+<p>You designate a version field in an entity as follows. In this
+example we'll use an integer.</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+class User
+{
+    // ...
+    /** @Version @Column(type=&quot;integer&quot;) */
+    private $version;
+    // ...
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+  &lt;entity name=&quot;User&quot;&gt;
+    &lt;field name=&quot;version&quot; type=&quot;integer&quot; version=&quot;true&quot; /&gt;
+  &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>Alternatively a datetime type can be used (which maps to a SQL
+timestamp or datetime):</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+class User
+{
+    // ...
+    /** @Version @Column(type=&quot;datetime&quot;) */
+    private $version;
+    // ...
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+  &lt;entity name=&quot;User&quot;&gt;
+    &lt;field name=&quot;version&quot; type=&quot;datetime&quot; version=&quot;true&quot; /&gt;
+  &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>Version numbers (not timestamps) should however be preferred as
+they can not potentially conflict in a highly concurrent
+environment, unlike timestamps where this is a possibility,
+depending on the resolution of the timestamp on the particular
+database platform.</p>
+<p>When a version conflict is encountered during
+<code>EntityManager#flush()</code>, an <code>OptimisticLockException</code> is thrown
+and the active transaction rolled back (or marked for rollback).
+This exception can be caught and handled. Potential responses to an
+OptimisticLockException are to present the conflict to the user or
+to refresh or reload objects in a new transaction and then retrying
+the transaction.</p>
+<p>With PHP promoting a share-nothing architecture, the time between
+showing an update form and actually modifying the entity can in the
+worst scenario be as long as your applications session timeout. If
+changes happen to the entity in that time frame you want to know
+directly when retrieving the entity that you will hit an optimistic
+locking exception:</p>
+<p>You can always verify the version of an entity during a request
+either when calling <code>EntityManager#find()</code>:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\OptimisticLockException;
+
+$theEntityId = 1;
+$expectedVersion = 184;
+
+try {
+    $entity = $em-&gt;find('User', $theEntityId, LockMode::OPTIMISTIC, $expectedVersion);
+
+    // do the work
+
+    $em-&gt;flush();
+} catch(OptimisticLockException $e) {
+    echo &quot;Sorry, but someone else has already changed this entity. Please apply the changes again!&quot;;
+}
+</code></pre>
+<p>Or you can use <code>EntityManager#lock()</code> to find out:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\OptimisticLockException;
+
+$theEntityId = 1;
+$expectedVersion = 184;
+
+$entity = $em-&gt;find('User', $theEntityId);
+
+try {
+    // assert version
+    $em-&gt;lock($entity, LockMode::OPTIMISTIC, $expectedVersion);
+
+} catch(OptimisticLockException $e) {
+    echo &quot;Sorry, but someone else has already changed this entity. Please apply the changes again!&quot;;
+}
+</code></pre>
+<h4 class="section-header" id="title.1.2.1.1"><a href="#title.1.2.1.1">Important Implementation Notes<i class="fas fa-link"></i></a></h4>
+<p>You can easily get the optimistic locking workflow wrong if you
+compare the wrong versions. Say you have Alice and Bob editing a
+hypothetical blog post:</p>
+<ul><li class="dash"> Alice reads the headline of the blog post being &quot;Foo&quot;, at
+   optimistic lock version 1 (GET Request)</li>
+<li class="dash"> Bob reads the headline of the blog post being &quot;Foo&quot;, at
+   optimistic lock version 1 (GET Request)</li>
+<li class="dash"> Bob updates the headline to &quot;Bar&quot;, upgrading the optimistic lock
+   version to 2 (POST Request of a Form)</li>
+<li class="dash"> Alice updates the headline to &quot;Baz&quot;, ... (POST Request of a
+   Form)</li>
+</ul>
+
+<p>Now at the last stage of this scenario the blog post has to be read
+again from the database before Alice's headline can be applied. At
+this point you will want to check if the blog post is still at
+version 1 (which it is not in this scenario).</p>
+<p>Using optimistic locking correctly, you <em>have</em> to add the version
+as an additional hidden field (or into the SESSION for more
+safety). Otherwise you cannot verify the version is still the one
+being originally read from the database when Alice performed her
+GET request for the blog post. If this happens you might see lost
+updates you wanted to prevent with Optimistic Locking.</p>
+<p>See the example code, The form (GET Request):</p>
+<pre><code class="php">&lt;?php
+$post = $em-&gt;find('BlogPost', 123456);
+
+echo '&lt;input type=&quot;hidden&quot; name=&quot;id&quot; value=&quot;' . $post-&gt;getId() . '&quot; /&gt;';
+echo '&lt;input type=&quot;hidden&quot; name=&quot;version&quot; value=&quot;' . $post-&gt;getCurrentVersion() . '&quot; /&gt;';
+</code></pre>
+<p>And the change headline action (POST Request):</p>
+<pre><code class="php">&lt;?php
+$postId = (int)$_GET['id'];
+$postVersion = (int)$_GET['version'];
+
+$post = $em-&gt;find('BlogPost', $postId, \Doctrine\DBAL\LockMode::OPTIMISTIC, $postVersion);
+</code></pre>
+<a id="transactions-and-concurrency_pessimistic-locking"></a>
+<h3 class="section-header" id="title.1.2.2"><a href="#title.1.2.2">Pessimistic Locking<i class="fas fa-link"></i></a></h3>
+<p>Doctrine 2 supports Pessimistic Locking at the database level. No
+attempt is being made to implement pessimistic locking inside
+Doctrine, rather vendor-specific and ANSI-SQL commands are used to
+acquire row-level locks. Every Entity can be part of a pessimistic
+lock, there is no special metadata required to use this feature.</p>
+<p>However for Pessimistic Locking to work you have to disable the
+Auto-Commit Mode of your Database and start a transaction around
+your pessimistic lock use-case using the &quot;Approach 2: Explicit
+Transaction Demarcation&quot; described above. Doctrine 2 will throw an
+Exception if you attempt to acquire an pessimistic lock and no
+transaction is running.</p>
+<p>Doctrine 2 currently supports two pessimistic lock modes:</p>
+<ul><li class="dash"> Pessimistic Write
+   (<code>Doctrine\DBAL\LockMode::PESSIMISTIC_WRITE</code>), locks the
+   underlying database rows for concurrent Read and Write Operations.</li>
+<li class="dash"> Pessimistic Read (<code>Doctrine\DBAL\LockMode::PESSIMISTIC_READ</code>),
+   locks other concurrent requests that attempt to update or lock rows
+   in write mode.</li>
+</ul>
+
+<p>You can use pessimistic locks in three different scenarios:</p>
+<ol><li>Using
+   <code>EntityManager#find($className, $id, \Doctrine\DBAL\LockMode::PESSIMISTIC_WRITE)</code>
+   or
+   <code>EntityManager#find($className, $id, \Doctrine\DBAL\LockMode::PESSIMISTIC_READ)</code></li>
+<li>Using
+   <code>EntityManager#lock($entity, \Doctrine\DBAL\LockMode::PESSIMISTIC_WRITE)</code>
+   or
+   <code>EntityManager#lock($entity, \Doctrine\DBAL\LockMode::PESSIMISTIC_READ)</code></li>
+<li>Using
+   <code>Query#setLockMode(\Doctrine\DBAL\LockMode::PESSIMISTIC_WRITE)</code>
+   or
+   <code>Query#setLockMode(\Doctrine\DBAL\LockMode::PESSIMISTIC_READ)</code></li>
+</ol>
+
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

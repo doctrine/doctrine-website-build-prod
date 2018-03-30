@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Using Behaviors to Share Relationship Properties - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <meta name="robots" content="index, follow">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/blog">Blog</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Using Behaviors to Share Relationship Properties</li>
+        </ol>
+    </nav>
+
+    <article>
+        <header>
+            <h2>Using Behaviors to Share Relationship Properties <small>post</small></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2009-02-04
+                            by
+                                    jwage
+                                    </p>
+
+        <div>
+            <a id="title.1"></a><h1>Define The Schema</h1>
+<p>In this article we will demonstrate some more ways to add
+functionality to Doctrine by using the behavior system. We will
+call this behavior <code>SharedProperties</code> and it allows you to share
+properties between your models and one-to-one relationships. Here
+is an example schema that will make use of the behavior we will
+write.</p>
+
+<pre><code class="">[yml]
+Entity:
+  actAs:
+    Sluggable:
+      fields: [name]
+    Timestampable:
+  columns:
+    name: string(255)
+    is_active:
+      type: boolean
+      default: false
+
+BlogPost:
+  actAs:
+    SharedProperties:
+      relations: [Entity]
+  columns:
+    title: string(255)
+    body: clob
+
+User:
+  actAs:
+    SharedProperties:
+      relations: [Entity]
+  columns:
+    username: string(255)
+    password: string(255)
+
+Administrator:
+  actAs:
+    SharedProperties:
+      relations: [User]
+  columns:
+    responsibilities: string(255)
+</code></pre>
+<p>The schema should be somewhat self-explanatory. Each model that
+acts as <code>SharedProperties</code> you must specify an array of model
+names or existing relationship aliases. Our behavior will
+automatically add foreign keys for the list of models and
+instantiate a one-to-one relationship between the models
+automatically.</p>
+<a id="title.2"></a><h1>Write the Template</h1>
+<p>Lets write the first part of our template that simply adds a column
+for each of the listed <code>relations</code>:</p>
+<pre><code class="php">&lt;?php
+class SharedProperties extends Doctrine_Template
+{
+    protected $_options = array();
+
+    public function __construct($options)
+    {
+        $this-&gt;_options = $options;
+    }
+
+    public function setTableDefinition()
+    {
+        foreach ($this-&gt;_options['relations'] as $relation) {
+            $columnName = Doctrine_Inflector::tableize($relation) . '_id';
+            if (!$this-&gt;_table-&gt;hasColumn($columnName)) {
+                $this-&gt;hasColumn($columnName, 'integer');
+            }
+        }
+    }
+}
+
+**NOTE** You will notice we add columns for each of the
+``relations`` specified if the column does not already exist. We
+will use these columns to automatically create the
+relationships/foreign keys between the models if they don't already
+exist in the next step.
+
+</code></pre>
+<a id="title.3"></a><h1>Enhance the Template</h1>
+<p>Now lets enhance our template and add a <code>setUp()</code> method to
+instantiate our relationships between the list of <code>relations</code> and
+the columns we added in the previous step:</p>
+<pre><code class="php">&lt;?php
+class SharedProperties extends Doctrine_Template
+{
+    // ...
+
+    public function setUp()
+    {
+        foreach ($this-&gt;_options['relations'] as $model) {
+            $table = $this-&gt;_table;
+            $local = Doctrine_Inflector::tableize($model) . '_id';
+            $foreign = Doctrine::getTable($model)-&gt;getIdentifier();
+            $this-&gt;_makeRelation($table, $model, $local, $foreign, true);
+        }
+
+        foreach ($this-&gt;_options['relations'] as $model) {
+            $table = Doctrine::getTable($model);
+            $local = $table-&gt;getIdentifier();
+            $foreign = Doctrine_Inflector::tableize($model) . '_id';
+            $this-&gt;_makeRelation($table, $this-&gt;_table-&gt;getOption('name'), $table-&gt;getIdentifier(), $foreign);
+        }
+    }
+
+    protected function _makeRelation(Doctrine_Table $table, $model, $local, $foreign, $cascade = false)
+    {
+        if (!$table-&gt;hasRelation($model)) {
+            $options = array('local'   =&gt; $local, 'foreign' =&gt; $foreign);
+            if ($cascade) {
+                $options['onDelete'] = 'CASCADE';
+            }
+            $table-&gt;bind(array($model, $options), Doctrine_Relation::ONE);
+        }
+    }
+}
+</code></pre>
+<a id="title.4"></a><h1>Generated SQL</h1>
+<p>This code we've added now makes a one-to-one relationship between
+the models that act as <code>SharedProperties</code> and the list of models
+specified. So for example, <code>Entity</code> has one <code>BlogPost</code> and
+<code>BlogPost</code> has one <code>Entity</code>. The above models at this point
+would generate the following SQL:</p>
+
+<pre><code class="">[sql]
+CREATE TABLE administrator (id BIGINT AUTO_INCREMENT, responsibilities VARCHAR(255), user_id BIGINT, INDEX user_id_idx (user_id), PRIMARY KEY(id)) ENGINE = INNODB;
+
+CREATE TABLE blog_post (id BIGINT AUTO_INCREMENT, title VARCHAR(255), body LONGTEXT, entity_id BIGINT, INDEX entity_id_idx (entity_id), PRIMARY KEY(id)) ENGINE = INNODB;
+
+CREATE TABLE entity (id BIGINT AUTO_INCREMENT, name VARCHAR(255), is_active TINYINT(1) DEFAULT '0', slug VARCHAR(255), created_at DATETIME, updated_at DATETIME, UNIQUE INDEX sluggable_idx (slug), PRIMARY KEY(id)) ENGINE = INNODB;
+
+CREATE TABLE user (id BIGINT AUTO_INCREMENT, username VARCHAR(255), password VARCHAR(255), entity_id BIGINT, INDEX entity_id_idx (entity_id), PRIMARY KEY(id)) ENGINE = INNODB;
+
+ALTER TABLE administrator ADD FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE;
+
+ALTER TABLE blog_post ADD FOREIGN KEY (entity_id) REFERENCES entity(id) ON DELETE CASCADE;
+
+ALTER TABLE user ADD FOREIGN KEY (entity_id) REFERENCES entity(id) ON DELETE CASCADE;
+</code></pre>
+<a id="title.5"></a><h1>Sharing Properties/Methods</h1>
+<p>Now to get to the fun, the main purpose of doing all this is to
+share the properties of these relationships. We can accomplish this
+by using the <code>Doctrine_Record_Filter</code> feature and some magic PHP
+<code>__call()</code> functionality. First lets modify our template to
+attach a new record filter.</p>
+<blockquote><p><strong>TIP</strong> Records filters in Doctrine allow you to handle all unknown
+properties access on a Doctrine object. This allows us to forward
+the calls on to the relationships so you can access properties from
+them.</p>
+</blockquote>
+<pre><code class="php">&lt;?php
+class SharedProperties extends Doctrine_Template
+{
+    // ...
+
+    public function setTableDefinition()
+    {
+        // ...
+
+        $this-&gt;_table-&gt;unshiftFilter(new SharedPropertiesFilter($this-&gt;_options));
+    }
+
+    // ...
+}
+</code></pre>
+<p>Now that we have attached our filter we need to write that class:</p>
+<pre><code class="php">&lt;?php
+class SharedPropertiesFilter extends Doctrine_Record_Filter
+{
+    protected $_options = array();
+
+    public function __construct($options)
+    {
+        $this-&gt;_options = $options;
+    }
+
+    public function init()
+    {
+        foreach ($this-&gt;_options['relations'] as $model) {
+            $this-&gt;_table-&gt;getRelation($model);
+        }
+    }
+
+    public function filterSet(Doctrine_Record $record, $name, $value)
+    {
+        foreach ($this-&gt;_options['relations'] as $model) {
+            try {
+                $record-&gt;$model-&gt;$name = $value;
+                return $record;
+            } catch (Exception $e) {}
+        }
+        throw new Doctrine_Record_UnknownPropertyException(sprintf('Unknown record property / related component &quot;%s&quot; on &quot;%s&quot;', $name, get_class($record)));
+    }
+
+    public function filterGet(Doctrine_Record $record, $name)
+    {
+        foreach ($this-&gt;_options['relations'] as $model) {
+            try {
+                return $record-&gt;$model-&gt;$name;
+            } catch (Exception $e) {}
+        }
+        throw new Doctrine_Record_UnknownPropertyException(sprintf('Unknown record property / related component &quot;%s&quot; on &quot;%s&quot;', $name, get_class($record)));
+    }
+}
+</code></pre>
+<p>Now you can see this filter checks to see if the property exists on
+any of the <code>relations</code> specified otherwise throws the normal
+<code>Doctrine_Record_UnknownPropertyException</code>.</p>
+<p>The last thing we need to do is add a magic <code>__call()</code> function
+to our template to handle the forwarding of any unknown methods to
+the <code>relations</code>:</p>
+<pre><code class="php">&lt;?php
+class SharedProperties extends Doctrine_Template
+{
+    // ...
+
+    public function __call($method, $arguments)
+    {
+        $invoker = $this-&gt;getInvoker();
+        foreach ($this-&gt;_options['relations'] as $model) {
+            try {
+                return call_user_func_array(array($invoker-&gt;$model, $method), $arguments);
+            } catch (Exception $e) {
+                continue;
+            }
+        }
+    }
+}
+</code></pre>
+<p>This is required if we have functions defined on the models and
+want to be able to access these methods. So for example if we were
+to add a <code>setPassword()</code> method to the generated <code>User</code> class
+like the following:</p>
+<pre><code class="php">&lt;?php
+class User extends BaseUser
+{
+    public function setPassword($password)
+    {
+        $this-&gt;_set('password', md5($password));
+    }
+}
+</code></pre>
+<p>Without the above <code>__call()</code> function we would not be able to do
+the following:</p>
+<pre><code class="php">&lt;?php
+$administrator = new Administrator();
+$administrator-&gt;setPassword('new_password');
+
+**TIP** **Auto Accessor and Mutator Overriding**
+
+If you want Doctrine to automatically override accessors with
+matching ``set*()`` and ``get*()`` functions then you need to
+enable the ``auto_accessor_override`` attribute in your
+configuration where you create your connections and set Doctrine
+attributes:
+</code></pre>
+<pre><code class="php">&lt;?php
+    $manager = Doctrine_Manager::getInstance();
+    $manager-&gt;setAttribute('auto_accessor_override', true);
+
+Now with that attribute the following is possible. Instead of
+having to call the method ``setPassword()``, Doctrine sees you are
+setting the ``password`` and a method named ``setPassword()``
+exists so it uses it to do the mutating.
+</code></pre>
+<pre><code class="php">&lt;?php
+    $administrator-&gt;password = 'new_password';
+
+</code></pre>
+<a id="title.6"></a><h1>Example Usage</h1>
+<p>That is it! Our behavior is implemented and we are ready to write
+some code that use our new models.</p>
+<a id="title.6.1"></a><h2>Creating New Records</h2>
+<pre><code class="php">&lt;?php
+$admin = new Administrator();
+$admin-&gt;name = 'Jonathan H. Wage';
+$admin-&gt;username = 'jwage';
+$admin-&gt;password = 'changeme';
+$admin-&gt;is_active = 1;
+$admin-&gt;responsibilities = 'Train all the PHP developers!';
+$admin-&gt;save();
+</code></pre>
+<p>Now that code results in the following structure being persisted to
+the database:</p>
+<pre><code class="php">&lt;?php
+print_r($admin-&gt;toArray(true));
+/*
+Array
+(
+    [id] =&gt; 2
+    [responsibilities] =&gt; Train all the PHP developers!
+    [user_id] =&gt; 2
+    [User] =&gt; Array
+        (
+            [id] =&gt; 2
+            [username] =&gt; jwage
+            [password] =&gt; 4cb9c8a8048fd02294477fcb1a41191a
+            [entity_id] =&gt; 3
+            [Entity] =&gt; Array
+                (
+                    [id] =&gt; 3
+                    [name] =&gt; Jonathan H. Wage
+                    [is_active] =&gt; 1
+                    [slug] =&gt; jonathan-h-wage
+                    [created_at] =&gt; 2009-02-04 16:01:12
+                    [updated_at] =&gt; 2009-02-04 16:01:12
+                )
+
+        )
+
+)
+*/
+</code></pre>
+<a id="title.6.2"></a><h2>Data Fixtures</h2>
+<p>Similarly, the following data fixtures would be possible:</p>
+
+<pre><code class="">[yml]
+BlogPost:
+  BlogPost_1:
+    name: Test Blog Post
+    title: This is a test blog post
+    body: This is a test blog post
+
+Administrator:
+  Administrator_1:
+    name: Test Manager
+    username: jwage
+    password: changeme
+    responsibilities: Overseeing development department
+</code></pre>
+<a id="title.6.3"></a><h2>Querying For and Accessing Data</h2>
+<p>You can query for these relationships as well:</p>
+<pre><code class="php">&lt;?php
+$q = Doctrine_Query::create()
+    -&gt;from('Administrator a')
+    -&gt;leftJoin('a.User u')
+    -&gt;leftJoin('u.Entity e')
+    -&gt;where('u.username = ?', 'jwage');
+
+$user = $q-&gt;fetchOne();
+echo $user['created_at'];
+</code></pre>
+<p>The above code would output the value of the <code>created_at</code> column
+that actually exists in the <code>Entity</code> model that is available
+through the <code>Administrator-&gt;User-&gt;Entity</code> relations.</p>
+
+        </div>
+                
+                    <nav class="article">
+                <ul class="pagination">
+                                            <li class="page-item"><a class="page-link previous" href="https://new.doctrine-project.org/2009/02/03/doctrine-1-0-7-is-available" title="Doctrine 1.0.7 is Available!"><span class="title">Previous: Doctrine 1.0.7 is Available!</span></a></li>
+                                                                <li class="page-item"><a class="page-link next" href="https://new.doctrine-project.org/2009/03/02/doctrine-1-0-8-and-1-1-0-rc2-released" title="Doctrine 1.0.8 and 1.1.0-RC2 Released"><span class="title">Next: Doctrine 1.0.8 and 1.1.0-RC2 Released</span></a></li>
+                                    </ul>
+            </nav>
+            </article>
+
+
+
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

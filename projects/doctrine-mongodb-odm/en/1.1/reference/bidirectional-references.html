@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Bi-Directional References - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-mongodb-odm/en/1.1/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Bi-Directional References</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-mongodb-odm/en/latest/reference/bidirectional-references.html" class="badge badge-secondary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-mongodb-odm/en/1.2/reference/bidirectional-references.html" class="badge badge-secondary">1.2</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-mongodb-odm/en/1.1/reference/bidirectional-references.html" class="badge badge-primary">1.1</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Bi-Directional References<i class="fas fa-link"></i></a></h1>
+<p>By default when you map a bi-directional reference, the reference is maintained on both sides
+of the relationship and there is not a single &quot;owning side&quot;. Both sides are considered owning
+and changes are tracked and persisted separately. Here is an example:</p>
+<pre><code class="php">&lt;?php
+
+/** @Document */
+class BlogPost
+{
+    // ...
+
+    /** @ReferenceOne(targetDocument=&quot;User&quot;) */
+    private $user;
+}
+
+/** @Document */
+class User
+{
+    // ...
+
+    /** @ReferenceMany(targetDocument=&quot;BlogPost&quot;) */
+    private $posts;
+}
+</code></pre>
+<p>When I persist some instances of the above classes the references would exist on both sides! The
+<code>BlogPost</code> collection would have a <a href="https://docs.mongodb.com/manual/reference/database-references/#dbrefs">DBRef</a> stored on the <code>$user</code> property and the <code>User</code>
+collection would have a <a href="https://docs.mongodb.com/manual/reference/database-references/#dbrefs">DBRef</a> stored in the <code>$posts</code> property.</p>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Owning and Inverse Sides<i class="fas fa-link"></i></a></h2>
+<p>A user may have lots of posts and we don't need to store a reference to each post on the user, we
+can get the users post by running a query like the following:</p>
+<pre><code class="javascript">db.BlogPost.find({ 'user.$id' : user.id })
+</code></pre>
+<p>In order to map this you can use the <code>inversedBy</code> and <code>mappedBy</code> options. Here is the same
+example above where we implement this:</p>
+<h3 class="section-header" id="title.1.1.1"><a href="#title.1.1.1">One to Many<i class="fas fa-link"></i></a></h3>
+<pre><code class="php">&lt;?php
+
+/** @Document */
+class BlogPost
+{
+    // ...
+
+    /** @ReferenceOne(targetDocument=&quot;User&quot;, inversedBy=&quot;posts&quot;) */
+    private $user;
+}
+
+/** @Document */
+class User
+{
+    // ...
+
+    /** @ReferenceMany(targetDocument=&quot;BlogPost&quot;, mappedBy=&quot;user&quot;) */
+    private $posts;
+}
+</code></pre>
+<p>So now when we persist a <code>User</code> and multiple <code>BlogPost</code> instances for that <code>User</code>:</p>
+<pre><code class="php">&lt;?php
+
+$user = new User();
+
+$post1 = new BlogPost();
+$post1-&gt;setUser($user);
+
+$post2 = new BlogPost();
+$post2-&gt;setUser($user);
+
+$post3 = new BlogPost();
+$post3-&gt;setUser($user);
+
+$dm-&gt;persist($post1);
+$dm-&gt;persist($post2);
+$dm-&gt;persist($post3);
+$dm-&gt;flush();
+</code></pre>
+<p>And we retrieve the <code>User</code> later to access the posts for that user:</p>
+<pre><code class="php">&lt;?php
+
+$user = $dm-&gt;find('User', $user-&gt;id);
+
+$posts = $user-&gt;getPosts();
+foreach ($posts as $post) {
+    // ...
+}
+</code></pre>
+<p>The above will execute a query like the following to lazily load the collection of posts to
+iterate over:</p>
+<pre><code class="javascript">db.BlogPost.find( { 'user.$id' : user.id } )
+</code></pre>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Remember that the inverse side, the side which specified <code>mappedBy</code> is immutable and
+any changes to the state of the reference will not be persisted.</p>
+</div>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">Other Examples<i class="fas fa-link"></i></a></h2>
+<p>Here are several examples which implement the <code>inversedBy</code> and <code>mappedBy</code> options:</p>
+<h3 class="section-header" id="title.1.2.1"><a href="#title.1.2.1">One to One<i class="fas fa-link"></i></a></h3>
+<p>Here is an example where we have a one to one relationship between <code>Cart</code> and <code>Customer</code>:</p>
+<pre><code class="php">&lt;?php
+
+/** @Document */
+class Cart
+{
+    // ...
+
+    /**
+     * @ReferenceOne(targetDocument=&quot;Customer&quot;, inversedBy=&quot;cart&quot;)
+     */
+    public $customer;
+}
+
+/** @Document */
+class Customer
+{
+    // ...
+
+    /**
+     * @ReferenceOne(targetDocument=&quot;Cart&quot;, mappedBy=&quot;customer&quot;)
+     */
+    public $cart;
+}
+</code></pre>
+<p>The owning side is on <code>Cart.customer</code> and the <code>Customer.cart</code> referenced is loaded with a query
+like this:</p>
+<pre><code class="javascript">db.Cart.find( { 'customer.$id' : customer.id } )
+</code></pre>
+<p>If you want to nullify the relationship between a <code>Cart</code> instance and <code>Customer</code> instance
+you must null it out on the <code>Cart.customer</code> side:</p>
+<pre><code class="php">&lt;?php
+
+$cart-&gt;setCustomer(null);
+$dm-&gt;flush();
+</code></pre>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>When specifying inverse one-to-one relationships the referenced document is
+loaded directly when the owning document is hydrated instead of using a
+proxy. In the example above, loading a <code>Customer</code> object from the database
+would also cause the corresponding <code>Cart</code> to be loaded. This can cause
+performance issues when loading many <code>Customer</code> objects at once.</p>
+</div>
+<h3 class="section-header" id="title.1.2.2"><a href="#title.1.2.2">Self-Referencing Many to Many<i class="fas fa-link"></i></a></h3>
+<pre><code class="php">&lt;?php
+
+namespace Documents;
+
+/** @Document */
+class User
+{
+    // ...
+
+    /**
+     * @ReferenceMany(targetDocument=&quot;User&quot;, mappedBy=&quot;myFriends&quot;)
+     */
+    public $friendsWithMe;
+
+    /**
+     * @ReferenceMany(targetDocument=&quot;User&quot;, inversedBy=&quot;friendsWithMe&quot;)
+     */
+    public $myFriends;
+
+    public function __construct($name)
+    {
+        $this-&gt;name = $name;
+        $this-&gt;friendsWithMe = new \Doctrine\Common\Collections\ArrayCollection();
+        $this-&gt;myFriends = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function addFriend(User $user)
+    {
+        $user-&gt;friendsWithMe[] = $this;
+        $this-&gt;myFriends[] = $user;
+    }
+}
+</code></pre>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Caching - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/orm/">ORM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-orm/en/2.5/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Caching</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/latest/reference/caching.html" class="badge badge-secondary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.6/reference/caching.html" class="badge badge-secondary">2.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.5/reference/caching.html" class="badge badge-primary">2.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Caching<i class="fas fa-link"></i></a></h1>
+<p>Doctrine provides cache drivers in the <code>Common</code> package for some
+of the most popular caching implementations such as APC, Memcache
+and Xcache. We also provide an <code>ArrayCache</code> driver which stores
+the data in a PHP array. Obviously, when using <code>ArrayCache</code>, the
+cache does not persist between requests, but this is useful for
+testing in a development environment.</p>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Cache Drivers<i class="fas fa-link"></i></a></h2>
+<p>The cache drivers follow a simple interface that is defined in
+<code>Doctrine\Common\Cache\Cache</code>. All the cache drivers extend a
+base class <code>Doctrine\Common\Cache\CacheProvider</code> which implements
+this interface.</p>
+<p>The interface defines the following public methods for you to implement:</p>
+<ul><li class="dash"> fetch($id) - Fetches an entry from the cache</li>
+<li class="dash"> contains($id) - Test if an entry exists in the cache</li>
+<li class="dash"> save($id, $data, $lifeTime = false) - Puts data into the cache for x seconds. 0 = infinite time</li>
+<li class="dash"> delete($id) - Deletes a cache entry</li>
+</ul>
+
+<p>Each driver extends the <code>CacheProvider</code> class which defines a few
+abstract protected methods that each of the drivers must
+implement:</p>
+<ul><li class="dash"> \_doFetch($id)</li>
+<li class="dash"> \_doContains($id)</li>
+<li class="dash"> \_doSave($id, $data, $lifeTime = false)</li>
+<li class="dash"> \_doDelete($id)</li>
+</ul>
+
+<p>The public methods <code>fetch()</code>, <code>contains()</code> etc. use the
+above protected methods which are implemented by the drivers. The
+code is organized this way so that the protected methods in the
+drivers do the raw interaction with the cache implementation and
+the <code>CacheProvider</code> can build custom functionality on top of
+these methods.</p>
+<p>This documentation does not cover every single cache driver included
+with Doctrine. For an up-to-date-list, see the
+`cache directory on GitHub &lt;https://github.com/doctrine/cache/tree/master/lib/Doctrine/Common/Cache&gt;`.</p>
+<h3 class="section-header" id="title.1.1.1"><a href="#title.1.1.1">APC<i class="fas fa-link"></i></a></h3>
+<p>In order to use the APC cache driver you must have it compiled and
+enabled in your php.ini. You can read about APC
+<a href="https://php.net/apc">in the PHP Documentation</a>. It will give
+you a little background information about what it is and how you
+can use it as well as how to install it.</p>
+<p>Below is a simple example of how you could use the APC cache driver
+by itself.</p>
+<pre><code class="php">&lt;?php
+$cacheDriver = new \Doctrine\Common\Cache\ApcCache();
+$cacheDriver-&gt;save('cache_id', 'my_data');
+</code></pre>
+<h3 class="section-header" id="title.1.1.2"><a href="#title.1.1.2">APCu<i class="fas fa-link"></i></a></h3>
+<p>In order to use the APCu cache driver you must have it compiled and
+enabled in your php.ini. You can read about APCu
+<a href="https://php.net/apcu">in the PHP Documentation</a>. It will give
+you a little background information about what it is and how you
+can use it as well as how to install it.</p>
+<p>Below is a simple example of how you could use the APCu cache driver
+by itself.</p>
+<pre><code class="php">&lt;?php
+$cacheDriver = new \Doctrine\Common\Cache\ApcuCache();
+$cacheDriver-&gt;save('cache_id', 'my_data');
+</code></pre>
+<h3 class="section-header" id="title.1.1.3"><a href="#title.1.1.3">Memcache<i class="fas fa-link"></i></a></h3>
+<p>In order to use the Memcache cache driver you must have it compiled
+and enabled in your php.ini. You can read about Memcache
+<a href="https://php.net/memcache">on the PHP website</a>. It will
+give you a little background information about what it is and how
+you can use it as well as how to install it.</p>
+<p>Below is a simple example of how you could use the Memcache cache
+driver by itself.</p>
+<pre><code class="php">&lt;?php
+$memcache = new Memcache();
+$memcache-&gt;connect('memcache_host', 11211);
+
+$cacheDriver = new \Doctrine\Common\Cache\MemcacheCache();
+$cacheDriver-&gt;setMemcache($memcache);
+$cacheDriver-&gt;save('cache_id', 'my_data');
+</code></pre>
+<h3 class="section-header" id="title.1.1.4"><a href="#title.1.1.4">Memcached<i class="fas fa-link"></i></a></h3>
+<p>Memcached is a more recent and complete alternative extension to
+Memcache.</p>
+<p>In order to use the Memcached cache driver you must have it compiled
+and enabled in your php.ini. You can read about Memcached
+<a href="https://php.net/memcached">on the PHP website</a>. It will
+give you a little background information about what it is and how
+you can use it as well as how to install it.</p>
+<p>Below is a simple example of how you could use the Memcached cache
+driver by itself.</p>
+<pre><code class="php">&lt;?php
+$memcached = new Memcached();
+$memcached-&gt;addServer('memcache_host', 11211);
+
+$cacheDriver = new \Doctrine\Common\Cache\MemcachedCache();
+$cacheDriver-&gt;setMemcached($memcached);
+$cacheDriver-&gt;save('cache_id', 'my_data');
+</code></pre>
+<h3 class="section-header" id="title.1.1.5"><a href="#title.1.1.5">Xcache<i class="fas fa-link"></i></a></h3>
+<p>In order to use the Xcache cache driver you must have it compiled
+and enabled in your php.ini. You can read about Xcache
+<a href="https://xcache.lighttpd.net/">here</a>. It will give you a little
+background information about what it is and how you can use it as
+well as how to install it.</p>
+<p>Below is a simple example of how you could use the Xcache cache
+driver by itself.</p>
+<pre><code class="php">&lt;?php
+$cacheDriver = new \Doctrine\Common\Cache\XcacheCache();
+$cacheDriver-&gt;save('cache_id', 'my_data');
+</code></pre>
+<h3 class="section-header" id="title.1.1.6"><a href="#title.1.1.6">Redis<i class="fas fa-link"></i></a></h3>
+<p>In order to use the Redis cache driver you must have it compiled
+and enabled in your php.ini. You can read about what Redis is
+<a href="https://redis.io/">from here</a>. Also check
+<a href="https://github.com/nicolasff/phpredis/">A PHP extension for Redis</a> for how you can use
+and install the Redis PHP extension.</p>
+<p>Below is a simple example of how you could use the Redis cache
+driver by itself.</p>
+<pre><code class="php">&lt;?php
+$redis = new Redis();
+$redis-&gt;connect('redis_host', 6379);
+
+$cacheDriver = new \Doctrine\Common\Cache\RedisCache();
+$cacheDriver-&gt;setRedis($redis);
+$cacheDriver-&gt;save('cache_id', 'my_data');
+</code></pre>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">Using Cache Drivers<i class="fas fa-link"></i></a></h2>
+<p>In this section we'll describe how you can fully utilize the API of
+the cache drivers to save data to a cache, check if some cached data
+exists, fetch the cached data and delete the cached data. We'll use the
+<code>ArrayCache</code> implementation as our example here.</p>
+<pre><code class="php">&lt;?php
+$cacheDriver = new \Doctrine\Common\Cache\ArrayCache();
+</code></pre>
+<h3 class="section-header" id="title.1.2.1"><a href="#title.1.2.1">Saving<i class="fas fa-link"></i></a></h3>
+<p>Saving some data to the cache driver is as simple as using the
+<code>save()</code> method.</p>
+<pre><code class="php">&lt;?php
+$cacheDriver-&gt;save('cache_id', 'my_data');
+</code></pre>
+<p>The <code>save()</code> method accepts three arguments which are described
+below:</p>
+<ul><li class="dash"> <code>$id</code> - The cache id</li>
+<li class="dash"> <code>$data</code> - The cache entry/data.</li>
+<li class="dash"> <code>$lifeTime</code> - The lifetime. If != false, sets a specific
+   lifetime for this cache entry (null =&gt; infinite lifeTime).</li>
+</ul>
+
+<p>You can save any type of data whether it be a string, array,
+object, etc.</p>
+<pre><code class="php">&lt;?php
+$array = array(
+    'key1' =&gt; 'value1',
+    'key2' =&gt; 'value2'
+);
+$cacheDriver-&gt;save('my_array', $array);
+</code></pre>
+<h3 class="section-header" id="title.1.2.2"><a href="#title.1.2.2">Checking<i class="fas fa-link"></i></a></h3>
+<p>Checking whether cached data exists is very simple: just use the
+<code>contains()</code> method. It accepts a single argument which is the ID
+of the cache entry.</p>
+<pre><code class="php">&lt;?php
+if ($cacheDriver-&gt;contains('cache_id')) {
+    echo 'cache exists';
+} else {
+    echo 'cache does not exist';
+}
+</code></pre>
+<h3 class="section-header" id="title.1.2.3"><a href="#title.1.2.3">Fetching<i class="fas fa-link"></i></a></h3>
+<p>Now if you want to retrieve some cache entry you can use the
+<code>fetch()</code> method. It also accepts a single argument just like
+<code>contains()</code> which is again the ID of the cache entry.</p>
+<pre><code class="php">&lt;?php
+$array = $cacheDriver-&gt;fetch('my_array');
+</code></pre>
+<h3 class="section-header" id="title.1.2.4"><a href="#title.1.2.4">Deleting<i class="fas fa-link"></i></a></h3>
+<p>As you might guess, deleting is just as easy as saving, checking
+and fetching. You can delete by an individual ID, or you can
+delete all entries.</p>
+<h4 class="section-header" id="title.1.2.4.1"><a href="#title.1.2.4.1">By Cache ID<i class="fas fa-link"></i></a></h4>
+<pre><code class="php">&lt;?php
+$cacheDriver-&gt;delete('my_array');
+</code></pre>
+<h4 class="section-header" id="title.1.2.4.2"><a href="#title.1.2.4.2">All<i class="fas fa-link"></i></a></h4>
+<p>If you simply want to delete all cache entries you can do so with
+the <code>deleteAll()</code> method.</p>
+<pre><code class="php">&lt;?php
+$deleted = $cacheDriver-&gt;deleteAll();
+</code></pre>
+<h3 class="section-header" id="title.1.2.5"><a href="#title.1.2.5">Namespaces<i class="fas fa-link"></i></a></h3>
+<p>If you heavily use caching in your application and use it in
+multiple parts of your application, or use it in different
+applications on the same server you may have issues with cache
+naming collisions. This can be worked around by using namespaces.
+You can set the namespace a cache driver should use by using the
+<code>setNamespace()</code> method.</p>
+<pre><code class="php">&lt;?php
+$cacheDriver-&gt;setNamespace('my_namespace_');
+</code></pre>
+<h2 class="section-header" id="title.1.3"><a href="#title.1.3">Integrating with the ORM<i class="fas fa-link"></i></a></h2>
+<p>The Doctrine ORM package is tightly integrated with the cache
+drivers to allow you to improve the performance of various aspects of
+Doctrine by simply making some additional configurations and
+method calls.</p>
+<h3 class="section-header" id="title.1.3.1"><a href="#title.1.3.1">Query Cache<i class="fas fa-link"></i></a></h3>
+<p>It is highly recommended that in a production environment you cache
+the transformation of a DQL query to its SQL counterpart. It
+doesn't make sense to do this parsing multiple times as it doesn't
+change unless you alter the DQL query.</p>
+<p>This can be done by configuring the query cache implementation to
+use on your ORM configuration.</p>
+<pre><code class="php">&lt;?php
+$config = new \Doctrine\ORM\Configuration();
+$config-&gt;setQueryCacheImpl(new \Doctrine\Common\Cache\ApcuCache());
+</code></pre>
+<h3 class="section-header" id="title.1.3.2"><a href="#title.1.3.2">Result Cache<i class="fas fa-link"></i></a></h3>
+<p>The result cache can be used to cache the results of your queries
+so that we don't have to query the database again after the first time.
+You just need to configure the result cache implementation.</p>
+<pre><code class="php">&lt;?php
+$config-&gt;setResultCacheImpl(new \Doctrine\Common\Cache\ApcuCache());
+</code></pre>
+<p>Now when you're executing DQL queries you can configure them to use
+the result cache.</p>
+<pre><code class="php">&lt;?php
+$query = $em-&gt;createQuery('select u from \Entities\User u');
+$query-&gt;useResultCache(true);
+</code></pre>
+<p>You can also configure an individual query to use a different
+result cache driver.</p>
+<pre><code class="php">&lt;?php
+$query-&gt;setResultCacheDriver(new \Doctrine\Common\Cache\ApcuCache());
+</code></pre>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Setting the result cache driver on the query will
+automatically enable the result cache for the query. If you want to
+disable it pass false to <code>useResultCache()</code>.</p>
+
+<pre><code class="">&lt;?php
+$query-&gt;useResultCache(false);
+</code></pre>
+</div>
+<p>If you want to set the time the cache has to live you can use the
+<code>setResultCacheLifetime()</code> method.</p>
+<pre><code class="php">&lt;?php
+$query-&gt;setResultCacheLifetime(3600);
+</code></pre>
+<p>The ID used to store the result set cache is a hash which is
+automatically generated for you if you don't set a custom ID
+yourself with the <code>setResultCacheId()</code> method.</p>
+<pre><code class="php">&lt;?php
+$query-&gt;setResultCacheId('my_custom_id');
+</code></pre>
+<p>You can also set the lifetime and cache ID by passing the values as
+the second and third argument to <code>useResultCache()</code>.</p>
+<pre><code class="php">&lt;?php
+$query-&gt;useResultCache(true, 3600, 'my_custom_id');
+</code></pre>
+<h3 class="section-header" id="title.1.3.3"><a href="#title.1.3.3">Metadata Cache<i class="fas fa-link"></i></a></h3>
+<p>Your class metadata can be parsed from a few different sources like
+XML, Annotations, etc. Instead of parsing this information on
+each request we should cache it using one of the cache drivers.</p>
+<p>Just like the query and result cache we need to configure it
+first.</p>
+<pre><code class="php">&lt;?php
+$config-&gt;setMetadataCacheImpl(new \Doctrine\Common\Cache\ApcuCache());
+</code></pre>
+<p>Now the metadata information will only be parsed once and stored in
+the cache driver.</p>
+<h2 class="section-header" id="title.1.4"><a href="#title.1.4">Clearing the Cache<i class="fas fa-link"></i></a></h2>
+<p>We've already shown you how you can use the API of the
+cache drivers to manually delete cache entries. For your
+convenience we offer command line tasks to help you with
+clearing the query, result and metadata cache.</p>
+<p>From the Doctrine command line you can run the following commands:</p>
+<p>To clear the query cache use the <code>orm:clear-cache:query</code> task.</p>
+<pre><code class="php">$ ./doctrine orm:clear-cache:query
+</code></pre>
+<p>To clear the metadata cache use the <code>orm:clear-cache:metadata</code> task.</p>
+<pre><code class="php">$ ./doctrine orm:clear-cache:metadata
+</code></pre>
+<p>To clear the result cache use the <code>orm:clear-cache:result</code> task.</p>
+<pre><code class="php">$ ./doctrine orm:clear-cache:result
+</code></pre>
+<p>All these tasks accept a <code>--flush</code> option to flush the entire
+contents of the cache instead of invalidating the entries.</p>
+<h2 class="section-header" id="title.1.5"><a href="#title.1.5">Cache Chaining<i class="fas fa-link"></i></a></h2>
+<p>A common pattern is to use a static cache to store data that is
+requested many times in a single PHP request. Even though this data
+may be stored in a fast memory cache, often that cache is over a
+network link leading to sizable network traffic.</p>
+<p>The ChainCache class allows multiple caches to be registered at once.
+For example, a per-request ArrayCache can be used first, followed by
+a (relatively) slower MemcacheCache if the ArrayCache misses.
+ChainCache automatically handles pushing data up to faster caches in
+the chain and clearing data in the entire stack when it is deleted.</p>
+<p>A ChainCache takes a simple array of CacheProviders in the order that
+they should be used.</p>
+<pre><code class="php">$arrayCache = new \Doctrine\Common\Cache\ArrayCache();
+$memcache = new Memcache();
+$memcache-&gt;connect('memcache_host', 11211);
+$chainCache = new \Doctrine\Common\Cache\ChainCache([
+    $arrayCache,
+    $memcache,
+]);
+</code></pre>
+<p>ChainCache itself extends the CacheProvider interface, so it is
+possible to create chains of chains. While this may seem like an easy
+way to build a simple high-availability cache, ChainCache does not
+implement any exception handling so using it as a high-availability
+mechanism is not recommended.</p>
+<h2 class="section-header" id="title.1.6"><a href="#title.1.6">Cache Slams<i class="fas fa-link"></i></a></h2>
+<p>Something to be careful of when using the cache drivers is
+&quot;cache slams&quot;. Imagine you have a heavily trafficked website with some
+code that checks for the existence of a cache record and if it does
+not exist it generates the information and saves it to the cache.
+Now, if 100 requests were issued all at the same time and each one
+sees the cache does not exist and they all try to insert the same
+cache entry it could lock up APC, Xcache, etc. and cause problems.
+Ways exist to work around this, like pre-populating your cache and
+not letting your users' requests populate the cache.</p>
+<p>You can read more about cache slams
+<a href="http://notmysock.org/blog/php/user-cache-timebomb.html">in this blog post</a>.</p>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

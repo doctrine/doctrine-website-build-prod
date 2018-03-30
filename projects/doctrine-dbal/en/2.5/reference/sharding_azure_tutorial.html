@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SQLAzure Sharding Tutorial - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/dbal/">DBAL</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-dbal/en/2.5/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">SQLAzure Sharding Tutorial</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-dbal/en/latest/reference/sharding_azure_tutorial.html" class="badge badge-secondary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-dbal/en/2.6/reference/sharding_azure_tutorial.html" class="badge badge-secondary">2.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-dbal/en/2.5/reference/sharding_azure_tutorial.html" class="badge badge-primary">2.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">SQLAzure Sharding Tutorial<i class="fas fa-link"></i></a></h1>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The sharding extension is currently in transition from a separate Project
+into DBAL. Class names may differ.</p>
+</div>
+<p>This tutorial builds upon the <a href="">Brian Swans tutorial
+&lt;http://blogs.msdn.com/b/silverlining/archive/2012/01/18/using-sql-azure-federations-via-php.aspx&gt;</a>
+on SQLAzure Sharding and turns all the examples into examples using the Doctrine Sharding support.</p>
+<p>It introduces SQL Azure Sharding, which is an abstraction layer in SQL Azure to
+support sharding. Many features for sharding are implemented on the database
+level, which makes it much easier to work with than generic sharding
+implementations.</p>
+<p>For this tutorial you need an Azure account. You don't need to deploy the code
+on Azure, you can run it from your own machine against the remote database.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>You can look at the code from the 'examples/sharding' directory.</p>
+</div>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Install Doctrine<i class="fas fa-link"></i></a></h2>
+<p>For this tutorial we will install Doctrine and the Sharding Extension through
+<a href="http://getcomposer.org">Composer</a> which is the easiest way to install
+Doctrine. Composer is a new package manager for PHP. Download the
+<code>composer.phar</code> from their website and put it into a newly created folder for
+this tutorial. Now create a <code>composer.json</code> file in this project root with
+the following content:</p>
+<blockquote><p>{
+    &quot;require&quot;: {
+        &quot;doctrine/dbal&quot;: &quot;2.2.2&quot;,
+        &quot;doctrine/shards&quot;: &quot;0.2&quot;
+    }
+}</p>
+</blockquote>
+<p>Open up the commandline and switch to your tutorial root directory, then call
+<code>php composer.phar install</code>. It will grab the code and install it into the
+<code>vendor</code> subdirectory of your project. It also creates an autoloader, so that
+we don't have to care about this.</p>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">Setup Connection<i class="fas fa-link"></i></a></h2>
+<p>The first thing to start with is setting up Doctrine and the database connection:</p>
+<pre><code class="php">&lt;?php
+// bootstrap.php
+use Doctrine\DBAL\DriverManager;
+use Doctrine\Shards\DBAL\SQLAzure\SQLAzureShardManager;
+
+require_once &quot;vendor/autoload.php&quot;;
+
+$conn = DriverManager::getConnection(array(
+    'driver'   =&gt; 'pdo_sqlsrv',
+    'dbname'   =&gt; 'SalesDB',
+    'host'     =&gt; 'tcp:dbname.windows.net',
+    'user'     =&gt; 'user@dbname',
+    'password' =&gt; 'XXX',
+    'platform'       =&gt; new \Doctrine\DBAL\Platforms\SQLAzurePlatform(),
+    'driverOptions'  =&gt; array('MultipleActiveResultSets' =&gt; false),
+    'sharding' =&gt; array(
+        'federationName'   =&gt; 'Orders_Federation',
+        'distributionKey'  =&gt; 'CustId',
+        'distributionType' =&gt; 'integer',
+    )
+));
+
+$shardManager = new SQLAzureShardManager($conn);
+</code></pre>
+<h2 class="section-header" id="title.1.3"><a href="#title.1.3">Create Database<i class="fas fa-link"></i></a></h2>
+<p>Create a new database using the Azure/SQL Azure management console.</p>
+<h2 class="section-header" id="title.1.4"><a href="#title.1.4">Create Schema<i class="fas fa-link"></i></a></h2>
+<p>Doctrine has a powerful schema API. We don't need to use low-level DDL
+statements to generate the database schema. Instead you can use an Object-Oriented API
+to create the database schema and then have Doctrine turn it into DDL
+statements.</p>
+<p>We will recreate Brians example schema with Doctrine DBAL. Instead of having to
+create federations and schema separately as in his example, Doctrine will do it
+all in one step:</p>
+<pre><code class="php">&lt;?php
+// create_schema.php
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Shards\DBAL\SQLAzure\SQLAzureSchemaSynchronizer;
+
+require_once 'bootstrap.php';
+
+$schema = new Schema();
+
+$products = $schema-&gt;createTable('Products');
+$products-&gt;addColumn('ProductID', 'integer');
+$products-&gt;addColumn('SupplierID', 'integer');
+$products-&gt;addColumn('ProductName', 'string');
+$products-&gt;addColumn('Price', 'decimal', array('scale' =&gt; 2, 'precision' =&gt; 12));
+$products-&gt;setPrimaryKey(array('ProductID'));
+$products-&gt;addOption('azure.federated', true);
+
+$customers = $schema-&gt;createTable('Customers');
+$customers-&gt;addColumn('CustomerID', 'integer');
+$customers-&gt;addColumn('CompanyName', 'string');
+$customers-&gt;addColumn('FirstName', 'string');
+$customers-&gt;addColumn('LastName', 'string');
+$customers-&gt;setPrimaryKey(array('CustomerID'));
+$customers-&gt;addOption('azure.federated', true);
+$customers-&gt;addOption('azure.federatedOnColumnName', 'CustomerID');
+
+$orders = $schema-&gt;createTable('Orders');
+$orders-&gt;addColumn('CustomerID', 'integer');
+$orders-&gt;addColumn('OrderID', 'integer');
+$orders-&gt;addColumn('OrderDate', 'datetime');
+$orders-&gt;setPrimaryKey(array('CustomerID', 'OrderID'));
+$orders-&gt;addOption('azure.federated', true);
+$orders-&gt;addOption('azure.federatedOnColumnName', 'CustomerID');
+
+$orderItems = $schema-&gt;createTable('OrderItems');
+$orderItems-&gt;addColumn('CustomerID', 'integer');
+$orderItems-&gt;addColumn('OrderID', 'integer');
+$orderItems-&gt;addColumn('ProductID', 'integer');
+$orderItems-&gt;addColumn('Quantity', 'integer');
+$orderItems-&gt;setPrimaryKey(array('CustomerID', 'OrderID', 'ProductID'));
+$orderItems-&gt;addOption('azure.federated', true);
+$orderItems-&gt;addOption('azure.federatedOnColumnName', 'CustomerID');
+
+// Create the Schema + Federation:
+$synchronizer = new SQLAzureSchemaSynchronizer($conn, $shardManager);
+$synchronizer-&gt;createSchema($schema);
+
+// Or jut look at the SQL:
+echo implode(&quot;\n&quot;, $synchronizer-&gt;getCreateSchema($schema));
+</code></pre>
+<h2 class="section-header" id="title.1.5"><a href="#title.1.5">View Federation Members<i class="fas fa-link"></i></a></h2>
+<p>To see how many shard instances (called Federation Members) your SQLAzure database currently has
+you can ask the <code>ShardManager</code> to enumerate all shards:</p>
+<pre><code class="php">&lt;?php
+// view_federation_members.php
+require_once &quot;bootstrap.php&quot;;
+
+$shards = $shardManager-&gt;getShards();
+foreach ($shards as $shard) {
+    print_r($shard);
+}
+</code></pre>
+<h2 class="section-header" id="title.1.6"><a href="#title.1.6">Insert Data<i class="fas fa-link"></i></a></h2>
+<p>Now we want to insert some test data into the database to see the behavior when
+we split the shards. We use the same test data as Brian, but use the Doctrine
+API to insert them. To insert data into federated tables we have to select the
+shard we want to put the data into. We can use the ShardManager to execute this
+operation for us:</p>
+<pre><code class="php">&lt;?php
+// insert_data.php
+require_once &quot;bootstrap.php&quot;;
+
+$shardManager-&gt;selectShard(0);
+
+$conn-&gt;insert(&quot;Products&quot;, array(
+    &quot;ProductID&quot; =&gt; 386,
+    &quot;SupplierID&quot; =&gt; 1001,
+    &quot;ProductName&quot; =&gt; 'Titanium Extension Bracket Left Hand',
+    &quot;Price&quot; =&gt; 5.25,
+));
+$conn-&gt;insert(&quot;Products&quot;, array(
+    &quot;ProductID&quot; =&gt; 387,
+    &quot;SupplierID&quot; =&gt; 1001,
+    &quot;ProductName&quot; =&gt; 'Titanium Extension Bracket Right Hand',
+    &quot;Price&quot; =&gt; 5.25,
+));
+$conn-&gt;insert(&quot;Products&quot;, array(
+    &quot;ProductID&quot; =&gt; 388,
+    &quot;SupplierID&quot; =&gt; 1001,
+    &quot;ProductName&quot; =&gt; 'Fusion Generator Module 5 kV',
+    &quot;Price&quot; =&gt; 10.50,
+));
+$conn-&gt;insert(&quot;Products&quot;, array(
+    &quot;ProductID&quot; =&gt; 388,
+    &quot;SupplierID&quot; =&gt; 1001,
+    &quot;ProductName&quot; =&gt; 'Bypass Filter 400 MHz Low Pass',
+    &quot;Price&quot; =&gt; 10.50,
+));
+
+$conn-&gt;insert(&quot;Customers&quot;, array(
+    'CustomerID' =&gt; 10,
+    'CompanyName' =&gt; 'Van Nuys',
+    'FirstName' =&gt; 'Catherine',
+    'LastName' =&gt; 'Abel',
+));
+$conn-&gt;insert(&quot;Customers&quot;, array(
+    'CustomerID' =&gt; 20,
+    'CompanyName' =&gt; 'Abercrombie',
+    'FirstName' =&gt; 'Kim',
+    'LastName' =&gt; 'Branch',
+));
+$conn-&gt;insert(&quot;Customers&quot;, array(
+    'CustomerID' =&gt; 30,
+    'CompanyName' =&gt; 'Contoso',
+    'FirstName' =&gt; 'Frances',
+    'LastName' =&gt; 'Adams',
+));
+$conn-&gt;insert(&quot;Customers&quot;, array(
+    'CustomerID' =&gt; 40,
+    'CompanyName' =&gt; 'A. Datum Corporation',
+    'FirstName' =&gt; 'Mark',
+    'LastName' =&gt; 'Harrington',
+));
+$conn-&gt;insert(&quot;Customers&quot;, array(
+    'CustomerID' =&gt; 50,
+    'CompanyName' =&gt; 'Adventure Works',
+    'FirstName' =&gt; 'Keith',
+    'LastName' =&gt; 'Harris',
+));
+$conn-&gt;insert(&quot;Customers&quot;, array(
+    'CustomerID' =&gt; 60,
+    'CompanyName' =&gt; 'Alpine Ski House',
+    'FirstName' =&gt; 'Wilson',
+    'LastName' =&gt; 'Pais',
+));
+$conn-&gt;insert(&quot;Customers&quot;, array(
+    'CustomerID' =&gt; 70,
+    'CompanyName' =&gt; 'Baldwin Museum of Science',
+    'FirstName' =&gt; 'Roger',
+    'LastName' =&gt; 'Harui',
+));
+$conn-&gt;insert(&quot;Customers&quot;, array(
+    'CustomerID' =&gt; 80,
+    'CompanyName' =&gt; 'Blue Yonder Airlines',
+    'FirstName' =&gt; 'Pilar',
+    'LastName' =&gt; 'Pinilla',
+));
+$conn-&gt;insert(&quot;Customers&quot;, array(
+    'CustomerID' =&gt; 90,
+    'CompanyName' =&gt; 'City Power &amp; Light',
+    'FirstName' =&gt; 'Kari',
+    'LastName' =&gt; 'Hensien',
+));
+$conn-&gt;insert(&quot;Customers&quot;, array(
+    'CustomerID' =&gt; 100,
+    'CompanyName' =&gt; 'Coho Winery',
+    'FirstName' =&gt; 'Peter',
+    'LastName' =&gt; 'Brehm',
+));
+
+$conn-&gt;executeUpdate(&quot;DECLARE @orderId INT
+
+    DECLARE @customerId INT
+
+    SET @orderId = 10
+    SELECT @customerId = CustomerId FROM Customers WHERE LastName = 'Hensien' and FirstName = 'Kari'
+
+    INSERT INTO Orders (CustomerId, OrderId, OrderDate)
+    VALUES (@customerId, @orderId, GetDate())
+
+    INSERT INTO OrderItems (CustomerID, OrderID, ProductID, Quantity)
+    VALUES (@customerId, @orderId, 388, 4)
+
+    SET @orderId = 20
+    SELECT @customerId = CustomerId FROM Customers WHERE LastName = 'Harui' and FirstName = 'Roger'
+
+    INSERT INTO Orders (CustomerId, OrderId, OrderDate)
+    VALUES (@customerId, @orderId, GetDate())
+
+    INSERT INTO OrderItems (CustomerID, OrderID, ProductID, Quantity)
+    VALUES (@customerId, @orderId, 389, 2)
+
+    SET @orderId = 30
+    SELECT @customerId = CustomerId FROM Customers WHERE LastName = 'Brehm' and FirstName = 'Peter'
+
+    INSERT INTO Orders (CustomerId, OrderId, OrderDate)
+    VALUES (@customerId, @orderId, GetDate())
+
+    INSERT INTO OrderItems (CustomerID, OrderID, ProductID, Quantity)
+    VALUES (@customerId, @orderId, 387, 3)
+
+    SET @orderId = 40
+    SELECT @customerId = CustomerId FROM Customers WHERE LastName = 'Pais' and FirstName = 'Wilson'
+
+    INSERT INTO Orders (CustomerId, OrderId, OrderDate)
+    VALUES (@customerId, @orderId, GetDate())
+
+    INSERT INTO OrderItems (CustomerID, OrderID, ProductID, Quantity)
+    VALUES (@customerId, @orderId, 388, 1)&quot;
+);
+</code></pre>
+<p>This puts the data into the currently only existing federation member. We
+selected that federation member by picking 0 as distribution value, which is by
+definition part of the only existing federation.</p>
+<h2 class="section-header" id="title.1.7"><a href="#title.1.7">Split Federation<i class="fas fa-link"></i></a></h2>
+<p>Now lets split the federation, creating a second federation member. SQL Azure
+will automatically redistribute the data into the two federations after you
+executed this command.</p>
+<pre><code class="php">&lt;?php
+// split_federation.php
+require_once 'bootstrap.php';
+
+$shardManager-&gt;splitFederation(60);
+</code></pre>
+<p>This little script uses the shard manager with a special method only existing
+on the SQL AZure implementation <code>splitFederation</code>. It accepts a value at
+at which the split is executed.</p>
+<p>If you reexecute the <code>view_federation_members.php</code> script you can now see
+that there are two federation members instead of just one as before. You can
+see with the <code>rangeLow</code> and <code>rangeHigh</code> parameters what customers and
+related entries are now served by which federation.</p>
+<h2 class="section-header" id="title.1.8"><a href="#title.1.8">Inserting Data after Split<i class="fas fa-link"></i></a></h2>
+<p>Now after we splitted the data we now have to make sure to be connected to the
+right federation before inserting data. Lets add a new customer with ID 55 and
+have him create an order.</p>
+<pre><code class="php">&lt;?php
+// insert_data_aftersplit.php
+require_once 'bootstrap.php';
+
+$newCustomerId = 55;
+
+$shardManager-&gt;selectShard($newCustomerId);
+
+$conn-&gt;insert(&quot;Customers&quot;, array(
+    &quot;CustomerID&quot; =&gt; $newCustomerId,
+    &quot;CompanyName&quot; =&gt; &quot;Microsoft&quot;,
+    &quot;FirstName&quot; =&gt; &quot;Brian&quot;,
+    &quot;LastName&quot; =&gt; &quot;Swan&quot;,
+));
+
+$conn-&gt;insert(&quot;Orders&quot;, array(
+    &quot;CustomerID&quot; =&gt; 55,
+    &quot;OrderID&quot; =&gt; 37,
+    &quot;OrderDate&quot; =&gt; date('Y-m-d H:i:s'),
+));
+
+$conn-&gt;insert(&quot;OrderItems&quot;, array(
+    &quot;CustomerID&quot; =&gt; 55,
+    &quot;OrderID&quot; =&gt; 37,
+    &quot;ProductID&quot; =&gt; 387,
+    &quot;Quantity&quot; =&gt; 1,
+));
+</code></pre>
+<p>As you can see its very important to pick the right distribution key in your
+sharded application. Otherwise you have to switch the shards very often, which
+is not really easy to work with. If you pick the sharding key right then it
+should be possible to select the shard only once per request for the major
+number of use-cases.</p>
+<p>Fan-out the queries accross multiple shards should only be necessary for a
+small number of queries, because these kind of queries are complex.</p>
+<h2 class="section-header" id="title.1.9"><a href="#title.1.9">Querying data with filtering off<i class="fas fa-link"></i></a></h2>
+<p>To access the data you have to pick a shard again and then start selecting data
+from it.</p>
+<pre><code class="php">&lt;?php
+// query_filtering_off.php
+require_once &quot;bootstrap.php&quot;;
+
+$shardManager-&gt;selectShard(0);
+
+$data = $conn-&gt;fetchAll('SELECT * FROM Customers');
+print_r($data);
+</code></pre>
+<p>This returns all customers from the shard with distribution value 0. This will
+be all customers with id 10 to less than 60, since we split federations at 60.</p>
+<h2 class="section-header" id="title.1.10"><a href="#title.1.10">Querying data with filtering on<i class="fas fa-link"></i></a></h2>
+<p>One special feature of SQL Azure is the possibility to database level filtering
+based on the sharding distribution values. This means that SQL Azure will add
+WHERE clauses with distributionkey=current distribution value conditions to
+each distribution key.</p>
+<pre><code class="php">&lt;?php
+// query_filtering_on.php
+require_once &quot;bootstrap.php&quot;;
+
+$shardManager-&gt;setFilteringEnabled(true);
+$shardManager-&gt;selectShard(55);
+
+$data = $conn-&gt;fetchAll('SELECT * FROM Customers');
+print_r($data);
+</code></pre>
+<p>Now you only get the customer with id = 55. The same holds for queries on the
+<code>Orders</code> and <code>OrderItems</code> table, which are restricted by customer id = 55.</p>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

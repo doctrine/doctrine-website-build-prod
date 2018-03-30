@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Native SQL - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/orm/">ORM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-orm/en/latest/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Native SQL</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/latest/reference/native-sql.html" class="badge badge-primary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.6/reference/native-sql.html" class="badge badge-secondary">2.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.5/reference/native-sql.html" class="badge badge-secondary">2.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Native SQL<i class="fas fa-link"></i></a></h1>
+<p>With <code>NativeQuery</code> you can execute native SELECT SQL statements
+and map the results to Doctrine entities or any other result format
+supported by Doctrine.</p>
+<p>In order to make this mapping possible, you need to describe
+to Doctrine what columns in the result map to which entity property.
+This description is represented by a <code>ResultSetMapping</code> object.</p>
+<p>With this feature you can map arbitrary SQL code to objects, such as highly
+vendor-optimized SQL or stored-procedures.</p>
+<p>Writing <code>ResultSetMapping</code> from scratch is complex, but there is a convenience
+wrapper around it called a <code>ResultSetMappingBuilder</code>. It can generate
+the mappings for you based on Entities and even generates the <code>SELECT</code>
+clause based on this information for you.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>If you want to execute DELETE, UPDATE or INSERT statements
+the Native SQL API cannot be used and will probably throw errors.
+Use <code>EntityManager#getConnection()</code> to access the native database
+connection and call the <code>executeUpdate()</code> method for these
+queries.</p>
+</div>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">The NativeQuery class<i class="fas fa-link"></i></a></h2>
+<p>To create a <code>NativeQuery</code> you use the method
+<code>EntityManager#createNativeQuery($sql, $resultSetMapping)</code>. As you can see in
+the signature of this method, it expects 2 ingredients: The SQL you want to
+execute and the <code>ResultSetMapping</code> that describes how the results will be
+mapped.</p>
+<p>Once you obtained an instance of a <code>NativeQuery</code>, you can bind parameters to
+it with the same API that <code>Query</code> has and execute it.</p>
+<pre><code class="php">&lt;?php
+use Doctrine\ORM\Query\ResultSetMapping;
+
+$rsm = new ResultSetMapping();
+// build rsm here
+
+$query = $entityManager-&gt;createNativeQuery('SELECT id, name, discr FROM users WHERE name = ?', $rsm);
+$query-&gt;setParameter(1, 'romanb');
+
+$users = $query-&gt;getResult();
+</code></pre>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">ResultSetMappingBuilder<i class="fas fa-link"></i></a></h2>
+<p>An easy start into ResultSet mapping is the <code>ResultSetMappingBuilder</code> object.
+This has several benefits:</p>
+<ul><li class="dash">The builder takes care of automatically updating your <code>ResultSetMapping</code>
+  when the fields or associations change on the metadata of an entity.</li>
+<li class="dash">You can generate the required <code>SELECT</code> expression for a builder
+  by converting it to a string.</li>
+<li class="dash">The API is much simpler than the usual <code>ResultSetMapping</code> API.</li>
+</ul>
+
+<p>One downside is that the builder API does not yet support entities
+with inheritance hierarchies.</p>
+<pre><code class="php">&lt;?php
+
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
+
+$sql = &quot;SELECT u.id, u.name, a.id AS address_id, a.street, a.city &quot; .
+       &quot;FROM users u INNER JOIN address a ON u.address_id = a.id&quot;;
+
+$rsm = new ResultSetMappingBuilder($entityManager);
+$rsm-&gt;addRootEntityFromClassMetadata('MyProject\User', 'u');
+$rsm-&gt;addJoinedEntityFromClassMetadata('MyProject\Address', 'a', 'u', 'address', array('id' =&gt; 'address_id'));
+</code></pre>
+<p>The builder extends the <code>ResultSetMapping</code> class and as such has all the functionality of it as well.</p>
+<div class="version-added"><p>Starting with Doctrine ORM 2.4 you can generate the <code>SELECT</code> clause
+from a <code>ResultSetMappingBuilder</code>. You can either cast the builder
+object to <code>(string)</code> and the DQL aliases are used as SQL table aliases
+or use the <code>generateSelectClause($tableAliases)</code> method and pass
+a mapping from DQL alias (key) to SQL alias (value)</p></div>
+<pre><code class="php">&lt;?php
+
+$selectClause = $builder-&gt;generateSelectClause(array(
+    'u' =&gt; 't1',
+    'g' =&gt; 't2'
+));
+$sql = &quot;SELECT &quot; . $selectClause . &quot; FROM users t1 JOIN groups t2 ON t1.group_id = t2.id&quot;;
+</code></pre>
+<h2 class="section-header" id="title.1.3"><a href="#title.1.3">The ResultSetMapping<i class="fas fa-link"></i></a></h2>
+<p>Understanding the <code>ResultSetMapping</code> is the key to using a
+<code>NativeQuery</code>. A Doctrine result can contain the following
+components:</p>
+<ul><li class="dash"> Entity results. These represent root result elements.</li>
+<li class="dash"> Joined entity results. These represent joined entities in
+   associations of root entity results.</li>
+<li class="dash"> Field results. These represent a column in the result set that
+   maps to a field of an entity. A field result always belongs to an
+   entity result or joined entity result.</li>
+<li class="dash"> Scalar results. These represent scalar values in the result set
+   that will appear in each result row. Adding scalar results to a
+   ResultSetMapping can also cause the overall result to become
+   <strong>mixed</strong> (see DQL - Doctrine Query Language) if the same
+   ResultSetMapping also contains entity results.</li>
+<li class="dash"> Meta results. These represent columns that contain
+   meta-information, such as foreign keys and discriminator columns.
+   When querying for objects (<code>getResult()</code>), all meta columns of
+   root entities or joined entities must be present in the SQL query
+   and mapped accordingly using <code>ResultSetMapping#addMetaResult</code>.</li>
+</ul>
+
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>It might not surprise you that Doctrine uses
+<code>ResultSetMapping</code> internally when you create DQL queries. As
+the query gets parsed and transformed to SQL, Doctrine fills a
+<code>ResultSetMapping</code> that describes how the results should be
+processed by the hydration routines.</p>
+</div>
+<p>We will now look at each of the result types that can appear in a
+ResultSetMapping in detail.</p>
+<h3 class="section-header" id="title.1.3.1"><a href="#title.1.3.1">Entity results<i class="fas fa-link"></i></a></h3>
+<p>An entity result describes an entity type that appears as a root
+element in the transformed result. You add an entity result through
+<code>ResultSetMapping#addEntityResult()</code>. Let's take a look at the
+method signature in detail:</p>
+<pre><code class="php">&lt;?php
+/**
+ * Adds an entity result to this ResultSetMapping.
+ *
+ * @param string $class The class name of the entity.
+ * @param string $alias The alias for the class. The alias must be unique among all entity
+ *                      results or joined entity results within this ResultSetMapping.
+ */
+public function addEntityResult($class, $alias)
+</code></pre>
+<p>The first parameter is the fully qualified name of the entity
+class. The second parameter is some arbitrary alias for this entity
+result that must be unique within a <code>ResultSetMapping</code>. You use
+this alias to attach field results to the entity result. It is very
+similar to an identification variable that you use in DQL to alias
+classes or relationships.</p>
+<p>An entity result alone is not enough to form a valid
+<code>ResultSetMapping</code>. An entity result or joined entity result
+always needs a set of field results, which we will look at soon.</p>
+<h3 class="section-header" id="title.1.3.2"><a href="#title.1.3.2">Joined entity results<i class="fas fa-link"></i></a></h3>
+<p>A joined entity result describes an entity type that appears as a
+joined relationship element in the transformed result, attached to
+a (root) entity result. You add a joined entity result through
+<code>ResultSetMapping#addJoinedEntityResult()</code>. Let's take a look at
+the method signature in detail:</p>
+<pre><code class="php">&lt;?php
+/**
+ * Adds a joined entity result.
+ *
+ * @param string $class The class name of the joined entity.
+ * @param string $alias The unique alias to use for the joined entity.
+ * @param string $parentAlias The alias of the entity result that is the parent of this joined result.
+ * @param object $relation The association field that connects the parent entity result with the joined entity result.
+ */
+public function addJoinedEntityResult($class, $alias, $parentAlias, $relation)
+</code></pre>
+<p>The first parameter is the class name of the joined entity. The
+second parameter is an arbitrary alias for the joined entity that
+must be unique within the <code>ResultSetMapping</code>. You use this alias
+to attach field results to the entity result. The third parameter
+is the alias of the entity result that is the parent type of the
+joined relationship. The fourth and last parameter is the name of
+the field on the parent entity result that should contain the
+joined entity result.</p>
+<h3 class="section-header" id="title.1.3.3"><a href="#title.1.3.3">Field results<i class="fas fa-link"></i></a></h3>
+<p>A field result describes the mapping of a single column in a SQL
+result set to a field in an entity. As such, field results are
+inherently bound to entity results. You add a field result through
+<code>ResultSetMapping#addFieldResult()</code>. Again, let's examine the
+method signature in detail:</p>
+<pre><code class="php">&lt;?php
+/**
+ * Adds a field result that is part of an entity result or joined entity result.
+ *
+ * @param string $alias The alias of the entity result or joined entity result.
+ * @param string $columnName The name of the column in the SQL result set.
+ * @param string $fieldName The name of the field on the (joined) entity.
+ */
+public function addFieldResult($alias, $columnName, $fieldName)
+</code></pre>
+<p>The first parameter is the alias of the entity result to which the
+field result will belong. The second parameter is the name of the
+column in the SQL result set. Note that this name is case
+sensitive, i.e. if you use a native query against Oracle it must be
+all uppercase. The third parameter is the name of the field on the
+entity result identified by <code>$alias</code> into which the value of the
+column should be set.</p>
+<h3 class="section-header" id="title.1.3.4"><a href="#title.1.3.4">Scalar results<i class="fas fa-link"></i></a></h3>
+<p>A scalar result describes the mapping of a single column in a SQL
+result set to a scalar value in the Doctrine result. Scalar results
+are typically used for aggregate values but any column in the SQL
+result set can be mapped as a scalar value. To add a scalar result
+use <code>ResultSetMapping#addScalarResult()</code>. The method signature in
+detail:</p>
+<pre><code class="php">&lt;?php
+/**
+ * Adds a scalar result mapping.
+ *
+ * @param string $columnName The name of the column in the SQL result set.
+ * @param string $alias The result alias with which the scalar result should be placed in the result structure.
+ */
+public function addScalarResult($columnName, $alias)
+</code></pre>
+<p>The first parameter is the name of the column in the SQL result set
+and the second parameter is the result alias under which the value
+of the column will be placed in the transformed Doctrine result.</p>
+<h3 class="section-header" id="title.1.3.5"><a href="#title.1.3.5">Meta results<i class="fas fa-link"></i></a></h3>
+<p>A meta result describes a single column in a SQL result set that
+is either a foreign key or a discriminator column. These columns
+are essential for Doctrine to properly construct objects out of SQL
+result sets. To add a column as a meta result use
+<code>ResultSetMapping#addMetaResult()</code>. The method signature in
+detail:</p>
+<pre><code class="php">&lt;?php
+/**
+ * Adds a meta column (foreign key or discriminator column) to the result set.
+ *
+ * @param string  $alias
+ * @param string  $columnAlias
+ * @param string  $columnName
+ * @param boolean $isIdentifierColumn
+ */
+public function addMetaResult($alias, $columnAlias, $columnName, $isIdentifierColumn = false)
+</code></pre>
+<p>The first parameter is the alias of the entity result to which the
+meta column belongs. A meta result column (foreign key or
+discriminator column) always belongs to an entity result. The
+second parameter is the column alias/name of the column in the SQL
+result set and the third parameter is the column name used in the
+mapping.
+The fourth parameter should be set to true in case the primary key
+of the entity is the foreign key you're adding.</p>
+<h3 class="section-header" id="title.1.3.6"><a href="#title.1.3.6">Discriminator Column<i class="fas fa-link"></i></a></h3>
+<p>When joining an inheritance tree you have to give Doctrine a hint
+which meta-column is the discriminator column of this tree.</p>
+<pre><code class="php">&lt;?php
+/**
+ * Sets a discriminator column for an entity result or joined entity result.
+ * The discriminator column will be used to determine the concrete class name to
+ * instantiate.
+ *
+ * @param string $alias The alias of the entity result or joined entity result the discriminator
+ *                      column should be used for.
+ * @param string $discrColumn The name of the discriminator column in the SQL result set.
+ */
+public function setDiscriminatorColumn($alias, $discrColumn)
+</code></pre>
+<h3 class="section-header" id="title.1.3.7"><a href="#title.1.3.7">Examples<i class="fas fa-link"></i></a></h3>
+<p>Understanding a ResultSetMapping is probably easiest through
+looking at some examples.</p>
+<p>First a basic example that describes the mapping of a single
+entity.</p>
+<pre><code class="php">&lt;?php
+// Equivalent DQL query: &quot;select u from User u where u.name=?1&quot;
+// User owns no associations.
+$rsm = new ResultSetMapping;
+$rsm-&gt;addEntityResult('User', 'u');
+$rsm-&gt;addFieldResult('u', 'id', 'id');
+$rsm-&gt;addFieldResult('u', 'name', 'name');
+
+$query = $this-&gt;em-&gt;createNativeQuery('SELECT id, name FROM users WHERE name = ?', $rsm);
+$query-&gt;setParameter(1, 'romanb');
+
+$users = $query-&gt;getResult();
+</code></pre>
+<p>The result would look like this:</p>
+<pre><code class="php">array(
+    [0] =&gt; User (Object)
+)
+</code></pre>
+<p>Note that this would be a partial object if the entity has more
+fields than just id and name. In the example above the column and
+field names are identical but that is not necessary, of course.
+Also note that the query string passed to createNativeQuery is
+<strong>real native SQL</strong>. Doctrine does not touch this SQL in any way.</p>
+<p>In the previous basic example, a User had no relations and the
+table the class is mapped to owns no foreign keys. The next example
+assumes User has a unidirectional or bidirectional one-to-one
+association to a CmsAddress, where the User is the owning side and
+thus owns the foreign key.</p>
+<pre><code class="php">&lt;?php
+// Equivalent DQL query: &quot;select u from User u where u.name=?1&quot;
+// User owns an association to an Address but the Address is not loaded in the query.
+$rsm = new ResultSetMapping;
+$rsm-&gt;addEntityResult('User', 'u');
+$rsm-&gt;addFieldResult('u', 'id', 'id');
+$rsm-&gt;addFieldResult('u', 'name', 'name');
+$rsm-&gt;addMetaResult('u', 'address_id', 'address_id');
+
+$query = $this-&gt;em-&gt;createNativeQuery('SELECT id, name, address_id FROM users WHERE name = ?', $rsm);
+$query-&gt;setParameter(1, 'romanb');
+
+$users = $query-&gt;getResult();
+</code></pre>
+<p>Foreign keys are used by Doctrine for lazy-loading purposes when
+querying for objects. In the previous example, each user object in
+the result will have a proxy (a &quot;ghost&quot;) in place of the address
+that contains the address\_id. When the ghost proxy is accessed, it
+loads itself based on this key.</p>
+<p>Consequently, associations that are <em>fetch-joined</em> do not require
+the foreign keys to be present in the SQL result set, only
+associations that are lazy.</p>
+<pre><code class="php">&lt;?php
+// Equivalent DQL query: &quot;select u from User u join u.address a WHERE u.name = ?1&quot;
+// User owns association to an Address and the Address is loaded in the query.
+$rsm = new ResultSetMapping;
+$rsm-&gt;addEntityResult('User', 'u');
+$rsm-&gt;addFieldResult('u', 'id', 'id');
+$rsm-&gt;addFieldResult('u', 'name', 'name');
+$rsm-&gt;addJoinedEntityResult('Address' , 'a', 'u', 'address');
+$rsm-&gt;addFieldResult('a', 'address_id', 'id');
+$rsm-&gt;addFieldResult('a', 'street', 'street');
+$rsm-&gt;addFieldResult('a', 'city', 'city');
+
+$sql = 'SELECT u.id, u.name, a.id AS address_id, a.street, a.city FROM users u ' .
+       'INNER JOIN address a ON u.address_id = a.id WHERE u.name = ?';
+$query = $this-&gt;em-&gt;createNativeQuery($sql, $rsm);
+$query-&gt;setParameter(1, 'romanb');
+
+$users = $query-&gt;getResult();
+</code></pre>
+<p>In this case the nested entity <code>Address</code> is registered with the
+<code>ResultSetMapping#addJoinedEntityResult</code> method, which notifies
+Doctrine that this entity is not hydrated at the root level, but as
+a joined entity somewhere inside the object graph. In this case we
+specify the alias 'u' as third parameter and <code>address</code> as fourth
+parameter, which means the <code>Address</code> is hydrated into the
+<code>User::$address</code> property.</p>
+<p>If a fetched entity is part of a mapped hierarchy that requires a
+discriminator column, this column must be present in the result set
+as a meta column so that Doctrine can create the appropriate
+concrete type. This is shown in the following example where we
+assume that there are one or more subclasses that extend User and
+either Class Table Inheritance or Single Table Inheritance is used
+to map the hierarchy (both use a discriminator column).</p>
+<pre><code class="php">&lt;?php
+// Equivalent DQL query: &quot;select u from User u where u.name=?1&quot;
+// User is a mapped base class for other classes. User owns no associations.
+$rsm = new ResultSetMapping;
+$rsm-&gt;addEntityResult('User', 'u');
+$rsm-&gt;addFieldResult('u', 'id', 'id');
+$rsm-&gt;addFieldResult('u', 'name', 'name');
+$rsm-&gt;addMetaResult('u', 'discr', 'discr'); // discriminator column
+$rsm-&gt;setDiscriminatorColumn('u', 'discr');
+
+$query = $this-&gt;em-&gt;createNativeQuery('SELECT id, name, discr FROM users WHERE name = ?', $rsm);
+$query-&gt;setParameter(1, 'romanb');
+
+$users = $query-&gt;getResult();
+</code></pre>
+<p>Note that in the case of Class Table Inheritance, an example as
+above would result in partial objects if any objects in the result
+are actually a subtype of User. When using DQL, Doctrine
+automatically includes the necessary joins for this mapping
+strategy but with native SQL it is your responsibility.</p>
+<h2 class="section-header" id="title.1.4"><a href="#title.1.4">Named Native Query<i class="fas fa-link"></i></a></h2>
+<p>You can also map a native query using a named native query mapping.</p>
+<p>To achieve that, you must describe the SQL resultset structure
+using named native query (and sql resultset mappings if is a several resultset mappings).</p>
+<p>Like named query, a named native query can be defined at class level or in an XML file.</p>
+<p>A resultSetMapping parameter is defined in @NamedNativeQuery,
+it represents the name of a defined @SqlResultSetMapping.</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+namespace MyProject\Model;
+/**
+ * @NamedNativeQueries({
+ *      @NamedNativeQuery(
+ *          name            = &quot;fetchMultipleJoinsEntityResults&quot;,
+ *          resultSetMapping= &quot;mappingMultipleJoinsEntityResults&quot;,
+ *          query           = &quot;SELECT u.id AS u_id, u.name AS u_name, u.status AS u_status, a.id AS a_id, a.zip AS a_zip, a.country AS a_country, COUNT(p.phonenumber) AS numphones FROM users u INNER JOIN addresses a ON u.id = a.user_id INNER JOIN phonenumbers p ON u.id = p.user_id GROUP BY u.id, u.name, u.status, u.username, a.id, a.zip, a.country ORDER BY u.username&quot;
+ *      ),
+ * })
+ * @SqlResultSetMappings({
+ *      @SqlResultSetMapping(
+ *          name    = &quot;mappingMultipleJoinsEntityResults&quot;,
+ *          entities= {
+ *              @EntityResult(
+ *                  entityClass = &quot;__CLASS__&quot;,
+ *                  fields      = {
+ *                      @FieldResult(name = &quot;id&quot;,       column=&quot;u_id&quot;),
+ *                      @FieldResult(name = &quot;name&quot;,     column=&quot;u_name&quot;),
+ *                      @FieldResult(name = &quot;status&quot;,   column=&quot;u_status&quot;),
+ *                  }
+ *              ),
+ *              @EntityResult(
+ *                  entityClass = &quot;Address&quot;,
+ *                  fields      = {
+ *                      @FieldResult(name = &quot;id&quot;,       column=&quot;a_id&quot;),
+ *                      @FieldResult(name = &quot;zip&quot;,      column=&quot;a_zip&quot;),
+ *                      @FieldResult(name = &quot;country&quot;,  column=&quot;a_country&quot;),
+ *                  }
+ *              )
+ *          },
+ *          columns = {
+ *              @ColumnResult(&quot;numphones&quot;)
+ *          }
+ *      )
+ *})
+ */
+ class User
+{
+    /** @Id @Column(type=&quot;integer&quot;) @GeneratedValue */
+    public $id;
+
+    /** @Column(type=&quot;string&quot;, length=50, nullable=true) */
+    public $status;
+
+    /** @Column(type=&quot;string&quot;, length=255, unique=true) */
+    public $username;
+
+    /** @Column(type=&quot;string&quot;, length=255) */
+    public $name;
+
+    /** @OneToMany(targetEntity=&quot;Phonenumber&quot;) */
+    public $phonenumbers;
+
+    /** @OneToOne(targetEntity=&quot;Address&quot;) */
+    public $address;
+
+    // ....
+}
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity name=&quot;MyProject\Model\User&quot;&gt;
+        &lt;named-native-queries&gt;
+            &lt;named-native-query name=&quot;fetchMultipleJoinsEntityResults&quot; result-set-mapping=&quot;mappingMultipleJoinsEntityResults&quot;&gt;
+                &lt;query&gt;SELECT u.id AS u_id, u.name AS u_name, u.status AS u_status, a.id AS a_id, a.zip AS a_zip, a.country AS a_country, COUNT(p.phonenumber) AS numphones FROM users u INNER JOIN addresses a ON u.id = a.user_id INNER JOIN phonenumbers p ON u.id = p.user_id GROUP BY u.id, u.name, u.status, u.username, a.id, a.zip, a.country ORDER BY u.username&lt;/query&gt;
+            &lt;/named-native-query&gt;
+        &lt;/named-native-queries&gt;
+        &lt;sql-result-set-mappings&gt;
+            &lt;sql-result-set-mapping name=&quot;mappingMultipleJoinsEntityResults&quot;&gt;
+                &lt;entity-result entity-class=&quot;__CLASS__&quot;&gt;
+                    &lt;field-result name=&quot;id&quot; column=&quot;u_id&quot;/&gt;
+                    &lt;field-result name=&quot;name&quot; column=&quot;u_name&quot;/&gt;
+                    &lt;field-result name=&quot;status&quot; column=&quot;u_status&quot;/&gt;
+                &lt;/entity-result&gt;
+                &lt;entity-result entity-class=&quot;Address&quot;&gt;
+                    &lt;field-result name=&quot;id&quot; column=&quot;a_id&quot;/&gt;
+                    &lt;field-result name=&quot;zip&quot; column=&quot;a_zip&quot;/&gt;
+                    &lt;field-result name=&quot;country&quot; column=&quot;a_country&quot;/&gt;
+                &lt;/entity-result&gt;
+                &lt;column-result name=&quot;numphones&quot;/&gt;
+            &lt;/sql-result-set-mapping&gt;
+        &lt;/sql-result-set-mappings&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>Things to note:
+    - The resultset mapping declares the entities retrieved by this native query.
+    - Each field of the entity is bound to a SQL alias (or column name).
+    - All fields of the entity including the ones of subclasses
+      and the foreign key columns of related entities have to be present in the SQL query.
+    - Field definitions are optional provided that they map to the same
+      column name as the one declared on the class property.
+    - <code>__CLASS__</code> is an alias for the mapped class</p>
+<p>In the above example,
+the <code>fetchJoinedAddress</code> named query use the joinMapping result set mapping.
+This mapping returns 2 entities, User and Address, each property is declared and associated to a column name,
+actually the column name retrieved by the query.</p>
+<p>Let's now see an implicit declaration of the property / column.</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+namespace MyProject\Model;
+    /**
+     * @NamedNativeQueries({
+     *      @NamedNativeQuery(
+     *          name                = &quot;findAll&quot;,
+     *          resultSetMapping    = &quot;mappingFindAll&quot;,
+     *          query               = &quot;SELECT * FROM addresses&quot;
+     *      ),
+     * })
+     * @SqlResultSetMappings({
+     *      @SqlResultSetMapping(
+     *          name    = &quot;mappingFindAll&quot;,
+     *          entities= {
+     *              @EntityResult(
+     *                  entityClass = &quot;Address&quot;
+     *              )
+     *          }
+     *      )
+     * })
+     */
+   class Address
+   {
+        /**  @Id @Column(type=&quot;integer&quot;) @GeneratedValue */
+        public $id;
+
+        /** @Column() */
+        public $country;
+
+        /** @Column() */
+        public $zip;
+
+        /** @Column()*/
+        public $city;
+
+        // ....
+    }
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity name=&quot;MyProject\Model\Address&quot;&gt;
+        &lt;named-native-queries&gt;
+            &lt;named-native-query name=&quot;findAll&quot; result-set-mapping=&quot;mappingFindAll&quot;&gt;
+                &lt;query&gt;SELECT * FROM addresses&lt;/query&gt;
+            &lt;/named-native-query&gt;
+        &lt;/named-native-queries&gt;
+        &lt;sql-result-set-mappings&gt;
+            &lt;sql-result-set-mapping name=&quot;mappingFindAll&quot;&gt;
+                &lt;entity-result entity-class=&quot;Address&quot;/&gt;
+            &lt;/sql-result-set-mapping&gt;
+        &lt;/sql-result-set-mappings&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>In this example, we only describe the entity member of the result set mapping.
+The property / column mappings is done using the entity mapping values.
+In this case the model property is bound to the model_txt column.
+If the association to a related entity involve a composite primary key,
+a @FieldResult element should be used for each foreign key column.
+The @FieldResult name is composed of the property name for the relationship,
+followed by a dot (&quot;.&quot;), followed by the name or the field or property of the primary key.</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+namespace MyProject\Model;
+    /**
+     * @NamedNativeQueries({
+     *      @NamedNativeQuery(
+     *          name            = &quot;fetchJoinedAddress&quot;,
+     *          resultSetMapping= &quot;mappingJoinedAddress&quot;,
+     *          query           = &quot;SELECT u.id, u.name, u.status, a.id AS a_id, a.country AS a_country, a.zip AS a_zip, a.city AS a_city FROM users u INNER JOIN addresses a ON u.id = a.user_id WHERE u.username = ?&quot;
+     *      ),
+     * })
+     * @SqlResultSetMappings({
+     *      @SqlResultSetMapping(
+     *          name    = &quot;mappingJoinedAddress&quot;,
+     *          entities= {
+     *              @EntityResult(
+     *                  entityClass = &quot;__CLASS__&quot;,
+     *                  fields      = {
+     *                      @FieldResult(name = &quot;id&quot;),
+     *                      @FieldResult(name = &quot;name&quot;),
+     *                      @FieldResult(name = &quot;status&quot;),
+     *                      @FieldResult(name = &quot;address.id&quot;, column = &quot;a_id&quot;),
+     *                      @FieldResult(name = &quot;address.zip&quot;, column = &quot;a_zip&quot;),
+     *                      @FieldResult(name = &quot;address.city&quot;, column = &quot;a_city&quot;),
+     *                      @FieldResult(name = &quot;address.country&quot;, column = &quot;a_country&quot;),
+     *                  }
+     *              )
+     *          }
+     *      )
+     * })
+     */
+    class User
+    {
+        /** @Id @Column(type=&quot;integer&quot;) @GeneratedValue */
+        public $id;
+
+        /** @Column(type=&quot;string&quot;, length=50, nullable=true) */
+        public $status;
+
+        /** @Column(type=&quot;string&quot;, length=255, unique=true) */
+        public $username;
+
+        /** @Column(type=&quot;string&quot;, length=255) */
+        public $name;
+
+        /** @OneToOne(targetEntity=&quot;Address&quot;) */
+        public $address;
+
+        // ....
+    }
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity name=&quot;MyProject\Model\User&quot;&gt;
+        &lt;named-native-queries&gt;
+            &lt;named-native-query name=&quot;fetchJoinedAddress&quot; result-set-mapping=&quot;mappingJoinedAddress&quot;&gt;
+                &lt;query&gt;SELECT u.id, u.name, u.status, a.id AS a_id, a.country AS a_country, a.zip AS a_zip, a.city AS a_city FROM users u INNER JOIN addresses a ON u.id = a.user_id WHERE u.username = ?&lt;/query&gt;
+            &lt;/named-native-query&gt;
+        &lt;/named-native-queries&gt;
+        &lt;sql-result-set-mappings&gt;
+            &lt;sql-result-set-mapping name=&quot;mappingJoinedAddress&quot;&gt;
+                &lt;entity-result entity-class=&quot;__CLASS__&quot;&gt;
+                    &lt;field-result name=&quot;id&quot;/&gt;
+                    &lt;field-result name=&quot;name&quot;/&gt;
+                    &lt;field-result name=&quot;status&quot;/&gt;
+                    &lt;field-result name=&quot;address.id&quot; column=&quot;a_id&quot;/&gt;
+                    &lt;field-result name=&quot;address.zip&quot;  column=&quot;a_zip&quot;/&gt;
+                    &lt;field-result name=&quot;address.city&quot;  column=&quot;a_city&quot;/&gt;
+                    &lt;field-result name=&quot;address.country&quot; column=&quot;a_country&quot;/&gt;
+                &lt;/entity-result&gt;
+            &lt;/sql-result-set-mapping&gt;
+        &lt;/sql-result-set-mappings&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>If you retrieve a single entity and if you use the default mapping,
+you can use the resultClass attribute instead of resultSetMapping:</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+namespace MyProject\Model;
+    /**
+     * @NamedNativeQueries({
+     *      @NamedNativeQuery(
+     *          name           = &quot;find-by-id&quot;,
+     *          resultClass    = &quot;Address&quot;,
+     *          query          = &quot;SELECT * FROM addresses&quot;
+     *      ),
+     * })
+     */
+   class Address
+   {
+        // ....
+   }
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity name=&quot;MyProject\Model\Address&quot;&gt;
+        &lt;named-native-queries&gt;
+            &lt;named-native-query name=&quot;find-by-id&quot; result-class=&quot;Address&quot;&gt;
+                &lt;query&gt;SELECT * FROM addresses WHERE id = ?&lt;/query&gt;
+            &lt;/named-native-query&gt;
+        &lt;/named-native-queries&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>In some of your native queries, you'll have to return scalar values,
+for example when building report queries.
+You can map them in the @SqlResultsetMapping through @ColumnResult.
+You actually can even mix, entities and scalar returns in the same native query (this is probably not that common though).</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+namespace MyProject\Model;
+    /**
+     * @NamedNativeQueries({
+     *      @NamedNativeQuery(
+     *          name            = &quot;count&quot;,
+     *          resultSetMapping= &quot;mappingCount&quot;,
+     *          query           = &quot;SELECT COUNT(*) AS count FROM addresses&quot;
+     *      )
+     * })
+     * @SqlResultSetMappings({
+     *      @SqlResultSetMapping(
+     *          name    = &quot;mappingCount&quot;,
+     *          columns = {
+     *              @ColumnResult(
+     *                  name = &quot;count&quot;
+     *              )
+     *          }
+     *      )
+     * })
+     */
+   class Address
+   {
+        // ....
+   }
+</code></pre>
+<pre><code class="xml">&lt;doctrine-mapping&gt;
+    &lt;entity name=&quot;MyProject\Model\Address&quot;&gt;
+        &lt;named-native-query name=&quot;count&quot; result-set-mapping=&quot;mappingCount&quot;&gt;
+            &lt;query&gt;SELECT COUNT(*) AS count FROM addresses&lt;/query&gt;
+        &lt;/named-native-query&gt;
+        &lt;sql-result-set-mappings&gt;
+            &lt;sql-result-set-mapping name=&quot;mappingCount&quot;&gt;
+                &lt;column-result name=&quot;count&quot;/&gt;
+            &lt;/sql-result-set-mapping&gt;
+        &lt;/sql-result-set-mappings&gt;
+    &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

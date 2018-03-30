@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Persisting the Decorator Pattern - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/orm/">ORM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-orm/en/latest/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Persisting the Decorator Pattern</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/latest/cookbook/decorator-pattern.html" class="badge badge-primary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.6/cookbook/decorator-pattern.html" class="badge badge-secondary">2.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.5/cookbook/decorator-pattern.html" class="badge badge-secondary">2.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">Persisting the Decorator Pattern<i class="fas fa-link"></i></a></h1>
+<div class="section-author"><p>This recipe will show you a simple example of how you can use
+Doctrine 2 to persist an implementation of the
+<a href="https://en.wikipedia.org/wiki/Decorator_pattern">Decorator Pattern</a></p></div>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Component<i class="fas fa-link"></i></a></h2>
+<p>The <code>Component</code> class needs to be persisted, so it's going to
+be an <code>Entity</code>. As the top of the inheritance hierarchy, it's going
+to have to define the persistent inheritance. For this example, we
+will use Single Table Inheritance, but Class Table Inheritance
+would work as well. In the discriminator map, we will define two
+concrete subclasses, <code>ConcreteComponent</code> and <code>ConcreteDecorator</code>.</p>
+<pre><code class="php">&lt;?php
+
+namespace Test;
+
+use Doctrine\ORM\Annotation as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\InheritanceType(&quot;SINGLE_TABLE&quot;)
+ * @ORM\DiscriminatorColumn(name=&quot;discr&quot;, type=&quot;string&quot;)
+ * @ORM\DiscriminatorMap({
+ *   &quot;cc&quot; = &quot;Test\Component\ConcreteComponent&quot;,
+ *   &quot;cd&quot; = &quot;Test\Decorator\ConcreteDecorator&quot;
+ * })
+ */
+abstract class Component
+{
+    /**
+     * @ORM\Id @ORM\Column(type=&quot;integer&quot;)
+     * @ORM\GeneratedValue(strategy=&quot;AUTO&quot;)
+     */
+    protected $id;
+
+    /** @ORM\Column(type=&quot;string&quot;, nullable=true) */
+    protected $name;
+
+    /**
+     * Get id
+     * @return integer $id
+     */
+    public function getId()
+    {
+        return $this-&gt;id;
+    }
+
+    /**
+     * Set name
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this-&gt;name = $name;
+    }
+
+    /**
+     * Get name
+     * @return string $name
+     */
+    public function getName()
+    {
+        return $this-&gt;name;
+    }
+
+}
+</code></pre>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">ConcreteComponent<i class="fas fa-link"></i></a></h2>
+<p>The <code>ConcreteComponent</code> class is pretty simple and doesn't do much
+more than extend the abstract <code>Component</code> class (only for the
+purpose of keeping this example simple).</p>
+<pre><code class="php">&lt;?php
+
+namespace Test\Component;
+
+use Doctrine\ORM\Annotation as ORM;
+use Test\Component;
+
+/** @ORM\Entity */
+class ConcreteComponent extends Component
+{}
+</code></pre>
+<h2 class="section-header" id="title.1.3"><a href="#title.1.3">Decorator<i class="fas fa-link"></i></a></h2>
+<p>The <code>Decorator</code> class doesn't need to be persisted, but it does
+need to define an association with a persisted <code>Entity</code>. We can
+use a <code>MappedSuperclass</code> for this.</p>
+<pre><code class="php">&lt;?php
+
+namespace Test;
+
+use Doctrine\ORM\Annotation as ORM;
+
+/** @ORM\MappedSuperclass */
+abstract class Decorator extends Component
+{
+
+    /**
+     * @ORM\OneToOne(targetEntity=&quot;Test\Component&quot;, cascade={&quot;all&quot;})
+     * @ORM\JoinColumn(name=&quot;decorates&quot;, referencedColumnName=&quot;id&quot;)
+     */
+    protected $decorates;
+
+    /**
+     * initialize the decorator
+     * @param Component $c
+     */
+    public function __construct(Component $c)
+    {
+        $this-&gt;setDecorates($c);
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see Test.Component::getName()
+     */
+    public function getName()
+    {
+	    return 'Decorated ' . $this-&gt;getDecorates()-&gt;getName();
+    }
+
+    /**
+     * the component being decorated
+     * @return Component
+     */
+    protected function getDecorates()
+    {
+	    return $this-&gt;decorates;
+    }
+
+    /**
+     * sets the component being decorated
+     * @param Component $c
+     */
+    protected function setDecorates(Component $c)
+    {
+	    $this-&gt;decorates = $c;
+    }
+
+}
+</code></pre>
+<p>All operations on the <code>Decorator</code> (i.e. persist, remove, etc) will
+cascade from the <code>Decorator</code> to the <code>Component</code>. This means that
+when we persist a <code>Decorator</code>, Doctrine will take care of
+persisting the chain of decorated objects for us. A <code>Decorator</code> can
+be treated exactly as a <code>Component</code> when it comes time to
+persisting it.</p>
+<p>The <code>Decorator's</code> constructor accepts an instance of a
+<code>Component</code>, as defined by the <code>Decorator</code> pattern. The
+setDecorates/getDecorates methods have been defined as protected to
+hide the fact that a <code>Decorator</code> is decorating a <code>Component</code> and
+keeps the <code>Component</code> interface and the <code>Decorator</code> interface
+identical.</p>
+<p>To illustrate the intended result of the <code>Decorator</code> pattern, the
+getName() method has been overridden to append a string to the
+<code>Component's</code> getName() method.</p>
+<h2 class="section-header" id="title.1.4"><a href="#title.1.4">ConcreteDecorator<i class="fas fa-link"></i></a></h2>
+<p>The final class required to complete a simple implementation of the
+Decorator pattern is the <code>ConcreteDecorator</code>. In order to further
+illustrate how the <code>Decorator</code> can alter data as it moves through
+the chain of decoration, a new field, &quot;special&quot;, has been added to
+this class. The getName() has been overridden and appends the value
+of the getSpecial() method to its return value.</p>
+<pre><code class="php">&lt;?php
+
+namespace Test\Decorator;
+
+use Doctrine\ORM\Annotation as ORM;
+use Test\Decorator;
+
+/** @ORM\Entity */
+class ConcreteDecorator extends Decorator
+{
+
+    /** @ORM\Column(type=&quot;string&quot;, nullable=true) */
+    protected $special;
+
+    /**
+     * Set special
+     * @param string $special
+     */
+    public function setSpecial($special)
+    {
+        $this-&gt;special = $special;
+    }
+
+    /**
+     * Get special
+     * @return string $special
+     */
+    public function getSpecial()
+    {
+        return $this-&gt;special;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see Test.Component::getName()
+     */
+    public function getName()
+    {
+        return '[' . $this-&gt;getSpecial()
+            . '] ' . parent::getName();
+    }
+
+}
+</code></pre>
+<h2 class="section-header" id="title.1.5"><a href="#title.1.5">Examples<i class="fas fa-link"></i></a></h2>
+<p>Here is an example of how to persist and retrieve your decorated
+objects</p>
+<pre><code class="php">&lt;?php
+
+use Test\Component\ConcreteComponent,
+    Test\Decorator\ConcreteDecorator;
+
+// assumes Doctrine 2 is configured and an instance of
+// an EntityManager is available as $em
+
+// create a new concrete component
+$c = new ConcreteComponent();
+$c-&gt;setName('Test Component 1');
+$em-&gt;persist($c); // assigned unique ID = 1
+
+// create a new concrete decorator
+$c = new ConcreteComponent();
+$c-&gt;setName('Test Component 2');
+
+$d = new ConcreteDecorator($c);
+$d-&gt;setSpecial('Really');
+$em-&gt;persist($d);
+// assigns c as unique ID = 2, and d as unique ID = 3
+
+$em-&gt;flush();
+
+$c = $em-&gt;find('Test\Component', 1);
+$d = $em-&gt;find('Test\Component', 3);
+
+echo get_class($c);
+// prints: Test\Component\ConcreteComponent
+
+echo $c-&gt;getName();
+// prints: Test Component 1
+
+echo get_class($d)
+// prints: Test\Component\ConcreteDecorator
+
+echo $d-&gt;getName();
+// prints: [Really] Decorated Test Component 2
+</code></pre>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

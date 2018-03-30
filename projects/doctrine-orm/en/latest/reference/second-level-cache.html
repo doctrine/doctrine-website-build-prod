@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>The Second Level Cache - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?8" rel="stylesheet" type="text/css" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?8" />
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark border-bottom">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://new.doctrine-project.org/search/">Search</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://github.com/doctrine/" target="_blank">Development</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="container">
+                                                                
+                                
+                                                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/orm/">ORM</a></li>
+                            <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-orm/en/latest/">Documentation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">The Second Level Cache</li>
+                        </ol>
+                    </nav>
+                
+                                    <ul class="list-inline float-right">
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/latest/reference/second-level-cache.html" class="badge badge-primary">master</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.6/reference/second-level-cache.html" class="badge badge-secondary">2.6</a>
+                            </li>
+                                                    <li class="list-inline-item mr-0">
+                                <a href="/projects/doctrine-orm/en/2.5/reference/second-level-cache.html" class="badge badge-secondary">2.5</a>
+                            </li>
+                                            </ul>
+                
+                <!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+<h1 class="section-header" id="title.1"><a href="#title.1">The Second Level Cache<i class="fas fa-link"></i></a></h1>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The second level cache functionality is marked as experimental for now. It
+is a very complex feature and we cannot guarantee yet that it works stable
+in all cases.</p>
+</div>
+<p>The Second Level Cache is designed to reduce the amount of necessary database access.
+It sits between your application and the database to avoid the number of database hits as much as possible.</p>
+<p>When turned on, entities will be first searched in cache and if they are not found,
+a database query will be fired and then the entity result will be stored in a cache provider.</p>
+<p>There are some flavors of caching available, but is better to cache read-only data.</p>
+<p>Be aware that caches are not aware of changes made to the persistent store by another application.
+They can, however, be configured to regularly expire cached data.</p>
+<h2 class="section-header" id="title.1.1"><a href="#title.1.1">Caching Regions<i class="fas fa-link"></i></a></h2>
+<p>Second level cache does not store instances of an entity, instead it caches only entity identifier and values.
+Each entity class, collection association and query has its region, where values of each instance are stored.</p>
+<p>Caching Regions are specific region into the cache provider that might store entities, collection or queries.
+Each cache region resides in a specific cache namespace and has its own lifetime configuration.</p>
+<p>Notice that when caching collection and queries only identifiers are stored.
+The entity values will be stored in its own region</p>
+<p>Something like below for an entity region :</p>
+<pre><code class="php">&lt;?php
+[
+  'region_name:entity_1_hash' =&gt; ['id'=&gt; 1, 'name' =&gt; 'FooBar', 'associationName'=&gt;null],
+  'region_name:entity_2_hash' =&gt; ['id'=&gt; 2, 'name' =&gt; 'Foo', 'associationName'=&gt;['id'=&gt;11]],
+  'region_name:entity_3_hash' =&gt; ['id'=&gt; 3, 'name' =&gt; 'Bar', 'associationName'=&gt;['id'=&gt;22]]
+];
+</code></pre>
+<p>If the entity holds a collection that also needs to be cached.
+An collection region could look something like :</p>
+<pre><code class="php">&lt;?php
+[
+  'region_name:entity_1_coll_assoc_name_hash' =&gt; ['ownerId'=&gt; 1, 'list' =&gt; [1, 2, 3]],
+  'region_name:entity_2_coll_assoc_name_hash' =&gt; ['ownerId'=&gt; 2, 'list' =&gt; [2, 3]],
+  'region_name:entity_3_coll_assoc_name_hash' =&gt; ['ownerId'=&gt; 3, 'list' =&gt; [2, 4]]
+];
+</code></pre>
+<p>A query region might be something like :</p>
+<pre><code class="php">&lt;?php
+[
+  'region_name:query_1_hash' =&gt; ['list' =&gt; [1, 2, 3]],
+  'region_name:query_2_hash' =&gt; ['list' =&gt; [2, 3]],
+  'region_name:query_3_hash' =&gt; ['list' =&gt; [2, 4]]
+];
+</code></pre>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The following data structures represents now the cache will looks like, this is not actual cached data.</p>
+</div>
+<a id="reference-second-level-cache-regions"></a>
+<h2 class="section-header" id="title.1.2"><a href="#title.1.2">Cache Regions<i class="fas fa-link"></i></a></h2>
+<p><code>Doctrine\ORM\Cache\Region\DefaultRegion</code> It's the default implementation.
+ A simplest cache region compatible with all doctrine-cache drivers but does not support locking.</p>
+<p><code>Doctrine\ORM\Cache\Region</code> and <code>Doctrine\ORM\Cache\ConcurrentRegion</code>
+Defines contracts that should be implemented by a cache provider.</p>
+<p>It allows you to provide your own cache implementation that might take advantage of specific cache driver.</p>
+<p>If you want to support locking for <code>READ_WRITE</code> strategies you should implement <code>ConcurrentRegion</code>; <code>CacheRegion</code> otherwise.</p>
+<h3 class="section-header" id="title.1.2.1"><a href="#title.1.2.1">Cache region<i class="fas fa-link"></i></a></h3>
+<p>Defines a contract for accessing a particular region.</p>
+<p><code>Doctrine\ORM\Cache\Region</code></p>
+<p>Defines a contract for accessing a particular cache region.</p>
+<p><a href="http://www.doctrine-project.org/api/orm/2.5/class-Doctrine.ORM.Cache.Region.html">See API Doc</a>.</p>
+<h3 class="section-header" id="title.1.2.2"><a href="#title.1.2.2">Concurrent cache region<i class="fas fa-link"></i></a></h3>
+<p>A <code>Doctrine\ORM\Cache\ConcurrentRegion</code> is designed to store concurrently managed data region.
+By default, Doctrine provides a very simple implementation based on file locks <code>Doctrine\ORM\Cache\Region\FileLockRegion</code>.</p>
+<p>If you want to use an <code>READ_WRITE</code> cache, you should consider providing your own cache region.</p>
+<p><code>Doctrine\ORM\Cache\ConcurrentRegion</code></p>
+<p>Defines contract for concurrently managed data region.</p>
+<p><a href="http://www.doctrine-project.org/api/orm/2.5/class-Doctrine.ORM.Cache.ConcurrentRegion.html">See API Doc</a>.</p>
+<h3 class="section-header" id="title.1.2.3"><a href="#title.1.2.3">Timestamp region<i class="fas fa-link"></i></a></h3>
+<p><code>Doctrine\ORM\Cache\TimestampRegion</code></p>
+<p>Tracks the timestamps of the most recent updates to particular entity.</p>
+<p><a href="http://www.doctrine-project.org/api/orm/2.5/class-Doctrine.ORM.Cache.TimestampRegion.html">See API Doc</a>.</p>
+<a id="reference-second-level-cache-mode"></a>
+<h2 class="section-header" id="title.1.3"><a href="#title.1.3">Caching mode<i class="fas fa-link"></i></a></h2>
+<ul><li><code>READ_ONLY</code> (DEFAULT)</li>
+<ul><li>Can do reads, inserts and deletes, cannot perform updates or employ any locks.</li>
+<li>Useful for data that is read frequently but never updated.</li>
+<li>Best performer.</li>
+<li>It is Simple.</li>
+</ul>
+<li><code>NONSTRICT_READ_WRITE</code></li>
+<ul><li>Read Write Cache doesn’t employ any locks but can do reads, inserts, updates and deletes.</li>
+<li>Good if the application needs to update data rarely.</li>
+</ul>
+<li><code>READ_WRITE</code></li>
+<ul><li>Read Write cache employs locks before update/delete.</li>
+<li>Use if data needs to be updated.</li>
+<li>Slowest strategy.</li>
+<li>To use it a the cache region implementation must support locking.</li>
+</ul>
+</ul>
+
+<h3 class="section-header" id="title.1.3.1"><a href="#title.1.3.1">Built-in cached persisters<i class="fas fa-link"></i></a></h3>
+<p>Cached persisters are responsible to access cache regions.</p>
+<blockquote><table><tr><th>Cache Usage</th><th>Persister</th></tr><tr><td>READ_ONLY</td><td>Doctrine\\ORM\\Cache\\Persister\\Entity\\ReadOnlyCachedEntityPersister</td></tr><tr><td>READ_WRITE</td><td>Doctrine\\ORM\\Cache\\Persister\\Entity\\ReadWriteCachedEntityPersister</td></tr><tr><td>NONSTRICT_READ_WRITE</td><td>Doctrine\\ORM\\Cache\\Persister\\Entity\\NonStrictReadWriteCachedEntityPersister</td></tr><tr><td>READ_ONLY</td><td>Doctrine\\ORM\\Cache\\Persister\\Collection\\ReadOnlyCachedCollectionPersister</td></tr><tr><td>READ_WRITE</td><td>Doctrine\\ORM\\Cache\\Persister\\Collection\\ReadWriteCachedCollectionPersister</td></tr><tr><td>NONSTRICT_READ_WRITE</td><td>Doctrine\\ORM\\Cache\\Persister\\Collection\\NonStrictReadWriteCachedCollectionPersister</td></tr></table>
+</blockquote>
+<h2 class="section-header" id="title.1.4"><a href="#title.1.4">Configuration<i class="fas fa-link"></i></a></h2>
+<p>Doctrine allows you to specify configurations and some points of extension for the second-level-cache</p>
+<h3 class="section-header" id="title.1.4.1"><a href="#title.1.4.1">Enable Second Level Cache<i class="fas fa-link"></i></a></h3>
+<p>To enable the second-level-cache, you should provide a cache factory
+<code>\Doctrine\ORM\Cache\DefaultCacheFactory</code> is the default implementation.</p>
+<pre><code class="php">&lt;?php
+/** @var \Doctrine\ORM\Cache\RegionsConfiguration $config */
+/** @var \Doctrine\Common\Cache\Cache $cache */
+
+$factory = new \Doctrine\ORM\Cache\DefaultCacheFactory($config, $cache);
+
+// Enable second-level-cache
+$config-&gt;setSecondLevelCacheEnabled();
+
+// Cache factory
+$config-&gt;getSecondLevelCacheConfiguration()
+    -&gt;setCacheFactory($factory);
+</code></pre>
+<h3 class="section-header" id="title.1.4.2"><a href="#title.1.4.2">Cache Factory<i class="fas fa-link"></i></a></h3>
+<p>Cache Factory is the main point of extension.</p>
+<p>It allows you to provide a specific implementation of the following components :</p>
+<ul><li><code>QueryCache</code> Store and retrieve query cache results.</li>
+<li><code>CachedEntityPersister</code> Store and retrieve entity results.</li>
+<li><code>CachedCollectionPersister</code> Store and retrieve query results.</li>
+<li><code>EntityHydrator</code>  Transform an entity into a cache entry and cache entry into entities</li>
+<li><code>CollectionHydrator</code> Transform a collection into a cache entry and cache entry into collection</li>
+</ul>
+
+<p><a href="http://www.doctrine-project.org/api/orm/2.5/class-Doctrine.ORM.Cache.DefaultCacheFactory.html">See API Doc</a>.</p>
+<h3 class="section-header" id="title.1.4.3"><a href="#title.1.4.3">Region Lifetime<i class="fas fa-link"></i></a></h3>
+<p>To specify a default lifetime for all regions or specify a different lifetime for a specific region.</p>
+<pre><code class="php">&lt;?php
+/** @var \Doctrine\ORM\Configuration $config */
+/** @var \Doctrine\ORM\Cache\CacheConfiguration $cacheConfig */
+$cacheConfig  =  $config-&gt;getSecondLevelCacheConfiguration();
+$regionConfig =  $cacheConfig-&gt;getRegionsConfiguration();
+
+// Cache Region lifetime
+$regionConfig-&gt;setLifetime('my_entity_region', 3600);   // Time to live for a specific region; In seconds
+$regionConfig-&gt;setDefaultLifetime(7200);                // Default time to live; In seconds
+</code></pre>
+<h3 class="section-header" id="title.1.4.4"><a href="#title.1.4.4">Cache Log<i class="fas fa-link"></i></a></h3>
+<p>By providing a cache logger you should be able to get information about all cache operations such as hits, misses and puts.</p>
+<p><code>\Doctrine\ORM\Cache\Logging\StatisticsCacheLogger</code> is a built-in implementation that provides basic statistics.</p>
+<blockquote><pre><code class="php">&lt;?php
+/** @var \Doctrine\ORM\Configuration $config */
+$logger = new \Doctrine\ORM\Cache\Logging\StatisticsCacheLogger();
+
+// Cache logger
+$config-&gt;setSecondLevelCacheEnabled(true);
+$config-&gt;getSecondLevelCacheConfiguration()
+    -&gt;setCacheLogger($logger);
+
+// Collect cache statistics
+
+// Get the number of entries successfully retrieved from a specific region.
+$logger-&gt;getRegionHitCount('my_entity_region');
+
+// Get the number of cached entries *not* found in a specific region.
+$logger-&gt;getRegionMissCount('my_entity_region');
+
+// Get the number of cacheable entries put in cache.
+$logger-&gt;getRegionPutCount('my_entity_region');
+
+// Get the total number of put in all regions.
+$logger-&gt;getPutCount();
+
+// Get the total number of entries successfully retrieved from all regions.
+$logger-&gt;getHitCount();
+
+// Get the total number of cached entries *not* found in all regions.
+$logger-&gt;getMissCount();
+</code></pre>
+</blockquote>
+<p>If you want to get more information you should implement <code>\Doctrine\ORM\Cache\Logging\CacheLogger</code>.
+and collect all information you want.</p>
+<p><a href="http://www.doctrine-project.org/api/orm/2.5/class-Doctrine.ORM.Cache.CacheLogger.html">See API Doc</a>.</p>
+<h2 class="section-header" id="title.1.5"><a href="#title.1.5">Entity cache definition<i class="fas fa-link"></i></a></h2>
+<ul><li>Entity cache configuration allows you to define the caching strategy and region for an entity.</li>
+<ul><li><code>usage</code> Specifies the caching strategy: <code>READ_ONLY</code>, <code>NONSTRICT_READ_WRITE</code>, <code>READ_WRITE</code>. see <a href="reference-second-level-cache-mode.html"></a></li>
+<li><code>region</code> Optional value that specifies the name of the second level cache region.</li>
+</ul>
+</ul>
+
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/**
+ * @Entity
+ * @Cache(usage=&quot;READ_ONLY&quot;, region=&quot;my_entity_region&quot;)
+ */
+class Country
+{
+    /**
+     * @Id
+     * @GeneratedValue
+     * @Column(type=&quot;integer&quot;)
+     */
+    protected $id;
+
+    /**
+     * @Column(unique=true)
+     */
+    protected $name;
+
+    // other properties and methods
+}
+</code></pre>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;doctrine-mapping xmlns=&quot;http://doctrine-project.org/schemas/orm/doctrine-mapping&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd&quot;&gt;
+  &lt;entity name=&quot;Country&quot;&gt;
+    &lt;cache usage=&quot;READ_ONLY&quot; region=&quot;my_entity_region&quot; /&gt;
+    &lt;id name=&quot;id&quot; type=&quot;integer&quot; column=&quot;id&quot;&gt;
+      &lt;generator strategy=&quot;IDENTITY&quot;/&gt;
+    &lt;/id&gt;
+    &lt;field name=&quot;name&quot; type=&quot;string&quot; column=&quot;name&quot;/&gt;
+  &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<h2 class="section-header" id="title.1.6"><a href="#title.1.6">Association cache definition<i class="fas fa-link"></i></a></h2>
+<p>The most common use case is to cache entities. But we can also cache relationships.
+It caches the primary keys of association and cache each element will be cached into its region.</p>
+<div class="configuration-block"><pre><code class="php">&lt;?php
+/**
+ * @Entity
+ * @Cache(&quot;NONSTRICT_READ_WRITE&quot;)
+ */
+class State
+{
+    /**
+     * @Id
+     * @GeneratedValue
+     * @Column(type=&quot;integer&quot;)
+     */
+    protected $id;
+
+    /**
+     * @Column(unique=true)
+     */
+    protected $name;
+
+    /**
+     * @Cache(&quot;NONSTRICT_READ_WRITE&quot;)
+     * @ManyToOne(targetEntity=&quot;Country&quot;)
+     * @JoinColumn(name=&quot;country_id&quot;, referencedColumnName=&quot;id&quot;)
+     */
+    protected $country;
+
+    /**
+     * @Cache(&quot;NONSTRICT_READ_WRITE&quot;)
+     * @OneToMany(targetEntity=&quot;City&quot;, mappedBy=&quot;state&quot;)
+     */
+    protected $cities;
+
+    // other properties and methods
+}
+</code></pre>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;doctrine-mapping xmlns=&quot;http://doctrine-project.org/schemas/orm/doctrine-mapping&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd&quot;&gt;
+  &lt;entity name=&quot;State&quot;&gt;
+
+    &lt;cache usage=&quot;NONSTRICT_READ_WRITE&quot; /&gt;
+
+    &lt;id name=&quot;id&quot; type=&quot;integer&quot; column=&quot;id&quot;&gt;
+      &lt;generator strategy=&quot;IDENTITY&quot;/&gt;
+    &lt;/id&gt;
+
+    &lt;field name=&quot;name&quot; type=&quot;string&quot; column=&quot;name&quot;/&gt;
+
+    &lt;many-to-one field=&quot;country&quot; target-entity=&quot;Country&quot;&gt;
+      &lt;cache usage=&quot;NONSTRICT_READ_WRITE&quot; /&gt;
+
+      &lt;join-columns&gt;
+        &lt;join-column name=&quot;country_id&quot; referenced-column-name=&quot;id&quot;/&gt;
+      &lt;/join-columns&gt;
+    &lt;/many-to-one&gt;
+
+    &lt;one-to-many field=&quot;cities&quot; target-entity=&quot;City&quot; mapped-by=&quot;state&quot;&gt;
+      &lt;cache usage=&quot;NONSTRICT_READ_WRITE&quot;/&gt;
+    &lt;/one-to-many&gt;
+  &lt;/entity&gt;
+&lt;/doctrine-mapping&gt;
+</code></pre>
+</div>
+<p>&gt; Note: for this to work, the target entity must also be marked as cacheable.</p>
+<h3 class="section-header" id="title.1.6.1"><a href="#title.1.6.1">Cache usage<i class="fas fa-link"></i></a></h3>
+<p>Basic entity cache</p>
+<pre><code class="php">&lt;?php
+$em-&gt;persist(new Country($name));
+$em-&gt;flush();                         // Hit database to insert the row and put into cache
+
+$em-&gt;clear();                         // Clear entity manager
+
+$country1  = $em-&gt;find('Country', 1); // Retrieve item from cache
+
+$country-&gt;setName(&quot;New Name&quot;);
+$em-&gt;persist($country);
+$em-&gt;flush();                         // Hit database to update the row and update cache
+
+$em-&gt;clear();                         // Clear entity manager
+
+$country2  = $em-&gt;find('Country', 1); // Retrieve item from cache
+                                      // Notice that $country1 and $country2 are not the same instance.
+</code></pre>
+<p>Association cache</p>
+<pre><code class="php">&lt;?php
+// Hit database to insert the row and put into cache
+$em-&gt;persist(new State($name, $country));
+$em-&gt;flush();
+
+// Clear entity manager
+$em-&gt;clear();
+
+// Retrieve item from cache
+$state = $em-&gt;find('State', 1);
+
+// Hit database to update the row and update cache entry
+$state-&gt;setName(&quot;New Name&quot;);
+$em-&gt;persist($state);
+$em-&gt;flush();
+
+// Create a new collection item
+$city = new City($name, $state);
+$state-&gt;addCity($city);
+
+// Hit database to insert new collection item,
+// put entity and collection cache into cache.
+$em-&gt;persist($city);
+$em-&gt;persist($state);
+$em-&gt;flush();
+
+// Clear entity manager
+$em-&gt;clear();
+
+// Retrieve item from cache
+$state = $em-&gt;find('State', 1);
+
+// Retrieve association from cache
+$country = $state-&gt;getCountry();
+
+// Retrieve collection from cache
+$cities = $state-&gt;getCities();
+
+echo $country-&gt;getName();
+echo $state-&gt;getName();
+
+// Retrieve each collection item from cache
+foreach ($cities as $city) {
+    echo $city-&gt;getName();
+}
+</code></pre>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Notice that all entities should be marked as cacheable.</p>
+</div>
+<h2 class="section-header" id="title.1.7"><a href="#title.1.7">Using the query cache<i class="fas fa-link"></i></a></h2>
+<p>The second level cache stores the entities, associations and collections.
+The query cache stores the results of the query but as identifiers, entity values are actually stored in the 2nd level cache.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Query cache should always be used in conjunction with the second-level-cache for those entities which should be cached.</p>
+</div>
+<pre><code class="php">&lt;?php
+/** @var \Doctrine\ORM\EntityManager $em */
+
+// Execute database query, store query cache and entity cache
+$result1 = $em-&gt;createQuery('SELECT c FROM Country c ORDER BY c.name')
+    -&gt;setCacheable(true)
+    -&gt;getResult();
+
+$em-&gt;clear()
+
+// Check if query result is valid and load entities from cache
+$result2 = $em-&gt;createQuery('SELECT c FROM Country c ORDER BY c.name')
+    -&gt;setCacheable(true)
+    -&gt;getResult();
+</code></pre>
+<h3 class="section-header" id="title.1.7.1"><a href="#title.1.7.1">Cache mode<i class="fas fa-link"></i></a></h3>
+<p>The Cache Mode controls how a particular query interacts with the second-level cache:</p>
+<ul><li><code>Cache::MODE_GET</code> - May read items from the cache, but will not add items.</li>
+<li><code>Cache::MODE_PUT</code> - Will never read items from the cache, but will add items to the cache as it reads them from the database.</li>
+<li><code>Cache::MODE_NORMAL</code> - May read items from the cache, and add items to the cache.</li>
+<li><code>Cache::MODE_REFRESH</code> - The query will never read items from the cache, but will refresh items to the cache as it reads them from the database.</li>
+</ul>
+
+<pre><code class="php">&lt;?php
+/** @var \Doctrine\ORM\EntityManager $em */
+// Will refresh the query cache and all entities the cache as it reads from the database.
+$result1 = $em-&gt;createQuery('SELECT c FROM Country c ORDER BY c.name')
+    -&gt;setCacheMode(Cache::MODE_GET)
+    -&gt;setCacheable(true)
+    -&gt;getResult();
+</code></pre>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The the default query cache mode is <code>`Cache::MODE_NORMAL`</code></p>
+</div>
+<h3 class="section-header" id="title.1.7.2"><a href="#title.1.7.2">DELETE / UPDATE queries<i class="fas fa-link"></i></a></h3>
+<p>DQL UPDATE / DELETE statements are ported directly into a database and bypass the second-level cache,
+Entities that are already cached will NOT be invalidated.
+However the cached data could be evicted using the cache API or an special query hint.</p>
+<p>Execute the <code>UPDATE</code> and invalidate <code>all cache entries</code> using <code>Query::HINT_CACHE_EVICT</code></p>
+<pre><code class="php">&lt;?php
+// Execute and invalidate
+$this-&gt;em-&gt;createQuery(&quot;UPDATE Entity\Country u SET u.name = 'unknown' WHERE u.id = 1&quot;)
+    -&gt;setHint(Query::HINT_CACHE_EVICT, true)
+    -&gt;execute();
+</code></pre>
+<p>Execute the <code>UPDATE</code> and invalidate <code>all cache entries</code> using the cache API</p>
+<pre><code class="php">&lt;?php
+// Execute
+$this-&gt;em-&gt;createQuery(&quot;UPDATE Entity\Country u SET u.name = 'unknown' WHERE u.id = 1&quot;)
+    -&gt;execute();
+// Invoke Cache API
+$em-&gt;getCache()-&gt;evictEntityRegion('Entity\Country');
+</code></pre>
+<p>Execute the <code>UPDATE</code> and invalidate <code>a specific cache entry</code> using the cache API</p>
+<pre><code class="php">&lt;?php
+// Execute
+$this-&gt;em-&gt;createQuery(&quot;UPDATE Entity\Country u SET u.name = 'unknown' WHERE u.id = 1&quot;)
+    -&gt;execute();
+// Invoke Cache API
+$em-&gt;getCache()-&gt;evictEntity('Entity\Country', 1);
+</code></pre>
+<h2 class="section-header" id="title.1.8"><a href="#title.1.8">Using the repository query cache<i class="fas fa-link"></i></a></h2>
+<p>As well as <code>Query Cache</code> all persister queries store only identifier values for an individual query.
+All persister use a single timestamps cache region keeps track of the last update for each persister,
+When a query is loaded from cache, the timestamp region is checked for the last update for that persister.
+Using the last update timestamps as part of the query key invalidate the cache key when an update occurs.</p>
+<pre><code class="php">&lt;?php
+// load from database and store cache query key hashing the query + parameters + last timestamp cache region..
+$entities   = $em-&gt;getRepository('Entity\Country')-&gt;findAll();
+
+// load from query and entities from cache..
+$entities   = $em-&gt;getRepository('Entity\Country')-&gt;findAll();
+
+// update the timestamp cache region for Country
+$em-&gt;persist(new Country('zombieland'));
+$em-&gt;flush();
+$em-&gt;clear();
+
+// Reload from database.
+// At this point the query cache key if not logger valid, the select goes straight
+$entities   = $em-&gt;getRepository('Entity\Country')-&gt;findAll();
+</code></pre>
+<h2 class="section-header" id="title.1.9"><a href="#title.1.9">Cache API<i class="fas fa-link"></i></a></h2>
+<p>Caches are not aware of changes made by another application.
+However, you can use the cache API to check / invalidate cache entries.</p>
+<pre><code class="php">&lt;?php
+/** @var \Doctrine\ORM\Cache $cache */
+$cache = $em-&gt;getCache();
+
+$cache-&gt;containsEntity('Entity\State', 1)      // Check if the cache exists
+$cache-&gt;evictEntity('Entity\State', 1);        // Remove an entity from cache
+$cache-&gt;evictEntityRegion('Entity\State');     // Remove all entities from cache
+
+$cache-&gt;containsCollection('Entity\State', 'cities', 1);   // Check if the cache exists
+$cache-&gt;evictCollection('Entity\State', 'cities', 1);      // Remove an entity collection from cache
+$cache-&gt;evictCollectionRegion('Entity\State', 'cities');   // Remove all collections from cache
+</code></pre>
+<h2 class="section-header" id="title.1.10"><a href="#title.1.10">Limitations<i class="fas fa-link"></i></a></h2>
+<h3 class="section-header" id="title.1.10.1"><a href="#title.1.10.1">Composite primary key<i class="fas fa-link"></i></a></h3>
+<p>Composite primary key are supported by second level cache,
+however when one of the keys is an association the cached entity should always be retrieved using the association identifier.
+For performance reasons the cache API does not extract from composite primary key.</p>
+<pre><code class="php">&lt;?php
+/**
+ * @Entity
+ */
+class Reference
+{
+    /**
+     * @Id
+     * @ManyToOne(targetEntity=&quot;Article&quot;, inversedBy=&quot;references&quot;)
+     * @JoinColumn(name=&quot;source_id&quot;, referencedColumnName=&quot;article_id&quot;)
+     */
+    private $source;
+
+    /**
+     * @Id
+     * @ManyToOne(targetEntity=&quot;Article&quot;)
+     * @JoinColumn(name=&quot;target_id&quot;, referencedColumnName=&quot;article_id&quot;)
+     */
+    private $target;
+}
+
+// Supported
+/** @var Article $article */
+$article = $em-&gt;find('Article', 1);
+
+// Supported
+/** @var Article $article */
+$article = $em-&gt;find('Article', $article);
+
+// Supported
+$id        = array('source' =&gt; 1, 'target' =&gt; 2);
+$reference = $em-&gt;find('Reference', $id);
+
+// NOT Supported
+$id        = array('source' =&gt; new Article(1), 'target' =&gt; new Article(2));
+$reference = $em-&gt;find('Reference', $id);
+</code></pre>
+<h3 class="section-header" id="title.1.10.2"><a href="#title.1.10.2">Distributed environments<i class="fas fa-link"></i></a></h3>
+<p>Some cache driver are not meant to be used in a distributed environment.
+Load-balancer for distributing workloads across multiple computing resources
+should be used in conjunction with distributed caching system such as memcached, redis, riak ...</p>
+<p>Caches should be used with care when using a load-balancer if you don't share the cache.
+While using APC or any file based cache update occurred in a specific machine would not reflect to the cache in other machines.</p>
+<h3 class="section-header" id="title.1.10.3"><a href="#title.1.10.3">Paginator<i class="fas fa-link"></i></a></h3>
+<p>Count queries generated by <code>Doctrine\ORM\Tools\Pagination\Paginator</code> are not cached by second-level cache.
+Although entities and query result are cached count queries will hit the database every time.</p>
+</body>
+</html>                    </main>
+
+        <footer class="footer">
+            <div class="container">
+                <i class="fa fa-copyright"></i> 2018 Doctrine
+            </div>
+        </footer>
+
+        <script type="text/javascript">
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById('back-to-top').style.display = "block";
+                } else {
+                    document.getElementById('back-to-top').style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
+        </script>
+
+        <button onclick="topFunction()" id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?8"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>
