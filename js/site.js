@@ -32,27 +32,8 @@ function loadCurrentDocsMenu() {
     elem.parents('ul').addClass('opened-ul');
 }
 
-function scrollToSection(url) {
-    var hash = url.substring(url.indexOf('#') + 1);
-    //var hash = hash.replace('', '');
-
-    console.log(hash);
-
-    if (hash) {
-        $('.right-content').scrollTop(0);
-
-        var position = $('a[name="' + hash + '"]').offset().top - $('.right-content').offset().top;
-
-        console.log(position);
-
-        $('.right-content').scrollTop(position);
-    }
-}
-
 $(function() {
     loadCurrentDocsMenu();
-
-    scrollToSection(window.location.href);
 
     $('.project-version-switcher').each(function() {
         $(this).attr('href', $(this).attr('href') + window.location.hash);
@@ -60,9 +41,3 @@ $(function() {
 });
 
 window.onhashchange = loadCurrentDocsMenu;
-
-$(function() {
-    $('.toc-item a').on('click', function(e) {
-        scrollToSection($(this).attr('href'));
-    });
-});
