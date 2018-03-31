@@ -1,13 +1,3 @@
----
-layout: default
-indexed: true
-title: 
-docsSlug: doctrine-common
-docsPage: true
-docsIndex: false
-docsVersion: 2.8
-permalink: none
----
 <?php return array (
   'index' => 
   array (
@@ -35,83 +25,29 @@ permalink: none
     array (
       0 => 
       array (
+        0 => 'index',
+        1 => 'reference/annotations',
+        2 => 'reference/caching',
+        3 => 'reference/class-loading',
+      ),
+      1 => 
+      array (
         0 => 'reference/class-loading',
         1 => 'reference/annotations',
         2 => 'reference/caching',
       ),
     ),
-    'ctime' => 1522389024,
+    'ctime' => 1522488205,
     'depends' => 
     array (
-      0 => 'reference/class-loading',
+      0 => 'index',
       1 => 'reference/annotations',
       2 => 'reference/caching',
-      3 => 'search',
-    ),
-  ),
-  'reference/class-loading' => 
-  array (
-    'file' => 'reference/class-loading',
-    'url' => 'reference/class-loading.html',
-    'title' => 'Class Loading',
-    'titles' => 
-    array (
-      0 => 
-      array (
-        0 => 'Class Loading',
-        1 => 
-        array (
-          0 => 
-          array (
-            0 => 'Overview',
-            1 => 
-            array (
-            ),
-          ),
-          1 => 
-          array (
-            0 => 'Usage',
-            1 => 
-            array (
-            ),
-          ),
-          2 => 
-          array (
-            0 => 'File Extension',
-            1 => 
-            array (
-            ),
-          ),
-          3 => 
-          array (
-            0 => 'Namespace Separator',
-            1 => 
-            array (
-            ),
-          ),
-          4 => 
-          array (
-            0 => 'Failing Silently and class\\_exists',
-            1 => 
-            array (
-            ),
-          ),
-          5 => 
-          array (
-            0 => 'Summary',
-            1 => 
-            array (
-            ),
-          ),
-        ),
-      ),
-    ),
-    'tocs' => 
-    array (
-    ),
-    'ctime' => 1522389024,
-    'depends' => 
-    array (
+      3 => 'reference/class-loading',
+      4 => 'reference/class-loading',
+      5 => 'reference/annotations',
+      6 => 'reference/caching',
+      7 => 'search',
     ),
     'parent' => 'index',
   ),
@@ -230,12 +166,23 @@ permalink: none
     ),
     'tocs' => 
     array (
+      0 => 
+      array (
+        0 => 'tmp/doctrine-docs/doctrine-common/en/2.8/index',
+        1 => 'reference/annotations',
+        2 => 'reference/caching',
+        3 => 'reference/class-loading',
+      ),
     ),
-    'ctime' => 1522389024,
+    'ctime' => 1522488205,
     'depends' => 
     array (
+      0 => 'tmp/doctrine-docs/doctrine-common/en/2.8/index',
+      1 => 'reference/annotations',
+      2 => 'reference/caching',
+      3 => 'reference/class-loading',
     ),
-    'parent' => 'index',
+    'parent' => 'reference/class-loading',
   ),
   'reference/caching' => 
   array (
@@ -261,27 +208,99 @@ permalink: none
     ),
     'tocs' => 
     array (
+      0 => 
+      array (
+        0 => 'tmp/doctrine-docs/doctrine-common/en/2.8/index',
+        1 => 'reference/annotations',
+        2 => 'reference/caching',
+        3 => 'reference/class-loading',
+      ),
     ),
-    'ctime' => 1522389024,
+    'ctime' => 1522488205,
     'depends' => 
     array (
+      0 => 'tmp/doctrine-docs/doctrine-common/en/2.8/index',
+      1 => 'reference/annotations',
+      2 => 'reference/caching',
+      3 => 'reference/class-loading',
     ),
-    'parent' => 'index',
+    'parent' => 'reference/class-loading',
   ),
-  'search' => 
+  'reference/class-loading' => 
   array (
-    'file' => 'search',
-    'url' => 'search.html',
-    'title' => NULL,
+    'file' => 'reference/class-loading',
+    'url' => 'reference/class-loading.html',
+    'title' => 'Class Loading',
     'titles' => 
     array (
+      0 => 
+      array (
+        0 => 'Class Loading',
+        1 => 
+        array (
+          0 => 
+          array (
+            0 => 'Overview',
+            1 => 
+            array (
+            ),
+          ),
+          1 => 
+          array (
+            0 => 'Usage',
+            1 => 
+            array (
+            ),
+          ),
+          2 => 
+          array (
+            0 => 'File Extension',
+            1 => 
+            array (
+            ),
+          ),
+          3 => 
+          array (
+            0 => 'Namespace Separator',
+            1 => 
+            array (
+            ),
+          ),
+          4 => 
+          array (
+            0 => 'Failing Silently and class\\_exists',
+            1 => 
+            array (
+            ),
+          ),
+          5 => 
+          array (
+            0 => 'Summary',
+            1 => 
+            array (
+            ),
+          ),
+        ),
+      ),
     ),
     'tocs' => 
     array (
+      0 => 
+      array (
+        0 => 'tmp/doctrine-docs/doctrine-common/en/2.8/index',
+        1 => 'reference/annotations',
+        2 => 'reference/caching',
+        3 => 'reference/class-loading',
+      ),
     ),
-    'ctime' => false,
+    'ctime' => 1522488205,
     'depends' => 
     array (
+      0 => 'tmp/doctrine-docs/doctrine-common/en/2.8/index',
+      1 => 'reference/annotations',
+      2 => 'reference/caching',
+      3 => 'reference/class-loading',
     ),
+    'parent' => 'reference/class-loading',
   ),
 );
