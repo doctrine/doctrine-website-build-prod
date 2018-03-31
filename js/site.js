@@ -4,8 +4,6 @@ String.prototype.replaceAll = function(search, replacement) {
 };
 
 function loadCurrentDocsMenu() {
-    console.log('Trying to find menu');
-
     var currentUrl = window.location.href;
     var lastPart = currentUrl.substr(currentUrl.lastIndexOf('/') + 1);
 
@@ -18,8 +16,6 @@ function loadCurrentDocsMenu() {
     }
 
     var id = lastPart.replaceAll('#', '-').replaceAll('.', '-');
-
-    console.log(id);
 
     // close open stuff
     $('.opened').removeClass('opened');
@@ -34,11 +30,29 @@ function loadCurrentDocsMenu() {
     // open parents
     elem.next('ul').addClass('opened-ul');
     elem.parents('ul').addClass('opened-ul');
+}
 
+function scrollToSection(url) {
+    var hash = url.substring(url.indexOf('#') + 1);
+    //var hash = hash.replace('', '');
+
+    console.log(hash);
+
+    if (hash) {
+        $('.right-content').scrollTop(0);
+
+        var position = $('a[name="' + hash + '"]').offset().top - $('.right-content').offset().top;
+
+        console.log(position);
+
+        $('.right-content').scrollTop(position);
+    }
 }
 
 $(function() {
     loadCurrentDocsMenu();
+
+    scrollToSection(window.location.href);
 
     $('.project-version-switcher').each(function() {
         $(this).attr('href', $(this).attr('href') + window.location.hash);
@@ -47,3 +61,8 @@ $(function() {
 
 window.onhashchange = loadCurrentDocsMenu;
 
+$(function() {
+    $('.toc-item a').on('click', function(e) {
+        scrollToSection($(this).attr('href'));
+    });
+});
