@@ -2,6 +2,16 @@ var Sidebar = function() {
     this.loadCurrentDocsMenu();
     this.initVersionLinks();
 
+    $('.navbar-toggler').on('click', function() {
+        var sidebar = $('.sidebar');
+
+        if (sidebar.hasClass('open-sidebar')) {
+            sidebar.removeClass('open-sidebar');
+        } else {
+            sidebar.addClass('open-sidebar');
+        }
+    });
+
     var self = this;
 
     window.onhashchange = function() {
