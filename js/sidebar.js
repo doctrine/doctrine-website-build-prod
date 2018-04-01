@@ -2,14 +2,13 @@ var Sidebar = function() {
     this.loadCurrentDocsMenu();
     this.initVersionLinks();
 
-    $('.navbar-toggler').on('click', function() {
-        var sidebar = $('.sidebar');
+    $('[data-toggle="offcanvas"]').click(function () {
+        $('.row-offcanvas').toggleClass('active')
+        $('.sidebar').toggle();
+    });
 
-        if (sidebar.hasClass('open-sidebar')) {
-            sidebar.removeClass('open-sidebar');
-        } else {
-            sidebar.addClass('open-sidebar');
-        }
+    $('.toc-item').on('click', function() {
+        $('.toc-toggle').click();
     });
 
     var self = this;
