@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Doctrine\ORM\Query | API</title>
+
+            <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/sami.css">
+        <script src="../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../js/bootstrap.min.js"></script>
+        <script src="../../js/typeahead.min.js"></script>
+        <script src="../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Doctrine_ORM_Query" data-root-path="../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                <script>
+            $('option[data-version="'+window.projectVersion+'"]').prop('selected', true);
+        </script>
+        <form id="search-form" action="../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../index.html">API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../classes.html">Classes</a></li>
+                                            <li><a href="../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../traits.html">Traits</a></li>
+                    <li><a href="../../doc-index.html">Index</a></li>
+                    <li><a href="../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                        <li><a href="../../Doctrine.html">Doctrine</a></li><li class="backslash">\</li><li><a href="../../Doctrine/ORM.html">ORM</a></li><li class="backslash">\</li><li>Query</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>
+            Query
+                
+        </h1>
+    </div>
+
+    <p>    class
+    <strong>Query</strong>        extends <abbr title="Doctrine\ORM\AbstractQuery">AbstractQuery</abbr>
+</p>
+
+        
+    
+
+            <div class="description">
+            <p>A Query object represents a DQL query.</p>                                </div>
+    
+    
+            <h2>Constants</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td>STATE_CLEAN</td>
+                <td class="last">
+                    <p><em>A query object is in CLEAN state when it has NO unparsed/unprocessed DQL parts.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>STATE_DIRTY</td>
+                <td class="last">
+                    <p><em>A query object is in state DIRTY when it has DQL parts that have not yet been
+parsed/processed. This is automatically defined as DIRTY when addDqlQueryPart
+is called.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>HINT_REFRESH</td>
+                <td class="last">
+                    <p><em>The refresh hint turns any query into a refresh query with the result that
+any local changes in entities are overridden with the fetched values.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>HINT_CACHE_ENABLED</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>HINT_CACHE_EVICT</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>HINT_REFRESH_ENTITY</td>
+                <td class="last">
+                    <p><em>Internal hint: is set to the proxy entity that is currently triggered for loading</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>HINT_FORCE_PARTIAL_LOAD</td>
+                <td class="last">
+                    <p><em>The forcePartialLoad query hint forces a particular query to return
+partial objects.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>HINT_INCLUDE_META_COLUMNS</td>
+                <td class="last">
+                    <p><em>The includeMetaColumns query hint causes meta columns like foreign keys and
+discriminator columns to be selected and returned as part of the query result.</em></p>
+                    <p>This hint does only apply to non-object queries.</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>HINT_CUSTOM_TREE_WALKERS</td>
+                <td class="last">
+                    <p><em>An array of class names that implement \Doctrine\ORM\Query\TreeWalker and
+are iterated and executed after the DQL has been parsed into an AST.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>HINT_CUSTOM_OUTPUT_WALKER</td>
+                <td class="last">
+                    <p><em>A string with a class name that implements \Doctrine\ORM\Query\TreeWalker
+and is used for generating the target SQL from any DQL AST tree.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>HINT_INTERNAL_ITERATION</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>HINT_LOCK_MODE</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+            </table>
+
+    
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getSQL">getSQL</a>()
+        
+                                            <p>Gets the SQL query/queries that correspond to this DQL query.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Query/AST/SelectStatement.html"><abbr title="Doctrine\ORM\Query\AST\SelectStatement">SelectStatement</abbr></a>|<a href="../../Doctrine/ORM/Query/AST/UpdateStatement.html"><abbr title="Doctrine\ORM\Query\AST\UpdateStatement">UpdateStatement</abbr></a>|<a href="../../Doctrine/ORM/Query/AST/DeleteStatement.html"><abbr title="Doctrine\ORM\Query\AST\DeleteStatement">DeleteStatement</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getAST">getAST</a>()
+        
+                                            <p>Returns the corresponding AST for this DQL query.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Query/ResultSetMapping.html"><abbr title="Doctrine\ORM\Query\ResultSetMapping">ResultSetMapping</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getResultSetMapping">getResultSetMapping</a>()
+        
+                                            <p>Gets the ResultSetMapping used for hydration.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Doctrine\DBAL\Driver\Statement">Statement</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_doExecute">doExecute</a>()
+        
+                                            <p>Executes the query and returns a the resulting Statement object.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setQueryCacheDriver">setQueryCacheDriver</a>(<abbr title="Doctrine\Common\Cache\Cache">Cache</abbr>|null $queryCache)
+        
+                                            <p>Defines a cache driver to be used for caching queries.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_useQueryCache">useQueryCache</a>(bool $bool)
+        
+                                            <p>Defines whether the query should make use of a query cache, if available.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Doctrine\Common\Cache\Cache">Cache</abbr>|null
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getQueryCacheDriver">getQueryCacheDriver</a>()
+        
+                                            <p>Returns the cache driver used for query caching.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setQueryCacheLifetime">setQueryCacheLifetime</a>(int $timeToLive)
+        
+                                            <p>Defines how long the query cache will be active before expire.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    int
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getQueryCacheLifetime">getQueryCacheLifetime</a>()
+        
+                                            <p>Retrieves the lifetime of resultset cache.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_expireQueryCache">expireQueryCache</a>(bool $expire = true)
+        
+                                            <p>Defines if the query cache is active or not.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getExpireQueryCache">getExpireQueryCache</a>()
+        
+                                            <p>Retrieves if the query cache is active or not.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_free">free</a>()
+        
+                                            <p>Frees the resources used by the query object.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Doctrine\ORM\AbstractQuery">AbstractQuery</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setDQL">setDQL</a>(string $dqlQuery)
+        
+                                            <p>Sets a DQL query string.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getDQL">getDQL</a>()
+        
+                                            <p>Returns the DQL query that is represented by this query object.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    int
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getState">getState</a>()
+        
+                                            <p>Returns the state of this query object
+By default the type is Doctrine_ORM_Query_Abstract::STATE_CLEAN but if it appears any unprocessed DQL
+part, it is switched to Doctrine_ORM_Query_Abstract::STATE_DIRTY.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_contains">contains</a>(string $dql)
+        
+                                            <p>Method to check if an arbitrary piece of DQL exists</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setFirstResult">setFirstResult</a>(int $firstResult)
+        
+                                            <p>Sets the position of the first result to retrieve (the "offset").</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    int
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getFirstResult">getFirstResult</a>()
+        
+                                            <p>Gets the position of the first result the query object was set to retrieve (the "offset").</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setMaxResults">setMaxResults</a>(int|null $maxResults)
+        
+                                            <p>Sets the maximum number of results to retrieve (the "limit").</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    int|null
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getMaxResults">getMaxResults</a>()
+        
+                                            <p>Gets the maximum number of results the query object was set to retrieve (the "limit").</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Internal/Hydration/IterableResult.html"><abbr title="Doctrine\ORM\Internal\Hydration\IterableResult">IterableResult</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_iterate">iterate</a>(<abbr title="Doctrine\Common\Collections\ArrayCollection">ArrayCollection</abbr>|array|<a href="../../Doctrine/ORM/Query/Parameter.html"><abbr title="Doctrine\ORM\Query\Parameter">Parameter</abbr></a>[]|mixed[]|null $parameters = null, int|null $hydrationMode = self::HYDRATE_OBJECT)
+        
+                                            <p>Executes the query and returns an IterableResult that can be used to incrementally
+iterated over the result.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Doctrine\ORM\AbstractQuery">AbstractQuery</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setHint">setHint</a>(string $name, mixed $value)
+        
+                                            <p>Sets a query hint. If the hint name is not recognized, it is silently ignored.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Doctrine\ORM\AbstractQuery">AbstractQuery</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setHydrationMode">setHydrationMode</a>(int $hydrationMode)
+        
+                                            <p>Defines the processing mode to be used during hydration / result set transformation.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setLockMode">setLockMode</a>(int $lockMode)
+        
+                                            <p>Set the lock mode for this Query.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    int|null
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getLockMode">getLockMode</a>()
+        
+                                            <p>Get the current lock mode for this query.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getQueryCacheId">getQueryCacheId</a>()
+        
+                                            <p>Generate a cache id for the query cache - reusing the Result-Cache-Id generator.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getHash">getHash</a>()
+        
+                                            <p>Generates a string of currently query to use for the cache second level cache.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method___clone">__clone</a>()
+        
+                                            <p>Cleanup Query resource when clone is called.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_getSQL">
+        <div class="location">at         line 201</div>
+        <code>                    string
+    <strong>getSQL</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the SQL query/queries that correspond to this DQL query.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>SQL query</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getAST">
+        <div class="location">at         line 211</div>
+        <code>                    <a href="../../Doctrine/ORM/Query/AST/SelectStatement.html"><abbr title="Doctrine\ORM\Query\AST\SelectStatement">SelectStatement</abbr></a>|<a href="../../Doctrine/ORM/Query/AST/UpdateStatement.html"><abbr title="Doctrine\ORM\Query\AST\UpdateStatement">UpdateStatement</abbr></a>|<a href="../../Doctrine/ORM/Query/AST/DeleteStatement.html"><abbr title="Doctrine\ORM\Query\AST\DeleteStatement">DeleteStatement</abbr></a>
+    <strong>getAST</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Returns the corresponding AST for this DQL query.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Query/AST/SelectStatement.html"><abbr title="Doctrine\ORM\Query\AST\SelectStatement">SelectStatement</abbr></a>|<a href="../../Doctrine/ORM/Query/AST/UpdateStatement.html"><abbr title="Doctrine\ORM\Query\AST\UpdateStatement">UpdateStatement</abbr></a>|<a href="../../Doctrine/ORM/Query/AST/DeleteStatement.html"><abbr title="Doctrine\ORM\Query\AST\DeleteStatement">DeleteStatement</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getResultSetMapping">
+        <div class="location">at         line 221</div>
+        <code>            protected        <a href="../../Doctrine/ORM/Query/ResultSetMapping.html"><abbr title="Doctrine\ORM\Query\ResultSetMapping">ResultSetMapping</abbr></a>
+    <strong>getResultSetMapping</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the ResultSetMapping used for hydration.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Query/ResultSetMapping.html"><abbr title="Doctrine\ORM\Query\ResultSetMapping">ResultSetMapping</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_doExecute">
+        <div class="location">at         line 288</div>
+        <code>            protected        <abbr title="Doctrine\DBAL\Driver\Statement">Statement</abbr>
+    <strong>doExecute</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Executes the query and returns a the resulting Statement object.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Doctrine\DBAL\Driver\Statement">Statement</abbr></td>
+            <td>The executed database statement that holds the results.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setQueryCacheDriver">
+        <div class="location">at         line 450</div>
+        <code>                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+    <strong>setQueryCacheDriver</strong>(<abbr title="Doctrine\Common\Cache\Cache">Cache</abbr>|null $queryCache)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Defines a cache driver to be used for caching queries.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><abbr title="Doctrine\Common\Cache\Cache">Cache</abbr>|null</td>
+                <td>$queryCache</td>
+                <td>Cache driver.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a></td>
+            <td>This query instance.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_useQueryCache">
+        <div class="location">at         line 464</div>
+        <code>                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+    <strong>useQueryCache</strong>(bool $bool)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Defines whether the query should make use of a query cache, if available.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>bool</td>
+                <td>$bool</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a></td>
+            <td>This query instance.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getQueryCacheDriver">
+        <div class="location">at         line 477</div>
+        <code>                    <abbr title="Doctrine\Common\Cache\Cache">Cache</abbr>|null
+    <strong>getQueryCacheDriver</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Returns the cache driver used for query caching.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Doctrine\Common\Cache\Cache">Cache</abbr>|null</td>
+            <td>The cache driver used for query caching or NULL, if
+                                          this Query does not use query caching.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setQueryCacheLifetime">
+        <div class="location">at         line 493</div>
+        <code>                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+    <strong>setQueryCacheLifetime</strong>(int $timeToLive)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Defines how long the query cache will be active before expire.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>int</td>
+                <td>$timeToLive</td>
+                <td>How long the cache entry is valid.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a></td>
+            <td>This query instance.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getQueryCacheLifetime">
+        <div class="location">at         line 509</div>
+        <code>                    int
+    <strong>getQueryCacheLifetime</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Retrieves the lifetime of resultset cache.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>int</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_expireQueryCache">
+        <div class="location">at         line 521</div>
+        <code>                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+    <strong>expireQueryCache</strong>(bool $expire = true)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Defines if the query cache is active or not.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>bool</td>
+                <td>$expire</td>
+                <td>Whether or not to force query cache expiration.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a></td>
+            <td>This query instance.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getExpireQueryCache">
+        <div class="location">at         line 533</div>
+        <code>                    bool
+    <strong>getExpireQueryCache</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Retrieves if the query cache is active or not.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_free">
+        <div class="location">at         line 538</div>
+        <code>                    
+    <strong>free</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Frees the resources used by the query object.</p>                    <p>Resets Parameters, Parameter Types and Query Hints.</p>                            </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setDQL">
+        <div class="location">at         line 553</div>
+        <code>                    <abbr title="Doctrine\ORM\AbstractQuery">AbstractQuery</abbr>
+    <strong>setDQL</strong>(string $dqlQuery)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Sets a DQL query string.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$dqlQuery</td>
+                <td>DQL Query.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Doctrine\ORM\AbstractQuery">AbstractQuery</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getDQL">
+        <div class="location">at         line 568</div>
+        <code>                    string
+    <strong>getDQL</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Returns the DQL query that is represented by this query object.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>DQL query.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getState">
+        <div class="location">at         line 583</div>
+        <code>                    int
+    <strong>getState</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Returns the state of this query object
+By default the type is Doctrine_ORM_Query_Abstract::STATE_CLEAN but if it appears any unprocessed DQL
+part, it is switched to Doctrine_ORM_Query_Abstract::STATE_DIRTY.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>int</td>
+            <td>The query state.</td>
+        </tr>
+    </table>
+
+            
+            
+                            <h4>See also</h4>
+
+                    <table class="table table-condensed">
+            </table>
+
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_contains">
+        <div class="location">at         line 595</div>
+        <code>                    bool
+    <strong>contains</strong>(string $dql)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Method to check if an arbitrary piece of DQL exists</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$dql</td>
+                <td>Arbitrary piece of DQL to check for.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setFirstResult">
+        <div class="location">at         line 607</div>
+        <code>                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+    <strong>setFirstResult</strong>(int $firstResult)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Sets the position of the first result to retrieve (the "offset").</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>int</td>
+                <td>$firstResult</td>
+                <td>The first result to return.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a></td>
+            <td>This query object.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getFirstResult">
+        <div class="location">at         line 621</div>
+        <code>                    int
+    <strong>getFirstResult</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the position of the first result the query object was set to retrieve (the "offset").</p>                    <p>Returns NULL if {@link setFirstResult} was not applied to this query.</p>                            </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>int</td>
+            <td>The position of the first result.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setMaxResults">
+        <div class="location">at         line 633</div>
+        <code>                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+    <strong>setMaxResults</strong>(int|null $maxResults)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Sets the maximum number of results to retrieve (the "limit").</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>int|null</td>
+                <td>$maxResults</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a></td>
+            <td>This query object.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getMaxResults">
+        <div class="location">at         line 647</div>
+        <code>                    int|null
+    <strong>getMaxResults</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the maximum number of results the query object was set to retrieve (the "limit").</p>                    <p>Returns NULL if {@link setMaxResults} was not applied to this query.</p>                            </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>int|null</td>
+            <td>Maximum number of results.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_iterate">
+        <div class="location">at         line 661</div>
+        <code>                    <a href="../../Doctrine/ORM/Internal/Hydration/IterableResult.html"><abbr title="Doctrine\ORM\Internal\Hydration\IterableResult">IterableResult</abbr></a>
+    <strong>iterate</strong>(<abbr title="Doctrine\Common\Collections\ArrayCollection">ArrayCollection</abbr>|array|<a href="../../Doctrine/ORM/Query/Parameter.html"><abbr title="Doctrine\ORM\Query\Parameter">Parameter</abbr></a>[]|mixed[]|null $parameters = null, int|null $hydrationMode = self::HYDRATE_OBJECT)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Executes the query and returns an IterableResult that can be used to incrementally
+iterated over the result.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><abbr title="Doctrine\Common\Collections\ArrayCollection">ArrayCollection</abbr>|array|<a href="../../Doctrine/ORM/Query/Parameter.html"><abbr title="Doctrine\ORM\Query\Parameter">Parameter</abbr></a>[]|mixed[]|null</td>
+                <td>$parameters</td>
+                <td>The query parameters.</td>
+            </tr>
+                    <tr>
+                <td>int|null</td>
+                <td>$hydrationMode</td>
+                <td>The hydration mode to use.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Internal/Hydration/IterableResult.html"><abbr title="Doctrine\ORM\Internal\Hydration\IterableResult">IterableResult</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setHint">
+        <div class="location">at         line 671</div>
+        <code>                    <abbr title="Doctrine\ORM\AbstractQuery">AbstractQuery</abbr>
+    <strong>setHint</strong>(string $name, mixed $value)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Sets a query hint. If the hint name is not recognized, it is silently ignored.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td>The name of the hint.</td>
+            </tr>
+                    <tr>
+                <td>mixed</td>
+                <td>$value</td>
+                <td>The value of the hint.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Doctrine\ORM\AbstractQuery">AbstractQuery</abbr></td>
+            <td>This query instance.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setHydrationMode">
+        <div class="location">at         line 681</div>
+        <code>                    <abbr title="Doctrine\ORM\AbstractQuery">AbstractQuery</abbr>
+    <strong>setHydrationMode</strong>(int $hydrationMode)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Defines the processing mode to be used during hydration / result set transformation.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>int</td>
+                <td>$hydrationMode</td>
+                <td>Doctrine processing mode to be used during hydration process.
+                          One of the Query::HYDRATE_* constants.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Doctrine\ORM\AbstractQuery">AbstractQuery</abbr></td>
+            <td>This query instance.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setLockMode">
+        <div class="location">at         line 699</div>
+        <code>                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+    <strong>setLockMode</strong>(int $lockMode)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set the lock mode for this Query.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>int</td>
+                <td>$lockMode</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/TransactionRequiredException.html"><abbr title="Doctrine\ORM\TransactionRequiredException">TransactionRequiredException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>See also</h4>
+
+                    <table class="table table-condensed">
+            </table>
+
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getLockMode">
+        <div class="location">at         line 717</div>
+        <code>                    int|null
+    <strong>getLockMode</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get the current lock mode for this query.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>int|null</td>
+            <td>The current lock mode of this query or NULL if no specific lock mode is set.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getQueryCacheId">
+        <div class="location">at         line 733</div>
+        <code>            protected        string
+    <strong>getQueryCacheId</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Generate a cache id for the query cache - reusing the Result-Cache-Id generator.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getHash">
+        <div class="location">at         line 754</div>
+        <code>            protected        string
+    <strong>getHash</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Generates a string of currently query to use for the cache second level cache.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method___clone">
+        <div class="location">at         line 762</div>
+        <code>                    
+    <strong>__clone</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Cleanup Query resource when clone is called.</p>                                                </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>
