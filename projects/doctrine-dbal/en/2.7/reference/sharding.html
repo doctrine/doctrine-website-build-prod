@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sharding - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                    <meta name="robots" content="noindex, follow">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://new.doctrine-project.org/css/style.css?f6e2f2" rel="stylesheet" type="text/css" />
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+
+        <link rel="stylesheet" href="https://new.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://new.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://new.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://new.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://new.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://new.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://new.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://new.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://new.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://new.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://new.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://new.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://new.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://new.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://new.doctrine-project.org/images/mstile-310x310.png" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://new.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+            </head>
+    <body>
+                    <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="https://new.doctrine-project.org/"><img src="https://new.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="https://new.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://new.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://new.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://new.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://new.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://new.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://new.doctrine-project.org/team/">Team</a>
+                        </li>
+                    </ul>
+
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                </div>
+
+                <div class="rounded" id="hits">
+                    <!-- Hits widget will appear here -->
+                </div>
+            </nav>
+        
+            <div class="container-wrapper container-fluid">
+        <div class="row row-offcanvas row-offcanvas-right">
+                            <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
+                    <div class="sidebar-sticky">
+                        
+<div class="toc"><ul><li id="architecture-html-title-1" class="toc-item"><a href="architecture.html#title.1">Architecture</a></li><ul><li id="architecture-html-title-1-1" class="toc-item"><a href="architecture.html#title.1.1">Drivers</a></li><li id="architecture-html-title-1-2" class="toc-item"><a href="architecture.html#title.1.2">Platforms</a></li><li id="architecture-html-title-1-3" class="toc-item"><a href="architecture.html#title.1.3">Logging</a></li><li id="architecture-html-title-1-4" class="toc-item"><a href="architecture.html#title.1.4">Schema</a></li><li id="architecture-html-title-1-5" class="toc-item"><a href="architecture.html#title.1.5">Types</a></li></ul><li id="caching-html-title-1" class="toc-item"><a href="caching.html#title.1">Caching</a></li><li id="configuration-html-title-1" class="toc-item"><a href="configuration.html#title.1">Configuration</a></li><ul><li id="configuration-html-title-1-1" class="toc-item"><a href="configuration.html#title.1.1">Getting a Connection</a></li><ul><li id="configuration-html-title-1-1-1" class="toc-item"><a href="configuration.html#title.1.1.1">Connecting using a URL</a></li><li id="configuration-html-title-1-1-2" class="toc-item"><a href="configuration.html#title.1.1.2">Driver</a></li><li id="configuration-html-title-1-1-3" class="toc-item"><a href="configuration.html#title.1.1.3">Wrapper Class</a></li><li id="configuration-html-title-1-1-4" class="toc-item"><a href="configuration.html#title.1.1.4">Connection Details</a></li><ul></ul><li id="configuration-html-title-1-1-5" class="toc-item"><a href="configuration.html#title.1.1.5">Automatic platform version detection</a></li><li id="configuration-html-title-1-1-6" class="toc-item"><a href="configuration.html#title.1.1.6">Custom Platform</a></li><li id="configuration-html-title-1-1-7" class="toc-item"><a href="configuration.html#title.1.1.7">Custom Driver Options</a></li></ul></ul><li id="data-retrieval-and-manipulation-html-title-1" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1">Data Retrieval And Manipulation</a></li><ul><li id="data-retrieval-and-manipulation-html-title-1-1" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.1">Data Retrieval</a></li><ul><li id="data-retrieval-and-manipulation-html-title-1-1-1" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.1.1">Dynamic Parameters and Prepared Statements</a></li><li id="data-retrieval-and-manipulation-html-title-1-1-2" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.1.2">Using Prepared Statements</a></li></ul><li id="data-retrieval-and-manipulation-html-title-1-2" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.2">Binding Types</a></li><ul><li id="data-retrieval-and-manipulation-html-title-1-2-1" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.2.1">Doctrine\DBAL\Types Conversion</a></li><li id="data-retrieval-and-manipulation-html-title-1-2-2" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.2.2">List of Parameters Conversion</a></li></ul><li id="data-retrieval-and-manipulation-html-title-1-3" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3">API</a></li><ul><li id="data-retrieval-and-manipulation-html-title-1-3-1" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3.1">prepare()</a></li><li id="data-retrieval-and-manipulation-html-title-1-3-2" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3.2">executeUpdate()</a></li><li id="data-retrieval-and-manipulation-html-title-1-3-3" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3.3">executeQuery()</a></li><li id="data-retrieval-and-manipulation-html-title-1-3-4" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3.4">fetchAll()</a></li><li id="data-retrieval-and-manipulation-html-title-1-3-5" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3.5">fetchArray()</a></li><li id="data-retrieval-and-manipulation-html-title-1-3-6" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3.6">fetchColumn()</a></li><li id="data-retrieval-and-manipulation-html-title-1-3-7" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3.7">fetchAssoc()</a></li><li id="data-retrieval-and-manipulation-html-title-1-3-8" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3.8">delete()</a></li><li id="data-retrieval-and-manipulation-html-title-1-3-9" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3.9">insert()</a></li><li id="data-retrieval-and-manipulation-html-title-1-3-10" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3.10">update()</a></li><li id="data-retrieval-and-manipulation-html-title-1-3-11" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3.11">quote()</a></li><li id="data-retrieval-and-manipulation-html-title-1-3-12" class="toc-item"><a href="data-retrieval-and-manipulation.html#title.1.3.12">quoteIdentifier()</a></li></ul></ul><li id="events-html-title-1" class="toc-item"><a href="events.html#title.1">Events</a></li><ul><li id="events-html-title-1-1" class="toc-item"><a href="events.html#title.1.1">PostConnect Event</a></li><li id="events-html-title-1-2" class="toc-item"><a href="events.html#title.1.2">Schema Events</a></li><ul><li id="events-html-title-1-2-1" class="toc-item"><a href="events.html#title.1.2.1">OnSchemaCreateTable Event</a></li><li id="events-html-title-1-2-2" class="toc-item"><a href="events.html#title.1.2.2">OnSchemaCreateTableColumn Event</a></li><li id="events-html-title-1-2-3" class="toc-item"><a href="events.html#title.1.2.3">OnSchemaDropTable Event</a></li><li id="events-html-title-1-2-4" class="toc-item"><a href="events.html#title.1.2.4">OnSchemaAlterTable Event</a></li><li id="events-html-title-1-2-5" class="toc-item"><a href="events.html#title.1.2.5">OnSchemaAlterTableAddColumn Event</a></li><li id="events-html-title-1-2-6" class="toc-item"><a href="events.html#title.1.2.6">OnSchemaAlterTableRemoveColumn Event</a></li><li id="events-html-title-1-2-7" class="toc-item"><a href="events.html#title.1.2.7">OnSchemaAlterTableChangeColumn Event</a></li><li id="events-html-title-1-2-8" class="toc-item"><a href="events.html#title.1.2.8">OnSchemaAlterTableRenameColumn Event</a></li><li id="events-html-title-1-2-9" class="toc-item"><a href="events.html#title.1.2.9">OnSchemaColumnDefinition Event</a></li><li id="events-html-title-1-2-10" class="toc-item"><a href="events.html#title.1.2.10">OnSchemaIndexDefinition Event</a></li></ul></ul><li id="introduction-html-title-1" class="toc-item"><a href="introduction.html#title.1">Introduction</a></li><li id="known-vendor-issues-html-title-1" class="toc-item"><a href="known-vendor-issues.html#title.1">Known Vendor Issues</a></li><ul><li id="known-vendor-issues-html-title-1-1" class="toc-item"><a href="known-vendor-issues.html#title.1.1">PostgreSQL</a></li><ul><li id="known-vendor-issues-html-title-1-1-1" class="toc-item"><a href="known-vendor-issues.html#title.1.1.1">DateTime, DateTimeTz and Time Types</a></li><li id="known-vendor-issues-html-title-1-1-2" class="toc-item"><a href="known-vendor-issues.html#title.1.1.2">Timezones and DateTimeTz</a></li></ul><li id="known-vendor-issues-html-title-1-2" class="toc-item"><a href="known-vendor-issues.html#title.1.2">MySQL</a></li><ul><li id="known-vendor-issues-html-title-1-2-1" class="toc-item"><a href="known-vendor-issues.html#title.1.2.1">DateTimeTz</a></li></ul><li id="known-vendor-issues-html-title-1-3" class="toc-item"><a href="known-vendor-issues.html#title.1.3">Sqlite</a></li><ul><li id="known-vendor-issues-html-title-1-3-1" class="toc-item"><a href="known-vendor-issues.html#title.1.3.1">Buffered Queries and Isolation</a></li><li id="known-vendor-issues-html-title-1-3-2" class="toc-item"><a href="known-vendor-issues.html#title.1.3.2">DateTime</a></li><li id="known-vendor-issues-html-title-1-3-3" class="toc-item"><a href="known-vendor-issues.html#title.1.3.3">DateTimeTz</a></li><li id="known-vendor-issues-html-title-1-3-4" class="toc-item"><a href="known-vendor-issues.html#title.1.3.4">Reverse engineering primary key order</a></li></ul><li id="known-vendor-issues-html-title-1-4" class="toc-item"><a href="known-vendor-issues.html#title.1.4">IBM DB2</a></li><ul><li id="known-vendor-issues-html-title-1-4-1" class="toc-item"><a href="known-vendor-issues.html#title.1.4.1">DateTimeTz</a></li></ul><li id="known-vendor-issues-html-title-1-5" class="toc-item"><a href="known-vendor-issues.html#title.1.5">Oracle</a></li><ul><li id="known-vendor-issues-html-title-1-5-1" class="toc-item"><a href="known-vendor-issues.html#title.1.5.1">DateTimeTz</a></li><li id="known-vendor-issues-html-title-1-5-2" class="toc-item"><a href="known-vendor-issues.html#title.1.5.2">OCI-LOB instances</a></li></ul><li id="known-vendor-issues-html-title-1-6" class="toc-item"><a href="known-vendor-issues.html#title.1.6">Microsoft SQL Server</a></li><ul><li id="known-vendor-issues-html-title-1-6-1" class="toc-item"><a href="known-vendor-issues.html#title.1.6.1">Unique and NULL</a></li><li id="known-vendor-issues-html-title-1-6-2" class="toc-item"><a href="known-vendor-issues.html#title.1.6.2">DateTime, DateTimeTz and Time Types</a></li><li id="known-vendor-issues-html-title-1-6-3" class="toc-item"><a href="known-vendor-issues.html#title.1.6.3">PDO_SQLSRV: VARBINARY/BLOB columns</a></li></ul></ul><li id="platforms-html-title-1" class="toc-item"><a href="platforms.html#title.1">Platforms</a></li><ul><li id="platforms-html-title-1-1" class="toc-item"><a href="platforms.html#title.1.1">MySQL</a></li><li id="platforms-html-title-1-2" class="toc-item"><a href="platforms.html#title.1.2">Oracle</a></li><li id="platforms-html-title-1-3" class="toc-item"><a href="platforms.html#title.1.3">Microsoft SQL Server</a></li><li id="platforms-html-title-1-4" class="toc-item"><a href="platforms.html#title.1.4">PostgreSQL</a></li><li id="platforms-html-title-1-5" class="toc-item"><a href="platforms.html#title.1.5">SAP Sybase SQL Anywhere</a></li><li id="platforms-html-title-1-6" class="toc-item"><a href="platforms.html#title.1.6">SQLite</a></li><li id="platforms-html-title-1-7" class="toc-item"><a href="platforms.html#title.1.7">Drizzle</a></li></ul><li id="portability-html-title-1" class="toc-item"><a href="portability.html#title.1">Portability</a></li><ul><li id="portability-html-title-1-1" class="toc-item"><a href="portability.html#title.1.1">Connection Wrapper</a></li><li id="portability-html-title-1-2" class="toc-item"><a href="portability.html#title.1.2">Database Platform</a></li><li id="portability-html-title-1-3" class="toc-item"><a href="portability.html#title.1.3">Keyword Lists</a></li></ul><li id="query-builder-html-title-1" class="toc-item"><a href="query-builder.html#title.1">SQL Query Builder</a></li><ul><li id="query-builder-html-title-1-1" class="toc-item"><a href="query-builder.html#title.1.1">Security: Safely preventing SQL Injection</a></li><li id="query-builder-html-title-1-2" class="toc-item"><a href="query-builder.html#title.1.2">Building a Query</a></li><ul><li id="query-builder-html-title-1-2-1" class="toc-item"><a href="query-builder.html#title.1.2.1">WHERE-Clause</a></li><li id="query-builder-html-title-1-2-2" class="toc-item"><a href="query-builder.html#title.1.2.2">Table alias</a></li><li id="query-builder-html-title-1-2-3" class="toc-item"><a href="query-builder.html#title.1.2.3">GROUP BY and HAVING Clause</a></li><li id="query-builder-html-title-1-2-4" class="toc-item"><a href="query-builder.html#title.1.2.4">Join Clauses</a></li><li id="query-builder-html-title-1-2-5" class="toc-item"><a href="query-builder.html#title.1.2.5">Order-By Clause</a></li><li id="query-builder-html-title-1-2-6" class="toc-item"><a href="query-builder.html#title.1.2.6">Limit Clause</a></li><li id="query-builder-html-title-1-2-7" class="toc-item"><a href="query-builder.html#title.1.2.7">VALUES Clause</a></li><li id="query-builder-html-title-1-2-8" class="toc-item"><a href="query-builder.html#title.1.2.8">Set Clause</a></li></ul><li id="query-builder-html-title-1-3" class="toc-item"><a href="query-builder.html#title.1.3">Building Expressions</a></li><li id="query-builder-html-title-1-4" class="toc-item"><a href="query-builder.html#title.1.4">Binding Parameters to Placeholders</a></li></ul><li id="schema-manager-html-title-1" class="toc-item"><a href="schema-manager.html#title.1">Schema-Manager</a></li><ul><li id="schema-manager-html-title-1-1" class="toc-item"><a href="schema-manager.html#title.1.1">listDatabases()</a></li><li id="schema-manager-html-title-1-2" class="toc-item"><a href="schema-manager.html#title.1.2">listSequences()</a></li><li id="schema-manager-html-title-1-3" class="toc-item"><a href="schema-manager.html#title.1.3">listTableColumns()</a></li><li id="schema-manager-html-title-1-4" class="toc-item"><a href="schema-manager.html#title.1.4">listTableDetails()</a></li><li id="schema-manager-html-title-1-5" class="toc-item"><a href="schema-manager.html#title.1.5">listTableForeignKeys()</a></li><li id="schema-manager-html-title-1-6" class="toc-item"><a href="schema-manager.html#title.1.6">listTableIndexes()</a></li><li id="schema-manager-html-title-1-7" class="toc-item"><a href="schema-manager.html#title.1.7">listTables()</a></li><li id="schema-manager-html-title-1-8" class="toc-item"><a href="schema-manager.html#title.1.8">listViews()</a></li><li id="schema-manager-html-title-1-9" class="toc-item"><a href="schema-manager.html#title.1.9">createSchema()</a></li></ul><li id="schema-representation-html-title-1" class="toc-item"><a href="schema-representation.html#title.1">Schema-Representation</a></li><ul><li id="schema-representation-html-title-1-1" class="toc-item"><a href="schema-representation.html#title.1.1">Schema Assets</a></li><ul><li id="schema-representation-html-title-1-1-1" class="toc-item"><a href="schema-representation.html#title.1.1.1">Column</a></li><ul></ul></ul></ul><li id="security-html-title-1" class="toc-item"><a href="security.html#title.1">Security</a></li><ul><li id="security-html-title-1-1" class="toc-item"><a href="security.html#title.1.1">SQL Injection: Safe and Unsafe APIs for User Input</a></li><li id="security-html-title-1-2" class="toc-item"><a href="security.html#title.1.2">User input in your queries</a></li><ul><li id="security-html-title-1-2-1" class="toc-item"><a href="security.html#title.1.2.1">Wrong: String Concatenation</a></li><li id="security-html-title-1-2-2" class="toc-item"><a href="security.html#title.1.2.2">Right: Prepared Statements</a></li><li id="security-html-title-1-2-3" class="toc-item"><a href="security.html#title.1.2.3">Right: Quoting/Escaping values</a></li></ul></ul><li id="sharding-html-title-1" class="toc-item"><a href="sharding.html#title.1">Sharding</a></li><ul><li id="sharding-html-title-1-1" class="toc-item"><a href="sharding.html#title.1.1">ID Generation</a></li><ul><li id="sharding-html-title-1-1-1" class="toc-item"><a href="sharding.html#title.1.1.1">Use GUID/UUIDs</a></li><li id="sharding-html-title-1-1-2" class="toc-item"><a href="sharding.html#title.1.1.2">Table Generator</a></li><li id="sharding-html-title-1-1-3" class="toc-item"><a href="sharding.html#title.1.1.3">Natural Identifiers</a></li></ul><li id="sharding-html-title-1-2" class="toc-item"><a href="sharding.html#title.1.2">Transactions</a></li><li id="sharding-html-title-1-3" class="toc-item"><a href="sharding.html#title.1.3">Foreign Keys</a></li><li id="sharding-html-title-1-4" class="toc-item"><a href="sharding.html#title.1.4">Complex Queries</a></li><li id="sharding-html-title-1-5" class="toc-item"><a href="sharding.html#title.1.5">ShardManager Interface</a></li><li id="sharding-html-title-1-6" class="toc-item"><a href="sharding.html#title.1.6">Schema Operations: SchemaSynchronizer Interface</a></li><li id="sharding-html-title-1-7" class="toc-item"><a href="sharding.html#title.1.7">SQL Azure Federations</a></li><ul><li id="sharding-html-title-1-7-1" class="toc-item"><a href="sharding.html#title.1.7.1">Schema Operations</a></li><li id="sharding-html-title-1-7-2" class="toc-item"><a href="sharding.html#title.1.7.2">SQLAzure Filtering</a></li></ul><li id="sharding-html-title-1-8" class="toc-item"><a href="sharding.html#title.1.8">Generic SQL Sharding Support</a></li></ul><li id="sharding_azure_tutorial-html-title-1" class="toc-item"><a href="sharding_azure_tutorial.html#title.1">SQLAzure Sharding Tutorial</a></li><ul><li id="sharding_azure_tutorial-html-title-1-1" class="toc-item"><a href="sharding_azure_tutorial.html#title.1.1">Install Doctrine</a></li><li id="sharding_azure_tutorial-html-title-1-2" class="toc-item"><a href="sharding_azure_tutorial.html#title.1.2">Setup Connection</a></li><li id="sharding_azure_tutorial-html-title-1-3" class="toc-item"><a href="sharding_azure_tutorial.html#title.1.3">Create Database</a></li><li id="sharding_azure_tutorial-html-title-1-4" class="toc-item"><a href="sharding_azure_tutorial.html#title.1.4">Create Schema</a></li><li id="sharding_azure_tutorial-html-title-1-5" class="toc-item"><a href="sharding_azure_tutorial.html#title.1.5">View Federation Members</a></li><li id="sharding_azure_tutorial-html-title-1-6" class="toc-item"><a href="sharding_azure_tutorial.html#title.1.6">Insert Data</a></li><li id="sharding_azure_tutorial-html-title-1-7" class="toc-item"><a href="sharding_azure_tutorial.html#title.1.7">Split Federation</a></li><li id="sharding_azure_tutorial-html-title-1-8" class="toc-item"><a href="sharding_azure_tutorial.html#title.1.8">Inserting Data after Split</a></li><li id="sharding_azure_tutorial-html-title-1-9" class="toc-item"><a href="sharding_azure_tutorial.html#title.1.9">Querying data with filtering off</a></li><li id="sharding_azure_tutorial-html-title-1-10" class="toc-item"><a href="sharding_azure_tutorial.html#title.1.10">Querying data with filtering on</a></li></ul><li id="supporting-other-databases-html-title-1" class="toc-item"><a href="supporting-other-databases.html#title.1">Supporting Other Databases</a></li><ul><li id="supporting-other-databases-html-title-1-1" class="toc-item"><a href="supporting-other-databases.html#title.1.1">Implementation Steps in Detail</a></li></ul><li id="transactions-html-title-1" class="toc-item"><a href="transactions.html#title.1">Transactions</a></li><ul><li id="transactions-html-title-1-1" class="toc-item"><a href="transactions.html#title.1.1">Transaction Nesting</a></li><li id="transactions-html-title-1-2" class="toc-item"><a href="transactions.html#title.1.2">Auto-commit mode</a></li><li id="transactions-html-title-1-3" class="toc-item"><a href="transactions.html#title.1.3">Error handling</a></li></ul><li id="types-html-title-1" class="toc-item"><a href="types.html#title.1">Types</a></li><ul><li id="types-html-title-1-1" class="toc-item"><a href="types.html#title.1.1">Reference</a></li><ul><li id="types-html-title-1-1-1" class="toc-item"><a href="types.html#title.1.1.1">Numeric types</a></li><ul></ul><li id="types-html-title-1-1-2" class="toc-item"><a href="types.html#title.1.1.2">String types</a></li><ul></ul><li id="types-html-title-1-1-3" class="toc-item"><a href="types.html#title.1.1.3">Bit types</a></li><ul></ul><li id="types-html-title-1-1-4" class="toc-item"><a href="types.html#title.1.1.4">Date and time types</a></li><ul></ul><li id="types-html-title-1-1-5" class="toc-item"><a href="types.html#title.1.1.5">Array types</a></li><ul></ul><li id="types-html-title-1-1-6" class="toc-item"><a href="types.html#title.1.1.6">Object types</a></li><ul></ul></ul><li id="types-html-title-1-2" class="toc-item"><a href="types.html#title.1.2">Mapping Matrix</a></li><li id="types-html-title-1-3" class="toc-item"><a href="types.html#title.1.3">Detection of Database Types</a></li><li id="types-html-title-1-4" class="toc-item"><a href="types.html#title.1.4">Custom Mapping Types</a></li></ul></ul></div>
+                    </div>
+                </nav>
+            
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-9 pt-3 px-4">
+                <div class="row">
+                                                                
+                                        
+                                                                <nav class="breadcrumbs d-none d-sm-block d-md-block d-lg-block d-xl-block" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/">Projects</a></li>
+                                <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/dbal/">DBAL</a></li>
+                                <li class="breadcrumb-item"><a href="https://new.doctrine-project.org/projects/doctrine-dbal/en/2.7/">Documentation</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Sharding</li>
+                            </ol>
+                        </nav>
+                                    </div>
+
+                <div class="row">
+                    <div class="col-12">
+                                                    <button type="button" class="btn btn-primary btn-sm float-right toc-toggle" data-toggle="offcanvas" id="toc-toggle">Table of Contents</button>
+
+                                                            <ul class="list-inline">
+                                                                            <li class="list-inline-item mr-0">
+                                            <a href="/projects/doctrine-dbal/en/latest/reference/sharding.html" class="project-version-switcher badge badge-secondary">master</a>
+                                        </li>
+                                                                            <li class="list-inline-item mr-0">
+                                            <a href="/projects/doctrine-dbal/en/2.7/reference/sharding.html" class="project-version-switcher badge badge-warning">2.7</a>
+                                        </li>
+                                                                            <li class="list-inline-item mr-0">
+                                            <a href="/projects/doctrine-dbal/en/2.6/reference/sharding.html" class="project-version-switcher badge badge-secondary">2.6</a>
+                                        </li>
+                                                                            <li class="list-inline-item mr-0">
+                                            <a href="/projects/doctrine-dbal/en/2.5/reference/sharding.html" class="project-version-switcher badge badge-secondary">2.5</a>
+                                        </li>
+                                    
+                                    
+                                    <li class="list-inline-item ml-2"><a href="https://github.com/doctrine/dbal/edit/2.7/docs/en/reference/sharding.rst" class="badge badge-primary">Edit</a></li>
+
+                                </ul>
+                            
+                            
+<a class="section-anchor" id="title.1" name="title.1"></a><h1 class="section-header"><a href="#title.1">Sharding<i class="fas fa-link"></i></a></h1>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The sharding extension is currently in transition from a separate Project
+into DBAL. Class names may differ.</p>
+</div>
+<p>Starting with 2.3 Doctrine DBAL contains some functionality to simplify the
+development of horizontally sharded applications. In this first release it
+contains a <code>ShardManager</code> interface. This interface allows to programatically
+select a shard to send queries to. At the moment there are no functionalities
+yet to dynamically pick a shard based on ID, query or database row yet. That
+means the sharding extension is primarily suited for:</p>
+<ul><li class="dash">multi-tenant applications or</li>
+<li class="dash">applications with completely separated datasets (example: weather data).</li>
+</ul>
+
+<p>Both kind of application will work with both DBAL and ORM.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Horizontal sharding is an evasive architecture that will affect your application code and using this
+extension to Doctrine will not make it work &quot;magically&quot;.</p>
+</div>
+<p>You have to understand and integrate the following drawbacks:</p>
+<ul><li class="dash">Pre-generation of IDs that are unique across all shards required.</li>
+<li class="dash">No transaction support across shards.</li>
+<li class="dash">No foreign key support across shards (meaning no &quot;real&quot; relations).</li>
+<li class="dash">Very complex (or impossible) to query aggregates across shards.</li>
+<li class="dash">Denormalization: Composite keys required where normalized non-sharded db schemas don't need them.</li>
+<li class="dash">Schema Operations have to be done on all shards.</li>
+</ul>
+
+<p>The primary questions in a sharding architecture are:</p>
+<ul><li>Where is my data located?</li>
+<li>Where should I save this new data to find it later?</li>
+</ul>
+
+<p>To answer these questions you generally have to craft a function that will tell
+you for a given ID, on which shard the data for this ID is located. To simplify
+this approach you will generally just pick a table which is the root of a set of
+related data and decide for the IDs of this table. All the related data that
+belong to this table are saved on the same shard.</p>
+<p>Take for example a multi-user blog application with the following tables:</p>
+<ul><li class="dash">Blog [id, name]</li>
+<li class="dash">Post [id, blog_id, subject, body, author_id]</li>
+<li class="dash">Comment [id, post_id, comment, author_id]</li>
+<li class="dash">User [id, username]</li>
+</ul>
+
+<p>A sensible sharding architecture will split the application by blog. That means
+all the data for a particular blog will be on a single shard and scaling is
+done by putting the amount of blogs on many different database servers.</p>
+<p>Now users can post and comment on different blogs that reside on different
+shards. This makes the database schema above slightly tricky, because both
+`author_id` columns cannot have foreign keys to `User (id)`. Instead the User
+table is located in an entirely different &quot;dimension&quot; of the application in
+terms of the sharding architecture.</p>
+<p>To simplify working with this kind of multi-dimensional database schema, you
+can replace the author_ids with something more &quot;meaningful&quot;, for example the
+e-mail address of the users if that is always known. The &quot;user&quot; table can then
+be separated from the database schema above and put on a second horizontally
+scaled sharding architecture.</p>
+<p>As you can see, even with just the four tables above, sharding actually becomes
+quite complex to think about.</p>
+<p>The rest of this section discusses Doctrine sharding functionality in technical
+detail.</p>
+<a class="section-anchor" id="title.1.1" name="title.1.1"></a><h2 class="section-header"><a href="#title.1.1">ID Generation<i class="fas fa-link"></i></a></h2>
+<p>To solve the issue of unique ID-generation across all shards are several
+approaches you should evaluate:</p>
+<a class="section-anchor" id="title.1.1.1" name="title.1.1.1"></a><h3 class="section-header"><a href="#title.1.1.1">Use GUID/UUIDs<i class="fas fa-link"></i></a></h3>
+<p>The most simple ID-generation mechanism for sharding are
+universally unique identifiers. These are 16-byte
+(128-bit) numbers that are guaranteed to be unique across different servers.
+You can <a href="">read up on UUIDs on Wikipedia
+&lt;http://en.wikipedia.org/wiki/Universally_unique_identifier&gt;</a>.</p>
+<p>The drawback of UUIDs is the segmentation they cause on indexes. Because UUIDs
+are not sequentially generated, they can have negative impact on index access
+performance. Additionally they are much bigger
+than numerical primary keys (which are normally 4-bytes in length).</p>
+<p>At the moment Doctrine DBAL drivers MySQL and SQL Server support the generation
+of UUID/GUIDs. You can use the following bit of code to generate them across
+platforms:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\DBAL\DriverManager;
+
+$conn = DriverManager::getConnection(/**..**/);
+$guid = $conn-&gt;fetchColumn('SELECT ' . $conn-&gt;getDatabasePlatform()-&gt;getGuidExpression());
+
+$conn-&gt;insert(&quot;my_table&quot;, array(&quot;id&quot; =&gt; $guid, &quot;foo&quot; =&gt; &quot;bar&quot;));
+</code></pre>
+<p>In your application you should hide this details in Id-Generation services:</p>
+<pre><code class="php">&lt;?php
+namespace MyApplication;
+
+class IdGenerationService
+{
+    private $conn;
+
+    public function generateCustomerId()
+    {
+        return $this-&gt;conn-&gt;fetchColumn('SELECT ' .
+            $this-&gt;conn-&gt;getDatabasePlatform()-&gt;getGuidExpression()
+        );
+    }
+}
+</code></pre>
+<p>A good starting point to read up on GUIDs (vs numerical ids) is this blog post
+<a href="">Coding Horror: Primary Keys: IDs vs GUIDs
+&lt;http://www.codinghorror.com/blog/2007/03/primary-keys-ids-versus-guids.html&gt;</a>.</p>
+<a class="section-anchor" id="title.1.1.2" name="title.1.1.2"></a><h3 class="section-header"><a href="#title.1.1.2">Table Generator<i class="fas fa-link"></i></a></h3>
+<p>In some scenarios there is no way around a numerical, automatically
+incrementing id. The way Auto incrementing IDs are implemented in MySQL and SQL
+Server however is completely unsuitable for sharding. Remember in a sharding
+architecture you have to know where the row for a specific ID is located and
+IDs have to be globally unique across all servers. Auto-Increment Primary Keys
+are missing both properties.</p>
+<p>To get around this issue you can use the so-called &quot;table-generator&quot; strategy.
+In this case you define a single database that is responsible for the
+generation of auto-incremented ids. You create a table on this database and
+through the use of locking create new sequential ids.</p>
+<p>There are three important drawbacks to this strategy:</p>
+<ul><li class="dash"> Single point of failure</li>
+<li class="dash"> Bottleneck when application is write-heavy</li>
+<li class="dash"> A second independent database connection is needed to guarantee transaction
+   safety.</li>
+</ul>
+
+<p>If you can live with this drawbacks then you can use table-generation with the
+following code in Doctrine:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Id\TableGenerator;
+
+$conn = DriverManager::getConnection(/**..**); // connection 1
+
+// creating the TableGenerator automatically opens a second connection.
+$tableGenerator = new TableGenerator($conn, &quot;sequences_tbl_name&quot;);
+
+$id1 = $tableGenerator-&gt;nextValue(&quot;sequence_name1&quot;);
+$id2 = $tableGenerator-&gt;nextValue(&quot;sequence_name2&quot;);
+</code></pre>
+<p>The table generator obviously needs a table to work. The schema of this table
+is described in the <code>TableGenerator</code> class-docblock. Alternatively you
+can use the <code>Doctrine\DBAL\Id\TableGeneratorSchemaVisitor</code> and apply it to your
+<code>Doctrine\DBAL\Schema\Schema</code> instance. It will automatically add the required
+sequence table.</p>
+<a class="section-anchor" id="title.1.1.3" name="title.1.1.3"></a><h3 class="section-header"><a href="#title.1.1.3">Natural Identifiers<i class="fas fa-link"></i></a></h3>
+<p>Sometimes you are lucky and your application data-model comes with a natural
+id. This is mostly the case for applications who get their IDs generated
+somewhere else (exogeneous ID-generation) or that work with temporal data. In
+that case you can just define the natural primary key and shard your
+application based on this data.</p>
+<a class="section-anchor" id="title.1.2" name="title.1.2"></a><h2 class="section-header"><a href="#title.1.2">Transactions<i class="fas fa-link"></i></a></h2>
+<p>Transactions in sharding can only work for data that is located on a single
+shard. If you need transactions in your sharding architecture then you have to
+make sure that the data updated during a transaction is located on a single
+shard.</p>
+<a class="section-anchor" id="title.1.3" name="title.1.3"></a><h2 class="section-header"><a href="#title.1.3">Foreign Keys<i class="fas fa-link"></i></a></h2>
+<p>Since you cannot create foreign keys between remote database servers, in a
+sharding architecture you should put the data on a shard that belongs to each
+other. But even if you can isolate most of the rows on a single shard there may
+exist relations between tables that exist on different shards. In this case
+your application should be aware of the potential inconsistencies and handle
+them graciously.</p>
+<a class="section-anchor" id="title.1.4" name="title.1.4"></a><h2 class="section-header"><a href="#title.1.4">Complex Queries<i class="fas fa-link"></i></a></h2>
+<p>GROUP BY, DISTINCT and ORDER BY are clauses that cannot be easily used in a
+sharding architecture. If you have to execute these queries against multiple
+shards then you cannot just append the different results to each other.</p>
+<p>You have to be aware of this problem and design your queries accordingly or
+shard the data in a way that you never have to query multiple shards to
+calculate a result.</p>
+<a class="section-anchor" id="title.1.5" name="title.1.5"></a><h2 class="section-header"><a href="#title.1.5">ShardManager Interface<i class="fas fa-link"></i></a></h2>
+<p>The central API of the sharding extension is the <code>ShardManager</code> interface.
+It contains two different groups of functions with regard to sharding.</p>
+<p>First, it contains the Shard Selection API. You can pick a shard based on a
+so-called &quot;distribution-value&quot; or reset the connection to the &quot;global&quot; shard,
+a necessary database that often contains heavily cached, sharding independent
+data such as meta tables or the &quot;user/tenant&quot; table.</p>
+<pre><code class="php">&lt;?php
+use Doctrine\DBAL\DriverManager;
+use Doctrine\Shards\DBAL\SQLAzure\SQLAzureShardManager;
+
+$conn = DriverManager::getConnection(array(
+    'sharding' =&gt; array(
+        'federationName' =&gt; 'my_database',
+        'distributionKey' =&gt; 'customer_id',
+    )
+));
+$shardManager = new SQLAzureShardManager($conn);
+
+$currentCustomerId = 1234;
+$shardManager-&gt;selectShard($currentCustomerId);
+// all queries after this call hit the shard
+// where customer with id 1234 is on.
+
+$shardManager-&gt;selectGlobal();
+// the global database is selected.
+</code></pre>
+<p>To access the currently selected distribution value use the following API
+method:</p>
+<pre><code class="php">&lt;?php
+$value = $shardManager-&gt;getCurrentDistributionValue();
+</code></pre>
+<p>The shard manager will prevent you switching shards when a transaction is open.
+This is especially important when using sharding with the ORM. Because the ORM
+uses a single transaction during the flush-operation this means that you can
+only ever use one <code>EntityManager</code> with data from a single shard.</p>
+<p>The second API is the &quot;fan-out&quot; query API. This allows you to execute queries against
+ALL shards. The order of the results of this operation is undefined, that means
+your query has to return the data in a way that works for the application, or
+you have to sort the data in the application.</p>
+<pre><code class="php">&lt;?php
+$sql = &quot;SELECT * FROM customers&quot;;
+$rows = $shardManager-&gt;queryAll($sql, $params);
+</code></pre>
+<a class="section-anchor" id="title.1.6" name="title.1.6"></a><h2 class="section-header"><a href="#title.1.6">Schema Operations: SchemaSynchronizer Interface<i class="fas fa-link"></i></a></h2>
+<p>Schema Operations in a sharding architecture are tricky. You have to perform
+them on all databases instances (shards) at the same time. Also Doctrine
+has problems with this in particular as you cannot generate an SQL file with
+changes on any development machine anymore and apply this on production. The
+required changes depend on the amount of shards.</p>
+<p>To allow the Doctrine Schema API operations on a sharding architecture we
+performed a refactored from code inside ORM <code>Doctrine\ORM\Tools\SchemaTool</code>
+class and extracted the code for operations on Schema instances into a new
+<code>Doctrine\Shards\DBAL\SchemaSynchronizer</code> interface.</p>
+<p>Every sharding implementation can implement this interface and allow schema
+operations to take part on multiple shards.</p>
+<a class="section-anchor" id="title.1.7" name="title.1.7"></a><h2 class="section-header"><a href="#title.1.7">SQL Azure Federations<i class="fas fa-link"></i></a></h2>
+<p>Doctrine Shards ships with a custom implementation for Microsoft SQL
+Azure. The Azure platform provides a native sharding functionality. In SQL
+Azure the sharding functionality is called Federations. This
+functionality applies the following restrictions (in line with the ones listed
+above):</p>
+<ul><li class="dash">IDENTITY columns are not allowed on sharded tables (federated tables)</li>
+<li class="dash">Each table may only have exactly one clustered index and this index has to
+  have the distribution key/sharding-id as one column.</li>
+<li class="dash">Every unique index (or primary key) has to contain the
+  distribution-key/sharding-id.</li>
+</ul>
+
+<p>Especially the requirements 2 and 3 prevent normalized database schemas. You
+have to put the distribution key on every sharded table, which can affect your
+application code quite a bit. This may lead to the creation of composite keys
+where you normally wouldn't need them.</p>
+<p>The benefit of SQL Azure Federations is that they implement all the
+shard-picking logic on the server. You only have to make use of the <code>USE
+FEDERATION</code> statement. You don't have to maintain a list of all the shards
+inside your application and more importantly, resizing shards is done
+transparently on the server.</p>
+<p>Features of SQL Azure are:</p>
+<ul><li class="dash">Central server to log into federations architecture. No need to know all
+  connection details of all shards.</li>
+<li class="dash">Database level operation to split shards, taking away the tediousness of this
+  operation for application developers.</li>
+<li class="dash">A global tablespace that can contain global data to all shards.</li>
+<li class="dash">One or many different federations (this library only supports working with
+  one)</li>
+<li class="dash">Sharded or non-sharded tables inside federations</li>
+<li class="dash">Allows filtering SELECT queries on the database based on the selected
+  sharding key value. This allows to implement sharded Multi-Tenant Apps very easily.</li>
+</ul>
+
+<p>To setup an SQL Azure ShardManager use the following code:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\DBAL\DriverManager;
+use Doctrine\Shards\DBAL\SQLAzure\SQLAzureShardManager;
+
+$conn = DriverManager::getConnection(array(
+    'dbname'   =&gt; 'my_database',
+    'host'     =&gt; 'tcp:dbname.windows.net',
+    'user'     =&gt; 'user@dbname',
+    'password' =&gt; 'XXX',
+    'sharding' =&gt; array(
+        'federationName'   =&gt; 'my_federation',
+        'distributionKey'  =&gt; 'customer_id',
+        'distributionType' =&gt; 'integer',
+    )
+));
+$shardManager = new SQLAzureShardManager($conn);
+</code></pre>
+<p>Currently you are limited to one federation in your application.</p>
+<p>You can inspect all the currently known shards on SQL Azure using the
+<code>ShardManager#getShards()</code> function:</p>
+<pre><code class="php">&lt;?php
+foreach ($shardManager-&gt;getShards() as $shard) {
+    echo $shard['id'] . &quot; &quot; . $shard['rangeLow'] . &quot; - &quot; . $shard['rangeHigh'];
+}
+</code></pre>
+<a class="section-anchor" id="title.1.7.1" name="title.1.7.1"></a><h3 class="section-header"><a href="#title.1.7.1">Schema Operations<i class="fas fa-link"></i></a></h3>
+<p>Schema Operations on SQL Azure Federations are possible with the
+<code>SQLAzureSchemaSynchronizer</code>. You can instantiate this from your code:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\Shards\DBAL\SQLAzure\SQLAzureSchemaSynchronizer;
+
+$synchronizer = new SQLAzureSchemaSynchronizer($conn, $shardManager);
+</code></pre>
+<p>You can use the API such as <code>createSchema($schema)</code> then and it will be
+distributed across all shards. The assumptions are:</p>
+<ul><li class="dash">Using <code>SchemaSynchronizer#createSchema()</code> assumes the database is empty.
+  The federation is created during this operation.</li>
+<li class="dash">Using <code>SchemaSynchronizer#updateSchema()</code> assumes the database and the
+  federation exists. All shards of the federation are iterated and update is
+  applied to all shards consecutively.</li>
+</ul>
+
+<p>For a schema with tables in the global or federated sub-schema you have to use
+the Schema API to mark tables:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\DBAL\Schema\Schema;
+
+$schema = new Schema();
+
+// no options set, this table will be on the federation root
+$users = $schema-&gt;createTable('Users');
+//...
+
+// marked as sharded, but no distribution column given:
+// non-federated table inside the federation
+$products = $schema-&gt;createTable('Products');
+$products-&gt;addOption('azure.federated', true);
+//...
+
+// shared + distribution column:
+// federated table
+$customers = $schema-&gt;createTable('Customers');
+$customers-&gt;addColumn('CustomerID', 'integer');
+//...
+$customers-&gt;addOption('azure.federated', true);
+$customers-&gt;addOption('azure.federatedOnColumnName', 'CustomerID');
+</code></pre>
+<a class="section-anchor" id="title.1.7.2" name="title.1.7.2"></a><h3 class="section-header"><a href="#title.1.7.2">SQLAzure Filtering<i class="fas fa-link"></i></a></h3>
+<p>SQL Azure comes with a powerful filtering feature, that allows you to
+automatically implement a multi-tenant application for a formerly single-tenant
+application. The restriction to make this work is that your application does not work with
+IDENTITY columns.</p>
+<p>Normally when you select a shard using <code>ShardManager#selectShard()</code> any query
+executed against this shard will return data from ALL the tenants located on
+this shard. With the &quot;FILTERING=ON&quot; flag on the <code>USE FEDERATION</code> query
+however SQL Azure can automatically filter all SELECT queries with the chosen
+distribution value. Additionally you can automatically set the currently
+selected distribution value in every INSERT statement using a function for this
+value as the <code>DEFAULT</code> part of the column. If you are using GUIDs for every
+row then UPDATE and DELETE statements using only GUIDs will work out perfectly
+as well, as they are by definition for unique rows. This feature allows you to
+build multi-tenant applications, even though they were not originally designed
+that way.</p>
+<p>To enable filtering you can use the
+<code>SQLAzureShardManager#setFilteringEnabled()</code> method. This method is not part
+of the interface. You can also set a default value for filtering by passing it
+as the &quot;sharding.filteringEnabled&quot; parameter to
+<code>DriverManager#getConnection()</code>.</p>
+<a class="section-anchor" id="title.1.8" name="title.1.8"></a><h2 class="section-header"><a href="#title.1.8">Generic SQL Sharding Support<i class="fas fa-link"></i></a></h2>
+<p>Besides the custom SQL Azure support there is a generic implementation that
+works with all database drivers. It requires to specify all database
+connections and will switch between the different connections under the hood
+when using the <code>ShardManager</code> API. This is also the biggest drawback of this
+approach, since fan-out queries need to connect to all databases in a single
+request.</p>
+<p>See the configuration for a sample sharding connection:</p>
+<pre><code class="php">&lt;?php
+use Doctrine\DBAL\DriverManager;
+
+$conn = DriverManager::getConnection(array(
+    'wrapperClass' =&gt; 'Doctrine\DBAL\Sharding\PoolingShardConnection',
+    'driver'       =&gt; 'pdo_sqlite',
+    'global'       =&gt; array('memory' =&gt; true),
+    'shards'       =&gt; array(
+        array('id' =&gt; 1, 'memory' =&gt; true),
+        array('id' =&gt; 2, 'memory' =&gt; true),
+    ),
+    'shardChoser' =&gt; 'Doctrine\DBAL\Sharding\ShardChoser\MultiTenantShardChoser',
+));
+</code></pre>
+<p>You have to configure the following options:</p>
+<ul><li class="dash">'wrapperClass' - Selecting the PoolingShardConnection as above.</li>
+<li class="dash">'global' - An array of database parameters that is used for connecting to the
+  global database.</li>
+<li class="dash">'shards' - An array of shard database parameters. You have to specify an
+  'id' parameter for each of the shard configurations.</li>
+<li class="dash">'shardChoser' - Implementation of the
+  <code>Doctrine\Shards\DBAL\ShardChoser\ShardChoser</code> interface.</li>
+</ul>
+
+<p>The Shard Choser interface maps the distribution value to a shard-id. This
+gives you the freedom to implement your own strategy for sharding the data
+horizontally.</p>
+                                            </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+                            
+        <button id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://new.doctrine-project.org/components/highlightjs/highlight.pack.js?3970aa"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script src="https://new.doctrine-project.org/js/main.js?f32c09"></script>
+        <script src="https://new.doctrine-project.org/js/search.js?a06250"></script>
+
+        <script type="text/javascript">
+            var projectSlug = 'dbal';
+            var versionSlug = '2.7';
+
+            new Main();
+
+            new Search(projectSlug, versionSlug);
+        </script>
+
+            <script src="https://new.doctrine-project.org/js/sidebar.js?cd221a"></script>
+
+    <script type="text/javascript">
+        new Sidebar();
+    </script>
+
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>
