@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Doctrine 2 Batch Processing - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <meta name="robots" content="index, follow">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://www.doctrine-project.org/css/style.css?369e38" rel="stylesheet" type="text/css" />
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+
+        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://www.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://www.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://www.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://www.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://www.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://www.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://www.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://www.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://www.doctrine-project.org/images/mstile-310x310.png" />
+
+        <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://www.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+            </head>
+    <body>
+                    <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://www.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://www.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/team/">Team</a>
+                        </li>
+                    </ul>
+
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                </div>
+
+                <div class="search-results rounded">
+                    <div id="hits">
+                        <!-- Hits widget will appear here -->
+                    </div>
+
+                    <a href="https://www.algolia.com" target="_blank"><img src="https://www.doctrine-project.org/images/search-by-algolia.png" class="float-right" style="width: 150px;" /></a>
+                </div>
+            </nav>
+        
+            <main role="main" class="container-wrapper container">
+            <article>
+        <header>
+            <h2>Doctrine 2 Batch Processing <small>post</small></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2009-08-07
+                            by
+                                    romanb
+                                    </p>
+
+        <div>
+            <p><strong>TIP</strong> Disclaimer: In general, an ORM is surely not the best tool
+    for the job for mass data movements, however, it can be a
+    convenient alternative if the performance is sufficient. Every
+    RDBMS has its own highly efficient commands for such operations.
+    For maximum efficiency you should consult the manual of your
+    RDBMS.</p>
+<blockquote><p><strong>NOTE</strong> The hardware used for the following tests: MBP, Intel Core
+2 Duo 2.53 Ghz, 4GB DDR3 RAM, 7200rpm HDD.</p>
+</blockquote>
+<p>A lot of people have encountered the infamous &quot;memory exhausted&quot;
+errors when using Doctrine for bulk operations or in long-running
+scripts. This is a problem that is the result of 2 things:</p>
+<ul><li class="dash"> The often unnecessarily intertwined architecture of Doctrine
+   1.x.</li>
+<li class="dash"> The simple garbage collector of PHP &lt; 5.3.
+    <strong>NOTE</strong> If you did not know it yet, basically every circular
+    reference between objects (and that is every bidirectional
+    relationship!) is a potential memory leak in PHP &lt; 5.3.</li>
+</ul>
+
+<p>Now, the PHP team did their homework and introduced a new garbage
+collector in PHP 5.3 (that is enabled by default, thank god!) that
+is capable of properly detecting cyclic references that are not
+referenced any longer from the outside.</p>
+<p>In Doctrine 2 we did our part of the homework to address this issue
+and redesigned the Doctrine core from scratch. The result is a much
+better user experience, as I will demonstrate with some examples.</p>
+<a id="title.1"></a><h1>Mass inserts</h1>
+<p>The first thing we will look at is mass inserts. In Doctrine 2
+there is a special pattern that can be used for mass inserts that
+looks as follows:</p>
+<pre><code class="php">&lt;?php
+// $em instanceof EntityManager
+$batchSize = 20;
+for ($i=1; $i&lt;=10000; ++$i) {
+     $obj = new MyEntity;
+     $obj-&gt;setFoo('...');
+     // ... set more data
+     $em-&gt;persist($obj);
+     if (($i % $batchSize) == 0) {
+         $em-&gt;flush();
+         $em-&gt;clear();
+    }
+}
+</code></pre>
+<p>I used this pattern to create a little demonstration that looks
+like this in a PHPUnit test:</p>
+<pre><code class="php">&lt;?php
+// $this-&gt;_em created in setUp()
+echo &quot;Memory usage before: &quot; . (memory_get_usage() / 1024) . &quot; KB&quot; . PHP_EOL;
+$s = microtime(true);
+$batchSize = 20;
+for ($i=1; $i&lt;=10000; ++$i) {
+     $user = new CmsUser;
+     $user-&gt;status = 'user';
+     $user-&gt;username = 'user' . $i;
+     $user-&gt;name = 'Mr.Smith-' . $i;
+     $this-&gt;_em-&gt;persist($user);
+     if (($i % $batchSize) == 0) {
+         $this-&gt;_em-&gt;flush();
+         $this-&gt;_em-&gt;clear();
+    }
+}
+
+//gc_collect_cycles(); // explained later!
+echo &quot;Memory usage after: &quot; . (memory_get_usage() / 1024) . &quot; KB&quot; . PHP_EOL;
+
+$e = microtime(true);
+echo ' Inserted 10000 objects in ' . ($e - $s) . ' seconds' . PHP_EOL;
+</code></pre>
+<p>As you can see, we insert a total of 10000 objects. On running this
+code through PHPUnit, using an SQLite in-memory database, I got the
+following output:</p>
+
+<pre><code class="">Memory usage before: 5034.03515625 KB
+Memory usage after: 6726.3515625 KB
+Inserted 10000 objects in 3.165983915329 seconds
+</code></pre>
+<p>We can see the following:</p>
+<ul><li class="dash"> The insertion of 10000 objects through Doctrine into an SQLite
+   in-memory database took roughly 3 seconds, not too bad.</li>
+<li class="dash"> Memory usage increased by roughly 1.7MB, not too bad either.</li>
+</ul>
+
+<p>If you are now still not satisfied and wonder where the 1.7MB are
+going, here is the answer: A small part of that is occupied by
+objects that were created on-demand internally by Doctrine, these
+will stay pretty constant, however. But the majority of this 1.7MB
+has simply not yet been reclaimed (but is eliglible for garbage
+collection for the new garbage collector!). To prove that, I can
+just uncomment the gc\_collect\_cycles() function call. Here's the
+result:</p>
+
+<pre><code class="">Memory usage before: 5034.3828125 KB
+Memory usage after: 5502.21484375 KB
+Inserted 10000 objects in 3.1807188987732 seconds
+</code></pre>
+<p>Much better! And to prove that the &nbsp;500KB occupied by Doctrine are
+constant, I simply made it 20000 objects. Here is the result:</p>
+
+<pre><code class="">Memory usage before: 5034.3828125 KB
+Memory usage after: 5502.21484375 KB
+Inserted 20000 objects in 6.6149919033051 seconds
+</code></pre>
+<p>We can see the following things:</p>
+<ul><li class="dash"> Memory usage is constant, the second batch of 10000 objects did
+   not result in additional memory usage.</li>
+<li class="dash"> The mass insertion strategy scales almost linearly. 10k objects
+   took &nbsp;3.2 seconds and 20k objects took &nbsp;6.6 seconds.</li>
+</ul>
+
+<p>Note: You do not really need to call gc\_collect\_cycles(). This
+should just demonstrate that the memory can be reclaimed. PHP would
+reclaim that memory anyway when it needs to.</p>
+<p>Even better, when testing the peak memory usage
+(memory\_get\_peak\_usage()) it turned out that the memory usage
+never grew beyond &nbsp;10MB in between. If you choose a larger batch
+size the peak memory usage will be higher and vice versa.</p>
+<a id="title.2"></a><h1>Mass object processing</h1>
+<p>Now we take a look at mass-processing objects, which means loading
+10000 objects from the database and doing something with each of
+them. The clue here is the new support for iterative (step-by-step)
+hydration in Doctrine 2. The pattern for these kinds of tasks looks
+as follows:</p>
+<pre><code class="php">&lt;?php
+$q = $this-&gt;_em-&gt;createQuery(&quot;&lt;DQL to select the objects I want&gt;&quot;);
+$iterableResult = $q-&gt;iterate();
+while (($row = $iterableResult-&gt;next()) !== false) {
+        // do stuff with the data in the row, $row[0] is always the object
+        $this-&gt;_em-&gt;detach($row[0]); // detach from Doctrine, so that it can be GC'd immediately
+ }
+</code></pre>
+<p>So instead of using <code>$q-&gt;execute()</code> or <code>$q-&gt;getResult()</code> or
+similar, we use <code>$q-&gt;iterate()</code> which returns an instance of
+<code>IterableResult</code> that allows us to iterate over the result step
+by step. The important part for not running out of memory is the
+line where the created object is detached from Doctrine, which
+results in Doctrine removing any internal references to that
+object, Doctrine no longer &quot;knows&quot; about that object.</p>
+<p>I used this pattern to iterate through the just inserted 10000
+objects as follows:</p>
+<pre><code class="php">&lt;?php
+$q = $this-&gt;_em-&gt;createQuery(&quot;select u from Doctrine\Tests\Models\CMS\CmsUser u&quot;);
+$iterableResult = $q-&gt;iterate();
+
+echo &quot;Memory usage before: &quot; . (memory_get_usage() / 1024) . &quot; KB&quot; . PHP_EOL;
+
+while (($row = $iterableResult-&gt;next()) !== false) {
+    // ... I could do some stuff here
+    $this-&gt;_em-&gt;detach($row[0]);
+}
+
+echo &quot;Memory usage after: &quot; . (memory_get_usage() / 1024) . &quot; KB&quot; . PHP_EOL;
+</code></pre>
+<p>The following is the result:</p>
+
+<pre><code class="">Memory usage before: 6578.58984375 KB
+Memory usage after: 6581.71875 KB
+</code></pre>
+<p>The result is pretty acceptable. Here is the same again, this time
+for 20000 objects, again to prove that the small memory increase is
+constant:</p>
+
+<pre><code class="">Memory usage before: 6578.23828125 KB 
+Memory usage after: 6581.359375 KB
+</code></pre>
+<p>Good stuff!</p>
+<blockquote><p><strong>NOTE</strong> If you're thinking that I waited ages until the 10k or 20k
+objects were hydrated, that was not the case. 10k or 20k objects
+(without associations) are hydrated in seconds.</p>
+</blockquote>
+<p>More information on bulk operations with Doctrine 2 can be found in
+the (very new) online manual that is still a work in progress:</p>
+<p>http://www.doctrine-project.org/documentation/manual/2\_0/en/batch-processing</p>
+<a id="title.3"></a><h1>UPDATE</h1>
+<p>Some people seem to be wondering why Doctrine does not use
+multi-inserts (insert into (...) values (...), (...), (...), ...</p>
+<p>First of all, this syntax is only supported on mysql and newer
+postgresql versions. Secondly, there is no easy way to get hold of
+all the generated identifiers in such a multi-insert when using
+AUTO\_INCREMENT or SERIAL and an ORM needs the identifiers for
+identity management of the objects. Lastly, insert performance is
+rarely the bottleneck of an ORM. Normal inserts are more than fast
+enough for most situations and if you really want to do fast bulk
+inserts, then a multi-insert is not the best way anyway, i.e.
+Postgres COPY or Mysql LOAD DATA INFILE are several orders of
+magnitude faster.</p>
+<p>These are the reasons why it is not worth the effort to implement
+an abstraction that performs multi-inserts on mysql and postgresql
+in an ORM.</p>
+<p>I hope that clears up some questionmarks.</p>
+
+        </div>
+                
+                    <nav class="article">
+                <ul class="pagination">
+                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2009/08/04/help-write-tests-for-new-dql-parser.html" title="Help write tests for new DQL Parser"><span class="title">Previous: Help write tests for new DQL Parser</span></a></li>
+                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2009/08/15/doctrine2-native-queries.html" title="Doctrine 2 Native Queries"><span class="title">Next: Doctrine 2 Native Queries</span></a></li>
+                                    </ul>
+            </nav>
+            </article>
+
+
+
+    </main>
+
+        
+        <button id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://www.doctrine-project.org/components/highlightjs/highlight.pack.js?3970aa"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script src="https://www.doctrine-project.org/js/main.js?f32c09"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?36322d"></script>
+
+        <script type="text/javascript">
+            var projectSlug = '';
+            var versionSlug = 'latest';
+
+            new Main();
+
+            new Search(projectSlug, versionSlug);
+        </script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

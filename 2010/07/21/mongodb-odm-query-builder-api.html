@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MongoDB ODM: Query Builder API - Doctrine - PHP Database Tools</title>
+
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <meta name="robots" content="index, follow">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://www.doctrine-project.org/css/style.css?369e38" rel="stylesheet" type="text/css" />
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+
+        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://www.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://www.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://www.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://www.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://www.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://www.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://www.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://www.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://www.doctrine-project.org/images/mstile-310x310.png" />
+
+        <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://www.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        
+            </head>
+    <body>
+                    <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="https://www.doctrine-project.org/projects/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/annotations/">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/cache/">Cache</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/collections/">Collections</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/common/">Common</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/couchdb-odm/">CouchDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/dbal/">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/inflector/">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/lexer/">Lexer</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/migrations/">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb/">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb-odm/">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/orientdb-odm/">OrientDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/orm/">ORM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/phpcr-odm/">PHPCR ODM</a>
+                                                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://www.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/team/">Team</a>
+                        </li>
+                    </ul>
+
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                </div>
+
+                <div class="search-results rounded">
+                    <div id="hits">
+                        <!-- Hits widget will appear here -->
+                    </div>
+
+                    <a href="https://www.algolia.com" target="_blank"><img src="https://www.doctrine-project.org/images/search-by-algolia.png" class="float-right" style="width: 150px;" /></a>
+                </div>
+            </nav>
+        
+            <main role="main" class="container-wrapper container">
+            <article>
+        <header>
+            <h2>MongoDB ODM: Query Builder API <small>post</small></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2010-07-21
+                            by
+                                    jwage
+                                    </p>
+
+        <div>
+            <p>The Doctrine MongoDB Object Document Mapper includes a fluent
+object oriented API for building queries to execute against
+MongoDB. Recently some changes were made to the API to simplify it
+and make it more readable. This blog post aims to demonstrate and
+introduce the new API to you!</p>
+<a id="title.1"></a><h1>Query Types</h1>
+<p>The API still supports all the types of queries you would expect:</p>
+<ul><li class="dash"> <a href="#find">find</a></li>
+<li class="dash"> <a href="#insert">insert</a></li>
+<li class="dash"> <a href="#update">update</a></li>
+<li class="dash"> <a href="#delete">delete</a></li>
+</ul>
+
+<p>Continue reading to see examples for each of the above types of
+queries!</p>
+<p>## Find</p>
+<p>You can easily find documents by just creating a new <code>Query</code>
+object with the <code>createQuery()</code> method. A new <code>Query</code> object
+defaults to a <code>find</code> query so you just need to pass the name of
+the document to query for:</p>
+<pre><code class="php">&lt;?php
+$q = $dm-&gt;createQuery('User');
+</code></pre>
+<p>You can change the document being queried for by using the
+<code>find()</code> method:</p>
+<pre><code class="php">&lt;?php
+$q-&gt;find('Project');
+</code></pre>
+<a id="title.1.1"></a><h2>Conditions</h2>
+<p>You can limit the returned documents by specifying some
+conditions:</p>
+<pre><code class="php">&lt;?php
+$q-&gt;field('title')-&gt;equals('The Doctrine Project');
+</code></pre>
+<p>Maybe you want to only return projects created after today:</p>
+<pre><code class="php">&lt;?php
+$q-&gt;field('createdAt')-&gt;greaterThan(new MongoDate(time()));
+</code></pre>
+<p>You can even a condition on an embedded document:</p>
+<pre><code class="php">&lt;?php
+$q-&gt;field('profile.firstName')-&gt;equals('Jonathan');
+</code></pre>
+<p>Also, you can add a condition for a referenced document to filter
+by id:</p>
+<pre><code class="php">&lt;?php
+$q-&gt;field('account.$id')-&gt;equals($accountId);
+</code></pre>
+<p>The <code>field()</code> method specifies the current field to add the
+conditions to. You can optionally use the magical <code>__call()</code>
+feature of the <code>Query</code> object to specify the current field as
+well:</p>
+<pre><code class="php">&lt;?php
+$q-&gt;createdAt()-&gt;greaterThan(new MongoDate(time()));
+</code></pre>
+<p>All the methods you'd expect can be used in combination with the
+<code>field()</code> method for adding conditions to your query:</p>
+<ul><li class="dash"> equal($value)</li>
+<li class="dash"> where($javascript)</li>
+<li class="dash"> not($value)</li>
+<li class="dash"> in($values)</li>
+<li class="dash"> notIn($values)</li>
+<li class="dash"> notEqual($value)</li>
+<li class="dash"> greaterThan($value)</li>
+<li class="dash"> greaterThanOrEq($value)</li>
+<li class="dash"> lessThan($value)</li>
+<li class="dash"> lessThanOrEq($value)</li>
+<li class="dash"> range($start, $end)</li>
+<li class="dash"> size($size)</li>
+<li class="dash"> exists($bool)</li>
+<li class="dash"> type($type)</li>
+<li class="dash"> all($values)</li>
+<li class="dash"> mod($mod)</li>
+</ul>
+
+<p>## Insert</p>
+<p>You can easily insert new documents using the <code>Query</code> API as
+well. Just use the <code>insert()</code> method in combination with
+<code>field()</code> and <code>set()</code>:</p>
+<pre><code class="php">&lt;?php
+$q = $dm-&gt;createQuery('User')
+    -&gt;insert()
+    -&gt;field('username')-&gt;set('jwage')
+    -&gt;field('password')-&gt;set('password');
+</code></pre>
+<p>If you want to set the new document to insert you can use the
+<code>setNewObj()</code> method:</p>
+<pre><code class="php">&lt;?php
+$q = $dm-&gt;createQuery('User')
+    -&gt;insert()
+    -&gt;setNewObj(array(
+        'username' =&gt; 'jwage',
+        'password' =&gt; 'password'
+    ));
+</code></pre>
+<p>## Update</p>
+<p>If you want to update a document you can use the <code>update()</code>
+method in combination with <code>field()</code>, <code>set()</code> and conditions.
+Here is an example where we create a query to update a user with
+the username <code>jwage</code> and give him a new password:</p>
+<pre><code class="php">&lt;?php
+$q = $dm-&gt;createQuery('User')
+    -&gt;update()
+    -&gt;field('password')-&gt;set('newpassword')
+    -&gt;field('username')-&gt;equals('jwage');
+</code></pre>
+<p>## Delete</p>
+<p>You can delete documents as well by using the <code>delete()</code> method
+in combination with conditions. Here is an example where we create
+a query to delete the user document with a username of <code>jwage</code>:</p>
+<pre><code class="php">&lt;?php
+$q = $dm-&gt;createQuery('User')
+    -&gt;delete()
+    -&gt;field('username')-&gt;equals('jwage');
+</code></pre>
+<p>As you can see the fluent API makes it a bit easier to express
+queries that are easy to read in the same way you would read
+english from left to right. We hope to enhance and improve this API
+even more before we release the stable 1.0 version.</p>
+<p>You can read more about the Query Builder API in the
+<a href="http://www.doctrine-project.org/projects/mongodb_odm/1.0/docs/reference/query-builder-api/en#query-builder-api">documentation</a>.</p>
+
+        </div>
+                
+                    <nav class="article">
+                <ul class="pagination">
+                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2010/07/20/mixing-types-of-documents.html" title="MongoDB ODM: Mixing Types of Documents"><span class="title">Previous: MongoDB ODM: Mixing Types of Documents</span></a></li>
+                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2010/07/22/mongodb-for-ecommerce.html" title="MongoDB ODM: MongoDB for eCommerce"><span class="title">Next: MongoDB ODM: MongoDB for eCommerce</span></a></li>
+                                    </ul>
+            </nav>
+            </article>
+
+
+
+    </main>
+
+        
+        <button id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://www.doctrine-project.org/components/highlightjs/highlight.pack.js?3970aa"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script src="https://www.doctrine-project.org/js/main.js?f32c09"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?36322d"></script>
+
+        <script type="text/javascript">
+            var projectSlug = '';
+            var versionSlug = 'latest';
+
+            new Main();
+
+            new Search(projectSlug, versionSlug);
+        </script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>
