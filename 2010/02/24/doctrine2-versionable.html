@@ -125,31 +125,38 @@
                                     </p>
 
         <div>
-            <p><strong>NOTE</strong> This blog entry relates to an outdated Doctrine 2 Alpha
-    version. Please see the documentation for the most up to date
-    behavior. A test-implementation for this behavior is on
-    github.com/beberlei/DoctrineExtensions</p>
+            <dl>
+<dt><strong>NOTE</strong> This blog entry relates to an outdated Doctrine 2 Alpha</dt>
+<dd>version. Please see the documentation for the most up to date
+behavior. A test-implementation for this behavior is on
+github.com/beberlei/DoctrineExtensions</dd>
+</dl>
+
 <p>My previous post on behaviors in Doctrine 2 generated quite some
-discussion about the difference on behaviours that are re-usable
-across models and the trivial specific implementations I have
-shown.</p>
-<p>In this post I will show a re-usable versionable (audit-log)
-behavior. For this we will need the following ingredients:</p>
-<ul><li class="dash"> An interface <code>DoctrineExtensions\Versionable\Versionable</code></li>
-<li class="dash"> A class <code>DoctrineExtensions\Versionable\VersionManager</code></li>
-<li class="dash"> An event listener
-   <code>DoctrineExtensions\Versionable\VersionListener</code></li>
-<li class="dash"> A generic entity
-   <code>DoctrineExtensions\Versionable\ResourceVersion</code>
-    <strong>NOTE</strong> The Event API is currently in the central focus of our
-    efforts so the API shown here may change before the first Beta
-    release.</li>
+discussion about the difference on behaviours that are re-usable across
+models and the trivial specific implementations I have shown.</p>
+
+<p>In this post I will show a re-usable versionable (audit-log) behavior.
+For this we will need the following ingredients:</p>
+
+<ul>
+<li>An interface <code>DoctrineExtensions\Versionable\Versionable</code></li>
+<li>A class <code>DoctrineExtensions\Versionable\VersionManager</code></li>
+<li>An event listener <code>DoctrineExtensions\Versionable\VersionListener</code></li>
+<li><p>A generic entity <code>DoctrineExtensions\Versionable\ResourceVersion</code></p>
+
+<blockquote>
+  <p><strong>NOTE</strong> The Event API is currently in the central focus of our
+  efforts so the API shown here may change before the first Beta
+  release.</p>
+</blockquote></li>
 </ul>
 
 <p>The workflow is as follows, each Entity that is supposed to be
-versionable has to implement the interface <code>Versionable</code> which
-looks like this:</p>
-<pre><code class="php">&lt;?php
+versionable has to implement the interface <code>Versionable</code> which looks
+like this:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 namespace DoctrineExtensions\Versionable;
 
 interface Versionable
@@ -170,43 +177,46 @@ interface Versionable
     public function getResourceId();
 }
 </code></pre>
-<p>Whenever an entity is persisted or updated the state that is
-persisted will also be logged in an audit table. The state is
-returned with an array of key value pairs in the
-<code>getVersionedData()</code> and the current version has to be the value
-of the @Version column of the entity.</p>
-<p>To sum up, the requirements of an entity that can be a
-<code>Versionable</code> in this simple implementation:</p>
-<ul><li class="dash"> Single Integer Primary Key.</li>
-<li class="dash"> Has to be versioned with an integer column.</li>
+
+<p>Whenever an entity is persisted or updated the state that is persisted
+will also be logged in an audit table. The state is returned with an
+array of key value pairs in the <code>getVersionedData()</code> and the current
+version has to be the value of the @Version column of the entity.</p>
+
+<p>To sum up, the requirements of an entity that can be a <code>Versionable</code> in
+this simple implementation:</p>
+
+<ul>
+<li>Single Integer Primary Key.</li>
+<li>Has to be versioned with an integer column.</li>
 </ul>
 
-<p>How does such versioned data look like? The generic resource
-version entity looks like this. Its a Doctrine Entity, but in a
-domain model its an immutable value object. It should not be
-changed after creation.</p>
-<pre><code class="php">&lt;?php
+<p>How does such versioned data look like? The generic resource version
+entity looks like this. Its a Doctrine Entity, but in a domain model its
+an immutable value object. It should not be changed after creation.</p>
+
+<pre><code class="sourceCode php">&lt;?php
 namespace DoctrineExtensions\Versionable;
 
 class ResourceVersion
 {
-    /** @Id @Column(type=&quot;integer&quot;) */
+    /** @Id @Column(type="integer") */
     private $id;
 
-    /** @Column(type=&quot;string&quot;) */
+    /** @Column(type="string") */
     private $resourceName;
 
-    /** @Column(type=&quot;integer&quot;) */
+    /** @Column(type="integer") */
     private $resourceId;
 
-    /** @Column(type=&quot;array&quot;) */
+    /** @Column(type="array") */
     private $versionedData;
 
     /**
-     * @Column(type=&quot;integer&quot;) */
+     * @Column(type="integer") */
     private $version;
 
-    /** @Column(type=&quot;datetime&quot;) */
+    /** @Column(type="datetime") */
     private $snapshotDate;
 
     public function __construct(Versionable $resource)
@@ -215,19 +225,21 @@ class ResourceVersion
         $this-&gt;resourceId = $resource-&gt;getResourceId();
         $this-&gt;versionedData = $resource-&gt;getVersionedData();
         $this-&gt;version = $resource-&gt;getCurrentVersion();
-        $this-&gt;snapshotDate = new \DateTime(&quot;now&quot;);
+        $this-&gt;snapshotDate = new \DateTime("now");
     }
 
     // getters
 }
 </code></pre>
-<p>Now we need to solve the problem of generating the
-<code>ResourceVersion</code> whenever an <code>Versionable</code> entity is persisted
-or updated. This can be done by using the
-<a href="http://www.doctrine-project.org/documentation/manual/2_0/en/events">Doctrine EventManager API</a>.
-We will implement the <code>EventSubscriber</code> interface and hook into
-the &quot;onFlush&quot; event.</p>
-<pre><code class="php">&lt;?php
+
+<p>Now we need to solve the problem of generating the <code>ResourceVersion</code>
+whenever an <code>Versionable</code> entity is persisted or updated. This can be
+done by using the <a href="http://www.doctrine-project.org/documentation/manual/2_0/en/events">Doctrine EventManager
+API</a>.
+We will implement the <code>EventSubscriber</code> interface and hook into the
+"onFlush" event.</p>
+
+<pre><code class="sourceCode php">&lt;?php
 namespace DoctrineExtensions\Versionable;
 
 use Doctrine\Common\EventSubscriber,
@@ -270,11 +282,12 @@ class VersionListener implements EventSubscriber
     }
 }
 </code></pre>
-<p>How do we hook this <code>VersionListener</code> into the EntityManager? We
-will wrap the VersionManager around it that handles registration
-and offers some convenience methods to retrieve the versions of a
-resource.</p>
-<pre><code class="php">&lt;?php
+
+<p>How do we hook this <code>VersionListener</code> into the EntityManager? We will
+wrap the VersionManager around it that handles registration and offers
+some convenience methods to retrieve the versions of a resource.</p>
+
+<pre><code class="sourceCode php">&lt;?php
 namespace DoctrineExtensions\Versionable;
 
 use Doctrine\ORM\EntityManager;
@@ -294,8 +307,8 @@ class VersionManager
     public function getVersions(Versionable $resource)
     {
         $query = $this-&gt;_em-&gt;createQuery(
-            &quot;SELECT v FROM DoctrineExtensions\Versionable\ResourceVersion v INDEX BY v.version &quot;.
-            &quot;WHERE v.resourceName = ?1 AND v.resourceId = ?2 ORDER BY v.version DESC&quot;);
+            "SELECT v FROM DoctrineExtensions\Versionable\ResourceVersion v INDEX BY v.version ".
+            "WHERE v.resourceName = ?1 AND v.resourceId = ?2 ORDER BY v.version DESC");
         $query-&gt;setParameter(1, get_class($resource));
         $query-&gt;setParameter(2, $resource-&gt;getResourceId());
 
@@ -303,45 +316,49 @@ class VersionManager
     }
 }
 </code></pre>
-<p>Now using this to retrieve all the versions of a given entity that
-is versionable you would go and:</p>
-<pre><code class="php">&lt;?php
+
+<p>Now using this to retrieve all the versions of a given entity that is
+versionable you would go and:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 // $em EntityManager, $blogPost my Blog Post
 
 $versionManager = new VersionManager($em);
 $versions = $versionManager-&gt;getVersions($blogPost);
 
-echo &quot;Old Title: &quot;.$versions[$oldVersionNum]-&gt;getVersionedData('title');
+echo "Old Title: ".$versions[$oldVersionNum]-&gt;getVersionedData('title');
 
 // Create a new version
-$blogPost-&gt;setTitle(&quot;My very new title&quot;);    
+$blogPost-&gt;setTitle("My very new title");    
 $em-&gt;flush();
 </code></pre>
-<p>This is a first example of how to use the powerful Doctrine 2 Event
-API. It is certainly not easy to use, as you need to understand the
-inner workings of the UnitOfWork and the different steps it is in
-during the flush process. However you can generate huge benefits in
-reusability.</p>
-<p>The versionable behaviour could be extended by the following
-features:</p>
-<ul><li class="dash"> Create a new interface <code>Revertable</code> that extends
-   <code>Versionable</code> and add a method
-   <code>revert(Revertable $resource, $toVersion)</code> to the
-   <code>VersionManager</code> that handles the retrieval, invoking of revert
-   and such.</li>
-<li class="dash"> Create a new interface Diffable with a method diff($aVersion,
-   $bVersion) and new method diff(Diffable $resource, $aId, $bId) to
-   the VersionManager that handles the delegation of a difference
-   computation between two versions to the Diffable implementor.</li>
+
+<p>This is a first example of how to use the powerful Doctrine 2 Event API.
+It is certainly not easy to use, as you need to understand the inner
+workings of the UnitOfWork and the different steps it is in during the
+flush process. However you can generate huge benefits in reusability.</p>
+
+<p>The versionable behaviour could be extended by the following features:</p>
+
+<ul>
+<li>Create a new interface <code>Revertable</code> that extends <code>Versionable</code> and
+add a method <code>revert(Revertable $resource, $toVersion)</code> to the
+<code>VersionManager</code> that handles the retrieval, invoking of revert and
+such.</li>
+<li>Create a new interface Diffable with a method diff(\$aVersion,
+\$bVersion) and new method diff(Diffable \$resource, \$aId, \$bId)
+to the VersionManager that handles the delegation of a difference
+computation between two versions to the Diffable implementor.</li>
 </ul>
 
-<p>Another approach would be not to save the complete state of an
-entity during the flush operation, but only the fields that
-changed. This is generally called an <em>AuditLog</em>. We could add an
-<code>Auditable</code> interface much in the same manner than the
-<code>Versionable</code> and retrieve the ChangeSets of each entity during
-flush using the following event listener:</p>
-<pre><code class="php">&lt;?php
+<p>Another approach would be not to save the complete state of an entity
+during the flush operation, but only the fields that changed. This is
+generally called an <em>AuditLog</em>. We could add an <code>Auditable</code> interface
+much in the same manner than the <code>Versionable</code> and retrieve the
+ChangeSets of each entity during flush using the following event
+listener:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 class AuditListener implements EventSubscriber
 {
     public function getSubscribedEvents()
@@ -354,7 +371,7 @@ class AuditListener implements EventSubscriber
         $em = $args-&gt;getEntityManager();
         $uow = $em-&gt;getUnitOfWork();
 
-        $changeDate = new DateTime(&quot;now&quot;);
+        $changeDate = new DateTime("now");
         $class = $em-&gt;getClassMetadata('DoctrineExtensions\Auditable\AuditEntry');
 
         foreach ($uow-&gt;getScheduledEntityUpdates() AS $entity) {
@@ -380,6 +397,7 @@ class AuditListener implements EventSubscriber
     }
 }
 </code></pre>
+
 <p>This approach can also be re-used or combined with several similiar
 behaviours, like Taggable, Blamable, Commentable.</p>
 

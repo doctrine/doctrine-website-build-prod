@@ -125,28 +125,29 @@
                                     </p>
 
         <div>
-            <p>While Doctrine 1 had validation nested inside the
-<code>Doctrine_Record</code> instance this is not the case in Doctrine 2
-anymore. We won't ship Doctrine 2 with any validators, the reason
-being that we think all the frameworks out there already ship with
-quite decents ones that can be integrated into your Domain easily.
-Besides us being ORM experts not wanting to maintain yet another
-validation library, moving the responsibility of validation into
-the domain layer also allows you to integrate it much easier into
-frameworks form libraries for example.</p>
-<p>What we do offer are hooks to execute any kind of validation inside
-the Doctrine ORM.</p>
-<p>Entities can register lifecycle event methods with Doctrine that
-are called on different occasions. For validation we would need to
-hook into the events called before persisting and updating. Even
-though we don't support validation out of the box, the
-implementation is even simpler than in Doctrine 1 and you will get
-the additional benefit of being able to re-use your validation in
-any other part of your domain.</p>
-<p>Say we have an <code>Order</code> with several <code>OrderLine</code> instances. We
-never want to allow any customer to order for a larger sum than he
-is allowed to:</p>
-<pre><code class="php">&lt;?php
+            <p>While Doctrine 1 had validation nested inside the <code>Doctrine_Record</code>
+instance this is not the case in Doctrine 2 anymore. We won't ship
+Doctrine 2 with any validators, the reason being that we think all the
+frameworks out there already ship with quite decents ones that can be
+integrated into your Domain easily. Besides us being ORM experts not
+wanting to maintain yet another validation library, moving the
+responsibility of validation into the domain layer also allows you to
+integrate it much easier into frameworks form libraries for example.</p>
+
+<p>What we do offer are hooks to execute any kind of validation inside the
+Doctrine ORM.</p>
+
+<p>Entities can register lifecycle event methods with Doctrine that are
+called on different occasions. For validation we would need to hook into
+the events called before persisting and updating. Even though we don't
+support validation out of the box, the implementation is even simpler
+than in Doctrine 1 and you will get the additional benefit of being able
+to re-use your validation in any other part of your domain.</p>
+
+<p>Say we have an <code>Order</code> with several <code>OrderLine</code> instances. We never want
+to allow any customer to order for a larger sum than he is allowed to:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 class Order
 {
     public function assertCustomerAllowedBuying()
@@ -164,12 +165,15 @@ class Order
     }
 }
 </code></pre>
-<p>Now this is some pretty important piece of business logic in your
-code, enforcing it at any time is important so that customers with
-a unknown reputation don't owe your business too much money.</p>
-<p>We can enforce this constraint in any of the metadata drivers.
-First Annotations:</p>
-<pre><code class="php">&lt;?php
+
+<p>Now this is some pretty important piece of business logic in your code,
+enforcing it at any time is important so that customers with a unknown
+reputation don't owe your business too much money.</p>
+
+<p>We can enforce this constraint in any of the metadata drivers. First
+Annotations:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 /**
  * @Entity
  * @HasLifecycleCallbacks
@@ -182,29 +186,34 @@ class Order
     public function assertCustomerAllowedBuying() {}
 }
 </code></pre>
+
 <p>In XML Mappings:</p>
 
-<pre><code class="">[xml]
+<pre><code>[xml]
 &lt;doctrine-mapping&gt;
-    &lt;entity name=&quot;Order&quot;&gt;
+    &lt;entity name="Order"&gt;
         &lt;lifecycle-callbacks&gt;
-            &lt;lifecycle-callback type=&quot;prePersist&quot; method=&quot;assertCustomerAllowedBuying&quot; /&gt;
-            &lt;lifecycle-callback type=&quot;preUpdate&quot; method=&quot;assertCustomerAllowedBuying&quot; /&gt;
+            &lt;lifecycle-callback type="prePersist" method="assertCustomerAllowedBuying" /&gt;
+            &lt;lifecycle-callback type="preUpdate" method="assertCustomerAllowedBuying" /&gt;
         &lt;/lifecycle-callbacks&gt;
     &lt;/entity&gt;
 &lt;/doctirne-mapping&gt;
 </code></pre>
-<p>YAML needs some little change yet, to allow multiple lifecycle
-events for one method, this will happen before Beta 1 though.</p>
+
+<p>YAML needs some little change yet, to allow multiple lifecycle events
+for one method, this will happen before Beta 1 though.</p>
+
 <p>Now validation is performed whenever you call
-<code>EntityManager#persist($order)</code> or when you call
-<code>EntityManager#flush()</code> and an order is about to be updated. Any
-Exception that happens in the lifecycle callbacks will be catched
-by the EntityManager and the current transaction is rolled back.</p>
+<code>EntityManager#persist($order)</code> or when you call <code>EntityManager#flush()</code>
+and an order is about to be updated. Any Exception that happens in the
+lifecycle callbacks will be catched by the EntityManager and the current
+transaction is rolled back.</p>
+
 <p>Of course you can do any type of primitive checks, not null,
 email-validation, string size, integer and date ranges in your
 validation callbacks.</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 class Order
 {
     /**
@@ -226,23 +235,27 @@ class Order
     }
 }
 </code></pre>
-<p>What is nice about lifecycle events is, you can also re-use the
-methods at other places in your domain, for example in combination
-with your form library. Additionally there is no limitation in the
-number of methods you register on one particular event, i.e. you
-can register multiple methods for validation in &quot;PrePersist&quot; or
-&quot;PreUpdate&quot; or mix and share them in any combinations between those
-two events.</p>
-<p>There is no limit to what you can and can't validate in
-&quot;PrePersist&quot; and &quot;PreUpdate&quot; aslong as you don't create new entity
-instances. This was already discussed in the previous blog post on
-the Versionable extension, which requires another type of event
-called &quot;onFlush&quot;.</p>
-<p>Also read:</p>
-<ul><li class="dash"> <a href="http://www.doctrine-project.org/documentation/manual/2_0/en/events#lifecycle-events">Doctrine 2 Manual: Events</a></li>
-<li class="dash"> <a href="http://www.doctrine-project.org/blog/doctrine2-versionable">Doctrine 2 Blog: A reusable Versionable Behaviour</a></li>
-</ul>
 
+<p>What is nice about lifecycle events is, you can also re-use the methods
+at other places in your domain, for example in combination with your
+form library. Additionally there is no limitation in the number of
+methods you register on one particular event, i.e. you can register
+multiple methods for validation in "PrePersist" or "PreUpdate" or mix
+and share them in any combinations between those two events.</p>
+
+<p>There is no limit to what you can and can't validate in "PrePersist" and
+"PreUpdate" aslong as you don't create new entity instances. This was
+already discussed in the previous blog post on the Versionable
+extension, which requires another type of event called "onFlush".</p>
+
+<p>Also read:</p>
+
+<ul>
+<li><a href="http://www.doctrine-project.org/documentation/manual/2_0/en/events#lifecycle-events">Doctrine 2 Manual:
+Events</a></li>
+<li><a href="http://www.doctrine-project.org/blog/doctrine2-versionable">Doctrine 2 Blog: A reusable Versionable
+Behaviour</a></li>
+</ul>
 
         </div>
                 

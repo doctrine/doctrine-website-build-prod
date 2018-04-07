@@ -126,39 +126,53 @@
 
         <div>
             <p>managed to merge the new query builder.</p>
-<p>I developed the original query builder about 9 months ago - it was one of my
-first contributions to the PHPCR-ODM doctrine project. It was heavily based on
-the ORM query builder and the consensus being that we should make the ODM as
-intuitive as possible for existing ORM users.</p>
-<p>Abstracting PHPCR to fit the existing interface worked up until a point, we
-could implement the <em>basic</em> functionality of the ORM Query Builder exactly,
-things started to come undone when we looked at implementing joins.</p>
-<p>I had added the joins in the API but didn't get around to implementing them, the
-methods just threw &quot;not implemented&quot; exceptions. Later, when we wanted to
-implement them, it wasn't so simple. Infact, upon closer inspection, many of
-the things available in the PHPCR API's Query Object Model interface were not
-covered by the model of the query builder we had chosen, in short, it was not
-fit for purpose. I expounded this on the following wiki page:</p>
-<ul><li>https://github.com/symfony-cmf/symfony-cmf/wiki/Query-Builder-v2</li>
+
+<p>I developed the original query builder about 9 months ago - it was one
+of my first contributions to the PHPCR-ODM doctrine project. It was
+heavily based on the ORM query builder and the consensus being that we
+should make the ODM as intuitive as possible for existing ORM users.</p>
+
+<p>Abstracting PHPCR to fit the existing interface worked up until a point,
+we could implement the <em>basic</em> functionality of the ORM Query Builder
+exactly, things started to come undone when we looked at implementing
+joins.</p>
+
+<p>I had added the joins in the API but didn't get around to implementing
+them, the methods just threw "not implemented" exceptions. Later, when
+we wanted to implement them, it wasn't so simple. Infact, upon closer
+inspection, many of the things available in the PHPCR API's Query Object
+Model interface were not covered by the model of the query builder we
+had chosen, in short, it was not fit for purpose. I expounded this on
+the following wiki page:</p>
+
+<ul>
+<li><a href="https://github.com/symfony-cmf/symfony-cmf/wiki/Query-Builder-v2">https://github.com/symfony-cmf/symfony-cmf/wiki/Query-Builder-v2</a></li>
 </ul>
 
 <p>As detailed in the above linked page, it seemed to me that either we
-implemented a 2 part factory heavy query builder or a fluent node based query
-builder. The node based design won. However, at the time I never imagined it
-would take so long to write! So nearly 2 months later here we are.</p>
+implemented a 2 part factory heavy query builder or a fluent node based
+query builder. The node based design won. However, at the time I never
+imagined it would take so long to write! So nearly 2 months later here
+we are.</p>
+
 <p>Some features of the new query builder</p>
-<ul><li>Can fully express the PHPCR QOM (Query Object Model).</li>
+
+<ul>
+<li>Can fully express the PHPCR QOM (Query Object Model).</li>
 <li>Features a fluent interface.</li>
 <li>Strict validation and helpful exception messages.</li>
 <li>Less verbose than the PHPCR QOM model.</li>
 </ul>
 
 <p>Lets compare a PHPCR QOM query with its new query builder counterpart:</p>
-<p>The following two examples are equivalent and both select a blog posts with node
-name &quot;My Post Title&quot; having the ODM class &quot;Blog\Post&quot;. We order the result set
-first by publishing date and then by title.</p>
+
+<p>The following two examples are equivalent and both select a blog posts
+with node name "My Post Title" having the ODM class "BlogPost". We order
+the result set first by publishing date and then by title.</p>
+
 <p>Using the PHPCR QOM:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $q = $qom-&gt;createQuery(
     // SourceInterface (from)
     $qom-&gt;selector('nt:unstructured', 'p')
@@ -183,8 +197,10 @@ $q-&gt;bindValue('phpcr_class', 'Blog\Post');
 $q-&gt;bindValue('post_title', 'My Post Title');
 $res = $q-&gt;execute();
 </code></pre>
+
 <p>Using the new PHPCR-ODM query builder:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $q = $documentManager-&gt;createQueryBuilder()
     -&gt;fromDocument('Blog\Post', 'p')
     -&gt;where()
@@ -198,12 +214,15 @@ $q = $documentManager-&gt;createQueryBuilder()
     -&gt;getQuery();
 $res = $q-&gt;execute();
 </code></pre>
-<p>Whilst the two examples above are equivalent it should be noted that we are
-being slightly unfair to the PHPCR QOM as we are forced to add the
-<code>phpcr:class</code> constraint, which is a PHPCR-ODMism. Despite this, the new API
-is clearly less verbose and, I hope, more intelligible.</p>
+
+<p>Whilst the two examples above are equivalent it should be noted that we
+are being slightly unfair to the PHPCR QOM as we are forced to add the
+<code>phpcr:class</code> constraint, which is a PHPCR-ODMism. Despite this, the new
+API is clearly less verbose and, I hope, more intelligible.</p>
+
 <p>The API allows chaining together operands:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $qb = $documentManager-&gt;createQueryBuilder();
 $qb
     -&gt;from()
@@ -219,15 +238,20 @@ $qb
         -&gt;end()
     -&gt;end();
 </code></pre>
+
 <p>The API also allows you to break the query into multiple statements:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $qb-&gt;from()-&gt;document('Blog\Post', 'p');
 $qb-&gt;where()-&gt;eq()-&gt;field('p.title')-&gt;literal('Foobar');
 $qb-&gt;orderBy()-&gt;asc()-&gt;field('p.title');
 </code></pre>
-<p>And to add extra criteria to an existing query builder instance (useful if the query
-builder is instantiated and initialized by a vendor library):</p>
-<pre><code class="php">&lt;?php
+
+<p>And to add extra criteria to an existing query builder instance (useful
+if the query builder is instantiated and initialized by a vendor
+library):</p>
+
+<pre><code class="sourceCode php">&lt;?php
 class MyExtension
 {
     public function modifyQuery(QueryBuilder $qb)
@@ -236,24 +260,30 @@ class MyExtension
     }
 }
 </code></pre>
+
 <p>As a bonus, the nature of the API also allows us to easily add multiple
 constraints to <code>andX</code> and <code>orX</code> operator nodes, something not easily
 done with the native PHPCR builder:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $qb-&gt;fromDocument('Blog\Post', 'p');
 
-// we can add one or many constraints to an &quot;andX&quot; node...
+// we can add one or many constraints to an "andX" node...
 $qb-&gt;where()-&gt;andX()
     -&gt;fieldIsset('p.username')
     -&gt;gt()-&gt;field('p.rank')-&gt;literal(50)-&gt;end()
     -&gt;eq()-&gt;fueld('p.title')-&gt;literal('This is a title');
-
 </code></pre>
-<p>The documentation is now online and is made up of both a guide and a reference:</p>
-<ul><li>Guide: http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder.html</li>
-<li>Reference: http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder-reference.html</li>
-</ul>
 
+<p>The documentation is now online and is made up of both a guide and a
+reference:</p>
+
+<ul>
+<li>Guide:
+<a href="http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder.html">http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder.html</a></li>
+<li>Reference:
+<a href="http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder-reference.html">http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder-reference.html</a></li>
+</ul>
 
         </div>
                 

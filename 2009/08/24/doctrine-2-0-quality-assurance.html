@@ -126,28 +126,30 @@
 
         <div>
             <p>Greetings folks!</p>
+
 <p>Today I'd like to talk about Quality Assurance in PHP projects.
 Currently, PHP lacks good tools for QA, but thanks to a special PHP
 user, <a href="http://sebastian-bergmann.de">Sebastian Bergmann</a> , this is
-changing gradually. If you don't know him, you can visit his blog
-and check about projects he's on. For lazy people, he's the author
-of <a href="http://www.phpunit.de">PHPUnit</a> , a de-facto Unit Test suite
-in PHP.</p>
-<p>Doctrine 2.0 uses PHPUnit as our Unit Test suite. It relies on PEAR
-to be installed, but you can also install it via SVN.</p>
-<p>The main initiative of QA in PHP projects is the website
-<a href="http://qualityassuranceinphpprojects.com">http://qualityassuranceinphpprojects.com</a>.
-There you can find available tools to measure, for example, how
-complex is your project and possible semantical issues.</p>
-<p>I have applied some of these tests against
-<a href="http://trac.doctrine-project.org/browser/trunk">Doctrine 2.0</a> to
-see how complex it is and if it can be optimized more. The first
-test I run is a trace about how complex our code base is. The tool
-I used is
-<a href="http://github.com/sebastianbergmann/phploc/tree/master">phploc</a>.
-Check out the results:</p>
+changing gradually. If you don't know him, you can visit his blog and
+check about projects he's on. For lazy people, he's the author of
+<a href="http://www.phpunit.de">PHPUnit</a> , a de-facto Unit Test suite in PHP.</p>
 
-<pre><code class="">[bash]
+<p>Doctrine 2.0 uses PHPUnit as our Unit Test suite. It relies on PEAR to
+be installed, but you can also install it via SVN.</p>
+
+<p>The main initiative of QA in PHP projects is the website
+<a href="http://qualityassuranceinphpprojects.com">[http://qualityassuranceinphpprojects.com](http://qualityassuranceinphpprojects.com)</a>.
+There you can find available tools to measure, for example, how complex
+is your project and possible semantical issues.</p>
+
+<p>I have applied some of these tests against <a href="http://trac.doctrine-project.org/browser/trunk">Doctrine
+2.0</a> to see how complex
+it is and if it can be optimized more. The first test I run is a trace
+about how complex our code base is. The tool I used is
+<a href="http://github.com/sebastianbergmann/phploc/tree/master">phploc</a>. Check
+out the results:</p>
+
+<pre><code>[bash]
 MacBlanco:bin guilhermeblanco$ ./phploc /Users/guilhermeblanco/www/doctrine/trunk/lib
 phploc 1.1.1 by Sebastian Bergmann.
 
@@ -164,14 +166,15 @@ Non-Static Methods:                      1699
 Static Methods:                           106
 Functions:                                 95
 </code></pre>
-<p>Of course it still misses a couple of code to implement (CLI Tasks,
-Locking strategies, ID Generators), but now we know how big
-Doctrine 2.0 is. Then, I decided to check duplicated code (possible
-optimization locations). The tool
-<a href="http://github.com/sebastianbergmann/phpcpd/tree/master">phpcpd</a>
-gave me this feedback:</p>
 
-<pre><code class="">[bash]
+<p>Of course it still misses a couple of code to implement (CLI Tasks,
+Locking strategies, ID Generators), but now we know how big Doctrine 2.0
+is. Then, I decided to check duplicated code (possible optimization
+locations). The tool
+<a href="http://github.com/sebastianbergmann/phpcpd/tree/master">phpcpd</a> gave me
+this feedback:</p>
+
+<pre><code>[bash]
 MacBlanco:bin guilhermeblanco$ ./phpcpd /Users/guilhermeblanco/www/doctrine/trunk/lib
 phpcpd 1.1.1 by Sebastian Bergmann.
 
@@ -182,17 +185,18 @@ Found 1 exact clones with 15 duplicated lines in 2 files:
 
 0.04% duplicated lines out of 38826 total lines of code.
 </code></pre>
-<p>I asked myself: It must be a method that could be moved to
-<code>AbstractPlatform.php</code>! So I opened both files and... no! It's a
-piece of code that cannot be optimized. So, consider Doctrine 2.0
-extremely optimized, because there is no duplicated code
-internally!</p>
-<p>Now Unit Test suite. Doctrine 2.0 has a steadily growing set of
-Unit Tests, and we are regularly analyzing the code coverage
-analysis to find parts that need more tests. Here is how such a
-coverage report is generated:</p>
 
-<pre><code class="">[bash]
+<p>I asked myself: It must be a method that could be moved to
+<code>AbstractPlatform.php</code>! So I opened both files and... no! It's a piece
+of code that cannot be optimized. So, consider Doctrine 2.0 extremely
+optimized, because there is no duplicated code internally!</p>
+
+<p>Now Unit Test suite. Doctrine 2.0 has a steadily growing set of Unit
+Tests, and we are regularly analyzing the code coverage analysis to find
+parts that need more tests. Here is how such a coverage report is
+generated:</p>
+
+<pre><code>[bash]
 MacBlanco:tests guilhermeblanco$ phpunit --coverage-html=./_coverage Doctrine_Tests_AllTests
 PHPUnit 3.3.17 by Sebastian Bergmann.
 
@@ -214,36 +218,27 @@ Tests: 562, Assertions: 1420, Skipped: 27.
 
 Generating code coverage report, this may take a moment.
 </code></pre>
+
 <p>The generated coverage can be seen in the following picture.</p>
+
 <p>Finally, some metrics are good to inspect how stable is our code. I
-applied <a href="http://pdepend.org">pdepend</a> , and it gave me these
-results:</p>
-<figure >
-    <img src="http://www.doctrine-project.org/blog-images/doctrine-2-0-qa/picture2.png" alt="jdepend chart" >
-            <figcaption>
-            <p>jdepend chart</p>
+applied <a href="http://pdepend.org">pdepend</a> , and it gave me these results:</p>
 
+<p><img src="http://www.doctrine-project.org/blog-images/doctrine-2-0-qa/picture2.png" alt="jdepend chart
+" /></p>
 
-                    </figcaption>
-    </figure>
-
-<figure >
-    <img src="http://www.doctrine-project.org/blog-images/doctrine-2-0-qa/picture3.png" alt="pyramid overview" >
-            <figcaption>
-            <p>pyramid overview</p>
-
-
-                    </figcaption>
-    </figure>
+<p><img src="http://www.doctrine-project.org/blog-images/doctrine-2-0-qa/picture3.png" alt="pyramid overview
+" /></p>
 
 <p>The command I ran was:</p>
 
-<pre><code class="">[bash]
+<pre><code>[bash]
 MacBlanco:bin guilhermeblanco$ ./pdepend --summary-xml=/Users/guilhermeblanco/summary.xml --jdepend-chart=/Users/guilhermeblanco/jdepend.svg --overview-pyramid=/Users/guilhermeblanco/pyramid.svg /Users/guilhermeblanco/www/doctrine/trunk/lib
 </code></pre>
-<p>Here is the generated summary. If you have any other ideas/tools
-that we should apply in our codebase to generate other metrics,
-please drop us a message!</p>
+
+<p>Here is the generated summary. If you have any other ideas/tools that we
+should apply in our codebase to generate other metrics, please drop us a
+message!</p>
 
         </div>
                 

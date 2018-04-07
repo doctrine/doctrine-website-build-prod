@@ -125,35 +125,41 @@
                                     </p>
 
         <div>
-            <p>By default DQL supports a limited subset of all the vendor-specific
-SQL functions common between all the vendors. However in many cases
-once you have decided on a specific database vendor, you will never
-change it during the life of your project. This decision for a
-specific vendor potentially allows you to make use of powerful SQL
-features that are unique to the vendor.</p>
-<blockquote><p><strong>Note</strong></p>
-<p>It is worth to mention that Doctrine 2 also allows you to handwrite
-your SQL instead of extending the DQL parser, which is sort of an
-advanced extension point. You can map arbitrary SQL to your objects
-and gain access to vendor specific functionalities using the
-<code>EntityManager#createNativeQuery()</code> API.</p>
+            <p>By default DQL supports a limited subset of all the vendor-specific SQL
+functions common between all the vendors. However in many cases once you
+have decided on a specific database vendor, you will never change it
+during the life of your project. This decision for a specific vendor
+potentially allows you to make use of powerful SQL features that are
+unique to the vendor.</p>
+
+<blockquote>
+  <p><strong>Note</strong></p>
+  
+  <p>It is worth to mention that Doctrine 2 also allows you to handwrite
+  your SQL instead of extending the DQL parser, which is sort of an
+  advanced extension point. You can map arbitrary SQL to your objects
+  and gain access to vendor specific functionalities using the
+  <code>EntityManager#createNativeQuery()</code> API.</p>
 </blockquote>
-<p>The DQL Parser has hooks to register functions that can then be
-used in your DQL queries and transformed into SQL, allowing to
-extend Doctrines Query capabilities to the vendors strength. This
-post explains the Used-Defined Functions API (UDF) of the Dql
-Parser and shows some examples to give you some hints how you would
-extend DQL.</p>
-<p>There are three types of functions in DQL, those that return a
-numerical value, those that return a string and those that return a
-Date. Your custom method has to be registered as either one of
-those. The return type information is used by the DQL parser to
-check possible syntax errors during the parsing process, for
-example using a string function return value in a math expression.</p>
-<a id="title.1"></a><h1>Registering your own DQL functions</h1>
-<p>You can register your functions adding them to the ORM
-configuration:</p>
-<pre><code class="php">&lt;?php
+
+<p>The DQL Parser has hooks to register functions that can then be used in
+your DQL queries and transformed into SQL, allowing to extend Doctrines
+Query capabilities to the vendors strength. This post explains the
+Used-Defined Functions API (UDF) of the Dql Parser and shows some
+examples to give you some hints how you would extend DQL.</p>
+
+<p>There are three types of functions in DQL, those that return a numerical
+value, those that return a string and those that return a Date. Your
+custom method has to be registered as either one of those. The return
+type information is used by the DQL parser to check possible syntax
+errors during the parsing process, for example using a string function
+return value in a math expression.</p>
+
+<h1 id="registering-your-own-dql-functions">Registering your own DQL functions</h1>
+
+<p>You can register your functions adding them to the ORM configuration:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $config = new \Doctrine\ORM\Configuration();
 $config-&gt;addCustomStringFunction($name, $class);
 $config-&gt;addCustomNumericFunction($name, $class);
@@ -161,28 +167,35 @@ $config-&gt;addCustomDatetimeFunction($name, $class);
 
 $em = EntityManager::create($dbParams, $config);
 </code></pre>
-<p>The <code>$name</code> is the name the function will be referred to in the
-DQL query. <code>$class</code> is a string of a class-name which has to
-extend <code>Doctrine\ORM\Query\Node\FunctionNode</code>. This is a class
-that offers all the necessary API and methods to implement a UDF.</p>
+
+<p>The <code>$name</code> is the name the function will be referred to in the DQL
+query. <code>$class</code> is a string of a class-name which has to extend
+<code>Doctrine\ORM\Query\Node\FunctionNode</code>. This is a class that offers all
+the necessary API and methods to implement a UDF.</p>
+
 <p>In this post we will implement some MySql specific Date calculation
 methods, which are quite handy in my opinion:</p>
-<a id="title.2"></a><h1>Date Diff</h1>
-<p><a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_datediff">Mysql's DateDiff function</a>
-takes two dates as argument and calculates the difference in days
-with <code>date1-date2</code>.</p>
-<p>The DQL parser is a top-down recursive descent parser to generate
-the Abstract-Syntax Tree (AST) and uses a TreeWalker approach to
-generate the appropriate SQL from the AST. This makes reading the
+
+<h1 id="date-diff">Date Diff</h1>
+
+<p><a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_datediff">Mysql's DateDiff
+function</a>
+takes two dates as argument and calculates the difference in days with
+<code>date1-date2</code>.</p>
+
+<p>The DQL parser is a top-down recursive descent parser to generate the
+Abstract-Syntax Tree (AST) and uses a TreeWalker approach to generate
+the appropriate SQL from the AST. This makes reading the
 Parser/TreeWalker code managable in a finite amount of time.</p>
-<p>The <code>FunctionNode</code> class I referred to earlier requires you to
-implement two methods, one for the parsing process (obviously)
-called <code>parse</code> and one for the TreeWalker process called
-<code>getSql()</code>. I show you the code for the DateDiff method and
-discuss it step by step:</p>
-<pre><code class="php">&lt;?php
+
+<p>The <code>FunctionNode</code> class I referred to earlier requires you to implement
+two methods, one for the parsing process (obviously) called <code>parse</code> and
+one for the TreeWalker process called <code>getSql()</code>. I show you the code
+for the DateDiff method and discuss it step by step:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 /**
- * DateDiffFunction ::= &quot;DATEDIFF&quot; &quot;(&quot; ArithmeticPrimary &quot;,&quot; ArithmeticPrimary &quot;)&quot;
+ * DateDiffFunction ::= "DATEDIFF" "(" ArithmeticPrimary "," ArithmeticPrimary ")"
  */
 class DateDiff extends FunctionNode
 {
@@ -209,50 +222,60 @@ class DateDiff extends FunctionNode
     }
 }
 </code></pre>
+
 <p>The Parsing process of the DATEDIFF function is going to find two
 expressions the date1 and the date2 values, whose AST Node
 representations will be saved in the variables of the DateDiff
 FunctionNode instance at (1).</p>
-<p>The parse() method has to cut the function call &quot;DATEDIFF&quot; and its
+
+<p>The parse() method has to cut the function call "DATEDIFF" and its
 argument into pieces. Since the parser detects the function using a
-lookahead the T\_IDENTIFIER of the function name has to be taken
-from the stack (2), followed by a detection of the arguments in
-(4)-(6). The opening and closing parenthesis have to be detected
-also. This happens during the Parsing process and leads to the
-generation of a DateDiff FunctionNode somewhere in the AST of the
-dql statement.</p>
-<p>The <code>ArithmeticPrimary</code> method call is the most common
-denominator of valid EBNF tokens taken from the
-<a href="http://www.doctrine-project.org/documentation/manual/2_0/en/dql-doctrine-query-language#ebnf">DQL EBNF grammer</a>
+lookahead the T&#95;IDENTIFIER of the function name has to be taken from
+the stack (2), followed by a detection of the arguments in (4)-(6). The
+opening and closing parenthesis have to be detected also. This happens
+during the Parsing process and leads to the generation of a DateDiff
+FunctionNode somewhere in the AST of the dql statement.</p>
+
+<p>The <code>ArithmeticPrimary</code> method call is the most common denominator of
+valid EBNF tokens taken from the <a href="http://www.doctrine-project.org/documentation/manual/2_0/en/dql-doctrine-query-language#ebnf">DQL EBNF
+grammer</a>
 that matches our requirements for valid input into the DateDiff Dql
 function. Picking the right tokens for your methods is a tricky
 business, but the EBNF grammer is pretty helpful finding it, as is
 looking at the Parser source code.</p>
-<p>Now in the TreeWalker process we have to pick up this node and
-generate SQL from it, which apprently is quite easy looking at the
-code in (7). Since we don't know which type of AST Node the first
-and second Date expression are we are just dispatching them back to
-the SQL Walker to generate SQL from and then wrap our DATEDIFF
-function call around this output.</p>
+
+<p>Now in the TreeWalker process we have to pick up this node and generate
+SQL from it, which apprently is quite easy looking at the code in (7).
+Since we don't know which type of AST Node the first and second Date
+expression are we are just dispatching them back to the SQL Walker to
+generate SQL from and then wrap our DATEDIFF function call around this
+output.</p>
+
 <p>Now registering this DateDiff FunctionNode with the ORM using:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $config = new \Doctrine\ORM\Configuration();
 $config-&gt;addCustomStringFunction('DATEDIFF', 'DoctrineExtensions\Query\MySql\DateDiff');
 </code></pre>
+
 <p>We can do fancy stuff like:</p>
 
-<pre><code class="">[sql]
+<pre><code>[sql]
 SELECT p FROM DoctrineExtensions\Query\BlogPost p WHERE DATEDIFF(CURRENT_TIME(), p.created) &lt; 7
 </code></pre>
-<a id="title.3"></a><h1>Date Add</h1>
-<p>Often useful it the ability to do some simple date calculations in
-your DQL query using
-<a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-add">MySql's DATE\_ADD function</a>.</p>
+
+<h1 id="date-add">Date Add</h1>
+
+<p>Often useful it the ability to do some simple date calculations in your
+DQL query using <a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-add">MySql's DATE&#95;ADD
+function</a>.</p>
+
 <p>I'll skip the bla and show the code for this function:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 /**
  * DateAddFunction ::=
- *     &quot;DATE_ADD&quot; &quot;(&quot; ArithmeticPrimary &quot;, INTERVAL&quot; ArithmeticPrimary Identifier &quot;)&quot;
+ *     "DATE_ADD" "(" ArithmeticPrimary ", INTERVAL" ArithmeticPrimary Identifier ")"
  */
 class DateAdd extends FunctionNode
 {
@@ -290,35 +313,39 @@ class DateAdd extends FunctionNode
     }
 }
 </code></pre>
-<p>The only difference compared to the DATEDIFF here is, we
-additionally need the <code>Lexer</code> to access the value of the
-<code>T_IDENTIFIER</code> token for the Date Interval unit, for example the
-MONTH in:</p>
 
-<pre><code class="">[sql]
+<p>The only difference compared to the DATEDIFF here is, we additionally
+need the <code>Lexer</code> to access the value of the <code>T_IDENTIFIER</code> token for the
+Date Interval unit, for example the MONTH in:</p>
+
+<pre><code>[sql]
 SELECT p FROM DoctrineExtensions\Query\BlogPost p WHERE DATE_ADD(CURRENT_TIME(), INTERVAL 4 MONTH) &gt; p.created
 </code></pre>
-<p>The above method now only supports the specification using
-<code>INTERVAL</code>, to also allow a real date in DATE\_ADD we need to add
-some decision logic to the parsing process (makes up for a nice
-excercise).</p>
-<p>Now as you see, the Parsing process doesn't catch all the possible
-SQL errors, here we don't match for all the valid inputs for the
-interval unit. However where necessary we rely on the database
-vendors SQL parser to show us further errors in the parsing
-process, for example if the Unit would not be one of the supported
-values by MySql.</p>
-<a id="title.4"></a><h1>Conclusion</h1>
+
+<p>The above method now only supports the specification using <code>INTERVAL</code>,
+to also allow a real date in DATE&#95;ADD we need to add some decision
+logic to the parsing process (makes up for a nice excercise).</p>
+
+<p>Now as you see, the Parsing process doesn't catch all the possible SQL
+errors, here we don't match for all the valid inputs for the interval
+unit. However where necessary we rely on the database vendors SQL parser
+to show us further errors in the parsing process, for example if the
+Unit would not be one of the supported values by MySql.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
 <p>Now that you all know how you can implement vendor specific SQL
-functionalities in DQL, we would be excited to see user extensions
-that add vendor specific function packages, for example more math
-functions, XML + GIS Support, Hashing functions and so on.</p>
-<p>For 2.0 we will come with the current set of functions, however for
-a future version we will re-evaluate if we can abstract even more
-vendor sql functions and extend the DQL languages scope.</p>
+functionalities in DQL, we would be excited to see user extensions that
+add vendor specific function packages, for example more math functions,
+XML + GIS Support, Hashing functions and so on.</p>
+
+<p>For 2.0 we will come with the current set of functions, however for a
+future version we will re-evaluate if we can abstract even more vendor
+sql functions and extend the DQL languages scope.</p>
+
 <p>Code for this Extension to DQL and other Doctrine Extensions can be
-found
-<a href="http://github.com/beberlei/DoctrineExtensions">in my Github DoctrineExtensions repository</a>.</p>
+found <a href="http://github.com/beberlei/DoctrineExtensions">in my Github DoctrineExtensions
+repository</a>.</p>
 
         </div>
                 

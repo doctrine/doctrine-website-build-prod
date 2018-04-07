@@ -115,41 +115,6 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
-            <h2><a href="https://www.doctrine-project.org/2015/09/16/doctrine_dbal_2_5_2_released.html">Doctrine DBAL 2.5.2 released</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on 2015-09-16
-                            by
-                                    <a href="mailto:deeky666@googlemail.com">Steve Müller</a>
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>We are happy to announce the immediate availability of Doctrine DBAL 2.5.2.</p>
-<p>This version fixes a regression where dropping a database on PostgreSQL didn't work properly anymore
-as well as several other issues.</p>
-<p>You can find all the changes on JIRA:</p>
-<ul><li class="dash"><a href="http://www.doctrine-project.org/jira/browse/DBAL/fixforversion/10731">DBAL 2.5.2</a> - 24 issues fixed</li>
-</ul>
-
-<p>You can install the DBAL using Composer and the following <code>composer.json</code>
-contents:</p>
-<pre><code class="json">{
-    &quot;require&quot;: {
-        &quot;doctrine/dbal&quot;: &quot;2.5.2&quot;
-    }
-}
-</code></pre>
-<p>Please report any issues you may have with the update on the mailing list or on
-<a href="http://www.doctrine-project.org/jira">Jira</a>.</p>
-
-        </div>
-
-            </article>
-    <article>
-        <header>
             <h2><a href="https://www.doctrine-project.org/2015/08/31/security_misconfiguration_vulnerability_in_various_doctrine_projects.html">Security Misconfiguration Vulnerability in various Doctrine projects</a></h2>
         </header>
 
@@ -162,133 +127,185 @@ contents:</p>
         <hr />
 
         <div>
-            <p>We are releasing new versions of Doctrine Cache, Annotations, ORM and MongoDB
-ODM today that fix a security misconfiguration vulnerability. This
-vulnerability was assigned CVE-2015-5723. It requires an attacker to have
-direct access to a user of the server to be exploitable. We consider
-exploitability to be low to medium.</p>
-<p>Exploiting this vulnerability can allow attackers to perform local arbitrary
-code execution with privileges of other users (privilege escalation).</p>
-<p><strong>You are only affected by this vulnerability, if your application runs with a umask of 0.</strong></p>
+            <p>We are releasing new versions of Doctrine Cache, Annotations, ORM and
+MongoDB ODM today that fix a security misconfiguration vulnerability.
+This vulnerability was assigned CVE-2015-5723. It requires an attacker
+to have direct access to a user of the server to be exploitable. We
+consider exploitability to be low to medium.</p>
+
+<p>Exploiting this vulnerability can allow attackers to perform local
+arbitrary code execution with privileges of other users (privilege
+escalation).</p>
+
+<p><strong>You are only affected by this vulnerability, if your application runs
+with a umask of 0.</strong></p>
+
 <p>Please update:</p>
-<ul><li class="dash">Annotations to 1.2.7</li>
-<li class="dash">Cache to 1.4.2 or 1.3.2</li>
-<li class="dash">Common to 2.5.1 or 2.4.3</li>
-<li class="dash">ORM to 2.5.1 or 2.4.8</li>
-<li class="dash">MongoDB ODM to 1.0.2</li>
-<li class="dash">MongoDB ODM Bundle to 3.0.1</li>
+
+<ul>
+<li>Annotations to 1.2.7</li>
+<li>Cache to 1.4.2 or 1.3.2</li>
+<li>Common to 2.5.1 or 2.4.3</li>
+<li>ORM to 2.5.1 or 2.4.8</li>
+<li>MongoDB ODM to 1.0.2</li>
+<li>MongoDB ODM Bundle to 3.0.1</li>
 </ul>
 
-<p>If you want to check the fix or apply patch manually, we <a href="">provide a Gist with all patches
-&lt;https://gist.github.com/beberlei/dc6e4b018988cba7e211&gt;</a>.</p>
-<p>If you cannot upgrade, see our notes below how to mitigate the problem without
-having to patch the code.</p>
-<p>We want to thank <a href="https://twitter.com/squiddlane">Ryan Lane</a> for finding the
-vulnerability, <a href="https://github.com/jeskew">Jonathan Eskew</a> from the AWS team
-to pass this security vulnerability to us and <a href="">Anthony Ferrara
-&lt;https://twitter.com/ircmaxell&gt;</a> for helping us discuss and find solutions to
-the problem.</p>
-<a id="title.1"></a><h1>Details</h1>
+<p>If you want to check the fix or apply patch manually, we <a href="https://gist.github.com/beberlei/dc6e4b018988cba7e211">provide a Gist
+with all
+patches</a>.</p>
+
+<p>If you cannot upgrade, see our notes below how to mitigate the problem
+without having to patch the code.</p>
+
+<p>We want to thank <a href="https://twitter.com/squiddlane">Ryan Lane</a> for finding
+the vulnerability, <a href="https://github.com/jeskew">Jonathan Eskew</a> from the
+AWS team to pass this security vulnerability to us and <a href="https://twitter.com/ircmaxell">Anthony
+Ferrara</a> for helping us discuss and find
+solutions to the problem.</p>
+
+<h1 id="details">Details</h1>
+
 <p>Doctrine uses different kinds of caches and some of them read the cached
-entries using <code>require</code> or <code>include</code> to make use of APC or Opcache.
-In case of proxy generation we actually need to execute the code to make
-a new auto-generated class part of the code-base.</p>
-<p>Doctrine always uses <code>mkdir($cacheDirectory, 0777);</code> on many of those caches
-directories. If your application is running with <code>umask(0)</code>, this allows an
-attacker to write arbitrary code into the cache directory which can be executed
-with the user privileges of the webserver.</p>
-<p>Running your application with <code>umask(0)</code> is not generally a good idea, but is
-sometimes recommended as simple solution to solve filesystem access problems
-when a console and a web user both write to a common cache directory. In
-combination with a cache that executes the cache entries as code, this can
-allow local arbitrary code execution.</p>
-<p>The patches released today change all caches that execute code to always use a
-default mask of <code>0775</code> instead of <code>0777</code>.</p>
-<ul><li class="dash">In case of Cache and Annotations we solve this by implementing a userland configurable umask
-  that defaults to <code>0002</code>. We apply this to every mkdir and chmod so that you can reconfigure
-  to another mask if you must.</li>
-<li class="dash">In all the other cases its a hardcoded change to <code>0775</code> for directories and
-  <code>0664</code> for files.</li>
+entries using <code>require</code> or <code>include</code> to make use of APC or Opcache. In
+case of proxy generation we actually need to execute the code to make a
+new auto-generated class part of the code-base.</p>
+
+<p>Doctrine always uses <code>mkdir($cacheDirectory, 0777);</code> on many of those
+caches directories. If your application is running with <code>umask(0)</code>, this
+allows an attacker to write arbitrary code into the cache directory
+which can be executed with the user privileges of the webserver.</p>
+
+<p>Running your application with <code>umask(0)</code> is not generally a good idea,
+but is sometimes recommended as simple solution to solve filesystem
+access problems when a console and a web user both write to a common
+cache directory. In combination with a cache that executes the cache
+entries as code, this can allow local arbitrary code execution.</p>
+
+<p>The patches released today change all caches that execute code to always
+use a default mask of <code>0775</code> instead of <code>0777</code>.</p>
+
+<ul>
+<li>In case of Cache and Annotations we solve this by implementing a
+userland configurable umask that defaults to <code>0002</code>. We apply this
+to every mkdir and chmod so that you can reconfigure to another mask
+if you must.</li>
+<li>In all the other cases its a hardcoded change to <code>0775</code> for
+directories and <code>0664</code> for files.</li>
 </ul>
 
-<p>We are aware that if you depend on <code>umask(0)</code>, this is a very inconvenient
-change, because your code will break when different users write to the same
-cache directory.</p>
-<p><strong>We feel it is not safe to make developers and operations responsible to know
-how to secure our cache implementations. They are often third party libraries
-to other open-source systems, we want them to be safe no matter how users
-configure their system.</strong></p>
-<a id="title.2"></a><h1>Am I vulnerable?</h1>
+<p>We are aware that if you depend on <code>umask(0)</code>, this is a very
+inconvenient change, because your code will break when different users
+write to the same cache directory.</p>
+
+<p><strong>We feel it is not safe to make developers and operations responsible
+to know how to secure our cache implementations. They are often third
+party libraries to other open-source systems, we want them to be safe no
+matter how users configure their system.</strong></p>
+
+<h1 id="am-i-vulnerable%3F">Am I vulnerable?</h1>
+
 <p>Your application must run with <code>umask(0)</code> for this vulnerability to be
-exploitable. This must not necessarily be an explicit call to the PHP function,
-it can also happen if you misconfigured your shell or webserver to run with
-umask 0 by default.</p>
-<p>You can easily check this by calling <code>echo umask();</code> from both the shell and
-your webserver. It will return 0, if you are potentially vulnerable.</p>
-<p>Second, you must be using using Doctrine with the Annotations FileCache or the
-PhpFileCache Cache implementation or one of the ORM or ODM ProxyGenerators. Of
-course this vulnerability can also be present in any other library or your own
-application, when you dynamically generate PHP code into a directory with world
-writable permissions.</p>
-<a id="title.3"></a><h1>Do you provide fixes for all branches of all affected components?</h1>
-<p>No, fixes are only applied to the most recent versions of Doctrine components.</p>
-<p>If you are running older components and don't want to or cannot upgrade, you
-should look into the sections about immediate and proper fixes below, that show
-solutions that don't require upgrading your code.</p>
-<p>If your system and application are correctly setup, it is also likely that you
-are not vulnerable. See the next section for information about that.</p>
-<a id="title.4"></a><h1>Is there an immediate fix when I can't upgrade?</h1>
-<p>Yes, as an immediate fix just make sure that your application runs with a
-non-zero umask all the time. Call <code>umask(umask() | 0002);</code> early in your code
-to prevent PHP from ever creating world writeable files and directories.</p>
-<p>Warning: It can break your application if it relies on running with <code>umask(0);</code>.</p>
-<p>This is not sufficient though, because the call to umask is not thread safe and
-a call to this function later in the code can reset the umask for all requests
-currently running. That means you must identify all code that calls
-<code>umask(0);</code> and change it.</p>
-<p>When you are unsure if your generated cache is clean, you can regenerate all
-files after you have changed the umask of your application.</p>
-<a id="title.5"></a><h1>Is there a proper fix or security best-practive to avoid this issue?</h1>
-<p>Yes, the best way to fix this problem is to always execute PHP code for a single
-application with the same user, independent of being called from the webserver,
-php-fpm or the shell. In this case you can always create directories with the
-default permissions of <code>0775</code> and files with <code>0664</code>:</p>
-<pre><code class="php">&lt;?php
+exploitable. This must not necessarily be an explicit call to the PHP
+function, it can also happen if you misconfigured your shell or
+webserver to run with umask 0 by default.</p>
+
+<p>You can easily check this by calling <code>echo umask();</code> from both the shell
+and your webserver. It will return 0, if you are potentially vulnerable.</p>
+
+<p>Second, you must be using using Doctrine with the Annotations FileCache
+or the PhpFileCache Cache implementation or one of the ORM or ODM
+ProxyGenerators. Of course this vulnerability can also be present in any
+other library or your own application, when you dynamically generate PHP
+code into a directory with world writable permissions.</p>
+
+<h1 id="do-you-provide-fixes-for-all-branches-of-all-affected-components%3F">Do you provide fixes for all branches of all affected components?</h1>
+
+<p>No, fixes are only applied to the most recent versions of Doctrine
+components.</p>
+
+<p>If you are running older components and don't want to or cannot upgrade,
+you should look into the sections about immediate and proper fixes
+below, that show solutions that don't require upgrading your code.</p>
+
+<p>If your system and application are correctly setup, it is also likely
+that you are not vulnerable. See the next section for information about
+that.</p>
+
+<h1 id="is-there-an-immediate-fix-when-i-can%27t-upgrade%3F">Is there an immediate fix when I can't upgrade?</h1>
+
+<p>Yes, as an immediate fix just make sure that your application runs with
+a non-zero umask all the time. Call <code>umask(umask() | 0002);</code> early in
+your code to prevent PHP from ever creating world writeable files and
+directories.</p>
+
+<p>Warning: It can break your application if it relies on running with
+<code>umask(0);</code>.</p>
+
+<p>This is not sufficient though, because the call to umask is not thread
+safe and a call to this function later in the code can reset the umask
+for all requests currently running. That means you must identify all
+code that calls <code>umask(0);</code> and change it.</p>
+
+<p>When you are unsure if your generated cache is clean, you can regenerate
+all files after you have changed the umask of your application.</p>
+
+<h1 id="is-there-a-proper-fix-or-security-best-practive-to-avoid-this-issue%3F">Is there a proper fix or security best-practive to avoid this issue?</h1>
+
+<p>Yes, the best way to fix this problem is to always execute PHP code for
+a single application with the same user, independent of being called
+from the webserver, php-fpm or the shell. In this case you can always
+create directories with the default permissions of <code>0775</code> and files with
+<code>0664</code>:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 // safety measure to overrule webserver or shell misconfiguration
 umask(umask() | 0002); 
 
-mkdir(&quot;/some/directory&quot;, 0775);
-file_put_contents(&quot;/some/directory/file&quot;, &quot;data&quot;);
-chmod(&quot;/some/directory/file&quot;, 0664);
+mkdir("/some/directory", 0775);
+file_put_contents("/some/directory/file", "data");
+chmod("/some/directory/file", 0664);
 </code></pre>
-<p>On most linux distributions it is possible to execute cronjobs or supervisord
-jobs with the <code>www-data</code>, <code>nginx</code> or <code>apache</code> users that the webserver
-runs with.</p>
-<p>Another way would be to use more advanced permission systems in Linux such as
-<code>chmod +a</code> or <code>setfacl</code>, both of which are not available on all
+
+<p>On most linux distributions it is possible to execute cronjobs or
+supervisord jobs with the <code>www-data</code>, <code>nginx</code> or <code>apache</code> users that the
+webserver runs with.</p>
+
+<p>Another way would be to use more advanced permission systems in Linux
+such as <code>chmod +a</code> or <code>setfacl</code>, both of which are not available on all
 distributions though.</p>
-<a id="title.6"></a><h1>Isn't everyone just using 0777/0666 everywhere?</h1>
-<p>Yes, this practice is extremely wide-spread in many projects. This is why we
-think it is very important to make sure your application runs with a proper
-umask.</p>
-<p>However, in our case the potential vulnerability is more severe than usual,
-because we use <code>require/include</code> to execute the written cache files, which
-can allow an attacker with access to a local user the possibility for executing
-arbitrary code with the webservers user.</p>
-<p>Code that is reading the generted/cache files using <code>fopen/file_get_contents</code>
-could &quot;only&quot; be poisoned with invalid or wrong data by an attacker. This is
-severe by itself, but does not allow arbitrary code execution.</p>
-<p>We want users of Doctrine to be safe by default, so we are changing this even
-if it will cause inconveniences.</p>
-<p>We have also notified as many OSS projects of this beforehand, mainly through
-PHP-FIG, because of the wide-spread practice. Several of them are preparing
-security releases for their libraries as well.</p>
-<p>Again, the nature of this issue is mostly remedied by <strong>not</strong> running with
-umask of zero, so make sure this is the case for your applications.</p>
-<a id="title.7"></a><h1>Questions?</h1>
-<p>If you have questions you can signup to the <a href="">Doctrine User Mailinglist
-&lt;https://groups.google.com/forum/#!forum/doctrine-user&gt;</a> and ask there or join
-<code>#doctrine</code> IRC Channel on Freenode.</p>
+
+<h1 id="isn%27t-everyone-just-using-0777%2F0666-everywhere%3F">Isn't everyone just using 0777/0666 everywhere?</h1>
+
+<p>Yes, this practice is extremely wide-spread in many projects. This is
+why we think it is very important to make sure your application runs
+with a proper umask.</p>
+
+<p>However, in our case the potential vulnerability is more severe than
+usual, because we use <code>require/include</code> to execute the written cache
+files, which can allow an attacker with access to a local user the
+possibility for executing arbitrary code with the webservers user.</p>
+
+<p>Code that is reading the generted/cache files using
+<code>fopen/file_get_contents</code> could "only" be poisoned with invalid or wrong
+data by an attacker. This is severe by itself, but does not allow
+arbitrary code execution.</p>
+
+<p>We want users of Doctrine to be safe by default, so we are changing this
+even if it will cause inconveniences.</p>
+
+<p>We have also notified as many OSS projects of this beforehand, mainly
+through PHP-FIG, because of the wide-spread practice. Several of them
+are preparing security releases for their libraries as well.</p>
+
+<p>Again, the nature of this issue is mostly remedied by <strong>not</strong> running
+with umask of zero, so make sure this is the case for your applications.</p>
+
+<h1 id="questions%3F">Questions?</h1>
+
+<p>If you have questions you can signup to the <a href="https://groups.google.com/forum/#!forum/doctrine-user">Doctrine User
+Mailinglist</a> and
+ask there or join <code>#doctrine</code> IRC Channel on Freenode.</p>
 
         </div>
 
@@ -307,37 +324,118 @@ umask of zero, so make sure this is the case for your applications.</p>
         <hr />
 
         <div>
-            <p>We are happy to announce the immediate availability of Doctrine ORM 2.5.1 and
-2.4.8.</p>
-<p>This versions include a fix for the <a href="">Security Misconfiguration Vulnerability
-&lt;http://www.doctrine-project.org/2015/08/31/security_misconfiguration_vulnerability_in_various_doctrine_projects.html&gt;</a>
+            <p>We are happy to announce the immediate availability of Doctrine ORM
+2.5.1 and 2.4.8.</p>
+
+<p>This versions include a fix for the <a href="http://www.doctrine-project.org/2015/08/31/security_misconfiguration_vulnerability_in_various_doctrine_projects.html">Security Misconfiguration
+Vulnerability</a>
 described in an earlier blog post today.</p>
+
 <p>Here are the changelogs:</p>
-<a id="title.1"></a><h1>Changelog 2.5.1</h1>
-<ul><li class="dash">DCOM-293: Fix for Security Misconfiguration Vulnerability</li>
-<li class="dash">DDC-3831: Fixed issue when paginator orders by a subselect expression</li>
-<li class="dash">DDC-3699: Fix bug in EntityManager#merge: Skipping properties if they are listed after a not loaded relation</li>
-<li class="dash">DDC-3684: Fix bug ClassMetadata#wakeupReflection when used with embeddables and Static Reflection</li>
-<li class="dash">DDC-3683: SecondLevelCache: Fix bug in DefaultCacheFactory#buildCollectionHydrator()</li>
-<li class="dash">DDC-3667: PersistentCollection: Fix BC break when creating empty Array/PersistentCollections</li>
+
+<h1 id="changelog-2.5.1">Changelog 2.5.1</h1>
+
+<ul>
+<li>DCOM-293: Fix for Security Misconfiguration Vulnerability</li>
+<li>DDC-3831: Fixed issue when paginator orders by a subselect
+expression</li>
+<li>DDC-3699: Fix bug in EntityManager&#35;merge: Skipping properties if
+they are listed after a not loaded relation</li>
+<li>DDC-3684: Fix bug ClassMetadata&#35;wakeupReflection when used with
+embeddables and Static Reflection</li>
+<li>DDC-3683: SecondLevelCache: Fix bug in
+DefaultCacheFactory&#35;buildCollectionHydrator()</li>
+<li>DDC-3667: PersistentCollection: Fix BC break when creating empty
+Array/PersistentCollections</li>
 </ul>
 
-<a id="title.2"></a><h1>Changelog 2.4.8</h1>
-<p>This release contains several fixes that have been in 2.5.0 already and are
-just backported to 2.4 for convenience. This is the last release in the 2.4
-branch and you should upgrade to 2.5.</p>
-<ul><li class="dash">DCOM-293: Fix for Security Misconfiguration Vulnerability</li>
-<li class="dash">DDC-3551: Fix difference between DBAL 2.4 and 2.5 concerning platform initialization and version detection.</li>
-<li class="dash">DDC-3240: EntityGenerator: Fix inheritance in Code-Generation</li>
-<li class="dash">DDC-3502: EntityGenerator: Fixed parsing for php 5.5 &quot;::class&quot; syntax</li>
-<li class="dash">DDC-3500: Joined Table Inheritance: Fix applying ON/WITH conditions to first join in Class Table Inheritance</li>
-<li class="dash">DDC-3343: Entities should not be deleted when using EXTRA_LAZY and one-to-many</li>
-<li class="dash">DDC-3619: Bugfix: Prevent Identity Map Garbage Collection that can cause spl_object_hash collisions</li>
-<li class="dash">DDC-3608: EntityGenerator: Properly generate default value from yml &amp; xml mapping</li>
-<li class="dash">DDC-3643: EntityGenerator: Fix EntityGenerator RegenerateEntityIfExists not working correctly.</li>
+<h1 id="changelog-2.4.8">Changelog 2.4.8</h1>
+
+<p>This release contains several fixes that have been in 2.5.0 already and
+are just backported to 2.4 for convenience. This is the last release in
+the 2.4 branch and you should upgrade to 2.5.</p>
+
+<ul>
+<li>DCOM-293: Fix for Security Misconfiguration Vulnerability</li>
+<li>DDC-3551: Fix difference between DBAL 2.4 and 2.5 concerning
+platform initialization and version detection.</li>
+<li>DDC-3240: EntityGenerator: Fix inheritance in Code-Generation</li>
+<li>DDC-3502: EntityGenerator: Fixed parsing for php 5.5 "::class"
+syntax</li>
+<li>DDC-3500: Joined Table Inheritance: Fix applying ON/WITH conditions
+to first join in Class Table Inheritance</li>
+<li>DDC-3343: Entities should not be deleted when using EXTRA&#95;LAZY and
+one-to-many</li>
+<li>DDC-3619: Bugfix: Prevent Identity Map Garbage Collection that can
+cause spl&#95;object&#95;hash collisions</li>
+<li>DDC-3608: EntityGenerator: Properly generate default value from yml
+&amp; xml mapping</li>
+<li>DDC-3643: EntityGenerator: Fix EntityGenerator
+RegenerateEntityIfExists not working correctly.</li>
 </ul>
 
 <p>As usual you can grab the latest versions from Composer.</p>
+
+        </div>
+
+            </article>
+    <article>
+        <header>
+            <h2><a href="https://www.doctrine-project.org/2015/08/18/doctrine-mongodb-odm-release-1-0-0.html">Doctrine MongoDB ODM release 1.0.0</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2015-08-18
+                            by
+                                    <a href="mailto:malarzm@gmail.com">Maciej Malarz</a>
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>In observance of August 18th, the day that Jon Wage tagged Doctrine
+MongoDB ODM's <a href="https://github.com/doctrine/mongodb-odm/releases/tag/1.0.0BETA1">first BETA
+release</a>,
+we've come together for a big celebration. From humble beginnings as a
+weekend hack to port Doctrine 2's data mapper pattern to NoSQL, the ODM
+quickly became a beast of a project and cut its teeth on production
+servers early on as a core dependency of the very first Symfony2
+startups. Today, after five years of adoption, improvements,
+refactoring, and <a href="https://twitter.com/jmikola/status/583047759160336384?lang=en">countless
+jokes</a>…
+we are very happy to announce the immediate availability of Doctrine
+MongoDB ODM 1.0.0!</p>
+
+<h1 id="what-is-new-in-1.0.0%3F">What is new in 1.0.0?</h1>
+
+<p>For our first stable release, we focused on fixing most known bugs (some
+of which were open for <em>years</em>), hardening existing features, and
+straightening out ODM's behaviour and correctness where possible. In
+hopes of ensuring a pleasant upgrade experience, we have prepared a
+<a href="https://github.com/doctrine/mongodb-odm/blob/master/CHANGELOG-1.0.md#100-2015-08-18">checklist</a>
+for you, which highlights the most important changes that may require
+your attention. A complete list of resolved issues and pull requests may
+be found on GitHub under the <a href="https://github.com/doctrine/mongodb-odm/issues?q=milestone%3A1.0.0">1.0.0
+milestone</a>.</p>
+
+<h1 id="behind-the-scenes%3A-doctrine-mongodb-1.2.0">Behind the scenes: Doctrine MongoDB 1.2.0</h1>
+
+<p>We are also happy to announce the immediate availability of Doctrine
+MongoDB 1.2.0, which is the underlying driver abstraction layer employed
+by the ODM. In particular, this release sports a brand new <a href="https://github.com/doctrine/mongodb/pull/213">Aggregation
+Builder</a>, along with
+improved query builder support for <a href="https://github.com/doctrine/mongodb/pull/212">update
+operators</a> and and
+<a href="https://github.com/doctrine/mongodb/pull/184">full-text search</a>
+introduced in MongoDB 2.6. For a full list of closed issues and pull
+requests, please see the <a href="https://github.com/doctrine/mongodb/releases/tag/1.2.0">release notes on
+GitHub</a>.</p>
+
+<h1 id="stop-fooling-around%2C-i-want-my-beta-back%21">Stop fooling around, I want my BETA back!</h1>
+
+<p>We apologize for any inconvenience, but Doctrine MongoDB ODM has
+officially gone stable and we don't intend on shipping more BETAs
+anytime soon. Well, at least not until work begins on 2.0 :D</p>
 
         </div>
 

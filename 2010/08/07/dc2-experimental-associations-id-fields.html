@@ -126,63 +126,73 @@
 
         <div>
             <p>Doctrine 2 supports composite keys of primitive types from the
-beginning, however we realized early that a very common use-case is
-a composite key with one or more elements being associated
-entities. For example think of a CMS System which allows Article
-Translations. A common SQL schema for this case would be:</p>
+beginning, however we realized early that a very common use-case is a
+composite key with one or more elements being associated entities. For
+example think of a CMS System which allows Article Translations. A
+common SQL schema for this case would be:</p>
 
-<pre><code class="">[sql]
+<pre><code>[sql]
 CREATE TABLE article (id INT PRIMARY KEY, title VARCHAR(255), body LONGTEXT);
 
 CREATE TABLE article_translations (article_id INT, language CHAR(3), title VARCHAR(255), body LONGTEXT, PRIMARY KEY (article_id, language));
 </code></pre>
-<p>This sort of schema cannot be mapped with Doctrine 2 currently, it
-would be required to add another column <code>id</code> on the
-article\_translations table and enforce a unique constraint on
-article\_id + language.</p>
+
+<p>This sort of schema cannot be mapped with Doctrine 2 currently, it would
+be required to add another column <code>id</code> on the article&#95;translations
+table and enforce a unique constraint on article&#95;id + language.</p>
+
 <p>Under the umbrella of
-<a href="http://www.doctrine-project.org/jira/browse/DDC-117">DDC-117</a>
-and some related tickets there were discussions about adding a
-feature that would help solve this problem: Allowing to add @Id to
-@ManyToOne or @OneToOne mappings. I committed this feature into an
-experimental Git branch today and we ask you to test this with as
-many crazy scenarios and use-cases as possible.</p>
-<p>This feature can potentially be uber-powerful, however we want to
-be sure that it works correctly and does not have to many
-problematic edge-cases. Therefore we need your feedback.</p>
-<ul><li class="dash"> Go to
-   <a href="http://github.com/doctrine/doctrine2/commits/DDC-117">http://github.com/doctrine/doctrine2/commits/DDC-117</a>
-   to see the code</li>
-<li class="dash"> <a href="http://github.com/doctrine/doctrine2/blob/DDC-117/tests/Doctrine/Tests/ORM/Functional/Ticket/DDC117Test.php">Have a look at the functional tests</a>
-   to see the synatx</li>
-<li class="dash"> Checkout the Git Repository and switch to the experimental
-   branch <code>git checkout DDC-117</code></li>
-<li class="dash"> Do crazy testing against this branch!</li>
+<a href="http://www.doctrine-project.org/jira/browse/DDC-117">DDC-117</a> and some
+related tickets there were discussions about adding a feature that would
+help solve this problem: Allowing to add @Id to @ManyToOne or @OneToOne
+mappings. I committed this feature into an experimental Git branch today
+and we ask you to test this with as many crazy scenarios and use-cases
+as possible.</p>
+
+<p>This feature can potentially be uber-powerful, however we want to be
+sure that it works correctly and does not have to many problematic
+edge-cases. Therefore we need your feedback.</p>
+
+<ul>
+<li>Go to
+<a href="http://github.com/doctrine/doctrine2/commits/DDC-117">[http://github.com/doctrine/doctrine2/commits/DDC-117](http://github.com/doctrine/doctrine2/commits/DDC-117)</a>
+to see the code</li>
+<li><a href="http://github.com/doctrine/doctrine2/blob/DDC-117/tests/Doctrine/Tests/ORM/Functional/Ticket/DDC117Test.php">Have a look at the functional
+tests</a>
+to see the synatx</li>
+<li>Checkout the Git Repository and switch to the experimental branch
+<code>git checkout DDC-117</code></li>
+<li>Do crazy testing against this branch!</li>
 </ul>
 
-<p>Personally I want this feature in core very much, however composite
-keys are very tricky. We want to find as many problematic cases
-with this feature as possible. That would enable us to evaluate if
-this approach will be merged into Doctrine 2.1 or not.</p>
-<blockquote><p><strong>NOTE</strong></p>
-<p>This feature currently only works with Annotations Mapping Driver.
-XML and YAML will follow later.</p>
+<p>Personally I want this feature in core very much, however composite keys
+are very tricky. We want to find as many problematic cases with this
+feature as possible. That would enable us to evaluate if this approach
+will be merged into Doctrine 2.1 or not.</p>
+
+<blockquote>
+  <p><strong>NOTE</strong></p>
+  
+  <p>This feature currently only works with Annotations Mapping Driver. XML
+  and YAML will follow later.</p>
 </blockquote>
+
 <p>By the way, the previous example is actually one of the functional
 test-cases for this feature:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 /**
  * @Entity
  */
 class DDC117Article
 {
-    /** @Id @Column(type=&quot;integer&quot;) @GeneratedValue */
+    /** @Id @Column(type="integer") @GeneratedValue */
     private $id;
     /** @Column */
     private $title;
 
     /**
-     * @OneToMany(targetEntity=&quot;DDC117Translation&quot;, mappedBy=&quot;article&quot;)
+     * @OneToMany(targetEntity="DDC117Translation", mappedBy="article")
      */
     private $translations;
 
@@ -199,17 +209,17 @@ class DDC117Article
 class DDC117Translation
 {
     /**
-     * @Id @ManyToOne(targetEntity=&quot;DDC117Article&quot;)
+     * @Id @ManyToOne(targetEntity="DDC117Article")
      */
     private $article;
 
     /**
-     * @Id @column(type=&quot;string&quot;)
+     * @Id @column(type="string")
      */
     private $language;
 
     /**
-     * @column(type=&quot;string&quot;)
+     * @column(type="string")
      */
     private $title;
 
@@ -221,11 +231,11 @@ class DDC117Translation
     }
 }
 
-$article = new DDC117Article(&quot;foo&quot;);
+$article = new DDC117Article("foo");
 $em-&gt;persist($article);
 $em-&gt;flush();
 
-$translation = new DDC117Translation($article, &quot;en&quot;, &quot;Bar&quot;);
+$translation = new DDC117Translation($article, "en", "Bar");
 $em-&gt;persist($translation);
 $em-&gt;flush();
 </code></pre>

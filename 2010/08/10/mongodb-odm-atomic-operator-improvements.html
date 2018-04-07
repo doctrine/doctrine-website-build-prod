@@ -125,13 +125,15 @@
                                     </p>
 
         <div>
-            <p>Recently we've improved the support for use of atomic operators and
-how much it takes advantage of them in the Doctrine MongoDB ODM.
-Now when updating embedded documents it will use dot annotation to
-<code>$set</code> the individual properties instead of sending the entire
-document even if only one property changes.</p>
+            <p>Recently we've improved the support for use of atomic operators and how
+much it takes advantage of them in the Doctrine MongoDB ODM. Now when
+updating embedded documents it will use dot annotation to <code>$set</code> the
+individual properties instead of sending the entire document even if
+only one property changes.</p>
+
 <p>Here is an example, first insert some new data:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $address = new Address();
 $address-&gt;setStreet('6512 Mercomatic Ct');
 
@@ -143,9 +145,11 @@ $user-&gt;addPhonenumber(new Phonenumber('6155139185'));
 $dm-&gt;persist($user);
 $dm-&gt;flush();
 </code></pre>
-<p>Now if we make some changes and <code>flush()</code> again it will perform
-an update:</p>
-<pre><code class="php">&lt;?php
+
+<p>Now if we make some changes and <code>flush()</code> again it will perform an
+update:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $phonenumbers = $user-&gt;getPhonenumbers();
 
 $address-&gt;setCity('Nashville');
@@ -155,10 +159,11 @@ $user-&gt;addPhonenumber(new Phonenumber('1234'));
 
 $dm-&gt;flush();
 </code></pre>
+
 <p>The above will result in the following queries, first it must run a
 <code>$set</code> to modify existing embedded documents:</p>
 
-<pre><code class="">Array
+<pre><code>Array
 (
     [$set] =&gt; Array
         (
@@ -168,10 +173,10 @@ $dm-&gt;flush();
 
 )
 </code></pre>
-<p>Then it issues another update to <code>$pushAll</code> the new
-phonenumbers:</p>
 
-<pre><code class="">Array
+<p>Then it issues another update to <code>$pushAll</code> the new phonenumbers:</p>
+
+<pre><code>Array
 (
     [$pushAll] =&gt; Array
         (

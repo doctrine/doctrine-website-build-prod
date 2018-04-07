@@ -125,39 +125,43 @@
                                     </p>
 
         <div>
-            <p>At
-<a href="http://www.doctrine-project.org/blog/doctrine-2-at-confoo-2010">ConFoo 2010</a>
-during my presentation, someone asked about the constructor of
-entities in Doctrine 2 and whether or not it could be used. I think
-this is something worth writing about since in Doctrine 1 this was
-not possible. The constructor was hi-jacked from you and used
-internally by Doctrine.</p>
-<p>In Doctrine 2 it is possible to define the constructor in your
-entity classes and is not required to be a zero argument
-constructor! That's right, Doctrine 2 never instantiates the
-constructor of your entities so you have complete control!</p>
+            <p>At <a href="http://www.doctrine-project.org/blog/doctrine-2-at-confoo-2010">ConFoo
+2010</a>
+during my presentation, someone asked about the constructor of entities
+in Doctrine 2 and whether or not it could be used. I think this is
+something worth writing about since in Doctrine 1 this was not possible.
+The constructor was hi-jacked from you and used internally by Doctrine.</p>
+
+<p>In Doctrine 2 it is possible to define the constructor in your entity
+classes and is not required to be a zero argument constructor! That's
+right, Doctrine 2 never instantiates the constructor of your entities so
+you have complete control!</p>
+
 <p>This is possible due to a small trick which is used by two other
 projects,
 <a href="http://sebastian-bergmann.de/archives/831-Freezing-and-Thawing-PHP-Objects.html">php-object-freezer</a>
-and Flow3. The gist of it is we store a prototype class instance
-that is unserialized from a hand crafted serialized string where
-the class name is concatenated into the string. The result when we
-unserialize the string is an instance of the class which is stored
-as a prototype and cloned everytime we need a new instance during
-hydration.</p>
+and Flow3. The gist of it is we store a prototype class instance that is
+unserialized from a hand crafted serialized string where the class name
+is concatenated into the string. The result when we unserialize the
+string is an instance of the class which is stored as a prototype and
+cloned everytime we need a new instance during hydration.</p>
+
 <p>Have a look at the method responsible for this:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 public function newInstance()
 {
     if ($this-&gt;_prototype === null) {
-        $this-&gt;_prototype = unserialize(sprintf('O:%d:&quot;%s&quot;:0:{}', strlen($this-&gt;name), $this-&gt;name));
+        $this-&gt;_prototype = unserialize(sprintf('O:%d:"%s":0:{}', strlen($this-&gt;name), $this-&gt;name));
     }
     return clone $this-&gt;_prototype;
 }
 </code></pre>
-<p>The above code allows us to have entities where we make full use of
-our constructor like the following class definition:</p>
-<pre><code class="php">&lt;?php
+
+<p>The above code allows us to have entities where we make full use of our
+constructor like the following class definition:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 namespace Entities;
 
 /** @Entity */
@@ -176,17 +180,21 @@ class User
     }
 }
 </code></pre>
+
 <p>Now of course you can use the constructor like you would expect:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 use Entities\User;
 
 $user = new User('jwage', 'changeme');
 </code></pre>
-<a id="title.1"></a><h1>Conclusion</h1>
-<p>It is an interesting solution and did not have much if any effect
-on hydration performance. At any rate the cost is well worth it to
-get complete control of your entities. No longer are the days where
-Doctrine greedily steals your precious class constructor!</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>It is an interesting solution and did not have much if any effect on
+hydration performance. At any rate the cost is well worth it to get
+complete control of your entities. No longer are the days where Doctrine
+greedily steals your precious class constructor!</p>
 
         </div>
                 

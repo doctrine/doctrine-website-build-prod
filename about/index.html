@@ -113,17 +113,23 @@
             </nav>
         
             <main role="main" class="container-wrapper container">
-                    <a id="title.1"></a><h1>About</h1>
-<p>The Doctrine Project is the home of a selected set of PHP libraries primarily focused
-on providing persistence services and related functionality. Its prize projects are a
-Object Relational Mapper and the Database Abstraction Layer it is built on top of.
-You can read more about what Doctrine has to offer below.</p>
-<a id="title.1.1"></a><h2>Common Shared Libraries</h2>
+                    <h1 id="about">About</h1>
+
+<p>The Doctrine Project is the home of a selected set of PHP libraries
+primarily focused on providing persistence services and related
+functionality. Its prize projects are a Object Relational Mapper and the
+Database Abstraction Layer it is built on top of. You can read more
+about what Doctrine has to offer below.</p>
+
+<h2 id="common-shared-libraries">Common Shared Libraries</h2>
+
 <p><a href="http://github.com/doctrine/common">doctrine/common</a></p>
+
 <p>Doctrine Common contains some base functionality and interfaces you need
 in order to create a Doctrine style object mapper. All of our mapper
-projects follow the same <code>Doctrine\Common\Persistence</code> interfaces.
-Here are the <code>ObjectManager</code> and <code>ObjectRepository</code> interfaces:</p>
+projects follow the same <code>Doctrine\Common\Persistence</code> interfaces. Here
+are the <code>ObjectManager</code> and <code>ObjectRepository</code> interfaces:</p>
+
 <pre><code class="php">&lt;?php
 
 namespace Doctrine\Common\Persistence;
@@ -149,34 +155,43 @@ interface ObjectRepository
     public function findOneBy(array $criteria);
 }
 </code></pre>
+
 <p><a href="http://github.com/doctrine/collections">doctrine/collections</a></p>
+
 <p>Doctrine Collections is a library that contains classes for working with
 arrays of data. Here is an example using the simple
 <code>Doctrine\Common\Collections\ArrayCollection</code> class:</p>
+
 <pre><code class="php">&lt;?php
 
 $data = new \Doctrine\Common\Collections\ArrayCollection(array(1, 2, 3));
 $data = $data-&gt;filter(function($count) { return $count &gt; 1; });
 </code></pre>
+
 <p><a href="http://github.com/doctrine/annotations">doctrine/annotations</a></p>
+
 <p>Doctrine Annotations is a library that allows you to parse structured
 information out of a doc block.</p>
+
 <p>Imagine you have a class with a doc block like the following:</p>
+
 <pre><code class="php">&lt;?php
 
-/** @Foo(bar=&quot;value&quot;) */
+/** @Foo(bar="value") */
 class User
 {
 
 }
 </code></pre>
+
 <p>You can parse the information out of the doc block for <code>User</code> easily.
 Define a new annotation object:</p>
+
 <pre><code class="php">&lt;?php
 
 /**
  * @Annotation
- * @Target(&quot;CLASS&quot;)
+ * @Target("CLASS")
  */
 class Foo
 {
@@ -184,7 +199,9 @@ class Foo
     public $bar;
 }
 </code></pre>
+
 <p>Now you can get instances of <code>Foo</code> defined on the <code>User</code>:</p>
+
 <pre><code class="php">&lt;?php
 
 $reflClass = new ReflectionClass('User');
@@ -193,24 +210,31 @@ $classAnnotations = $reader-&gt;getClassAnnotations($reflClass);
 
 foreach ($classAnnotations AS $annot) {
     if ($annot instanceof Foo) {
-        echo $annot-&gt;bar; // prints &quot;value&quot;;
+        echo $annot-&gt;bar; // prints "value";
     }
 }
 </code></pre>
+
 <p><a href="http://github.com/doctrine/inflector">doctrine/inflector</a></p>
+
 <p>Doctrine Inflector is a library that can perform string manipulations
 with regard to upper/lowercase and singular/plural forms of words.</p>
+
 <pre><code class="php">&lt;?php
 
 $camelCase = 'camelCase';
 $table = \Doctrine\Common\Inflector::tableize($camelCase);
 echo $table; // camel_case
 </code></pre>
+
 <p><a href="http://github.com/doctrine/lexer">doctrine/lexer</a></p>
+
 <p>Doctrine Lexer is a library that can be used in Top-Down, Recursive
 Descent Parsers. This lexer is used in Doctrine Annotations and in
 Doctrine ORM (DQL).</p>
+
 <p>Here is what the <code>AbstractLexer</code> provided by Doctrine looks like:</p>
+
 <pre><code class="php">&lt;?php
 
 namespace Doctrine\Common\Lexer;
@@ -235,12 +259,14 @@ abstract class AbstractLexer
     abstract protected function getType(&amp;$value);
 }
 </code></pre>
+
 <p>To implement a lexer just extend the
 <code>Doctrine\Common\Lexer\AbstractLexer</code> class and implement the
 <code>getCatchablePatterns</code>, <code>getNonCatchablePatterns</code>, and <code>getType</code>
 methods. Here is a very simple example lexer implementation named
-<code>CharacterTypeLexer</code>. It tokenizes a string to <code>T_UPPER</code>,
-<code>T_LOWER</code> and <code>T_NUMER</code>:</p>
+<code>CharacterTypeLexer</code>. It tokenizes a string to <code>T_UPPER</code>, <code>T_LOWER</code> and
+<code>T_NUMER</code>:</p>
+
 <pre><code class="php">&lt;?php
 
 use Doctrine\Common\Lexer\AbstractLexer;
@@ -279,7 +305,9 @@ class CharacterTypeLexer extends AbstractLexer
     }
 }
 </code></pre>
+
 <p>Use <code>CharacterTypeLexer</code> to extract an array of upper case characters:</p>
+
 <pre><code class="php">&lt;?php
 
 class UpperCaseCharacterExtracter
@@ -318,8 +346,10 @@ $upperCaseCharacters = $upperCaseCharacterExtractor-&gt;getUpperCaseCharacters('
 
 print_r($upperCaseCharacters);
 </code></pre>
+
 <p>The variable <code>$upperCaseCharacters</code> contains all of the upper case
 characters:</p>
+
 <pre><code class="php">Array
 (
     [0] =&gt; B
@@ -328,10 +358,13 @@ characters:</p>
     [3] =&gt; J
 )
 </code></pre>
+
 <p><a href="http://github.com/doctrine/cache">doctrine/cache</a></p>
+
 <p>Doctrine Cache is a library that provides an interface for caching data.
 It comes with implementations for some of the most popular caching data
 stores. Here is what the <code>Cache</code> interface looks like:</p>
+
 <pre><code class="php">&lt;?php
 
 namespace Doctrine\Common\Cache;
@@ -345,7 +378,9 @@ interface Cache
     function getStats();
 }
 </code></pre>
+
 <p>Here is an example using memcache:</p>
+
 <pre><code class="php">&lt;?php
 
 $memcache = new \Memcache();
@@ -354,29 +389,35 @@ $cache-&gt;setMemcache($memcache);
 
 $cache-&gt;set('key', 'value');
 
-echo $cache-&gt;get('key') // prints &quot;value&quot;
+echo $cache-&gt;get('key') // prints "value"
 </code></pre>
+
 <p>Other supported drivers are:</p>
-<ul><li class="dash"> APC</li>
-<li class="dash"> Couchbase</li>
-<li class="dash"> Filesystem</li>
-<li class="dash"> Memcached</li>
-<li class="dash"> MongoDB</li>
-<li class="dash"> PhpFile</li>
-<li class="dash"> Redis</li>
-<li class="dash"> Riak</li>
-<li class="dash"> WinCache</li>
-<li class="dash"> Xcache</li>
-<li class="dash"> ZendData</li>
+
+<ul>
+<li>APC</li>
+<li>Couchbase</li>
+<li>Filesystem</li>
+<li>Memcached</li>
+<li>MongoDB</li>
+<li>PhpFile</li>
+<li>Redis</li>
+<li>Riak</li>
+<li>WinCache</li>
+<li>Xcache</li>
+<li>ZendData</li>
 </ul>
 
-<a id="title.1.1.1"></a><h3>Database Abstraction Layers</h3>
+<h3 id="database-abstraction-layers">Database Abstraction Layers</h3>
+
 <p><a href="http://github.com/doctrine/dbal">doctrine/dbal</a></p>
+
 <p>Doctrine DBAL is a library that provides an abstraction layer for
 relational databases in PHP. Read <a href="http://jwage.com/post/31080076112/doctrine-dbal-php-database-abstraction-layer">Doctrine DBAL: PHP Database
 Abstraction
 Layer</a>
 blog post for more information on the DBAL.</p>
+
 <pre><code class="php">&lt;?php
 
 $config = new \Doctrine\DBAL\Configuration();
@@ -406,10 +447,14 @@ $qb = $conn-&gt;createQueryBuilder()
 
 $results = $qb-&gt;getQuery()-&gt;execute();
 </code></pre>
+
 <p><a href="http://github.com/doctrine/mongodb">doctrine/mongodb</a></p>
+
 <p>Doctrine MongoDB is a library that provides an abstraction layer on top
-of the <a href="http://pecl.php.net/package/mongo">PHP MongoDB PECL extension</a>. It provides some additional
-functionality and abstractions to make working with MongoDB easier.</p>
+of the <a href="http://pecl.php.net/package/mongo">PHP MongoDB PECL extension</a>.
+It provides some additional functionality and abstractions to make
+working with MongoDB easier.</p>
+
 <pre><code class="php">&lt;?php
 
 $conn = new \Doctrine\MongoDB\Connection();
@@ -422,9 +467,12 @@ $qb = $collection-&gt;createQueryBuilder()
 
 $user = $qb-&gt;getQuery()-&gt;getSingleResult();
 </code></pre>
+
 <p><a href="http://github.com/doctrine/couchdb-client">doctrine/couchdb-client</a></p>
+
 <p>Doctrine CouchDB Client is a library that provides a connection
 abstraction to CouchDB by wrapping around the CouchDB HTTP API.</p>
+
 <pre><code class="php">&lt;?php
 
 $client = \Doctrine\CouchDB\CouchDBClient::create();
@@ -434,12 +482,15 @@ $client-&gt;putDocument(array('foo' =&gt; 'baz'), $id, $rev);
 
 $doc = $client-&gt;findDocument($id);
 </code></pre>
-<a id="title.1.1.2"></a><h3>Object Mappers</h3>
+
+<h3 id="object-mappers">Object Mappers</h3>
+
 <p>The object mappers are where all the pieces come together. The object
 mappers provide transparent persistence for PHP objects. As mentioned
 above, they all implement the common interfaces from <code>Doctrine\Common</code>
 so working with each of them is generally the same. You have an
 <code>ObjectManager</code> to manage the persistent state of your domain objects:</p>
+
 <pre><code class="php">&lt;?php
 
 $user = new User();
@@ -450,24 +501,28 @@ $om = $this-&gt;getYourObjectManager();
 $om-&gt;persist($user);
 $om-&gt;flush(); // insert the new document
 </code></pre>
+
 <p>Then you can find that object later and modify it:</p>
+
 <pre><code class="php">&lt;?php
 
 $user = $om-&gt;find('User', 1);
-echo $user-&gt;getUsername(); // prints &quot;jwage&quot;
+echo $user-&gt;getUsername(); // prints "jwage"
 
 $user-&gt;setUsername('jonwge'); // change the obj in memory
 
 $om-&gt;flush(); // updates the object in the database
 </code></pre>
-<p>Check out one of the supported object mappers below:</p>
-<ul><li class="dash"><a href="http://github.com/doctrine/doctrine2">ORM</a></li>
-<li class="dash"><a href="http://github.com/doctrine/couchdb-odm">CouchDB ODM</a></li>
-<li class="dash"><a href="http://github.com/doctrine/mongodb-odm">MongoDB ODM</a></li>
-<li class="dash"><a href="http://github.com/doctrine/phpcr-odm">PHPCR ODM</a></li>
-<li class="dash"><a href="http://github.com/doctrine/orientdb-odm">OrientDB ODM</a></li>
-</ul>
 
+<p>Check out one of the supported object mappers below:</p>
+
+<ul>
+<li><a href="http://github.com/doctrine/doctrine2">ORM</a></li>
+<li><a href="http://github.com/doctrine/couchdb-odm">CouchDB ODM</a></li>
+<li><a href="http://github.com/doctrine/mongodb-odm">MongoDB ODM</a></li>
+<li><a href="http://github.com/doctrine/phpcr-odm">PHPCR ODM</a></li>
+<li><a href="http://github.com/doctrine/orientdb-odm">OrientDB ODM</a></li>
+</ul>
             </main>
 
         

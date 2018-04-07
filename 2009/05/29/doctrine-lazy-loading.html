@@ -125,11 +125,13 @@
                                     </p>
 
         <div>
-            <a id="title.1"></a><h1>Did you know?</h1>
+            <h1 id="did-you-know%3F">Did you know?</h1>
+
 <p>Did you know that in Doctrine if you don't specifically select a
-property or join a relationship in your DQL query, you can lazily
-load that data? Here is a simple example to demonstrate.</p>
-<pre><code class="php">&lt;?php
+property or join a relationship in your DQL query, you can lazily load
+that data? Here is a simple example to demonstrate.</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $q = Doctrine::getTable('User')
   -&gt;createQuery('u')
   -&gt;select('u.id, u.username')
@@ -137,81 +139,93 @@ $q = Doctrine::getTable('User')
 
 $user = $q-&gt;fetchOne();
 </code></pre>
-<p>Notice how I only selected the <code>id</code> and <code>username</code>, but we have
-an additional column named <code>email_address</code>. If I were to access
-that property it would lazily load the data.</p>
-<pre><code class="php">&lt;?php
+
+<p>Notice how I only selected the <code>id</code> and <code>username</code>, but we have an
+additional column named <code>email_address</code>. If I were to access that
+property it would lazily load the data.</p>
+
+<pre><code class="sourceCode php">&lt;?php
 echo $user['email_address']
 
 **NOTE** The above code would result in an additional query to the
 database that would lazy load all unloaded properties of an object
 in proxy state. A record is in proxy state when it has one or more
 properties that have not been loaded from the database.
-
 </code></pre>
-<a id="title.2"></a><h1>Be aware</h1>
-<p>This can be both a curse and a blessing because if you lazily load
-many properties and relationships this means you will have a high
-query count per page. In Doctrine 1.x lazy loading is on by default
-so it is often overly used. The problem is people aren't even aware
-that it is happening.</p>
-<a id="title.3"></a><h1>More Examples</h1>
-<p>Imagine you had a <code>User</code> and <code>Profile</code> model where <code>User</code> has
-one <code>Profile</code> and <code>Profile</code> has one <code>User</code>, a simple
-one-to-one relationship. If I were to write a DQL query where I
-retrieve an individual user record like the following.</p>
-<pre><code class="php">&lt;?php
+
+<h1 id="be-aware">Be aware</h1>
+
+<p>This can be both a curse and a blessing because if you lazily load many
+properties and relationships this means you will have a high query count
+per page. In Doctrine 1.x lazy loading is on by default so it is often
+overly used. The problem is people aren't even aware that it is
+happening.</p>
+
+<h1 id="more-examples">More Examples</h1>
+
+<p>Imagine you had a <code>User</code> and <code>Profile</code> model where <code>User</code> has one
+<code>Profile</code> and <code>Profile</code> has one <code>User</code>, a simple one-to-one
+relationship. If I were to write a DQL query where I retrieve an
+individual user record like the following.</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $q = Doctrine::getTable('User')
   -&gt;createQuery('u')
   -&gt;where('u.username = ?', 'jwage');
 
 $user = $q-&gt;fetchOne();
 </code></pre>
-<p>But then I wanted to retrieve the <code>Profile</code> for that <code>User</code> I
-could do so by simply accessing the <code>Profile</code> property on
-<code>User</code>.</p>
-<pre><code class="php">&lt;?php
+
+<p>But then I wanted to retrieve the <code>Profile</code> for that <code>User</code> I could do
+so by simply accessing the <code>Profile</code> property on <code>User</code>.</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $profile = $user-&gt;Profile;
 </code></pre>
-<p>The above code would result in an additional query to the database
-that loads the <code>Profile</code> record for the <code>User</code> in question. Now
-if I were to be rendering a list of twenty <code>User</code> objects and I
-lazily load the profile of each user that means I would have 21
-queries total! That is too many! In that case it would be smart to
-<code>leftJoin()</code> the <code>Profile</code> object like the following.</p>
-<pre><code class="php">&lt;?php
+
+<p>The above code would result in an additional query to the database that
+loads the <code>Profile</code> record for the <code>User</code> in question. Now if I were to
+be rendering a list of twenty <code>User</code> objects and I lazily load the
+profile of each user that means I would have 21 queries total! That is
+too many! In that case it would be smart to <code>leftJoin()</code> the <code>Profile</code>
+object like the following.</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $q = Doctrine::getTable('User')
   -&gt;createQuery('u')
   -&gt;leftJoin('u.Profile p');
 
 $users = $q-&gt;execute();
 </code></pre>
-<p>Now when I access the <code>Profile</code> relationship of an individual
-object the data would already be present and no lazy loading would
-be required.</p>
-<a id="title.4"></a><h1>Why?</h1>
-<p>I made this blog post because I noticed this feature being abused
-and overly used just because it makes things easier. The goal is to
-make you aware of what is happening so that you can effectively use
-lazy loading and not end up having applications with very high
-query counts per page.</p>
-<p>I've seen this many times and the blame is often put on Doctrine
-but really it is the tool not being used properly. So, be aware of
-when you are lazy loading properties and the total number of
-queries you execute per page. Make sure you always join required
-relationships and only select the properties you need to access. It
-doesn't make sense to load data if you're not going to be using
-it.</p>
-<a id="title.5"></a><h1>How?</h1>
-<p>If you need help with keeping track of how many queries you have
-per page, frameworks like
+
+<p>Now when I access the <code>Profile</code> relationship of an individual object the
+data would already be present and no lazy loading would be required.</p>
+
+<h1 id="why%3F">Why?</h1>
+
+<p>I made this blog post because I noticed this feature being abused and
+overly used just because it makes things easier. The goal is to make you
+aware of what is happening so that you can effectively use lazy loading
+and not end up having applications with very high query counts per page.</p>
+
+<p>I've seen this many times and the blame is often put on Doctrine but
+really it is the tool not being used properly. So, be aware of when you
+are lazy loading properties and the total number of queries you execute
+per page. Make sure you always join required relationships and only
+select the properties you need to access. It doesn't make sense to load
+data if you're not going to be using it.</p>
+
+<h1 id="how%3F">How?</h1>
+
+<p>If you need help with keeping track of how many queries you have per
+page, frameworks like
 <a href="http://www.symfony-project.org/book/1_0/16-Application-Management-Tools#chapter_16_sub_web_debug_toolbar">Symfony</a>
-and <a href="http://framework.zend.com">Zend Framework</a> give you debug
-tools to show you how many queries you have per page. Or of course
-you can always use the
+and <a href="http://framework.zend.com">Zend Framework</a> give you debug tools to
+show you how many queries you have per page. Or of course you can always
+use the
 <a href="http://www.doctrine-project.org/documentation/manual/1_1/en/component-overview:profiler">Profiling</a>
-tool built in to Doctrine to log the queries in your application
-and keep track of it that way.</p>
+tool built in to Doctrine to log the queries in your application and
+keep track of it that way.</p>
 
         </div>
                 

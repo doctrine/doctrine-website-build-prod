@@ -125,93 +125,114 @@
                                     </p>
 
         <div>
-            <p>The Doctrine MongoDB Object Document Mapper includes a fluent
-object oriented API for building queries to execute against
-MongoDB. Recently some changes were made to the API to simplify it
-and make it more readable. This blog post aims to demonstrate and
-introduce the new API to you!</p>
-<a id="title.1"></a><h1>Query Types</h1>
+            <p>The Doctrine MongoDB Object Document Mapper includes a fluent object
+oriented API for building queries to execute against MongoDB. Recently
+some changes were made to the API to simplify it and make it more
+readable. This blog post aims to demonstrate and introduce the new API
+to you!</p>
+
+<h1 id="query-types">Query Types</h1>
+
 <p>The API still supports all the types of queries you would expect:</p>
-<ul><li class="dash"> <a href="#find">find</a></li>
-<li class="dash"> <a href="#insert">insert</a></li>
-<li class="dash"> <a href="#update">update</a></li>
-<li class="dash"> <a href="#delete">delete</a></li>
+
+<ul>
+<li><a href="#find">find</a></li>
+<li><a href="#insert">insert</a></li>
+<li><a href="#update">update</a></li>
+<li><a href="#delete">delete</a></li>
 </ul>
 
-<p>Continue reading to see examples for each of the above types of
-queries!</p>
-<p>## Find</p>
-<p>You can easily find documents by just creating a new <code>Query</code>
-object with the <code>createQuery()</code> method. A new <code>Query</code> object
-defaults to a <code>find</code> query so you just need to pass the name of
-the document to query for:</p>
-<pre><code class="php">&lt;?php
+<p>Continue reading to see examples for each of the above types of queries!</p>
+
+<p>&#35;&#35; Find</p>
+
+<p>You can easily find documents by just creating a new <code>Query</code> object with
+the <code>createQuery()</code> method. A new <code>Query</code> object defaults to a <code>find</code>
+query so you just need to pass the name of the document to query for:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $q = $dm-&gt;createQuery('User');
 </code></pre>
-<p>You can change the document being queried for by using the
-<code>find()</code> method:</p>
-<pre><code class="php">&lt;?php
+
+<p>You can change the document being queried for by using the <code>find()</code>
+method:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $q-&gt;find('Project');
 </code></pre>
-<a id="title.1.1"></a><h2>Conditions</h2>
-<p>You can limit the returned documents by specifying some
-conditions:</p>
-<pre><code class="php">&lt;?php
+
+<h2 id="conditions">Conditions</h2>
+
+<p>You can limit the returned documents by specifying some conditions:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $q-&gt;field('title')-&gt;equals('The Doctrine Project');
 </code></pre>
+
 <p>Maybe you want to only return projects created after today:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $q-&gt;field('createdAt')-&gt;greaterThan(new MongoDate(time()));
 </code></pre>
+
 <p>You can even a condition on an embedded document:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $q-&gt;field('profile.firstName')-&gt;equals('Jonathan');
 </code></pre>
-<p>Also, you can add a condition for a referenced document to filter
-by id:</p>
-<pre><code class="php">&lt;?php
+
+<p>Also, you can add a condition for a referenced document to filter by id:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $q-&gt;field('account.$id')-&gt;equals($accountId);
 </code></pre>
-<p>The <code>field()</code> method specifies the current field to add the
-conditions to. You can optionally use the magical <code>__call()</code>
-feature of the <code>Query</code> object to specify the current field as
-well:</p>
-<pre><code class="php">&lt;?php
+
+<p>The <code>field()</code> method specifies the current field to add the conditions
+to. You can optionally use the magical <code>__call()</code> feature of the <code>Query</code>
+object to specify the current field as well:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $q-&gt;createdAt()-&gt;greaterThan(new MongoDate(time()));
 </code></pre>
+
 <p>All the methods you'd expect can be used in combination with the
 <code>field()</code> method for adding conditions to your query:</p>
-<ul><li class="dash"> equal($value)</li>
-<li class="dash"> where($javascript)</li>
-<li class="dash"> not($value)</li>
-<li class="dash"> in($values)</li>
-<li class="dash"> notIn($values)</li>
-<li class="dash"> notEqual($value)</li>
-<li class="dash"> greaterThan($value)</li>
-<li class="dash"> greaterThanOrEq($value)</li>
-<li class="dash"> lessThan($value)</li>
-<li class="dash"> lessThanOrEq($value)</li>
-<li class="dash"> range($start, $end)</li>
-<li class="dash"> size($size)</li>
-<li class="dash"> exists($bool)</li>
-<li class="dash"> type($type)</li>
-<li class="dash"> all($values)</li>
-<li class="dash"> mod($mod)</li>
+
+<ul>
+<li>equal(\$value)</li>
+<li>where(\$javascript)</li>
+<li>not(\$value)</li>
+<li>in(\$values)</li>
+<li>notIn(\$values)</li>
+<li>notEqual(\$value)</li>
+<li>greaterThan(\$value)</li>
+<li>greaterThanOrEq(\$value)</li>
+<li>lessThan(\$value)</li>
+<li>lessThanOrEq(\$value)</li>
+<li>range(\$start, \$end)</li>
+<li>size(\$size)</li>
+<li>exists(\$bool)</li>
+<li>type(\$type)</li>
+<li>all(\$values)</li>
+<li>mod(\$mod)</li>
 </ul>
 
-<p>## Insert</p>
-<p>You can easily insert new documents using the <code>Query</code> API as
-well. Just use the <code>insert()</code> method in combination with
-<code>field()</code> and <code>set()</code>:</p>
-<pre><code class="php">&lt;?php
+<p>&#35;&#35; Insert</p>
+
+<p>You can easily insert new documents using the <code>Query</code> API as well. Just
+use the <code>insert()</code> method in combination with <code>field()</code> and <code>set()</code>:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $q = $dm-&gt;createQuery('User')
     -&gt;insert()
     -&gt;field('username')-&gt;set('jwage')
     -&gt;field('password')-&gt;set('password');
 </code></pre>
+
 <p>If you want to set the new document to insert you can use the
 <code>setNewObj()</code> method:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $q = $dm-&gt;createQuery('User')
     -&gt;insert()
     -&gt;setNewObj(array(
@@ -219,30 +240,38 @@ $q = $dm-&gt;createQuery('User')
         'password' =&gt; 'password'
     ));
 </code></pre>
-<p>## Update</p>
-<p>If you want to update a document you can use the <code>update()</code>
-method in combination with <code>field()</code>, <code>set()</code> and conditions.
-Here is an example where we create a query to update a user with
-the username <code>jwage</code> and give him a new password:</p>
-<pre><code class="php">&lt;?php
+
+<p>&#35;&#35; Update</p>
+
+<p>If you want to update a document you can use the <code>update()</code> method in
+combination with <code>field()</code>, <code>set()</code> and conditions. Here is an example
+where we create a query to update a user with the username <code>jwage</code> and
+give him a new password:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $q = $dm-&gt;createQuery('User')
     -&gt;update()
     -&gt;field('password')-&gt;set('newpassword')
     -&gt;field('username')-&gt;equals('jwage');
 </code></pre>
-<p>## Delete</p>
-<p>You can delete documents as well by using the <code>delete()</code> method
-in combination with conditions. Here is an example where we create
-a query to delete the user document with a username of <code>jwage</code>:</p>
-<pre><code class="php">&lt;?php
+
+<p>&#35;&#35; Delete</p>
+
+<p>You can delete documents as well by using the <code>delete()</code> method in
+combination with conditions. Here is an example where we create a query
+to delete the user document with a username of <code>jwage</code>:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $q = $dm-&gt;createQuery('User')
     -&gt;delete()
     -&gt;field('username')-&gt;equals('jwage');
 </code></pre>
-<p>As you can see the fluent API makes it a bit easier to express
-queries that are easy to read in the same way you would read
-english from left to right. We hope to enhance and improve this API
-even more before we release the stable 1.0 version.</p>
+
+<p>As you can see the fluent API makes it a bit easier to express queries
+that are easy to read in the same way you would read english from left
+to right. We hope to enhance and improve this API even more before we
+release the stable 1.0 version.</p>
+
 <p>You can read more about the Query Builder API in the
 <a href="http://www.doctrine-project.org/projects/mongodb_odm/1.0/docs/reference/query-builder-api/en#query-builder-api">documentation</a>.</p>
 

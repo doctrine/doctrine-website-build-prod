@@ -125,26 +125,29 @@
                                     </p>
 
         <div>
-            <p>A question asked to me many times by many different people over the
-last year is, &quot;will Doctrine ever have any support for MongoDB?&quot;. I
-have never really had an answer because we haven't had any official
-plans to support it as it was so new to the database world and php
-so nobody really knew much about it yet.</p>
-<p>A few weekends ago I decided to install MongoDB and give it a try.
-It was pretty fun and interesting. I quickly learned that it being
-a document based storage system lends itself well to a object
-mapper so the experimental
-<a href="http://github.com/jwage/odm">Doctrine MongoDB Object Document Mapper</a>
-was born.</p>
-<a id="title.1"></a><h1>Introducing Doctrine MongoDB Object Document Mapper (ODM)</h1>
+            <p>A question asked to me many times by many different people over the last
+year is, "will Doctrine ever have any support for MongoDB?". I have
+never really had an answer because we haven't had any official plans to
+support it as it was so new to the database world and php so nobody
+really knew much about it yet.</p>
+
+<p>A few weekends ago I decided to install MongoDB and give it a try. It
+was pretty fun and interesting. I quickly learned that it being a
+document based storage system lends itself well to a object mapper so
+the experimental <a href="http://github.com/jwage/odm">Doctrine MongoDB Object Document
+Mapper</a> was born.</p>
+
+<h1 id="introducing-doctrine-mongodb-object-document-mapper-odm">Introducing Doctrine MongoDB Object Document Mapper (ODM)</h1>
+
 <p>Much like the Doctrine 2 ORM, the ODM aims to provide transparent
-persistence for PHP 5.3.0+ objects. You will notice that the
-Doctrine 2 ORM and ODM infrastructure, style, interfaces, etc. are
-all very similar. Instead of an EntityManager like in the ORM you
-have the DocumentManager. Map your objects in the same way you do
-for the ORM. Here is an examle <code>User</code> document:</p>
-<pre><code class="php">&lt;?php
-/** @Document(db=&quot;my_db&quot;, collection=&quot;users&quot;) */
+persistence for PHP 5.3.0+ objects. You will notice that the Doctrine 2
+ORM and ODM infrastructure, style, interfaces, etc. are all very
+similar. Instead of an EntityManager like in the ORM you have the
+DocumentManager. Map your objects in the same way you do for the ORM.
+Here is an examle <code>User</code> document:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+/** @Document(db="my_db", collection="users") */
 class User
 {
     /** @Id */
@@ -159,9 +162,11 @@ class User
     // ...
 }
 </code></pre>
-<p>Now like you would expect you can create new instances and persist
-them to Mongo:</p>
-<pre><code class="php">&lt;?php
+
+<p>Now like you would expect you can create new instances and persist them
+to Mongo:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $user = new User();
 $user-&gt;setUsername('jwage');
 $user-&gt;setPassword('testing');
@@ -169,58 +174,70 @@ $user-&gt;setPassword('testing');
 $dm-&gt;persist($user);
 $dm-&gt;flush();
 </code></pre>
-<p>Now if you have a look in MongoDB you will see a database named
-<code>my_db</code> and a collection named <code>users</code> containing a new
-document like the following:</p>
 
-<pre><code class="">array(
+<p>Now if you have a look in MongoDB you will see a database named <code>my_db</code>
+and a collection named <code>users</code> containing a new document like the
+following:</p>
+
+<pre><code>array(
   '_id' =&gt; instanceof MongoId,
   'username' =&gt; 'jwage',
   'password' =&gt; 'testing'
 )
 </code></pre>
-<p>When you query for and retrieve this document from the database
-later, Doctrine reconstructs the PHP object with the data from
-MongoDB:</p>
-<pre><code class="php">&lt;?php
+
+<p>When you query for and retrieve this document from the database later,
+Doctrine reconstructs the PHP object with the data from MongoDB:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $user = $dm-&gt;findOne('User', array('username' =&gt; 'jwage')); // instanceof User
 echo $user-&gt;getUsername();
 </code></pre>
+
 <p>Below you can find an overview list of the features available:</p>
-<ul><li class="dash"> Transparent persistence.</li>
-<li class="dash"> Map one or many embedded documents.</li>
-<li class="dash"> Map one or many referenced documents.</li>
-<li class="dash"> Create references between documents in different databases.</li>
-<li class="dash"> Map documents with Annotations, XML, YAML or plain old PHP code.</li>
-<li class="dash"> Documents can be stored on the
-   <a href="http://www.php.net/MongoGridFS">MongoGridFS</a>.</li>
-<li class="dash"> Collection per class(concrete) and single collection inheritance
-   supported.</li>
-<li class="dash"> Map your Doctrine 2 ORM Entities to the ODM and use mixed data
-   stores.</li>
-<li class="dash"> Inserts are performed using
-   <a href="http://us.php.net/manual/en/mongocollection.batchinsert.php">MongoCollection::batchInsert()</a></li>
-<li class="dash"> Updates are performed using $set instead of saving the entire
-   document.</li>
+
+<ul>
+<li>Transparent persistence.</li>
+<li>Map one or many embedded documents.</li>
+<li>Map one or many referenced documents.</li>
+<li>Create references between documents in different databases.</li>
+<li>Map documents with Annotations, XML, YAML or plain old PHP code.</li>
+<li>Documents can be stored on the
+<a href="http://www.php.net/MongoGridFS">MongoGridFS</a>.</li>
+<li>Collection per class(concrete) and single collection inheritance
+supported.</li>
+<li>Map your Doctrine 2 ORM Entities to the ODM and use mixed data
+stores.</li>
+<li>Inserts are performed using
+<a href="http://us.php.net/manual/en/mongocollection.batchinsert.php">MongoCollection::batchInsert()</a></li>
+<li>Updates are performed using \$set instead of saving the entire
+document.</li>
 </ul>
 
-<a id="title.2"></a><h1>Getting Started?</h1>
-<p>We've put together a little documentation to help you get familiar
-with the ODM quickly.</p>
-<ul><li class="dash"> <a href="http://www.doctrine-project.org/projects/mongodb_odm/1.0/docs/reference/en">Reference Documentation</a></li>
-<li class="dash"> <a href="http://www.doctrine-project.org/projects/mongodb_odm/1.0/docs/cookbook/getting-started/en">Getting Started Cookbook Article</a></li>
-<li class="dash"> <a href="http://www.doctrine-project.org/projects/mongodb_odm/1.0/api">API Documentation</a></li>
+<h1 id="getting-started%3F">Getting Started?</h1>
+
+<p>We've put together a little documentation to help you get familiar with
+the ODM quickly.</p>
+
+<ul>
+<li><a href="http://www.doctrine-project.org/projects/mongodb_odm/1.0/docs/reference/en">Reference
+Documentation</a></li>
+<li><a href="http://www.doctrine-project.org/projects/mongodb_odm/1.0/docs/cookbook/getting-started/en">Getting Started Cookbook
+Article</a></li>
+<li><a href="http://www.doctrine-project.org/projects/mongodb_odm/1.0/api">API
+Documentation</a></li>
 </ul>
 
-<a id="title.3"></a><h1>How can I contribute?</h1>
+<h1 id="how-can-i-contribute%3F">How can I contribute?</h1>
+
 <p>Get your fork on! All you need to do is fork a Doctrine
-<a href="http://github.com/doctrine">repository</a> on github.com and
-<a href="http://github.com/guides/fork-a-project-and-submit-your-modifications/7">submit your modifications</a>
+<a href="http://github.com/doctrine">repository</a> on github.com and <a href="http://github.com/guides/fork-a-project-and-submit-your-modifications/7">submit your
+modifications</a>
 to us by sending a pull request.</p>
-<p>You can also take part in discussions on our
-<a href="http://groups.google.com/group/doctrine-user">mailing list</a> or
-join #doctrine on irc.freenode.net for live support from the
-community.</p>
+
+<p>You can also take part in discussions on our <a href="http://groups.google.com/group/doctrine-user">mailing
+list</a> or join &#35;doctrine
+on irc.freenode.net for live support from the community.</p>
 
         </div>
                 

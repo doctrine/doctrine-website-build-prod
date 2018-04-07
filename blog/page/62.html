@@ -115,124 +115,6 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
-            <h2><a href="https://www.doctrine-project.org/2009/08/04/help-write-tests-for-new-dql-parser.html">Help write tests for new DQL Parser</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on 2009-08-04
-                            by
-                                    guilhermeblanco
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>As you all know, we're focusing most of our development time on
-Doctrine 2.0 these days. To help speed things up, we would like to
-ask for help writing tests from our users</p>
-<p>Recently I finished new
-<a href="http://trac.doctrine-project.org/browser/trunk/lib/Doctrine/ORM/Query/Parser.php">DQL parser for 2.0</a>.
-Most of you may not be familiar with compiler's theory, but for
-those that are, it's a top-down recursive descent parser for a
-context-free grammar, usually known as LL(k).</p>
-<p>We mapped the entire supported DQL into a document, which is an
-<a href="http://en.wikipedia.org/wiki/Extended_Backus–Naur_Form">EBNF (Extended Backus-Naur Form)</a> ,
-which is a meta-syntax notation to express context-free grammars.
-This one is quite simple to be readable by humans. Yes, we are
-humans if you raise the question! =)</p>
-<p>The header of our EBNF describes some terms and conventions, but
-here is a small subset of our grammar:</p>
-
-<pre><code class="">FromClause                        ::= &quot;FROM&quot; IdentificationVariableDeclaration {&quot;,&quot; IdentificationVariableDeclaration}*
-IdentificationVariableDeclaration ::= RangeVariableDeclaration [IndexBy] {JoinVariableDeclaration}* 
-RangeVariableDeclaration          ::= AbstractSchemaName [&quot;AS&quot;] AliasIdentificationVariable
-AbstractSchemaName                ::= identifier
-AliasIdentificationVariable       ::= identifier
-</code></pre>
-<p>It's not mentioned in this subset some pieces just for clarity.
-Identifier is a terminal (no grammar rule to follow after that) and
-is a string (ie. &quot;<code>name</code>&quot;, &quot;<code>email</code>&quot;).</p>
-<a id="title.1"></a><h1>What does this subset do?</h1>
-<p>It processes this pieces of DQL:</p>
-
-<pre><code class="">FROM User u
-FROM User AS u, u.Group g
-</code></pre>
-<a id="title.2"></a><h1>How does it do that?</h1>
-<p>Each piece of DQL is converted to a series of tokens. Some tokens
-are defined in our
-<a href="http://en.wikipedia.org/wiki/Symbol_table">Symbol Table</a> , which
-is then validated and correctly typed into the right token type.
-For example... when it finds the &quot;<code>FROM</code>&quot;, it'll return for us
-internally a token in an array format of:</p>
-
-<pre><code class="">array(
-    'value' =&gt; 'FROM', 
-    'type' =&gt; Lexer::T_FROM, 
-    'position' =&gt; 0
-)
-</code></pre>
-<p>Value is the actual string representation in DQL, type is the token
-type that was brought by symbol table and position is the position
-of this token in the DQL string.</p>
-<p>Then token is validated in the DQL parser; if it is expected the
-<code>T_FROM</code>, just match and go to next token, if not raise a syntax
-error. Imagine someone types this: &quot;<code>FROM User u, u.Group u</code>&quot;. It
-is not valid DQL, because alias &quot;<code>u</code>&quot; is being used twice. That
-is the task of another check, which inspects the requested DQL
-defined symbol table and reports for semantical errors. We removed
-the lexical errors since we use them as identifiers, so there is no
-lexical error checks in DQL. Not that it may open a hole in our
-structure, syntax and semantical checks do all that we need.</p>
-<a id="title.3"></a><h1>How can I help?</h1>
-<p>We currently have a single test that checks for DQL recognition. We
-need to expand it to cover as much situations as possible. If you
-follow the EBNF grammar rules, you'll see that for example, IN
-condition supports either a series of Literals (which can be
-strings, booleans, etc), an InputParameter or a subselect. We need
-some people with free time to cover all possible situations; I mean
-that we needs something like these queries:</p>
-
-<pre><code class="">SELECT u FROM CmsUser u WHERE u.id IN (1, 2)
-
-SELECT u FROM CmsUser u WHERE u.id IN (?0)
-
-SELECT u FROM CmsUser u WHERE u.name IN ('guilhermeblanco', 'jwage', 'romanb')
-
-SELECT u FROM CmsUser u WHERE u.id IN (SELECT u2.id FROM CmsUser u2)
-</code></pre>
-<p>By doing (sometimes) stupid queries and complex queries, we cover
-all possibilities and then we can finally consider that we have a
-good coverage in our DQL support.</p>
-<p>If you load the
-<a href="http://trac.doctrine-project.org/browser/trunk/tests/Doctrine/Tests/ORM/Query/LanguageRecognitionTest.php">LanguageRecognitionTest</a> ,
-you'll find that we have already builtin 2 methods to help you
-asserting DQL support: <code>assertValidDql</code> and <code>assertInvalidDql</code>.
-Just follow the EBNF, pick defined models under
-<a href="http://trac.doctrine-project.org/browser/trunk/tests/Doctrine/Tests/Models/CMS">Models/CMS folder</a>
-and start writing tests.</p>
-<a id="title.4"></a><h1>Running tests</h1>
-<p>It is not hard to execute new test suite. Once you have
-<a href="http://phpunit.de">PHPUnit</a> and <a href="http://xdebug.org">XDebug</a>
-installed, go to tests folder of trunk, create the directory
-<code>_coverage</code> (CHMOD 0777) and execute:</p>
-
-<pre><code class="">phpunit --coverage-html=./_coverage Doctrine_Tests_AllTests
-</code></pre>
-<p>Then you'll have coverage too, which means it'll be even better to
-see where it's missing tests in suite.</p>
-<p>Once you write your tests, create a ticket in our trac and then
-upload the patched file there. We'll review your tests and commit
-them.</p>
-<p>To generate a patch file, just type:
-<code>svn diff &gt; /path/to/path/file.diff</code> I hope you enjoy new
-structure and contribute with lots of tests!</p>
-
-        </div>
-
-            </article>
-    <article>
-        <header>
             <h2><a href="https://www.doctrine-project.org/2009/07/27/doctrine-1-0-11-and-1-1-3-released.html">Doctrine 1.0.11 and 1.1.3 Released</a></h2>
         </header>
 
@@ -245,16 +127,20 @@ structure and contribute with lots of tests!</p>
         <hr />
 
         <div>
-            <p>Today I am happy to introduce two new maintenance releases for
-Doctrine, 1.0.11 and 1.1.3. As always these are regular maintenance
-releases and contain dozens of bug fixes. Below you will find links
-to view the changelogs for both releases.</p>
-<ul><li class="dash"> <a href="http://www.doctrine-project.org/change_log/1_0_11">Doctrine 1.0.11 Changelog</a></li>
-<li class="dash"> <a href="http://www.doctrine-project.org/change_log/1_1_3">Doctrine 1.1.3 Changelog</a></li>
+            <p>Today I am happy to introduce two new maintenance releases for Doctrine,
+1.0.11 and 1.1.3. As always these are regular maintenance releases and
+contain dozens of bug fixes. Below you will find links to view the
+changelogs for both releases.</p>
+
+<ul>
+<li><a href="http://www.doctrine-project.org/change_log/1_0_11">Doctrine 1.0.11
+Changelog</a></li>
+<li><a href="http://www.doctrine-project.org/change_log/1_1_3">Doctrine 1.1.3
+Changelog</a></li>
 </ul>
 
-<p>It is recommended that you upgrade as soon as possible. You can
-download the new versions from the
+<p>It is recommended that you upgrade as soon as possible. You can download
+the new versions from the
 <a href="http://www.doctrine-project.org/download">download</a> page.</p>
 
         </div>
@@ -274,47 +160,89 @@ download the new versions from the
         <hr />
 
         <div>
-            <p>You've probably noticed over the past few days I have rolled out
-some major new site enhancements. You can find more information
-below about all the changes made.</p>
-<a id="title.1"></a><h1>Register Now!</h1>
-<p>I have opened up a new registration portal on the Doctrine website.
-This will create a login both on the website and Trac and is also
-connected to your SVN account if you choose to request access.</p>
-<a id="title.2"></a><h1>Login Now!</h1>
+            <p>You've probably noticed over the past few days I have rolled out some
+major new site enhancements. You can find more information below about
+all the changes made.</p>
+
+<h1 id="register-now%21">Register Now!</h1>
+
+<p>I have opened up a new registration portal on the Doctrine website. This
+will create a login both on the website and Trac and is also connected
+to your SVN account if you choose to request access.</p>
+
+<h1 id="login-now%21">Login Now!</h1>
+
 <p>Once you have registered you can login to the
 <a href="http://www.doctrine-project.org/login">website</a> and
-<a href="http://trac.doctrine-project.org/login">Trac</a>. This will make
-some extra functionality available for you to manage your user
-information.</p>
-<a id="title.3"></a><h1>New Extensions Repository</h1>
-<p>A place where you can browse, search and find out what extensions
-are available for Doctrine. It contains documentation, ability to
-run the unit tests and download the code.</p>
+<a href="http://trac.doctrine-project.org/login">Trac</a>. This will make some
+extra functionality available for you to manage your user information.</p>
+
+<h1 id="new-extensions-repository">New Extensions Repository</h1>
+
+<p>A place where you can browse, search and find out what extensions are
+available for Doctrine. It contains documentation, ability to run the
+unit tests and download the code.</p>
+
 <p>Check it out <a href="http://www.doctrine-project.org/extensions">here</a>.</p>
-<a id="title.4"></a><h1>User Documentation Area</h1>
-<p>For a long time I have wanted to have an area of the website where
-users could manage as much user contributed documentation as they
-want. I have started the new site with a tutorial on
-<a href="http://www.doctrine-project.org/documentation/user/1_2/en/how-to-write-an-extension">how to write an extension</a>.</p>
-<a id="title.5"></a><h1>New Homepage Look</h1>
-<p>I have slightly tweaked the homepage design to match the design of
-the new Doctrine
+
+<h1 id="user-documentation-area">User Documentation Area</h1>
+
+<p>For a long time I have wanted to have an area of the website where users
+could manage as much user contributed documentation as they want. I have
+started the new site with a tutorial on <a href="http://www.doctrine-project.org/documentation/user/1_2/en/how-to-write-an-extension">how to write an
+extension</a>.</p>
+
+<h1 id="new-homepage-look">New Homepage Look</h1>
+
+<p>I have slightly tweaked the homepage design to match the design of the
+new Doctrine
 <a href="http://www.amazon.com/Doctrine-ORM-PHP-Jonathan-Wage/dp/2918390038/ref=sr_1_1?ie=UTF8&amp;s=books&amp;qid=1246303098&amp;sr=8-1">book</a>.
-This is our first book so if you want to support the Doctrine
-project or just want to learn about Doctrine then we suggest you
-purchase a copy! :)</p>
-<a id="title.6"></a><h1>Manage your User Account</h1>
-<p>Central location where you can manage all the information you
-control as a Doctrine authenticated user. You can see what
-extensions you've written, control your user contributed
-documentation, request SVN access and update your account
-information. Check it out
+This is our first book so if you want to support the Doctrine project or
+just want to learn about Doctrine then we suggest you purchase a copy!
+:)</p>
+
+<h1 id="manage-your-user-account">Manage your User Account</h1>
+
+<p>Central location where you can manage all the information you control as
+a Doctrine authenticated user. You can see what extensions you've
+written, control your user contributed documentation, request SVN access
+and update your account information. Check it out
 <a href="http://www.doctrine-project.org/user/account">here</a>.</p>
-<p>These changes are primarily based around the new extensions
-repository which is available for Doctrine 1.2. You can read about
-what else is new in Doctrine 1.2
-<a href="http://www.doctrine-project.org/upgrade/1_2">here</a>.</p>
+
+<p>These changes are primarily based around the new extensions repository
+which is available for Doctrine 1.2. You can read about what else is new
+in Doctrine 1.2 <a href="http://www.doctrine-project.org/upgrade/1_2">here</a>.</p>
+
+        </div>
+
+            </article>
+    <article>
+        <header>
+            <h2><a href="https://www.doctrine-project.org/2009/06/30/doctrine-orm-for-php-available-in-print.html">Doctrine ORM for PHP available in print</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2009-06-30
+                            by
+                                    jwage
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>Last night the <a href="http://www.amazon.com/Doctrine-ORM-PHP-Jonathan-Wage/dp/2918390038/ref=sr_1_1?ie=UTF8&amp;s=books&amp;qid=1246303098&amp;sr=8-1">Doctrine ORM for
+PHP</a>
+book became available on the Amazon website. This is our first official
+piece of published documentation and we are very excited and proud to
+see this.</p>
+
+<p>If you are an existing or new Doctrine user, it is much appreciated if
+you purchase a copy. Since Doctrine is an open source project we don't
+make any money directly from it. Doctrine is all possible because of the
+contributors and the companies that fund it, like <a href="http://www.sensiolabs.com">Sensio
+Labs</a>. So it is a very nice gesture, even if
+you are already a Doctrine expert, to purchase a copy of the book to
+show your appreciation and support for the project.</p>
 
         </div>
 

@@ -125,18 +125,19 @@
                                     </p>
 
         <div>
-            <p>Today I will teach you how to write a simple Doctrine behavior. You
-will learn some of the basics of creating a behavior and you will
-gain some pretty cool functionality for your relationships.</p>
-<p>We will write a behavior called <code>RelationDql</code> which allows you to
-add default query parts that are automatically added to your
-queries when you reference the specified relationships. So first we
-will get started by looking at an example schema we can apply this
-to.</p>
-<p>Here is an example schema where we have a <code>Site</code>, <code>BlogPost</code>
-and <code>Tag</code> model:</p>
+            <p>Today I will teach you how to write a simple Doctrine behavior. You will
+learn some of the basics of creating a behavior and you will gain some
+pretty cool functionality for your relationships.</p>
 
-<pre><code class="">[yml]
+<p>We will write a behavior called <code>RelationDql</code> which allows you to add
+default query parts that are automatically added to your queries when
+you reference the specified relationships. So first we will get started
+by looking at an example schema we can apply this to.</p>
+
+<p>Here is an example schema where we have a <code>Site</code>, <code>BlogPost</code> and <code>Tag</code>
+model:</p>
+
+<pre><code>[yml]
 Site:
   columns:
     name: string(255)
@@ -173,15 +174,17 @@ BlogPostTag:
     Tag:
       foreignAlias: BlogPostTags
 </code></pre>
-<p>This is a fairly simple schema as you can see, but what if we want
-to have a relationship on the <code>Site</code> model to retrieve the latest
-five <code>BlogPost</code> records or order the <code>Tags</code> relationship
-alphabetically by default?</p>
-<p>Lets modify our schema to take into account a new behavior that we
-will write in the next step. First modify the <code>Site</code> model and a
-relationship named <code>LatestBlogPosts</code>:</p>
 
-<pre><code class="">[yml]
+<p>This is a fairly simple schema as you can see, but what if we want to
+have a relationship on the <code>Site</code> model to retrieve the latest five
+<code>BlogPost</code> records or order the <code>Tags</code> relationship alphabetically by
+default?</p>
+
+<p>Lets modify our schema to take into account a new behavior that we will
+write in the next step. First modify the <code>Site</code> model and a relationship
+named <code>LatestBlogPosts</code>:</p>
+
+<pre><code>[yml]
 Site:
   actAs:
     RelationDql:
@@ -201,13 +204,12 @@ Site:
 **TIP** The ``autoComplete`` option is set to ``false`` so that the
 relationship is not reflected and added to the opposite end,
 ``BlogPost`` automatically.
-
 </code></pre>
-<p>Now lets modify the <code>BlogPost</code> model to change the <code>Tags</code>
-relationship so that it is ordered alphabetically by name by
-default:</p>
 
-<pre><code class="">[yml]
+<p>Now lets modify the <code>BlogPost</code> model to change the <code>Tags</code> relationship
+so that it is ordered alphabetically by name by default:</p>
+
+<pre><code>[yml]
 BlogPost:
   actAs:
     Timestampable:
@@ -231,11 +233,12 @@ BlogPost:
 the DQL query. The key can be any valid function on the
 ``Doctrine_Query`` API and the value is of course the parameter to
 pass to the function.
-
 </code></pre>
+
 <p>Now that we have our schemas modified to take into account the new
 <code>RelationDql</code> behavior we need to actually write the code:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 class RelationDql extends Doctrine_Template
 {
   protected $_options = array();
@@ -251,10 +254,12 @@ class RelationDql extends Doctrine_Template
   }
 }
 </code></pre>
-<p>The template is very simple. It only attaches a record listener to
-the invoking table. Their is where most of the magic happens. So
-now lets define the <code>RelationDqlListener</code> class:</p>
-<pre><code class="php">&lt;?php
+
+<p>The template is very simple. It only attaches a record listener to the
+invoking table. Their is where most of the magic happens. So now lets
+define the <code>RelationDqlListener</code> class:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 class RelationDqlListener extends Doctrine_Record_Listener
 {
   protected $_options = array('relations' =&gt; array());
@@ -313,16 +318,20 @@ class RelationDqlListener extends Doctrine_Record_Listener
   }
 }
 </code></pre>
-<p>So now we have the behavior defined so lets look at some example
-DQL queries and the SQL that is outputted:</p>
-<blockquote><p><strong>TIP</strong> Remember, in order for the dql callbacks to be executed we
-must enable an attribute first.</p>
-</blockquote>
-<pre><code class="php">&lt;?php
-    $manager-&gt;setAttribute('use_dql_callbacks', true);
 
+<p>So now we have the behavior defined so lets look at some example DQL
+queries and the SQL that is outputted:</p>
+
+<blockquote>
+  <p><strong>TIP</strong> Remember, in order for the dql callbacks to be executed we
+  must enable an attribute first.</p>
+</blockquote>
+
+<pre><code class="sourceCode php">&lt;?php
+    $manager-&gt;setAttribute('use_dql_callbacks', true);
 </code></pre>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $q = Doctrine_Query::create()
   -&gt;select('s.name, p.title, p.created_at')
   -&gt;from('Site s')
@@ -330,30 +339,35 @@ $q = Doctrine_Query::create()
 
 echo $q-&gt;getSql();
 </code></pre>
+
 <p>The above would output the following SQL:</p>
 
-<pre><code class="">[sql]
+<pre><code>[sql]
 SELECT s.id AS s__id, s.name AS s__name, b.id AS b__id, b.title AS b__title, b.created_at AS b__created_at FROM site s LEFT JOIN blog_post b ON s.id = b.site_id ORDER BY b.created_at DESC LIMIT 5
 
 **NOTE** Notice how the ``ORDER BY`` and ``LIMIT`` were added to
 the query.
-
 </code></pre>
+
 <p>Now lets look at an example that involves the <code>BlogPost</code> tags:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $q = Doctrine_Query::create()
   -&gt;from('BlogPost p')
   -&gt;leftJoin('p.Tags t');
 
 echo $q-&gt;getSql();
 </code></pre>
+
 <p>The above would output the following SQL query:</p>
 
-<pre><code class="">[sql]
+<pre><code>[sql]
 SELECT b.id AS b__id, b.title AS b__title, b.body AS b__body, b.site_id AS b__site_id, b.created_at AS b__created_at, b.updated_at AS b__updated_at, t.id AS t__id, t.name AS t__name FROM blog_post b LEFT JOIN blog_post_tag b2 ON b.id = b2.blog_post_id LEFT JOIN tag t ON t.id = b2.tag_id ORDER BY t.name ASC
 </code></pre>
-<p>As you can see the <code>ORDER BY</code> clause to order the related tags by
-<code>name</code> was added for us.</p>
+
+<p>As you can see the <code>ORDER BY</code> clause to order the related tags by <code>name</code>
+was added for us.</p>
+
 <p>Pretty cool huh? You can use this in your projects to make your
 relationships a little nicer.</p>
 

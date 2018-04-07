@@ -125,46 +125,53 @@
                                     </p>
 
         <div>
-            <p>One major advantage to using something like MongoDB is the fact
-that it is schema-less. We can store multiple types of documents in
-a single collection and we are not limited to a single type of
-document in embedded and referenced documents. This article shows
-how you can easily mix types of documents in collections, embedded
-and referenced documents.</p>
-<a id="title.1"></a><h1>Mixing Types in Collections</h1>
-<p>If you don't want to use <code>SINGLE_COLLECTION</code> inheritance you can
-easily store different documents in the same collection by using a
-discriminator field. First define an <code>Article</code> document that maps
-to <code>my_documents</code>:</p>
-<pre><code class="php">&lt;?php
+            <p>One major advantage to using something like MongoDB is the fact that it
+is schema-less. We can store multiple types of documents in a single
+collection and we are not limited to a single type of document in
+embedded and referenced documents. This article shows how you can easily
+mix types of documents in collections, embedded and referenced
+documents.</p>
+
+<h1 id="mixing-types-in-collections">Mixing Types in Collections</h1>
+
+<p>If you don't want to use <code>SINGLE_COLLECTION</code> inheritance you can easily
+store different documents in the same collection by using a
+discriminator field. First define an <code>Article</code> document that maps to
+<code>my_documents</code>:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 /**
- * @Document(collection=&quot;my_documents&quot;)
- * @DiscriminatorField(fieldName=&quot;type&quot;)
- * @DiscriminatorMap({&quot;article&quot;=&quot;Article&quot;, &quot;album&quot;=&quot;Album&quot;})
+ * @Document(collection="my_documents")
+ * @DiscriminatorField(fieldName="type")
+ * @DiscriminatorMap({"article"="Article", "album"="Album"})
  */
 class Article
 {
     // ...
 }
 </code></pre>
+
 <p>Next create another document named <code>Album</code> and also map it to
 <code>my_documents</code>:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 /**
- * @Document(collection=&quot;my_documents&quot;)
- * @DiscriminatorField(fieldName=&quot;type&quot;)
- * @DiscriminatorMap({&quot;article&quot;=&quot;Article&quot;, &quot;album&quot;=&quot;Album&quot;})
+ * @Document(collection="my_documents")
+ * @DiscriminatorField(fieldName="type")
+ * @DiscriminatorMap({"article"="Article", "album"="Album"})
  */
 class Album
 {
     // ...
 }
 </code></pre>
+
 <p>Now if you create some instances and persist them they will all be
-stored in the <code>my_documents</code> collection and will have a
-discriminator field named <code>type</code> automatically set with the value
-specified in the mapping:</p>
-<pre><code class="php">&lt;?php
+stored in the <code>my_documents</code> collection and will have a discriminator
+field named <code>type</code> automatically set with the value specified in the
+mapping:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $article = new Article();
 $article-&gt;setTitle('Sample Article');
 // ...
@@ -175,28 +182,35 @@ $album-&gt;setName('My Album');
 $dm-&gt;persist($article);
 $dm-&gt;persist($album);
 </code></pre>
-<p>Finally, if you retrieve the documents they'll all be retrieved
-from <code>my_documents</code> but you will get back the proper PHP classes
-that created them:</p>
-<pre><code class="php">&lt;?php
+
+<p>Finally, if you retrieve the documents they'll all be retrieved from
+<code>my_documents</code> but you will get back the proper PHP classes that created
+them:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $articles = $dm-&gt;find('Article');
 $albums = $dm-&gt;find('Album');
 </code></pre>
+
 <p>You can retrieve more then just one document type by specifying an
 array:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $documents = $dm
     -&gt;createQuery(array('Article', 'Album'))
     -&gt;execute();
 </code></pre>
-<p>The returned documents will contain instances of articles and
-albums!</p>
-<a id="title.2"></a><h1>Mixing Types in Embedded Documents</h1>
+
+<p>The returned documents will contain instances of articles and albums!</p>
+
+<h1 id="mixing-types-in-embedded-documents">Mixing Types in Embedded Documents</h1>
+
 <p>You can store multiple types of documents in embedded documents by
-simply omitting the <code>targetDocument</code> option. First create a
-<code>User</code> document and embed multiple task documents:</p>
-<pre><code class="php">&lt;?php
-/** @Document(collection=&quot;users&quot;) */
+simply omitting the <code>targetDocument</code> option. First create a <code>User</code>
+document and embed multiple task documents:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+/** @Document(collection="users") */
 class User
 {
     // ...
@@ -210,10 +224,11 @@ class User
 **NOTE** Notice how on the ``$tasks`` annotation we don't specify
 whether it is ``one`` or ``many``. This is because we know it is
 ``many`` due to the default value being an array.
-
 </code></pre>
+
 <p>Now create the different types of tasks we can add to the user:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 /** @EmbeddedDocument */
 class DownloadTask
 {
@@ -226,8 +241,10 @@ class UploadTask
     // ...
 }
 </code></pre>
+
 <p>Now you can embed any type of class in the <code>$tasks</code> property:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $user = $dm-&gt;findOne('User', array(...));
 
 $task = new DownloadTask();
@@ -242,14 +259,17 @@ $user-&gt;addTask($task);
 
 $dm-&gt;flush();
 </code></pre>
-<a id="title.3"></a><h1>Mixing Types in Referenced Documents</h1>
-<p>Mixing types in referenced documents works just the same as
-embedded by omitting the <code>targetDocument</code> option. In this example
-a user can add references to all his favorite albums, songs and
-books. First define a <code>User</code> document with a many references
-property for storing the users favorites:</p>
-<pre><code class="php">&lt;?php
-/** @Document(collection=&quot;users&quot;) */
+
+<h1 id="mixing-types-in-referenced-documents">Mixing Types in Referenced Documents</h1>
+
+<p>Mixing types in referenced documents works just the same as embedded by
+omitting the <code>targetDocument</code> option. In this example a user can add
+references to all his favorite albums, songs and books. First define a
+<code>User</code> document with a many references property for storing the users
+favorites:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+/** @Document(collection="users") */
 class User
 {
     // ...
@@ -260,38 +280,43 @@ class User
     // ...
 }
 </code></pre>
+
 <p>Now here is what the referenced documents would look like:</p>
-<pre><code class="php">&lt;?php
-/** @Document(collection=&quot;albums&quot;) */
+
+<pre><code class="sourceCode php">&lt;?php
+/** @Document(collection="albums") */
 class Album
 {
     // ...
 }
 
-/** @Document(collection=&quot;songs&quot;) */
+/** @Document(collection="songs") */
 class Song
 {
     // ...
 }
 
-/** @Document(collection=&quot;books&quot;) */
+/** @Document(collection="books") */
 class Book
 {
     // ...
 }
 </code></pre>
+
 <p>Now it is easy to add the references to his favorites:</p>
-<pre><code class="php">&lt;?php
+
+<pre><code class="sourceCode php">&lt;?php
 $user-&gt;addFavorite($album);
 $user-&gt;addFavorite($song);
 $user-&gt;addFavorite($book);
 
 $dm-&gt;flush();
 </code></pre>
-<p>When you retrieve the user and access the <code>$favorites</code> the
-documents will be grouped by type and loaded with one or more
-<code>$in</code> queries:</p>
-<pre><code class="php">&lt;?php
+
+<p>When you retrieve the user and access the <code>$favorites</code> the documents
+will be grouped by type and loaded with one or more <code>$in</code> queries:</p>
+
+<pre><code class="sourceCode php">&lt;?php
 $user = $dm-&gt;findOne('User', array(...));
 $favorites = $user-&gt;getFavorites();
 
@@ -301,9 +326,9 @@ foreach ($favorites as $favorite) {
     // ...
 }
 </code></pre>
-<p>That is it! It is easy to take advantage of the schema-less
-features of MongoDB with the Doctrine Object Document Mapper
-(ODM)!</p>
+
+<p>That is it! It is easy to take advantage of the schema-less features of
+MongoDB with the Doctrine Object Document Mapper (ODM)!</p>
 
         </div>
                 
