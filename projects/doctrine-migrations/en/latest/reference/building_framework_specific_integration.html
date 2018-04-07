@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Version Numbers - Doctrine - PHP Database Tools</title>
+        <title>Building your integration of doctrine migration - Doctrine - PHP Database Tools</title>
 
         <meta charset="utf-8">
         <meta name="theme-color" content="#ffffff">
@@ -130,7 +130,7 @@
                                 <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/">Projects</a></li>
                                 <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/migrations/">Migrations</a></li>
                                 <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine-migrations/en/latest/">Documentation</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Version Numbers</li>
+                                <li class="breadcrumb-item active" aria-current="page">Building your integration of doctrine migration</li>
                             </ol>
                         </nav>
                                     </div>
@@ -141,80 +141,96 @@
 
                                                             <ul class="list-inline">
                                                                             <li class="list-inline-item mr-0">
-                                            <a href="/projects/doctrine-migrations/en/latest/reference/version_numbers.html" class="project-version-switcher badge badge-warning">master</a>
+                                            <a href="/projects/doctrine-migrations/en/latest/reference/building_framework_specific_integration.html" class="project-version-switcher badge badge-warning">master</a>
                                         </li>
                                     
                                     
-                                    <li class="list-inline-item ml-2"><a href="https://github.com/doctrine/migrations/edit/master/docs/en/reference/version_numbers.rst" class="badge badge-primary">Edit</a></li>
+                                    <li class="list-inline-item ml-2"><a href="https://github.com/doctrine/migrations/edit/master/docs/en/reference/building_framework_specific_integration.rst" class="badge badge-primary">Edit</a></li>
 
                                 </ul>
                             
                             
-<a class="section-anchor" id="title.1" name="title.1"></a><h1 class="section-header"><a href="#title.1">Version Numbers<i class="fas fa-link"></i></a></h1>
-<p>When <a href="generating_migrations.html">Generating Migrations</a> the newly created
-classes are generated with the name <code>Version{date}</code> with <code>{date}</code> having a
-<code>YmdHis</code> <a href="http://php.net/manual/en/function.date.php">format</a>. This format
-is important as it allows the migrations to be correctly ordered.</p>
-<p>Starting with version 1.5 when loading migration classes, Doctrine Migrations
-does a <code>sort($versions, SORT_STRING)</code> on version numbers. This can cause
-problems with custom version numbers:</p>
-<pre><code class="php">&lt;?php
-$versions = [
-    'Version1',
-    'Version2',
-    // ...
-    'Version10',
-];
-sort($versions, SORT_STRING);
+<a class="section-anchor" id="title.1" name="title.1"></a><h1 class="section-header"><a href="#title.1">Building your integration of doctrine migration<i class="fas fa-link"></i></a></h1>
+<p>For up to date code take a look at <a href="https://github.com/doctrine/migrations/blob/master/bin/doctrine-migrations.php">the doctrine migrations command line integration</a>.
+None the less the main steps required to make a functional integration are presented bellow.</p>
+<a class="section-anchor" id="title.1.1" name="title.1.1"></a><h2 class="section-header"><a href="#title.1.1">Installation<i class="fas fa-link"></i></a></h2>
+<p>First you need to require Doctrine Migrations as a dependency of your code</p>
+<pre><code class="sh">composer require doctrine/migrations
 
-var_dump($versions);
-/*
-array(3) {
-  [0] =&gt;
-  string(8) &quot;Version1&quot;
-  [1] =&gt;
-  string(9) &quot;Version10&quot;
-  [2] =&gt;
-  string(8) &quot;Version2&quot;
-}
-*/
 </code></pre>
-<p>The custom version numbers above end up out of order which may cause damage
-to a database.</p>
-<p>It's <strong>strongly recommended</strong> that the <code>Version{date}</code> migration class name
-format is kept to and that the various <a href="generating_migrations.html">tools for generating migrations</a>
-be used.</p>
-<p>Should some custom migration numbers be necessary, keeping the version number
-the same length as the date format (14 total characters) and padding it to the
-left with zeros should work.</p>
-<pre><code class="php">&lt;?php
-
-$versions = [
-    'Version00000000000001',
-    'Version00000000000002',
-    // ...
-    'Version00000000000010',
-    'Version20180107070000', // generated version
-];
-sort($versions, SORT_STRING);
-
-var_dump($versions);
-/*
-array(4) {
-  [0] =&gt;
-  string(21) &quot;Version00000000000001&quot;
-  [1] =&gt;
-  string(21) &quot;Version00000000000002&quot;
-  [2] =&gt;
-  string(21) &quot;Version00000000000010&quot;
-  [3] =&gt;
-  string(21) &quot;Version20180107070000&quot;
-}
-*/
+<p>Then you have to require the composer autoloader to use the classes from the `Doctrine\DBAL\Migrations`
+namespace in your project:</p>
+<pre><code class="php">$autoloadFiles = array(
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php'</code></pre>
+<p>);</p>
+<blockquote><p>$autoloader = false;
+foreach ($autoloadFiles as $autoloadFile) {
+    if (file_exists($autoloadFile)) {
+        require_once $autoloadFile;
+        $autoloader = true;
+    }
+}</p>
+<p>if (!$autoloader) {
+    die('vendor/autoload.php could not be found. Did you run `php composer.phar install`?');
+}</p>
+</blockquote>
+<p>Now the above autoloader is able to load a class like the following:</p>
+<pre><code class="bash">/path/to/migrations/lib/Doctrine/DBAL/Migrations/Migrations/Migration.php
 </code></pre>
-<p>Please note that migrating to this new, zero-padded format may require
-<a href="../">manual version table intervention</a> if the
-versions have previously been applied.</p>
+<a class="section-anchor" id="title.1.2" name="title.1.2"></a><h2 class="section-header"><a href="#title.1.2">Register Console Commands<i class="fas fa-link"></i></a></h2>
+<p>Now that we have setup the autoloaders we are ready to add the migration console
+commands to our <a href="http://doctrine-orm.readthedocs.org/en/latest/reference/tools.html#adding-own-commands">Doctrine Command Line Interface</a>:</p>
+<pre><code class="php">// ...
+
+$cli-&gt;addCommands(array(
+    // Migrations Commands
+    new \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand(),
+    new \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand(),
+    new \Doctrine\DBAL\Migrations\Tools\Console\Command\LatestCommand(),
+    new \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand(),
+    new \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand(),
+    new \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand()
+));
+</code></pre>
+<a class="section-anchor" id="title.1.3" name="title.1.3"></a><h2 class="section-header"><a href="#title.1.3">Register Console helpers<i class="fas fa-link"></i></a></h2>
+<p>Additionally you have to make sure the 'db' and 'dialog' Helpers are added to your Symfony
+Console HelperSet.</p>
+<pre><code class="php">$db = \Doctrine\DBAL\DriverManager::getConnection($params);
+// or
+$em = \Doctrine\ORM\EntityManager::create($params);
+$db = $em-&gt;getConnection();
+
+$helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
+    'db' =&gt; new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($db),
+    'question' =&gt; new \Symfony\Component\Console\Helper\QuestionHelper(),
+));
+</code></pre>
+<p>Note that the db helper is not required as you might want to pass the connection information
+from the command line directly.</p>
+<p>You will see that you have a few new commands when you execute the following command:</p>
+<pre><code class="bash">$ ./doctrine list migrations
+Doctrine Command Line Interface version 1.2.1
+
+Usage:
+  [options] command [arguments]
+
+Options:
+  --help           -h Display this help message.
+  --quiet          -q Do not output any message.
+  --verbose        -v Increase verbosity of messages.
+  --version        -V Display this program version.
+  --color          -c Force ANSI color output.
+  --no-interaction -n Do not ask any interactive question.
+
+Available commands for the &quot;migrations&quot; namespace:
+  :diff      Generate a migration by comparing your current database to your mapping information.
+  :execute   Execute a single migration version up or down manually.
+  :generate  Generate a blank migration class.
+  :migrate   Execute a migration to a specified version or the latest available version.
+  :status    View the status of a set of migrations.
+  :version   Manually add and delete migration versions from the version table.
+</code></pre>
                                             </div>
                 </div>
             </main>

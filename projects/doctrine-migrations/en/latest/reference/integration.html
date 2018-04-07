@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Version Numbers - Doctrine - PHP Database Tools</title>
+        <title>Integrations - Doctrine - PHP Database Tools</title>
 
         <meta charset="utf-8">
         <meta name="theme-color" content="#ffffff">
@@ -130,7 +130,7 @@
                                 <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/">Projects</a></li>
                                 <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/migrations/">Migrations</a></li>
                                 <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine-migrations/en/latest/">Documentation</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Version Numbers</li>
+                                <li class="breadcrumb-item active" aria-current="page">Integrations</li>
                             </ol>
                         </nav>
                                     </div>
@@ -141,80 +141,27 @@
 
                                                             <ul class="list-inline">
                                                                             <li class="list-inline-item mr-0">
-                                            <a href="/projects/doctrine-migrations/en/latest/reference/version_numbers.html" class="project-version-switcher badge badge-warning">master</a>
+                                            <a href="/projects/doctrine-migrations/en/latest/reference/integration.html" class="project-version-switcher badge badge-warning">master</a>
                                         </li>
                                     
                                     
-                                    <li class="list-inline-item ml-2"><a href="https://github.com/doctrine/migrations/edit/master/docs/en/reference/version_numbers.rst" class="badge badge-primary">Edit</a></li>
+                                    <li class="list-inline-item ml-2"><a href="https://github.com/doctrine/migrations/edit/master/docs/en/reference/integration.rst" class="badge badge-primary">Edit</a></li>
 
                                 </ul>
                             
                             
-<a class="section-anchor" id="title.1" name="title.1"></a><h1 class="section-header"><a href="#title.1">Version Numbers<i class="fas fa-link"></i></a></h1>
-<p>When <a href="generating_migrations.html">Generating Migrations</a> the newly created
-classes are generated with the name <code>Version{date}</code> with <code>{date}</code> having a
-<code>YmdHis</code> <a href="http://php.net/manual/en/function.date.php">format</a>. This format
-is important as it allows the migrations to be correctly ordered.</p>
-<p>Starting with version 1.5 when loading migration classes, Doctrine Migrations
-does a <code>sort($versions, SORT_STRING)</code> on version numbers. This can cause
-problems with custom version numbers:</p>
-<pre><code class="php">&lt;?php
-$versions = [
-    'Version1',
-    'Version2',
-    // ...
-    'Version10',
-];
-sort($versions, SORT_STRING);
+<a class="section-anchor" id="title.1" name="title.1"></a><h1 class="section-header"><a href="#title.1">Integrations<i class="fas fa-link"></i></a></h1>
+<p>If you want to start quickly, there are integrations for a lot of frameworks already:</p>
+<ul><li><a href="https://packagist.org/packages/doctrine/doctrine-migrations-bundle">symfony 2</a></li>
+<li><a href="https://packagist.org/packages/doctrine/doctrine-orm-module">ZF2</a></li>
+<li><a href="https://packagist.org/packages/laravel-doctrine/migrations">laravel</a></li>
+<li><a href="https://packagist.org/packages/kurl/silex-doctrine-migrations-provider">Silex</a></li>
+<li><a href="https://packagist.org/packages/dbtlr/silex-doctrine-migrations">Silex</a></li>
+<li><a href="https://packagist.org/packages/zenify/doctrine-migrations">nette</a></li>
+</ul>
 
-var_dump($versions);
-/*
-array(3) {
-  [0] =&gt;
-  string(8) &quot;Version1&quot;
-  [1] =&gt;
-  string(9) &quot;Version10&quot;
-  [2] =&gt;
-  string(8) &quot;Version2&quot;
-}
-*/
-</code></pre>
-<p>The custom version numbers above end up out of order which may cause damage
-to a database.</p>
-<p>It's <strong>strongly recommended</strong> that the <code>Version{date}</code> migration class name
-format is kept to and that the various <a href="generating_migrations.html">tools for generating migrations</a>
-be used.</p>
-<p>Should some custom migration numbers be necessary, keeping the version number
-the same length as the date format (14 total characters) and padding it to the
-left with zeros should work.</p>
-<pre><code class="php">&lt;?php
-
-$versions = [
-    'Version00000000000001',
-    'Version00000000000002',
-    // ...
-    'Version00000000000010',
-    'Version20180107070000', // generated version
-];
-sort($versions, SORT_STRING);
-
-var_dump($versions);
-/*
-array(4) {
-  [0] =&gt;
-  string(21) &quot;Version00000000000001&quot;
-  [1] =&gt;
-  string(21) &quot;Version00000000000002&quot;
-  [2] =&gt;
-  string(21) &quot;Version00000000000010&quot;
-  [3] =&gt;
-  string(21) &quot;Version20180107070000&quot;
-}
-*/
-</code></pre>
-<p>Please note that migrating to this new, zero-padded format may require
-<a href="../">manual version table intervention</a> if the
-versions have previously been applied.</p>
+<p>Don't hesitate to make a <a href="https://github.com/doctrine/migrations-documentation">Pull Request</a>
+if you want to add your integration to this list.</p>
                                             </div>
                 </div>
             </main>

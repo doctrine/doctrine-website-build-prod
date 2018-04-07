@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Version Numbers - Doctrine - PHP Database Tools</title>
+        <title>Installation - Doctrine - PHP Database Tools</title>
 
         <meta charset="utf-8">
         <meta name="theme-color" content="#ffffff">
@@ -130,7 +130,7 @@
                                 <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/">Projects</a></li>
                                 <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/migrations/">Migrations</a></li>
                                 <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine-migrations/en/latest/">Documentation</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Version Numbers</li>
+                                <li class="breadcrumb-item active" aria-current="page">Installation</li>
                             </ol>
                         </nav>
                                     </div>
@@ -141,80 +141,93 @@
 
                                                             <ul class="list-inline">
                                                                             <li class="list-inline-item mr-0">
-                                            <a href="/projects/doctrine-migrations/en/latest/reference/version_numbers.html" class="project-version-switcher badge badge-warning">master</a>
+                                            <a href="/projects/doctrine-migrations/en/latest/reference/installation.html" class="project-version-switcher badge badge-warning">master</a>
                                         </li>
                                     
                                     
-                                    <li class="list-inline-item ml-2"><a href="https://github.com/doctrine/migrations/edit/master/docs/en/reference/version_numbers.rst" class="badge badge-primary">Edit</a></li>
+                                    <li class="list-inline-item ml-2"><a href="https://github.com/doctrine/migrations/edit/master/docs/en/reference/installation.rst" class="badge badge-primary">Edit</a></li>
 
                                 </ul>
                             
                             
-<a class="section-anchor" id="title.1" name="title.1"></a><h1 class="section-header"><a href="#title.1">Version Numbers<i class="fas fa-link"></i></a></h1>
-<p>When <a href="generating_migrations.html">Generating Migrations</a> the newly created
-classes are generated with the name <code>Version{date}</code> with <code>{date}</code> having a
-<code>YmdHis</code> <a href="http://php.net/manual/en/function.date.php">format</a>. This format
-is important as it allows the migrations to be correctly ordered.</p>
-<p>Starting with version 1.5 when loading migration classes, Doctrine Migrations
-does a <code>sort($versions, SORT_STRING)</code> on version numbers. This can cause
-problems with custom version numbers:</p>
-<pre><code class="php">&lt;?php
-$versions = [
-    'Version1',
-    'Version2',
-    // ...
-    'Version10',
-];
-sort($versions, SORT_STRING);
+<a class="section-anchor" id="title.1" name="title.1"></a><h1 class="section-header"><a href="#title.1">Installation<i class="fas fa-link"></i></a></h1>
+<p>You have two options, you can either use composer to install doctrine migrations or you can use the standalone Phar package.</p>
+<a class="section-anchor" id="title.1.1" name="title.1.1"></a><h2 class="section-header"><a href="#title.1.1">Composer<i class="fas fa-link"></i></a></h2>
+<p>Install it with composer:</p>
+<pre><code class="sh">composer require doctrine/migrations
 
-var_dump($versions);
-/*
-array(3) {
-  [0] =&gt;
-  string(8) &quot;Version1&quot;
-  [1] =&gt;
-  string(9) &quot;Version10&quot;
-  [2] =&gt;
-  string(8) &quot;Version2&quot;
-}
-*/
 </code></pre>
-<p>The custom version numbers above end up out of order which may cause damage
-to a database.</p>
-<p>It's <strong>strongly recommended</strong> that the <code>Version{date}</code> migration class name
-format is kept to and that the various <a href="generating_migrations.html">tools for generating migrations</a>
-be used.</p>
-<p>Should some custom migration numbers be necessary, keeping the version number
-the same length as the date format (14 total characters) and padding it to the
-left with zeros should work.</p>
-<pre><code class="php">&lt;?php
-
-$versions = [
-    'Version00000000000001',
-    'Version00000000000002',
-    // ...
-    'Version00000000000010',
-    'Version20180107070000', // generated version
-];
-sort($versions, SORT_STRING);
-
-var_dump($versions);
-/*
-array(4) {
-  [0] =&gt;
-  string(21) &quot;Version00000000000001&quot;
-  [1] =&gt;
-  string(21) &quot;Version00000000000002&quot;
-  [2] =&gt;
-  string(21) &quot;Version00000000000010&quot;
-  [3] =&gt;
-  string(21) &quot;Version20180107070000&quot;
-}
-*/
+<a class="section-anchor" id="title.1.2" name="title.1.2"></a><h2 class="section-header"><a href="#title.1.2">PHP Binary / PHAR<i class="fas fa-link"></i></a></h2>
+<p>You can download the Migrations PHP Binary, which is a standalone PHAR package
+file with all the required dependencies. You can drop that single file onto any server
+and start using the Doctrine Migrations.</p>
+<p>To register a system command for the migrations you can create a simple batch
+script, for example on a \*nix Environment creating a `/usr/local/bin/doctrine-migrations`:</p>
+<pre><code class="bash">#!/bin/sh
+php /path/to/doctrine-migrations.phar &quot;$@&quot;
 </code></pre>
-<p>Please note that migrating to this new, zero-padded format may require
-<a href="../">manual version table intervention</a> if the
-versions have previously been applied.</p>
+<p>You could now go and use the migrations like:</p>
+<pre><code class="bash">[shell]
+myshell&gt; doctrine-migrations
+</code></pre>
+<p>Because the PHAR file is standalone it does not rely on the Symfony Console 'db' Helper,
+but you have to pass a `--db-configuration` parameter that points to a PHP file
+which returns the parameters for `Doctrine\DBAL\DriverManager::getConnection($dbParams)`.
+If you don't specify this option Doctrine Migrations will look for a `migrations-db.php`
+file returning that parameters in your current directory and only throw an error if
+that is not found.</p>
+<a class="section-anchor" id="title.1.2.1" name="title.1.2.1"></a><h3 class="section-header"><a href="#title.1.2.1">Configuration<i class="fas fa-link"></i></a></h3>
+<p>The last thing you need to do is to configure your migrations. You can do so
+by using the <em>--configuration</em> option to manually specify the path
+to a configuration file. If you don't specify any configuration file the tasks will
+look for a file named <em>migrations.xml</em> or <em>migrations.yml</em> at the root of
+your command line. For the upcoming examples you can use a <em>migrations.xml</em>
+file like the following:</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;doctrine-migrations xmlns=&quot;http://doctrine-project.org/schemas/migrations/configuration&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+      xsi:schemaLocation=&quot;http://doctrine-project.org/schemas/migrations/configuration
+                    http://doctrine-project.org/schemas/migrations/configuration.xsd&quot;&gt;
+
+    &lt;name&gt;Doctrine Sandbox Migrations&lt;/name&gt;
+
+    &lt;migrations-namespace&gt;DoctrineMigrations&lt;/migrations-namespace&gt;
+
+    &lt;table name=&quot;doctrine_migration_versions&quot; /&gt;
+
+    &lt;migrations-directory&gt;/path/to/migrations/classes/DoctrineMigrations&lt;/migrations-directory&gt;
+
+&lt;/doctrine-migrations&gt;
+</code></pre>
+<p>Of course you could do the same thing with a <em>configuration.yml</em> file:</p>
+<pre><code class="yaml">name: Doctrine Sandbox Migrations
+migrations_namespace: DoctrineMigrations
+table_name: doctrine_migration_versions
+migrations_directory: /path/to/migrations/classes/DoctrineMigrations
+</code></pre>
+<p>With the above example, the migrations tool will search the <code>migrations_directory</code>
+recursively for files that begin with <code>Version</code> followed one to 255 characters
+and a <code>.php</code> suffix. <code>Version.{1,255}\.php</code> is the regular expression that's
+used.</p>
+<p>Everything after <code>Version</code> will be treated as the actual version in
+the database. Take the file name <code>VersionSomeVersion.php</code>, <code>SomeVersion</code> would
+be the version <em>number</em> stored in the migrations database table. Since versions
+are ordered, doctrine <a href="generating_migrations.html">generates</a> version
+numbers with a date time like <code>Version20150505120000.php</code>. This ensures that
+the migrations are executed in the correct order.</p>
+<p>While you <em>can</em> use custom filenames, it's probably a good idea to the Doctrine
+<a href="generating_migrations.html">generate migration files</a> for you.</p>
+<p>And if you want to specify each migration manually in YAML you can:</p>
+<pre><code class="yaml">table_name: doctrine_migration_versions
+migrations_directory: /path/to/migrations/classes/DoctrineMigrations
+migrations:
+  migration1:
+    version: 20100704000000
+    class: DoctrineMigrations\NewMigration
+</code></pre>
+<p>If you specify your own migration classes (like `DoctrineMigrations\NewMigration` in the previous
+example) you will need an autoloader unless all those classes begin with the prefix Version*,
+for example path/to/migrations/classes/VersionNewMigration.php.</p>
                                             </div>
                 </div>
             </main>
