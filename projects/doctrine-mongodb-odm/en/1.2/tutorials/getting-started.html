@@ -203,7 +203,7 @@ class BlogPost
 <a class="section-anchor" id="title.1.3" name="title.1.3"></a><h2 class="section-header"><a href="#title.1.3">Persistent Models<i class="fas fa-link"></i></a></h2>
 <p>To make the above classes persistent, all we need to do is provide Doctrine with some mapping
 information so that it knows how to consume the objects and persist them to the database.</p>
-<p>You can provide your mapping information in Annotations or XML:</p>
+<p>You can provide your mapping information in Annotations, XML, or YAML:</p>
 <div class="configuration-block"><pre><code class="php">&lt;?php
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
@@ -273,6 +273,32 @@ class BlogPost
   &lt;/document&gt;
 &lt;/doctrine-mongo-mapping&gt;
 </code></pre>
+<pre><code class="yaml">Documents\User:
+  fields:
+    id:
+      type: id
+      id: true
+    name:
+      type: string
+    email:
+      type: string
+  referenceMany:
+    posts:
+      targetDocument: Documents\BlogPost
+      cascade: all
+
+Documents\BlogPost:
+  fields:
+    id:
+      type: id
+      id: true
+    title:
+      type: string
+    body:
+      type: string
+    createdAt:
+      type: date
+</code></pre>
 </div>
 <p>That’s it, we have our models, and we can save and retrieve them. Now
 all we need to do is to properly instantiate the <code>DocumentManager</code>
@@ -280,15 +306,12 @@ instance. Read more about setting up the Doctrine MongoDB ODM in the
 <a href="../reference/introduction.html">Introduction to MongoDB Object Document Mapper</a>:</p>
 <pre><code class="php">&lt;?php
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
 
-$loader = require_once('path/to/vendor/autoload.php');
-
-AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+AnnotationDriver::registerAnnotationClasses();
 
 $config = new Configuration();
 $config-&gt;setProxyDir('/path/to/generate/proxies');
@@ -337,7 +360,7 @@ stored in MongoDB in correct collections and databases. You can use the
     [_id] =&gt; 4bec5869fdc212081d000000
     [title] =&gt; My First Blog Post
     [body] =&gt; MongoDB + Doctrine 2 ODM = awesomeness!
-    [createdAt] =&gt; MongoDB\BSON\UTCDateTime Object
+    [createdAt] =&gt; MongoDate Object
         (
             [sec] =&gt; 1273723200
             [usec] =&gt; 0
@@ -373,7 +396,7 @@ $user = $dm-&gt;find('User', $userId);
 <p>Or you can find the user by name even:</p>
 <pre><code class="php">&lt;?php
 
-$user = $dm-&gt;getRepository('User')-&gt;findOneBy(array('name' =&gt; 'Bulat S.'));
+$user = $dm-&gt;getRepository('User')-&gt;findOneByName('Bulat S.');
 </code></pre>
 <p>If you want to iterate over the posts the user references it is as easy as the following:</p>
 <pre><code class="php">&lt;?php

@@ -86,29 +86,6 @@
         
     
 
-            <div class="description">
-            <p>The EntityManager is the central access point to ORM functionality.</p>            <p>It is a facade to all different ORM subsystems such as UnitOfWork,
-Query Language and Repository API. Instantiation is done through
-the static create() method. The quickest way to obtain a fully
-configured EntityManager is:</p>
-
-<pre><code>use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\EntityManager;
-
-$paths = array('/path/to/entity/mapping/files');
-
-$config = Setup::createAnnotationMetadataConfiguration($paths);
-$dbParams = array('driver' =&gt; 'pdo_sqlite', 'memory' =&gt; true);
-$entityManager = EntityManager::create($dbParams, $config);
-</code></pre>
-
-<p>For more information see
-{@link http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/configuration.html}</p>
-
-<p>You should never attempt to inherit from the EntityManager: Inheritance
-is not a valid extension point for the EntityManager. Instead you
-should take a look at the {see \Doctrine\ORM\Decorator\EntityManagerDecorator}
-and wrap your entity manager in a decorator.</p>                    </div>
     
     
     
@@ -155,16 +132,6 @@ and uses the given Configuration and EventManager implementations.</p>          
                     <a href="#method_getExpressionBuilder">getExpressionBuilder</a>()
         
                                             <p>Gets an ExpressionBuilder used for object-oriented construction of query expressions.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    <a href="../../Doctrine/ORM/Utility/IdentifierFlattener.html"><abbr title="Doctrine\ORM\Utility\IdentifierFlattener">IdentifierFlattener</abbr></a>
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_getIdentifierFlattener">getIdentifierFlattener</a>()
-        
-                                            <p>Gets an IdentifierFlattener used for converting Entities into an array of identifier values.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -239,12 +206,32 @@ and uses the given Configuration and EventManager implementations.</p>          
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_createNamedQuery">createNamedQuery</a>(string $name)
+        
+                                            <p>Creates a Query from a named query.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
                     <a href="../../Doctrine/ORM/NativeQuery.html"><abbr title="Doctrine\ORM\NativeQuery">NativeQuery</abbr></a>
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_createNativeQuery">createNativeQuery</a>(string $sql, <a href="../../Doctrine/ORM/Query/ResultSetMapping.html"><abbr title="Doctrine\ORM\Query\ResultSetMapping">ResultSetMapping</abbr></a> $rsm)
         
                                             <p>Creates a native SQL query.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/NativeQuery.html"><abbr title="Doctrine\ORM\NativeQuery">NativeQuery</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_createNamedNativeQuery">createNamedNativeQuery</a>(string $name)
+        
+                                            <p>Creates a NativeQuery from a named native query.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -259,30 +246,10 @@ and uses the given Configuration and EventManager implementations.</p>          
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    
+                    void
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_merge">merge</a>($object)
-        <small><sup><span class="label label-danger">deprecated</span></sup></small>
-                                            <p>{@inheritDoc}</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_detach">detach</a>($object)
-        <small><sup><span class="label label-danger">deprecated</span></sup></small>
-                                            <p>{@inheritDoc}</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_flush">flush</a>()
+                    <a href="#method_flush">flush</a>(null|object|array $entity = null)
         
                                             <p>Flushes all changes to objects that have been queued up to now to the database.</p>                </div>
                 <div class="col-md-2"></div>
@@ -292,14 +259,14 @@ and uses the given Configuration and EventManager implementations.</p>          
                     object|null
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_find">find</a>(string $entityName, mixed $id, int|null $lockMode = null, int|null $lockVersion = null)
+                    <a href="#method_find">find</a>(string $entityName, mixed $id, integer|null $lockMode = null, integer|null $lockVersion = null)
         
                                             <p>Finds an Entity by its identifier.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    object|<abbr title="ProxyManager\Proxy\GhostObjectInterface">GhostObjectInterface</abbr>|null
+                    object|null
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_getReference">getReference</a>(string $entityName, mixed $id)
@@ -313,7 +280,7 @@ without actually loading it, if the entity is not yet loaded.</p>               
                     object
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_getPartialReference">getPartialReference</a>(string $entityName, $id)
+                    <a href="#method_getPartialReference">getPartialReference</a>(string $entityName, mixed $identifier)
         
                                             <p>Gets a partial reference to the entity identified by the given type and identifier
 without actually loading it, if the entity is not yet loaded.</p>                </div>
@@ -321,10 +288,10 @@ without actually loading it, if the entity is not yet loaded.</p>               
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    
+                    void
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_clear">clear</a>(null $entityName = null)
+                    <a href="#method_clear">clear</a>(string|null $entityName = null)
         
                                             <p>Clears the EntityManager. All entities that are currently managed
 by this EntityManager become detached.</p>                </div>
@@ -344,7 +311,7 @@ be used after it is closed.</p>                </div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    
+                    void
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_persist">persist</a>(object $entity)
@@ -354,7 +321,7 @@ be used after it is closed.</p>                </div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    
+                    void
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_remove">remove</a>(object $entity)
@@ -364,13 +331,46 @@ be used after it is closed.</p>                </div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    
+                    void
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_refresh">refresh</a>(object $entity)
         
                                             <p>Refreshes the persistent state of an entity from the database,
 overriding any local changes that have not yet been persisted.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_detach">detach</a>(object $entity)
+        
+                                            <p>Detaches an entity from the EntityManager, causing a managed entity to
+become detached.  Unflushed changes made to the entity if any
+(including removal of the entity), will not be synchronized to the database.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    object
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_merge">merge</a>(object $entity)
+        
+                                            <p>Merges the state of a detached entity into the persistence context
+of this EntityManager and returns the managed copy of the entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    object
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_copy">copy</a>(object $entity, boolean $deep = false)
+        
+                                            <p>Creates a copy of the given entity. Can create a shallow or a deep copy.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -395,7 +395,7 @@ overriding any local changes that have not yet been persisted.</p>              
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    bool
+                    boolean
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_contains">contains</a>(object $entity)
@@ -465,7 +465,7 @@ overriding any local changes that have not yet been persisted.</p>              
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    <a href="../../Doctrine/ORM/Proxy/Factory/ProxyFactory.html"><abbr title="Doctrine\ORM\Proxy\Factory\ProxyFactory">ProxyFactory</abbr></a>
+                    <a href="../../Doctrine/ORM/Proxy/ProxyFactory.html"><abbr title="Doctrine\ORM\Proxy\ProxyFactory">ProxyFactory</abbr></a>
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_getProxyFactory">getProxyFactory</a>()
@@ -488,7 +488,7 @@ overriding any local changes that have not yet been persisted.</p>              
                     static&nbsp;<a href="../../Doctrine/ORM/EntityManager.html"><abbr title="Doctrine\ORM\EntityManager">EntityManager</abbr></a>
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_create">create</a>(<abbr title="Doctrine\DBAL\Connection">Connection</abbr>|mixed[] $connection, <a href="../../Doctrine/ORM/Configuration.html"><abbr title="Doctrine\ORM\Configuration">Configuration</abbr></a> $config, <abbr title="Doctrine\Common\EventManager">EventManager</abbr>|null $eventManager = null)
+                    <a href="#method_create">create</a>(array|<abbr title="Doctrine\DBAL\Connection">Connection</abbr> $connection, <a href="../../Doctrine/ORM/Configuration.html"><abbr title="Doctrine\ORM\Configuration">Configuration</abbr></a> $config, <abbr title="Doctrine\Common\EventManager">EventManager</abbr> $eventManager = null)
         
                                             <p>Factory method to create EntityManager instances.</p>                </div>
                 <div class="col-md-2"></div>
@@ -498,7 +498,7 @@ overriding any local changes that have not yet been persisted.</p>              
                     static&nbsp;<abbr title="Doctrine\DBAL\Connection">Connection</abbr>
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_createConnection">createConnection</a>(<abbr title="Doctrine\DBAL\Connection">Connection</abbr>|mixed[] $connection, <a href="../../Doctrine/ORM/Configuration.html"><abbr title="Doctrine\ORM\Configuration">Configuration</abbr></a> $config, <abbr title="Doctrine\Common\EventManager">EventManager</abbr>|null $eventManager = null)
+                    <a href="#method_createConnection">createConnection</a>(array|<abbr title="Doctrine\DBAL\Connection">Connection</abbr> $connection, <a href="../../Doctrine/ORM/Configuration.html"><abbr title="Doctrine\ORM\Configuration">Configuration</abbr></a> $config, <abbr title="Doctrine\Common\EventManager">EventManager</abbr> $eventManager = null)
         
                                             <p>Factory method to create Connection instances.</p>                </div>
                 <div class="col-md-2"></div>
@@ -515,7 +515,7 @@ overriding any local changes that have not yet been persisted.</p>              
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    bool
+                    boolean
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_isFiltersStateClean">isFiltersStateClean</a>()
@@ -525,7 +525,7 @@ overriding any local changes that have not yet been persisted.</p>              
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    bool
+                    boolean
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_hasFilters">hasFilters</a>()
@@ -541,7 +541,7 @@ overriding any local changes that have not yet been persisted.</p>              
             <div id="method-details">
                     <div class="method-item">
                     <h3 id="method___construct">
-        <div class="location">at         line 142</div>
+        <div class="location">at         line 148</div>
         <code>            protected        
     <strong>__construct</strong>(<abbr title="Doctrine\DBAL\Connection">Connection</abbr> $conn, <a href="../../Doctrine/ORM/Configuration.html"><abbr title="Doctrine\ORM\Configuration">Configuration</abbr></a> $config, <abbr title="Doctrine\Common\EventManager">EventManager</abbr> $eventManager)
         </code>
@@ -583,7 +583,7 @@ and uses the given Configuration and EventManager implementations.</p>          
             </div>
                     <div class="method-item">
                     <h3 id="method_getConnection">
-        <div class="location">at         line 170</div>
+        <div class="location">at         line 179</div>
         <code>                    <abbr title="Doctrine\DBAL\Connection">Connection</abbr>
     <strong>getConnection</strong>()
         </code>
@@ -613,7 +613,7 @@ and uses the given Configuration and EventManager implementations.</p>          
             </div>
                     <div class="method-item">
                     <h3 id="method_getMetadataFactory">
-        <div class="location">at         line 180</div>
+        <div class="location">at         line 189</div>
         <code>                    <a href="../../Doctrine/ORM/Mapping/ClassMetadataFactory.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadataFactory">ClassMetadataFactory</abbr></a>
     <strong>getMetadataFactory</strong>()
         </code>
@@ -643,7 +643,7 @@ and uses the given Configuration and EventManager implementations.</p>          
             </div>
                     <div class="method-item">
                     <h3 id="method_getExpressionBuilder">
-        <div class="location">at         line 188</div>
+        <div class="location">at         line 197</div>
         <code>                    <a href="../../Doctrine/ORM/Query/Expr.html"><abbr title="Doctrine\ORM\Query\Expr">Expr</abbr></a>
     <strong>getExpressionBuilder</strong>()
         </code>
@@ -679,38 +679,8 @@ and uses the given Configuration and EventManager implementations.</p>          
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_getIdentifierFlattener">
-        <div class="location">at         line 197</div>
-        <code>                    <a href="../../Doctrine/ORM/Utility/IdentifierFlattener.html"><abbr title="Doctrine\ORM\Utility\IdentifierFlattener">IdentifierFlattener</abbr></a>
-    <strong>getIdentifierFlattener</strong>()
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Gets an IdentifierFlattener used for converting Entities into an array of identifier values.</p>                                                </div>
-                <div class="tags">
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td><a href="../../Doctrine/ORM/Utility/IdentifierFlattener.html"><abbr title="Doctrine\ORM\Utility\IdentifierFlattener">IdentifierFlattener</abbr></a></td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
                     <h3 id="method_beginTransaction">
-        <div class="location">at         line 205</div>
+        <div class="location">at         line 209</div>
         <code>                    void
     <strong>beginTransaction</strong>()
         </code>
@@ -740,7 +710,7 @@ and uses the given Configuration and EventManager implementations.</p>          
             </div>
                     <div class="method-item">
                     <h3 id="method_getCache">
-        <div class="location">at         line 213</div>
+        <div class="location">at         line 217</div>
         <code>                    <a href="../../Doctrine/ORM/Cache.html"><abbr title="Doctrine\ORM\Cache">Cache</abbr></a>|null
     <strong>getCache</strong>()
         </code>
@@ -770,7 +740,7 @@ and uses the given Configuration and EventManager implementations.</p>          
             </div>
                     <div class="method-item">
                     <h3 id="method_transactional">
-        <div class="location">at         line 221</div>
+        <div class="location">at         line 225</div>
         <code>                    mixed
     <strong>transactional</strong>(callable $func)
         </code>
@@ -803,20 +773,11 @@ the transaction is rolled back, the EntityManager closed and the exception re-th
                     <table class="table table-condensed">
         <tr>
             <td>mixed</td>
-            <td>The value returned from the closure.</td>
+            <td>The non-empty value returned from the closure or true instead.</td>
         </tr>
     </table>
 
             
-                            <h4>Exceptions</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a target="_blank" href="http://php.net/Throwable">Throwable</a></td>
-                <td></td>
-            </tr>
-            </table>
-
             
                     </div>
     </div>
@@ -824,7 +785,7 @@ the transaction is rolled back, the EntityManager closed and the exception re-th
             </div>
                     <div class="method-item">
                     <h3 id="method_commit">
-        <div class="location">at         line 243</div>
+        <div class="location">at         line 251</div>
         <code>                    void
     <strong>commit</strong>()
         </code>
@@ -854,7 +815,7 @@ the transaction is rolled back, the EntityManager closed and the exception re-th
             </div>
                     <div class="method-item">
                     <h3 id="method_rollback">
-        <div class="location">at         line 251</div>
+        <div class="location">at         line 259</div>
         <code>                    void
     <strong>rollback</strong>()
         </code>
@@ -884,7 +845,7 @@ the transaction is rolled back, the EntityManager closed and the exception re-th
             </div>
                     <div class="method-item">
                     <h3 id="method_getClassMetadata">
-        <div class="location">at         line 274</div>
+        <div class="location">at         line 280</div>
         <code>                    <abbr title="Mapping\ClassMetadata">ClassMetadata</abbr>
     <strong>getClassMetadata</strong>($className)
         </code>
@@ -901,7 +862,7 @@ the transaction is rolled back, the EntityManager closed and the exception re-th
 MyProject\Domain\User
 sales:PriceRequest</p>
 
-<p>{@internal Performance-sensitive method. }}</p>                            </div>
+<p>Internal note: Performance-sensitive method.</p>                            </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
@@ -924,23 +885,6 @@ sales:PriceRequest</p>
     </table>
 
             
-                            <h4>Exceptions</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a target="_blank" href="http://php.net/ReflectionException">ReflectionException</a></td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td><a target="_blank" href="http://php.net/InvalidArgumentException">InvalidArgumentException</a></td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td><abbr title="Doctrine\Common\Persistence\Mapping\MappingException">MappingException</abbr></td>
-                <td></td>
-            </tr>
-            </table>
-
             
                     </div>
     </div>
@@ -948,7 +892,7 @@ sales:PriceRequest</p>
             </div>
                     <div class="method-item">
                     <h3 id="method_createQuery">
-        <div class="location">at         line 282</div>
+        <div class="location">at         line 288</div>
         <code>                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
     <strong>createQuery</strong>(string $dql = &#039;&#039;)
         </code>
@@ -987,8 +931,48 @@ sales:PriceRequest</p>
 
             </div>
                     <div class="method-item">
+                    <h3 id="method_createNamedQuery">
+        <div class="location">at         line 302</div>
+        <code>                    <a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a>
+    <strong>createNamedQuery</strong>(string $name)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Creates a Query from a named query.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Query.html"><abbr title="Doctrine\ORM\Query">Query</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
                     <h3 id="method_createNativeQuery">
-        <div class="location">at         line 296</div>
+        <div class="location">at         line 310</div>
         <code>                    <a href="../../Doctrine/ORM/NativeQuery.html"><abbr title="Doctrine\ORM\NativeQuery">NativeQuery</abbr></a>
     <strong>createNativeQuery</strong>(string $sql, <a href="../../Doctrine/ORM/Query/ResultSetMapping.html"><abbr title="Doctrine\ORM\Query\ResultSetMapping">ResultSetMapping</abbr></a> $rsm)
         </code>
@@ -1032,8 +1016,48 @@ sales:PriceRequest</p>
 
             </div>
                     <div class="method-item">
+                    <h3 id="method_createNamedNativeQuery">
+        <div class="location">at         line 323</div>
+        <code>                    <a href="../../Doctrine/ORM/NativeQuery.html"><abbr title="Doctrine\ORM\NativeQuery">NativeQuery</abbr></a>
+    <strong>createNamedNativeQuery</strong>(string $name)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Creates a NativeQuery from a named native query.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/NativeQuery.html"><abbr title="Doctrine\ORM\NativeQuery">NativeQuery</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
                     <h3 id="method_createQueryBuilder">
-        <div class="location">at         line 309</div>
+        <div class="location">at         line 333</div>
         <code>                    <a href="../../Doctrine/ORM/QueryBuilder.html"><abbr title="Doctrine\ORM\QueryBuilder">QueryBuilder</abbr></a>
     <strong>createQueryBuilder</strong>()
         </code>
@@ -1062,86 +1086,10 @@ sales:PriceRequest</p>
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_merge">
-        <div class="location">at         line 319</div>
-        <code>                    
-    <strong>merge</strong>($object)
-        <small><sup><span class="label label-danger">deprecated</span></sup></small></code>
-    </h3>
-    <div class="details">
-            
-            <p>
-                <small><sup><span class="label label-danger">deprecated</span></sup></small>
-                            <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-                    </p>
-    
-
-                    <div class="method-description">
-                                    <p>{@inheritDoc}</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td></td>
-                <td>$object</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_detach">
-        <div class="location">at         line 329</div>
-        <code>                    
-    <strong>detach</strong>($object)
-        <small><sup><span class="label label-danger">deprecated</span></sup></small></code>
-    </h3>
-    <div class="details">
-            
-            <p>
-                <small><sup><span class="label label-danger">deprecated</span></sup></small>
-                            <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-                    </p>
-    
-
-                    <div class="method-description">
-                                    <p>{@inheritDoc}</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td></td>
-                <td>$object</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
                     <h3 id="method_flush">
-        <div class="location">at         line 346</div>
-        <code>                    
-    <strong>flush</strong>()
+        <div class="location">at         line 354</div>
+        <code>                    void
+    <strong>flush</strong>(null|object|array $entity = null)
         </code>
     </h3>
     <div class="details">
@@ -1155,7 +1103,26 @@ database.</p>
 <p>If an entity is explicitly passed to this method only this entity and
 the cascade-persist semantics + scheduled inserts/removals are synchronized.</p>                            </div>
                 <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>null|object|array</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
             
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
             
                             <h4>Exceptions</h4>
 
@@ -1178,9 +1145,9 @@ the cascade-persist semantics + scheduled inserts/removals are synchronized.</p>
             </div>
                     <div class="method-item">
                     <h3 id="method_find">
-        <div class="location">at         line 371</div>
+        <div class="location">at         line 379</div>
         <code>                    object|null
-    <strong>find</strong>(string $entityName, mixed $id, int|null $lockMode = null, int|null $lockVersion = null)
+    <strong>find</strong>(string $entityName, mixed $id, integer|null $lockMode = null, integer|null $lockVersion = null)
         </code>
     </h3>
     <div class="details">
@@ -1204,17 +1171,17 @@ the cascade-persist semantics + scheduled inserts/removals are synchronized.</p>
                 <td>The identity of the entity to find.</td>
             </tr>
                     <tr>
-                <td>int|null</td>
+                <td>integer|null</td>
                 <td>$lockMode</td>
                 <td>One of the \Doctrine\DBAL\LockMode::* constants
-                             or NULL if no specific lock mode should be used
-                             during the search.</td>
+                                 or NULL if no specific lock mode should be used
+                                 during the search.</td>
             </tr>
                     <tr>
-                <td>int|null</td>
+                <td>integer|null</td>
                 <td>$lockVersion</td>
                 <td>The version of the entity to find when using
-                             optimistic locking.</td>
+                                 optimistic locking.</td>
             </tr>
             </table>
 
@@ -1257,8 +1224,8 @@ the cascade-persist semantics + scheduled inserts/removals are synchronized.</p>
             </div>
                     <div class="method-item">
                     <h3 id="method_getReference">
-        <div class="location">at         line 464</div>
-        <code>                    object|<abbr title="ProxyManager\Proxy\GhostObjectInterface">GhostObjectInterface</abbr>|null
+        <div class="location">at         line 470</div>
+        <code>                    object|null
     <strong>getReference</strong>(string $entityName, mixed $id)
         </code>
     </h3>
@@ -1290,7 +1257,7 @@ without actually loading it, if the entity is not yet loaded.</p>               
 
                     <table class="table table-condensed">
         <tr>
-            <td>object|<abbr title="ProxyManager\Proxy\GhostObjectInterface">GhostObjectInterface</abbr>|null</td>
+            <td>object|null</td>
             <td>The entity reference.</td>
         </tr>
     </table>
@@ -1312,9 +1279,9 @@ without actually loading it, if the entity is not yet loaded.</p>               
             </div>
                     <div class="method-item">
                     <h3 id="method_getPartialReference">
-        <div class="location">at         line 530</div>
+        <div class="location">at         line 512</div>
         <code>                    object
-    <strong>getPartialReference</strong>(string $entityName, $id)
+    <strong>getPartialReference</strong>(string $entityName, mixed $identifier)
         </code>
     </h3>
     <div class="details">
@@ -1343,9 +1310,9 @@ never be loaded in the first place.</p>                            </div>
                 <td>The name of the entity type.</td>
             </tr>
                     <tr>
-                <td></td>
-                <td>$id</td>
-                <td></td>
+                <td>mixed</td>
+                <td>$identifier</td>
+                <td>The entity identifier.</td>
             </tr>
             </table>
 
@@ -1367,9 +1334,9 @@ never be loaded in the first place.</p>                            </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_clear">
-        <div class="location">at         line 592</div>
-        <code>                    
-    <strong>clear</strong>(null $entityName = null)
+        <div class="location">at         line 547</div>
+        <code>                    void
+    <strong>clear</strong>(string|null $entityName = null)
         </code>
     </h3>
     <div class="details">
@@ -1384,14 +1351,37 @@ by this EntityManager become detached.</p>                                      
 
                     <table class="table table-condensed">
                     <tr>
-                <td>null</td>
+                <td>string|null</td>
                 <td>$entityName</td>
-                <td>Unused. @todo Remove from ObjectManager.</td>
+                <td>if given, only entities of this type will get detached</td>
             </tr>
             </table>
 
             
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
             
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMInvalidArgumentException.html"><abbr title="Doctrine\ORM\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></a></td>
+                <td>if a non-null non-string value is given</td>
+            </tr>
+                    <tr>
+                <td><abbr title="Doctrine\Common\Persistence\Mapping\MappingException">MappingException</abbr></td>
+                <td>if a $entityName is given, but that entity is not
+                                                              found in the mappings</td>
+            </tr>
+            </table>
+
             
                     </div>
     </div>
@@ -1399,7 +1389,7 @@ by this EntityManager become detached.</p>                                      
             </div>
                     <div class="method-item">
                     <h3 id="method_close">
-        <div class="location">at         line 606</div>
+        <div class="location">at         line 563</div>
         <code>                    void
     <strong>close</strong>()
         </code>
@@ -1431,8 +1421,8 @@ be used after it is closed.</p>                                                <
             </div>
                     <div class="method-item">
                     <h3 id="method_persist">
-        <div class="location">at         line 627</div>
-        <code>                    
+        <div class="location">at         line 586</div>
+        <code>                    void
     <strong>persist</strong>(object $entity)
         </code>
     </h3>
@@ -1458,6 +1448,15 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
             </table>
 
             
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
             
                             <h4>Exceptions</h4>
 
@@ -1479,8 +1478,8 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
             </div>
                     <div class="method-item">
                     <h3 id="method_remove">
-        <div class="location">at         line 649</div>
-        <code>                    
+        <div class="location">at         line 610</div>
+        <code>                    void
     <strong>remove</strong>(object $entity)
         </code>
     </h3>
@@ -1503,6 +1502,15 @@ or as a result of the flush operation.</p>                            </div>
             </table>
 
             
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
             
                             <h4>Exceptions</h4>
 
@@ -1524,8 +1532,8 @@ or as a result of the flush operation.</p>                            </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_refresh">
-        <div class="location">at         line 669</div>
-        <code>                    
+        <div class="location">at         line 632</div>
+        <code>                    void
     <strong>refresh</strong>(object $entity)
         </code>
     </h3>
@@ -1548,6 +1556,15 @@ overriding any local changes that have not yet been persisted.</p>              
             </table>
 
             
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
             
                             <h4>Exceptions</h4>
 
@@ -1568,8 +1585,168 @@ overriding any local changes that have not yet been persisted.</p>              
 
             </div>
                     <div class="method-item">
+                    <h3 id="method_detach">
+        <div class="location">at         line 656</div>
+        <code>                    void
+    <strong>detach</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Detaches an entity from the EntityManager, causing a managed entity to
+become detached.  Unflushed changes made to the entity if any
+(including removal of the entity), will not be synchronized to the database.</p>                    <p>Entities which previously referenced the detached entity will continue to
+reference it.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to detach.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMInvalidArgumentException.html"><abbr title="Doctrine\ORM\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_merge">
+        <div class="location">at         line 677</div>
+        <code>                    object
+    <strong>merge</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Merges the state of a detached entity into the persistence context
+of this EntityManager and returns the managed copy of the entity.</p>                    <p>The entity passed to merge will not become associated/managed with this EntityManager.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The detached entity to merge into the persistence context.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>object</td>
+            <td>The managed copy of the entity.</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMInvalidArgumentException.html"><abbr title="Doctrine\ORM\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></a></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMException.html"><abbr title="Doctrine\ORM\ORMException">ORMException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_copy">
+        <div class="location">at         line 694</div>
+        <code>                    object
+    <strong>copy</strong>(object $entity, boolean $deep = false)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Creates a copy of the given entity. Can create a shallow or a deep copy.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to copy.</td>
+            </tr>
+                    <tr>
+                <td>boolean</td>
+                <td>$deep</td>
+                <td>FALSE for a shallow copy, TRUE for a deep copy.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>object</td>
+            <td>The new entity.</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a target="_blank" href="http://php.net/BadMethodCallException">BadMethodCallException</a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
                     <h3 id="method_lock">
-        <div class="location">at         line 683</div>
+        <div class="location">at         line 702</div>
         <code>                    void
     <strong>lock</strong>(object $entity, int $lockMode, int|null $lockVersion = null)
         </code>
@@ -1632,7 +1809,7 @@ overriding any local changes that have not yet been persisted.</p>              
             </div>
                     <div class="method-item">
                     <h3 id="method_getRepository">
-        <div class="location">at         line 695</div>
+        <div class="location">at         line 714</div>
         <code>                    <abbr title="Doctrine\Common\Persistence\ObjectRepository">ObjectRepository</abbr>|<a href="../../Doctrine/ORM/EntityRepository.html"><abbr title="Doctrine\ORM\EntityRepository">EntityRepository</abbr></a>
     <strong>getRepository</strong>(string $entityName)
         </code>
@@ -1672,8 +1849,8 @@ overriding any local changes that have not yet been persisted.</p>              
             </div>
                     <div class="method-item">
                     <h3 id="method_contains">
-        <div class="location">at         line 707</div>
-        <code>                    bool
+        <div class="location">at         line 726</div>
+        <code>                    boolean
     <strong>contains</strong>(object $entity)
         </code>
     </h3>
@@ -1699,7 +1876,7 @@ overriding any local changes that have not yet been persisted.</p>              
 
                     <table class="table table-condensed">
         <tr>
-            <td>bool</td>
+            <td>boolean</td>
             <td>TRUE if this EntityManager currently manages the given entity, FALSE otherwise.</td>
         </tr>
     </table>
@@ -1712,7 +1889,7 @@ overriding any local changes that have not yet been persisted.</p>              
             </div>
                     <div class="method-item">
                     <h3 id="method_getEventManager">
-        <div class="location">at         line 716</div>
+        <div class="location">at         line 736</div>
         <code>                    <abbr title="Doctrine\Common\EventManager">EventManager</abbr>
     <strong>getEventManager</strong>()
         </code>
@@ -1742,7 +1919,7 @@ overriding any local changes that have not yet been persisted.</p>              
             </div>
                     <div class="method-item">
                     <h3 id="method_getConfiguration">
-        <div class="location">at         line 724</div>
+        <div class="location">at         line 744</div>
         <code>                    <a href="../../Doctrine/ORM/Configuration.html"><abbr title="Doctrine\ORM\Configuration">Configuration</abbr></a>
     <strong>getConfiguration</strong>()
         </code>
@@ -1772,7 +1949,7 @@ overriding any local changes that have not yet been persisted.</p>              
             </div>
                     <div class="method-item">
                     <h3 id="method_isOpen">
-        <div class="location">at         line 744</div>
+        <div class="location">at         line 766</div>
         <code>                    bool
     <strong>isOpen</strong>()
         </code>
@@ -1802,7 +1979,7 @@ overriding any local changes that have not yet been persisted.</p>              
             </div>
                     <div class="method-item">
                     <h3 id="method_getUnitOfWork">
-        <div class="location">at         line 752</div>
+        <div class="location">at         line 774</div>
         <code>                    <a href="../../Doctrine/ORM/UnitOfWork.html"><abbr title="Doctrine\ORM\UnitOfWork">UnitOfWork</abbr></a>
     <strong>getUnitOfWork</strong>()
         </code>
@@ -1832,7 +2009,7 @@ overriding any local changes that have not yet been persisted.</p>              
             </div>
                     <div class="method-item">
                     <h3 id="method_getHydrator">
-        <div class="location">at         line 760</div>
+        <div class="location">at         line 782</div>
         <code>                    <a href="../../Doctrine/ORM/Internal/Hydration/AbstractHydrator.html"><abbr title="Doctrine\ORM\Internal\Hydration\AbstractHydrator">AbstractHydrator</abbr></a>
     <strong>getHydrator</strong>(int $hydrationMode)
         </code>
@@ -1873,7 +2050,7 @@ selectively iterate over the result.</p>                            </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_newHydrator">
-        <div class="location">at         line 768</div>
+        <div class="location">at         line 790</div>
         <code>                    <a href="../../Doctrine/ORM/Internal/Hydration/AbstractHydrator.html"><abbr title="Doctrine\ORM\Internal\Hydration\AbstractHydrator">AbstractHydrator</abbr></a>
     <strong>newHydrator</strong>(int $hydrationMode)
         </code>
@@ -1922,8 +2099,8 @@ selectively iterate over the result.</p>                            </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_getProxyFactory">
-        <div class="location">at         line 799</div>
-        <code>                    <a href="../../Doctrine/ORM/Proxy/Factory/ProxyFactory.html"><abbr title="Doctrine\ORM\Proxy\Factory\ProxyFactory">ProxyFactory</abbr></a>
+        <div class="location">at         line 820</div>
+        <code>                    <a href="../../Doctrine/ORM/Proxy/ProxyFactory.html"><abbr title="Doctrine\ORM\Proxy\ProxyFactory">ProxyFactory</abbr></a>
     <strong>getProxyFactory</strong>()
         </code>
     </h3>
@@ -1939,7 +2116,7 @@ selectively iterate over the result.</p>                            </div>
 
                     <table class="table table-condensed">
         <tr>
-            <td><a href="../../Doctrine/ORM/Proxy/Factory/ProxyFactory.html"><abbr title="Doctrine\ORM\Proxy\Factory\ProxyFactory">ProxyFactory</abbr></a></td>
+            <td><a href="../../Doctrine/ORM/Proxy/ProxyFactory.html"><abbr title="Doctrine\ORM\Proxy\ProxyFactory">ProxyFactory</abbr></a></td>
             <td></td>
         </tr>
     </table>
@@ -1952,7 +2129,7 @@ selectively iterate over the result.</p>                            </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_initializeObject">
-        <div class="location">at         line 807</div>
+        <div class="location">at         line 828</div>
         <code>                    
     <strong>initializeObject</strong>($obj)
         </code>
@@ -1983,9 +2160,9 @@ selectively iterate over the result.</p>                            </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_create">
-        <div class="location">at         line 824</div>
+        <div class="location">at         line 845</div>
         <code>        static            <a href="../../Doctrine/ORM/EntityManager.html"><abbr title="Doctrine\ORM\EntityManager">EntityManager</abbr></a>
-    <strong>create</strong>(<abbr title="Doctrine\DBAL\Connection">Connection</abbr>|mixed[] $connection, <a href="../../Doctrine/ORM/Configuration.html"><abbr title="Doctrine\ORM\Configuration">Configuration</abbr></a> $config, <abbr title="Doctrine\Common\EventManager">EventManager</abbr>|null $eventManager = null)
+    <strong>create</strong>(array|<abbr title="Doctrine\DBAL\Connection">Connection</abbr> $connection, <a href="../../Doctrine/ORM/Configuration.html"><abbr title="Doctrine\ORM\Configuration">Configuration</abbr></a> $config, <abbr title="Doctrine\Common\EventManager">EventManager</abbr> $eventManager = null)
         </code>
     </h3>
     <div class="details">
@@ -1999,7 +2176,7 @@ selectively iterate over the result.</p>                            </div>
 
                     <table class="table table-condensed">
                     <tr>
-                <td><abbr title="Doctrine\DBAL\Connection">Connection</abbr>|mixed[]</td>
+                <td>array|<abbr title="Doctrine\DBAL\Connection">Connection</abbr></td>
                 <td>$connection</td>
                 <td>An array with the connection parameters or an existing Connection instance.</td>
             </tr>
@@ -2009,7 +2186,7 @@ selectively iterate over the result.</p>                            </div>
                 <td>The Configuration instance to use.</td>
             </tr>
                     <tr>
-                <td><abbr title="Doctrine\Common\EventManager">EventManager</abbr>|null</td>
+                <td><abbr title="Doctrine\Common\EventManager">EventManager</abbr></td>
                 <td>$eventManager</td>
                 <td>The EventManager instance to use.</td>
             </tr>
@@ -2046,9 +2223,9 @@ selectively iterate over the result.</p>                            </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_createConnection">
-        <div class="location">at         line 847</div>
+        <div class="location">at         line 868</div>
         <code>        static    protected        <abbr title="Doctrine\DBAL\Connection">Connection</abbr>
-    <strong>createConnection</strong>(<abbr title="Doctrine\DBAL\Connection">Connection</abbr>|mixed[] $connection, <a href="../../Doctrine/ORM/Configuration.html"><abbr title="Doctrine\ORM\Configuration">Configuration</abbr></a> $config, <abbr title="Doctrine\Common\EventManager">EventManager</abbr>|null $eventManager = null)
+    <strong>createConnection</strong>(array|<abbr title="Doctrine\DBAL\Connection">Connection</abbr> $connection, <a href="../../Doctrine/ORM/Configuration.html"><abbr title="Doctrine\ORM\Configuration">Configuration</abbr></a> $config, <abbr title="Doctrine\Common\EventManager">EventManager</abbr> $eventManager = null)
         </code>
     </h3>
     <div class="details">
@@ -2062,7 +2239,7 @@ selectively iterate over the result.</p>                            </div>
 
                     <table class="table table-condensed">
                     <tr>
-                <td><abbr title="Doctrine\DBAL\Connection">Connection</abbr>|mixed[]</td>
+                <td>array|<abbr title="Doctrine\DBAL\Connection">Connection</abbr></td>
                 <td>$connection</td>
                 <td>An array with the connection parameters or an existing Connection instance.</td>
             </tr>
@@ -2072,7 +2249,7 @@ selectively iterate over the result.</p>                            </div>
                 <td>The Configuration instance to use.</td>
             </tr>
                     <tr>
-                <td><abbr title="Doctrine\Common\EventManager">EventManager</abbr>|null</td>
+                <td><abbr title="Doctrine\Common\EventManager">EventManager</abbr></td>
                 <td>$eventManager</td>
                 <td>The EventManager instance to use.</td>
             </tr>
@@ -2109,7 +2286,7 @@ selectively iterate over the result.</p>                            </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_getFilters">
-        <div class="location">at         line 873</div>
+        <div class="location">at         line 894</div>
         <code>                    <a href="../../Doctrine/ORM/Query/FilterCollection.html"><abbr title="Doctrine\ORM\Query\FilterCollection">FilterCollection</abbr></a>
     <strong>getFilters</strong>()
         </code>
@@ -2139,8 +2316,8 @@ selectively iterate over the result.</p>                            </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_isFiltersStateClean">
-        <div class="location">at         line 885</div>
-        <code>                    bool
+        <div class="location">at         line 906</div>
+        <code>                    boolean
     <strong>isFiltersStateClean</strong>()
         </code>
     </h3>
@@ -2156,7 +2333,7 @@ selectively iterate over the result.</p>                            </div>
 
                     <table class="table table-condensed">
         <tr>
-            <td>bool</td>
+            <td>boolean</td>
             <td>True, if the filter collection is clean.</td>
         </tr>
     </table>
@@ -2169,8 +2346,8 @@ selectively iterate over the result.</p>                            </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_hasFilters">
-        <div class="location">at         line 893</div>
-        <code>                    bool
+        <div class="location">at         line 914</div>
+        <code>                    boolean
     <strong>hasFilters</strong>()
         </code>
     </h3>
@@ -2186,7 +2363,7 @@ selectively iterate over the result.</p>                            </div>
 
                     <table class="table table-condensed">
         <tr>
-            <td>bool</td>
+            <td>boolean</td>
             <td>True, if the EM has a filter collection.</td>
         </tr>
     </table>

@@ -118,30 +118,20 @@ Define the behavior that should be implemented by all entity persisters.</p>    
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    mixed[]
+                    array
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_getIdentifier">getIdentifier</a>(object $entity)
+                    <a href="#method_getInserts">getInserts</a>()
         
-                                            <p>Extracts the identifier values of an entity that relies on this persister.</p>                </div>
+                                            <p>Get all queued inserts.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    
+                    string
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_setIdentifier">setIdentifier</a>(object $entity, array $id)
-        
-                                            <p>Populates the entity identifier of an entity.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    mixed|null
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_getColumnValue">getColumnValue</a>($entity, string $columnName)
+                    <a href="#method_getInsertSQL">getInsertSQL</a>()
         
                                             <p class="no-description">No description</p>
                                     </div>
@@ -152,7 +142,7 @@ Define the behavior that should be implemented by all entity persisters.</p>    
                     string
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_getSelectSQL">getSelectSQL</a>($criteria, <a href="../../../../Doctrine/ORM/Mapping/AssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\AssociationMetadata">AssociationMetadata</abbr></a>|null $association = null, $lockMode = null, $limit = null, $offset = null, array $orderBy = [])
+                    <a href="#method_getSelectSQL">getSelectSQL</a>(array|<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $criteria, array|null $assoc = null, int|null $lockMode = null, int|null $limit = null, int|null $offset = null, array $orderBy = null)
         
                                             <p>Gets the SELECT SQL to select one or more entities by a set of field criteria.</p>                </div>
                 <div class="col-md-2"></div>
@@ -162,24 +152,24 @@ Define the behavior that should be implemented by all entity persisters.</p>    
                     string
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_getCountSQL">getCountSQL</a>(<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr>|mixed[] $criteria = [])
+                    <a href="#method_getCountSQL">getCountSQL</a>(array|<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $criteria = array())
         
                                             <p>Get the COUNT SQL to count entities (optionally based on a criteria)</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    <abbr title="Doctrine\ORM\Persisters\Entity\mixed[]">mixed[]</abbr>[]
+                    array
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_expandParameters">expandParameters</a>(mixed[] $criteria)
+                    <a href="#method_expandParameters">expandParameters</a>($criteria)
         
                                             <p>Expands the parameters from the given criteria and use the correct binding types if found.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    <abbr title="Doctrine\ORM\Persisters\Entity\mixed[]">mixed[]</abbr>[]
+                    array
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_expandCriteriaParameters">expandCriteriaParameters</a>(<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $criteria)
@@ -192,7 +182,7 @@ Define the behavior that should be implemented by all entity persisters.</p>    
                     string
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_getSelectConditionStatementSQL">getSelectConditionStatementSQL</a>($field, $value, <a href="../../../../Doctrine/ORM/Mapping/AssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\AssociationMetadata">AssociationMetadata</abbr></a>|null $association = null, $comparison = null)
+                    <a href="#method_getSelectConditionStatementSQL">getSelectConditionStatementSQL</a>(string $field, mixed $value, array|null $assoc = null, string|null $comparison = null)
         
                                             <p>Gets the SQL WHERE condition for matching a field with a given value.</p>                </div>
                 <div class="col-md-2"></div>
@@ -202,9 +192,20 @@ Define the behavior that should be implemented by all entity persisters.</p>    
                     void
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_insert">insert</a>($entity)
+                    <a href="#method_addInsert">addInsert</a>(object $entity)
         
-                                            <p>Inserts an entity. Returns any generated post-insert identifiers that were created as a result of the insertion.</p>                </div>
+                                            <p>Adds an entity to the queued insertions.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_executeInserts">executeInserts</a>()
+        
+                                            <p>Executes all queued entity insertions and returns any generated post-insert
+identifiers that were created as a result of the insertions.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -214,7 +215,8 @@ Define the behavior that should be implemented by all entity persisters.</p>    
                 <div class="col-md-8 type">
                     <a href="#method_update">update</a>(object $entity)
         
-                                            <p>Updates a managed entity. The entity is updated according to its current changeset in the running UnitOfWork.</p>                </div>
+                                            <p>Updates a managed entity. The entity is updated according to its current changeset
+in the running UnitOfWork. If there is no changeset, nothing is updated.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -232,39 +234,19 @@ Define the behavior that should be implemented by all entity persisters.</p>    
                     int
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_count">count</a>(<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr>[]|<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $criteria = [])
+                    <a href="#method_count">count</a>(array|<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $criteria = array())
         
                                             <p>Count entities (optionally filtered by a criteria)</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    void
+                    string
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_lock">lock</a>(array $criteria, int $lockMode)
+                    <a href="#method_getOwningTable">getOwningTable</a>(string $fieldName)
         
-                                            <p>Locks all rows of this entity matching the given criteria with the specified pessimistic lock mode.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    bool
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_exists">exists</a>($entity, <abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr>|null $extraConditions = null)
-        
-                                            <p>Checks whether the given managed entity exists in the database.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    void
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_refresh">refresh</a>(array $id, object $entity, int|null $lockMode = null)
-        
-                                            <p>Refreshes a managed entity.</p>                </div>
+                                            <p>Gets the name of the table that owns the column the given field is mapped to.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -272,7 +254,7 @@ Define the behavior that should be implemented by all entity persisters.</p>    
                     object|null
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_load">load</a>(array $criteria, object|null $entity = null, <a href="../../../../Doctrine/ORM/Mapping/AssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\AssociationMetadata">AssociationMetadata</abbr></a>|null $association = null, array $hints = [], int|null $lockMode = null, int|null $limit = null, array $orderBy = [])
+                    <a href="#method_load">load</a>(array $criteria, object|null $entity = null, array|null $assoc = null, array $hints = array(), int|null $lockMode = null, int|null $limit = null, array $orderBy = null)
         
                                             <p>Loads an entity by a list of field criteria.</p>                </div>
                 <div class="col-md-2"></div>
@@ -289,7 +271,28 @@ Define the behavior that should be implemented by all entity persisters.</p>    
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    mixed[]
+                    object
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_loadOneToOneEntity">loadOneToOneEntity</a>(array $assoc, object $sourceEntity, array $identifier = array())
+        
+                                            <p>Loads an entity of this persister's mapped class as part of a single-valued
+association from another entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_refresh">refresh</a>(array $id, object $entity, int|null $lockMode = null)
+        
+                                            <p>Refreshes a managed entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method_loadCriteria">loadCriteria</a>(<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $criteria)
@@ -299,63 +302,72 @@ Define the behavior that should be implemented by all entity persisters.</p>    
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    mixed[]
+                    array
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_loadAll">loadAll</a>(array $criteria = [], array $orderBy = [], int|null $limit = null, int|null $offset = null)
+                    <a href="#method_loadAll">loadAll</a>(array $criteria = array(), array $orderBy = null, int|null $limit = null, int|null $offset = null)
         
                                             <p>Loads a list of entities by a list of field criteria.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    object
+                    array
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_loadToOneEntity">loadToOneEntity</a>(<a href="../../../../Doctrine/ORM/Mapping/ToOneAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\ToOneAssociationMetadata">ToOneAssociationMetadata</abbr></a> $association, object $sourceEntity, array $identifier = [])
-        
-                                            <p>Loads an entity of this persister's mapped class as part of a single-valued
-association from another entity.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    mixed[]
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_getOneToManyCollection">getOneToManyCollection</a>(<a href="../../../../Doctrine/ORM/Mapping/OneToManyAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\OneToManyAssociationMetadata">OneToManyAssociationMetadata</abbr></a> $association, object $sourceEntity, int|null $offset = null, int|null $limit = null)
-        
-                                            <p>Returns an array with (sliced or full list) of elements in the specified collection.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    mixed[]
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_loadOneToManyCollection">loadOneToManyCollection</a>(<a href="../../../../Doctrine/ORM/Mapping/OneToManyAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\OneToManyAssociationMetadata">OneToManyAssociationMetadata</abbr></a> $association, object $sourceEntity, <a href="../../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $collection)
-        
-                                            <p>Loads a collection of entities in a one-to-many association.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    mixed[]
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_getManyToManyCollection">getManyToManyCollection</a>(<a href="../../../../Doctrine/ORM/Mapping/ManyToManyAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\ManyToManyAssociationMetadata">ManyToManyAssociationMetadata</abbr></a> $association, object $sourceEntity, int|null $offset = null, int|null $limit = null)
+                    <a href="#method_getManyToManyCollection">getManyToManyCollection</a>(array $assoc, object $sourceEntity, int|null $offset = null, int|null $limit = null)
         
                                             <p>Gets (sliced or full) elements of the given collection.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    mixed[]
+                    array
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_loadManyToManyCollection">loadManyToManyCollection</a>(<a href="../../../../Doctrine/ORM/Mapping/ManyToManyAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\ManyToManyAssociationMetadata">ManyToManyAssociationMetadata</abbr></a> $association, object $sourceEntity, <a href="../../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $collection)
+                    <a href="#method_loadManyToManyCollection">loadManyToManyCollection</a>(array $assoc, object $sourceEntity, <a href="../../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $collection)
         
                                             <p>Loads a collection of entities of a many-to-many association.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_loadOneToManyCollection">loadOneToManyCollection</a>(array $assoc, object $sourceEntity, <a href="../../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $collection)
+        
+                                            <p>Loads a collection of entities in a one-to-many association.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_lock">lock</a>(array $criteria, int $lockMode)
+        
+                                            <p>Locks all rows of this entity matching the given criteria with the specified pessimistic lock mode.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getOneToManyCollection">getOneToManyCollection</a>(array $assoc, object $sourceEntity, int|null $offset = null, int|null $limit = null)
+        
+                                            <p>Returns an array with (sliced or full list) of elements in the specified collection.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_exists">exists</a>(object $entity, <abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $extraConditions = null)
+        
+                                            <p>Checks whether the given managed entity exists in the database.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
             </div>
@@ -366,7 +378,7 @@ association from another entity.</p>                </div>
             <div id="method-details">
                     <div class="method-item">
                     <h3 id="method_getClassMetadata">
-        <div class="location">at         line 26</div>
+        <div class="location">at         line 37</div>
         <code>                    <a href="../../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a>
     <strong>getClassMetadata</strong>()
         </code>
@@ -394,7 +406,7 @@ association from another entity.</p>                </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_getResultSetMapping">
-        <div class="location">at         line 33</div>
+        <div class="location">at         line 44</div>
         <code>                    <a href="../../../../Doctrine/ORM/Query/ResultSetMapping.html"><abbr title="Doctrine\ORM\Query\ResultSetMapping">ResultSetMapping</abbr></a>
     <strong>getResultSetMapping</strong>()
         </code>
@@ -423,10 +435,10 @@ association from another entity.</p>                </div>
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_getIdentifier">
-        <div class="location">at         line 45</div>
-        <code>                    mixed[]
-    <strong>getIdentifier</strong>(object $entity)
+                    <h3 id="method_getInserts">
+        <div class="location">at         line 51</div>
+        <code>                    array
+    <strong>getInserts</strong>()
         </code>
     </h3>
     <div class="details">
@@ -434,25 +446,14 @@ association from another entity.</p>                </div>
     
 
                     <div class="method-description">
-                                    <p>Extracts the identifier values of an entity that relies on this persister.</p>                    <p>For composite identifiers, the identifier values are returned as an array
-with the same order as the field order in {@link ClassMetadata#identifier}.</p>                            </div>
+                                    <p>Get all queued inserts.</p>                                                </div>
                 <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>object</td>
-                <td>$entity</td>
-                <td></td>
-            </tr>
-            </table>
-
             
                             <h4>Return Value</h4>
 
                     <table class="table table-condensed">
         <tr>
-            <td>mixed[]</td>
+            <td>array</td>
             <td></td>
         </tr>
     </table>
@@ -464,46 +465,10 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_setIdentifier">
-        <div class="location">at         line 53</div>
-        <code>                    
-    <strong>setIdentifier</strong>(object $entity, array $id)
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Populates the entity identifier of an entity.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>object</td>
-                <td>$entity</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>array</td>
-                <td>$id</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_getColumnValue">
-        <div class="location">at         line 60</div>
-        <code>                    mixed|null
-    <strong>getColumnValue</strong>($entity, string $columnName)
+                    <h3 id="method_getInsertSQL">
+        <div class="location">at         line 61</div>
+        <code>                    string
+    <strong>getInsertSQL</strong>()
         </code>
     </h3>
     <div class="details">
@@ -511,27 +476,12 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
     
 
                 <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td></td>
-                <td>$entity</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>string</td>
-                <td>$columnName</td>
-                <td></td>
-            </tr>
-            </table>
-
             
                             <h4>Return Value</h4>
 
                     <table class="table table-condensed">
         <tr>
-            <td>mixed|null</td>
+            <td>string</td>
             <td></td>
         </tr>
     </table>
@@ -544,9 +494,9 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
             </div>
                     <div class="method-item">
                     <h3 id="method_getSelectSQL">
-        <div class="location">at         line 73</div>
+        <div class="location">at         line 75</div>
         <code>                    string
-    <strong>getSelectSQL</strong>($criteria, <a href="../../../../Doctrine/ORM/Mapping/AssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\AssociationMetadata">AssociationMetadata</abbr></a>|null $association = null, $lockMode = null, $limit = null, $offset = null, array $orderBy = [])
+    <strong>getSelectSQL</strong>(array|<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $criteria, array|null $assoc = null, int|null $lockMode = null, int|null $limit = null, int|null $offset = null, array $orderBy = null)
         </code>
     </h3>
     <div class="details">
@@ -560,27 +510,27 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
                     <table class="table table-condensed">
                     <tr>
-                <td></td>
+                <td>array|<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr></td>
                 <td>$criteria</td>
                 <td></td>
             </tr>
                     <tr>
-                <td><a href="../../../../Doctrine/ORM/Mapping/AssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\AssociationMetadata">AssociationMetadata</abbr></a>|null</td>
-                <td>$association</td>
+                <td>array|null</td>
+                <td>$assoc</td>
                 <td></td>
             </tr>
                     <tr>
-                <td></td>
+                <td>int|null</td>
                 <td>$lockMode</td>
                 <td></td>
             </tr>
                     <tr>
-                <td></td>
+                <td>int|null</td>
                 <td>$limit</td>
                 <td></td>
             </tr>
                     <tr>
-                <td></td>
+                <td>int|null</td>
                 <td>$offset</td>
                 <td></td>
             </tr>
@@ -609,9 +559,9 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
             </div>
                     <div class="method-item">
                     <h3 id="method_getCountSQL">
-        <div class="location">at         line 89</div>
+        <div class="location">at         line 83</div>
         <code>                    string
-    <strong>getCountSQL</strong>(<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr>|mixed[] $criteria = [])
+    <strong>getCountSQL</strong>(array|<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $criteria = array())
         </code>
     </h3>
     <div class="details">
@@ -625,7 +575,7 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
                     <table class="table table-condensed">
                     <tr>
-                <td><abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr>|mixed[]</td>
+                <td>array|<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr></td>
                 <td>$criteria</td>
                 <td></td>
             </tr>
@@ -649,9 +599,9 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
             </div>
                     <div class="method-item">
                     <h3 id="method_expandParameters">
-        <div class="location">at         line 98</div>
-        <code>                    <abbr title="Doctrine\ORM\Persisters\Entity\mixed[]">mixed[]</abbr>[]
-    <strong>expandParameters</strong>(mixed[] $criteria)
+        <div class="location">at         line 92</div>
+        <code>                    array
+    <strong>expandParameters</strong>($criteria)
         </code>
     </h3>
     <div class="details">
@@ -665,7 +615,7 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
                     <table class="table table-condensed">
                     <tr>
-                <td>mixed[]</td>
+                <td></td>
                 <td>$criteria</td>
                 <td></td>
             </tr>
@@ -676,7 +626,7 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
                     <table class="table table-condensed">
         <tr>
-            <td><abbr title="Doctrine\ORM\Persisters\Entity\mixed[]">mixed[]</abbr>[]</td>
+            <td>array</td>
             <td></td>
         </tr>
     </table>
@@ -689,8 +639,8 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
             </div>
                     <div class="method-item">
                     <h3 id="method_expandCriteriaParameters">
-        <div class="location">at         line 105</div>
-        <code>                    <abbr title="Doctrine\ORM\Persisters\Entity\mixed[]">mixed[]</abbr>[]
+        <div class="location">at         line 101</div>
+        <code>                    array
     <strong>expandCriteriaParameters</strong>(<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $criteria)
         </code>
     </h3>
@@ -716,7 +666,7 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
                     <table class="table table-condensed">
         <tr>
-            <td><abbr title="Doctrine\ORM\Persisters\Entity\mixed[]">mixed[]</abbr>[]</td>
+            <td>array</td>
             <td></td>
         </tr>
     </table>
@@ -729,9 +679,9 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
             </div>
                     <div class="method-item">
                     <h3 id="method_getSelectConditionStatementSQL">
-        <div class="location">at         line 116</div>
+        <div class="location">at         line 113</div>
         <code>                    string
-    <strong>getSelectConditionStatementSQL</strong>($field, $value, <a href="../../../../Doctrine/ORM/Mapping/AssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\AssociationMetadata">AssociationMetadata</abbr></a>|null $association = null, $comparison = null)
+    <strong>getSelectConditionStatementSQL</strong>(string $field, mixed $value, array|null $assoc = null, string|null $comparison = null)
         </code>
     </h3>
     <div class="details">
@@ -745,22 +695,22 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
                     <table class="table table-condensed">
                     <tr>
-                <td></td>
+                <td>string</td>
                 <td>$field</td>
                 <td></td>
             </tr>
                     <tr>
-                <td></td>
+                <td>mixed</td>
                 <td>$value</td>
                 <td></td>
             </tr>
                     <tr>
-                <td><a href="../../../../Doctrine/ORM/Mapping/AssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\AssociationMetadata">AssociationMetadata</abbr></a>|null</td>
-                <td>$association</td>
+                <td>array|null</td>
+                <td>$assoc</td>
                 <td></td>
             </tr>
                     <tr>
-                <td></td>
+                <td>string|null</td>
                 <td>$comparison</td>
                 <td></td>
             </tr>
@@ -783,10 +733,10 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_insert">
-        <div class="location">at         line 131</div>
+                    <h3 id="method_addInsert">
+        <div class="location">at         line 123</div>
         <code>                    void
-    <strong>insert</strong>($entity)
+    <strong>addInsert</strong>(object $entity)
         </code>
     </h3>
     <div class="details">
@@ -794,17 +744,15 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
     
 
                     <div class="method-description">
-                                    <p>Inserts an entity. Returns any generated post-insert identifiers that were created as a result of the insertion.</p>                    <p>The insertion happens instantaneously.</p>
-
-<p>Subclasses may override this method to customize the semantics of entity deletion.</p>                            </div>
+                                    <p>Adds an entity to the queued insertions.</p>                    <p>The entity remains queued until {@link executeInserts} is invoked.</p>                            </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
                     <table class="table table-condensed">
                     <tr>
-                <td></td>
+                <td>object</td>
                 <td>$entity</td>
-                <td></td>
+                <td>The entity to queue for insertion.</td>
             </tr>
             </table>
 
@@ -825,8 +773,40 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
             </div>
                     <div class="method-item">
+                    <h3 id="method_executeInserts">
+        <div class="location">at         line 134</div>
+        <code>                    array
+    <strong>executeInserts</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Executes all queued entity insertions and returns any generated post-insert
+identifiers that were created as a result of the insertions.</p>                    <p>If no inserts are queued, invoking this method is a NOOP.</p>                            </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td>An array of any generated post-insert IDs. This will be an empty array
+              if the entity class does not use the IDENTITY generation strategy.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
                     <h3 id="method_update">
-        <div class="location">at         line 143</div>
+        <div class="location">at         line 144</div>
         <code>                    void
     <strong>update</strong>(object $entity)
         </code>
@@ -836,9 +816,8 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
     
 
                     <div class="method-description">
-                                    <p>Updates a managed entity. The entity is updated according to its current changeset in the running UnitOfWork.</p>                    <p>If there is no changeset, nothing is updated.</p>
-
-<p>Subclasses may override this method to customize the semantics of entity update.</p>                            </div>
+                                    <p>Updates a managed entity. The entity is updated according to its current changeset
+in the running UnitOfWork. If there is no changeset, nothing is updated.</p>                                                </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
@@ -868,7 +847,7 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
             </div>
                     <div class="method-item">
                     <h3 id="method_delete">
-        <div class="location">at         line 156</div>
+        <div class="location">at         line 158</div>
         <code>                    bool
     <strong>delete</strong>(object $entity)
         </code>
@@ -878,7 +857,8 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
     
 
                     <div class="method-description">
-                                    <p>Deletes a managed entity.</p>                    <p>The entity to delete must be managed and have a persistent identifier. The deletion happens instantaneously.</p>
+                                    <p>Deletes a managed entity.</p>                    <p>The entity to delete must be managed and have a persistent identifier.
+The deletion happens instantaneously.</p>
 
 <p>Subclasses may override this method to customize the semantics of entity deletion.</p>                            </div>
                 <div class="tags">
@@ -910,9 +890,9 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
             </div>
                     <div class="method-item">
                     <h3 id="method_count">
-        <div class="location">at         line 165</div>
+        <div class="location">at         line 167</div>
         <code>                    int
-    <strong>count</strong>(<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr>[]|<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $criteria = [])
+    <strong>count</strong>(array|<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $criteria = array())
         </code>
     </h3>
     <div class="details">
@@ -926,7 +906,7 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
                     <table class="table table-condensed">
                     <tr>
-                <td><abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr>[]|<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr></td>
+                <td>array|<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr></td>
                 <td>$criteria</td>
                 <td></td>
             </tr>
@@ -949,10 +929,10 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_lock">
-        <div class="location">at         line 175</div>
-        <code>                    void
-    <strong>lock</strong>(array $criteria, int $lockMode)
+                    <h3 id="method_getOwningTable">
+        <div class="location">at         line 180</div>
+        <code>                    string
+    <strong>getOwningTable</strong>(string $fieldName)
         </code>
     </h3>
     <div class="details">
@@ -960,7 +940,49 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
     
 
                     <div class="method-description">
-                                    <p>Locks all rows of this entity matching the given criteria with the specified pessimistic lock mode.</p>                                                </div>
+                                    <p>Gets the name of the table that owns the column the given field is mapped to.</p>                    <p>The default implementation in BasicEntityPersister always returns the name
+of the table the entity type of this persister is mapped to, since an entity
+is always persisted to a single table with a BasicEntityPersister.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$fieldName</td>
+                <td>The field name.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>The table name.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_load">
+        <div class="location">at         line 199</div>
+        <code>                    object|null
+    <strong>load</strong>(array $criteria, object|null $entity = null, array|null $assoc = null, array $hints = array(), int|null $lockMode = null, int|null $limit = null, array $orderBy = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Loads an entity by a list of field criteria.</p>                                                </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
@@ -968,12 +990,39 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
                     <tr>
                 <td>array</td>
                 <td>$criteria</td>
-                <td></td>
+                <td>The criteria by which to load the entity.</td>
             </tr>
                     <tr>
-                <td>int</td>
+                <td>object|null</td>
+                <td>$entity</td>
+                <td>The entity to load the data into. If not specified, a new entity is created.</td>
+            </tr>
+                    <tr>
+                <td>array|null</td>
+                <td>$assoc</td>
+                <td>The association that connects the entity to load to another entity, if any.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$hints</td>
+                <td>Hints for entity creation.</td>
+            </tr>
+                    <tr>
+                <td>int|null</td>
                 <td>$lockMode</td>
-                <td>One of the Doctrine\DBAL\LockMode::* constants.</td>
+                <td>One of the \Doctrine\DBAL\LockMode::* constants
+                             or NULL if no specific lock mode should be used
+                             for loading the entity.</td>
+            </tr>
+                    <tr>
+                <td>int|null</td>
+                <td>$limit</td>
+                <td>Limit number of results.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$orderBy</td>
+                <td>Criteria to order by.</td>
             </tr>
             </table>
 
@@ -982,8 +1031,8 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
                     <table class="table table-condensed">
         <tr>
-            <td>void</td>
-            <td></td>
+            <td>object|null</td>
+            <td>The loaded and managed entity instance or NULL if the entity can not be found.</td>
         </tr>
     </table>
 
@@ -994,10 +1043,10 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_exists">
-        <div class="location">at         line 184</div>
-        <code>                    bool
-    <strong>exists</strong>($entity, <abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr>|null $extraConditions = null)
+                    <h3 id="method_loadById">
+        <div class="location">at         line 211</div>
+        <code>                    object
+    <strong>loadById</strong>(array $identifier, object|null $entity = null)
         </code>
     </h3>
     <div class="details">
@@ -1005,20 +1054,20 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
     
 
                     <div class="method-description">
-                                    <p>Checks whether the given managed entity exists in the database.</p>                                                </div>
+                                    <p>Loads an entity by identifier.</p>                                                </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
                     <table class="table table-condensed">
                     <tr>
-                <td></td>
-                <td>$entity</td>
-                <td></td>
+                <td>array</td>
+                <td>$identifier</td>
+                <td>The entity identifier.</td>
             </tr>
                     <tr>
-                <td><abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr>|null</td>
-                <td>$extraConditions</td>
-                <td></td>
+                <td>object|null</td>
+                <td>$entity</td>
+                <td>The entity to load the data into. If not specified, a new entity is created.</td>
             </tr>
             </table>
 
@@ -1027,8 +1076,8 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
                     <table class="table table-condensed">
         <tr>
-            <td>bool</td>
-            <td>TRUE if the entity exists in the database, FALSE otherwise.</td>
+            <td>object</td>
+            <td>The loaded and managed entity instance or NULL if the entity can not be found.</td>
         </tr>
     </table>
 
@@ -1039,8 +1088,70 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
             </div>
                     <div class="method-item">
+                    <h3 id="method_loadOneToOneEntity">
+        <div class="location">at         line 227</div>
+        <code>                    object
+    <strong>loadOneToOneEntity</strong>(array $assoc, object $sourceEntity, array $identifier = array())
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Loads an entity of this persister's mapped class as part of a single-valued
+association from another entity.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$assoc</td>
+                <td>The association to load.</td>
+            </tr>
+                    <tr>
+                <td>object</td>
+                <td>$sourceEntity</td>
+                <td>The entity that owns the association (not necessarily the "owning side").</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$identifier</td>
+                <td>The identifier of the entity to load. Must be provided if
+                            the association to load represents the owning side, otherwise
+                            the identifier is derived from the $sourceEntity.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>object</td>
+            <td>The loaded and managed entity instance or NULL if the entity can not be found.</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../../Doctrine/ORM/Mapping/MappingException.html"><abbr title="Doctrine\ORM\Mapping\MappingException">MappingException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
                     <h3 id="method_refresh">
-        <div class="location">at         line 198</div>
+        <div class="location">at         line 241</div>
         <code>                    void
     <strong>refresh</strong>(array $id, object $entity, int|null $lockMode = null)
         </code>
@@ -1092,125 +1203,9 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_load">
-        <div class="location">at         line 216</div>
-        <code>                    object|null
-    <strong>load</strong>(array $criteria, object|null $entity = null, <a href="../../../../Doctrine/ORM/Mapping/AssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\AssociationMetadata">AssociationMetadata</abbr></a>|null $association = null, array $hints = [], int|null $lockMode = null, int|null $limit = null, array $orderBy = [])
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Loads an entity by a list of field criteria.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>array</td>
-                <td>$criteria</td>
-                <td>The criteria by which to load the entity.</td>
-            </tr>
-                    <tr>
-                <td>object|null</td>
-                <td>$entity</td>
-                <td>The entity to load the data into. If not specified, a new entity is created.</td>
-            </tr>
-                    <tr>
-                <td><a href="../../../../Doctrine/ORM/Mapping/AssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\AssociationMetadata">AssociationMetadata</abbr></a>|null</td>
-                <td>$association</td>
-                <td>The association that connects the entity to load to another entity, if any.</td>
-            </tr>
-                    <tr>
-                <td>array</td>
-                <td>$hints</td>
-                <td>Hints for entity creation.</td>
-            </tr>
-                    <tr>
-                <td>int|null</td>
-                <td>$lockMode</td>
-                <td>One of the \Doctrine\DBAL\LockMode::* constants or NULL if no specific lock mode
-                                             should be used for loading the entity.</td>
-            </tr>
-                    <tr>
-                <td>int|null</td>
-                <td>$limit</td>
-                <td>Limit number of results.</td>
-            </tr>
-                    <tr>
-                <td>array</td>
-                <td>$orderBy</td>
-                <td>Criteria to order by.</td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>object|null</td>
-            <td>The loaded and managed entity instance or NULL if the entity can not be found.</td>
-        </tr>
-    </table>
-
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_loadById">
-        <div class="location">at         line 236</div>
-        <code>                    object
-    <strong>loadById</strong>(array $identifier, object|null $entity = null)
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Loads an entity by identifier.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>array</td>
-                <td>$identifier</td>
-                <td>The entity identifier.</td>
-            </tr>
-                    <tr>
-                <td>object|null</td>
-                <td>$entity</td>
-                <td>The entity to load the data into. If not specified, a new entity is created.</td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>object</td>
-            <td>The loaded and managed entity instance or NULL if the entity can not be found.</td>
-        </tr>
-    </table>
-
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
                     <h3 id="method_loadCriteria">
-        <div class="location">at         line 243</div>
-        <code>                    mixed[]
+        <div class="location">at         line 250</div>
+        <code>                    array
     <strong>loadCriteria</strong>(<abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $criteria)
         </code>
     </h3>
@@ -1236,7 +1231,7 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
                     <table class="table table-condensed">
         <tr>
-            <td>mixed[]</td>
+            <td>array</td>
             <td></td>
         </tr>
     </table>
@@ -1249,9 +1244,9 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
             </div>
                     <div class="method-item">
                     <h3 id="method_loadAll">
-        <div class="location">at         line 255</div>
-        <code>                    mixed[]
-    <strong>loadAll</strong>(array $criteria = [], array $orderBy = [], int|null $limit = null, int|null $offset = null)
+        <div class="location">at         line 262</div>
+        <code>                    array
+    <strong>loadAll</strong>(array $criteria = array(), array $orderBy = null, int|null $limit = null, int|null $offset = null)
         </code>
     </h3>
     <div class="details">
@@ -1277,7 +1272,7 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
                     <tr>
                 <td>int|null</td>
                 <td>$limit</td>
-                <td>Limit number of results.</td>
+                <td></td>
             </tr>
                     <tr>
                 <td>int|null</td>
@@ -1291,174 +1286,7 @@ with the same order as the field order in {@link ClassMetadata#identifier}.</p> 
 
                     <table class="table table-condensed">
         <tr>
-            <td>mixed[]</td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_loadToOneEntity">
-        <div class="location">at         line 271</div>
-        <code>                    object
-    <strong>loadToOneEntity</strong>(<a href="../../../../Doctrine/ORM/Mapping/ToOneAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\ToOneAssociationMetadata">ToOneAssociationMetadata</abbr></a> $association, object $sourceEntity, array $identifier = [])
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Loads an entity of this persister's mapped class as part of a single-valued
-association from another entity.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a href="../../../../Doctrine/ORM/Mapping/ToOneAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\ToOneAssociationMetadata">ToOneAssociationMetadata</abbr></a></td>
-                <td>$association</td>
-                <td>The association to load.</td>
-            </tr>
-                    <tr>
-                <td>object</td>
-                <td>$sourceEntity</td>
-                <td>The entity that owns the association (not necessarily the "owning side").</td>
-            </tr>
-                    <tr>
-                <td>array</td>
-                <td>$identifier</td>
-                <td>The identifier of the entity to load. Must be provided if
-                                              the association to load represents the owning side, otherwise
-                                              the identifier is derived from the $sourceEntity.</td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>object</td>
-            <td>The loaded and managed entity instance or NULL if the entity can not be found.</td>
-        </tr>
-    </table>
-
-            
-                            <h4>Exceptions</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a href="../../../../Doctrine/ORM/Mapping/MappingException.html"><abbr title="Doctrine\ORM\Mapping\MappingException">MappingException</abbr></a></td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_getOneToManyCollection">
-        <div class="location">at         line 287</div>
-        <code>                    mixed[]
-    <strong>getOneToManyCollection</strong>(<a href="../../../../Doctrine/ORM/Mapping/OneToManyAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\OneToManyAssociationMetadata">OneToManyAssociationMetadata</abbr></a> $association, object $sourceEntity, int|null $offset = null, int|null $limit = null)
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Returns an array with (sliced or full list) of elements in the specified collection.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a href="../../../../Doctrine/ORM/Mapping/OneToManyAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\OneToManyAssociationMetadata">OneToManyAssociationMetadata</abbr></a></td>
-                <td>$association</td>
-                <td>The association mapping of the association being loaded.</td>
-            </tr>
-                    <tr>
-                <td>object</td>
-                <td>$sourceEntity</td>
-                <td>The entity that owns the collection.</td>
-            </tr>
-                    <tr>
-                <td>int|null</td>
-                <td>$offset</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>int|null</td>
-                <td>$limit</td>
-                <td>Limit number of results.</td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>mixed[]</td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_loadOneToManyCollection">
-        <div class="location">at         line 303</div>
-        <code>                    mixed[]
-    <strong>loadOneToManyCollection</strong>(<a href="../../../../Doctrine/ORM/Mapping/OneToManyAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\OneToManyAssociationMetadata">OneToManyAssociationMetadata</abbr></a> $association, object $sourceEntity, <a href="../../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $collection)
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Loads a collection of entities in a one-to-many association.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a href="../../../../Doctrine/ORM/Mapping/OneToManyAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\OneToManyAssociationMetadata">OneToManyAssociationMetadata</abbr></a></td>
-                <td>$association</td>
-                <td>The association mapping of the association being loaded.</td>
-            </tr>
-                    <tr>
-                <td>object</td>
-                <td>$sourceEntity</td>
-                <td>The entity that owns the collection.</td>
-            </tr>
-                    <tr>
-                <td><a href="../../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a></td>
-                <td>$collection</td>
-                <td>The collection to load/fill.</td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>mixed[]</td>
+            <td>array</td>
             <td></td>
         </tr>
     </table>
@@ -1471,9 +1299,9 @@ association from another entity.</p>                                            
             </div>
                     <div class="method-item">
                     <h3 id="method_getManyToManyCollection">
-        <div class="location">at         line 319</div>
-        <code>                    mixed[]
-    <strong>getManyToManyCollection</strong>(<a href="../../../../Doctrine/ORM/Mapping/ManyToManyAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\ManyToManyAssociationMetadata">ManyToManyAssociationMetadata</abbr></a> $association, object $sourceEntity, int|null $offset = null, int|null $limit = null)
+        <div class="location">at         line 274</div>
+        <code>                    array
+    <strong>getManyToManyCollection</strong>(array $assoc, object $sourceEntity, int|null $offset = null, int|null $limit = null)
         </code>
     </h3>
     <div class="details">
@@ -1487,14 +1315,14 @@ association from another entity.</p>                                            
 
                     <table class="table table-condensed">
                     <tr>
-                <td><a href="../../../../Doctrine/ORM/Mapping/ManyToManyAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\ManyToManyAssociationMetadata">ManyToManyAssociationMetadata</abbr></a></td>
-                <td>$association</td>
-                <td>The association mapping of the association being loaded.</td>
+                <td>array</td>
+                <td>$assoc</td>
+                <td></td>
             </tr>
                     <tr>
                 <td>object</td>
                 <td>$sourceEntity</td>
-                <td>The entity that owns the collection.</td>
+                <td></td>
             </tr>
                     <tr>
                 <td>int|null</td>
@@ -1504,7 +1332,7 @@ association from another entity.</p>                                            
                     <tr>
                 <td>int|null</td>
                 <td>$limit</td>
-                <td>Limit number of results.</td>
+                <td></td>
             </tr>
             </table>
 
@@ -1513,7 +1341,7 @@ association from another entity.</p>                                            
 
                     <table class="table table-condensed">
         <tr>
-            <td>mixed[]</td>
+            <td>array</td>
             <td></td>
         </tr>
     </table>
@@ -1526,9 +1354,9 @@ association from another entity.</p>                                            
             </div>
                     <div class="method-item">
                     <h3 id="method_loadManyToManyCollection">
-        <div class="location">at         line 335</div>
-        <code>                    mixed[]
-    <strong>loadManyToManyCollection</strong>(<a href="../../../../Doctrine/ORM/Mapping/ManyToManyAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\ManyToManyAssociationMetadata">ManyToManyAssociationMetadata</abbr></a> $association, object $sourceEntity, <a href="../../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $collection)
+        <div class="location">at         line 285</div>
+        <code>                    array
+    <strong>loadManyToManyCollection</strong>(array $assoc, object $sourceEntity, <a href="../../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $collection)
         </code>
     </h3>
     <div class="details">
@@ -1542,14 +1370,64 @@ association from another entity.</p>                                            
 
                     <table class="table table-condensed">
                     <tr>
-                <td><a href="../../../../Doctrine/ORM/Mapping/ManyToManyAssociationMetadata.html"><abbr title="Doctrine\ORM\Mapping\ManyToManyAssociationMetadata">ManyToManyAssociationMetadata</abbr></a></td>
-                <td>$association</td>
+                <td>array</td>
+                <td>$assoc</td>
                 <td>The association mapping of the association being loaded.</td>
             </tr>
                     <tr>
                 <td>object</td>
                 <td>$sourceEntity</td>
                 <td>The entity that owns the collection.</td>
+            </tr>
+                    <tr>
+                <td><a href="../../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a></td>
+                <td>$collection</td>
+                <td>The collection to fill.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_loadOneToManyCollection">
+        <div class="location">at         line 296</div>
+        <code>                    array
+    <strong>loadOneToManyCollection</strong>(array $assoc, object $sourceEntity, <a href="../../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $collection)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Loads a collection of entities in a one-to-many association.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$assoc</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>object</td>
+                <td>$sourceEntity</td>
+                <td></td>
             </tr>
                     <tr>
                 <td><a href="../../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a></td>
@@ -1563,8 +1441,153 @@ association from another entity.</p>                                            
 
                     <table class="table table-condensed">
         <tr>
-            <td>mixed[]</td>
+            <td>array</td>
             <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_lock">
+        <div class="location">at         line 306</div>
+        <code>                    void
+    <strong>lock</strong>(array $criteria, int $lockMode)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Locks all rows of this entity matching the given criteria with the specified pessimistic lock mode.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$criteria</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$lockMode</td>
+                <td>One of the Doctrine\DBAL\LockMode::* constants.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getOneToManyCollection">
+        <div class="location">at         line 318</div>
+        <code>                    array
+    <strong>getOneToManyCollection</strong>(array $assoc, object $sourceEntity, int|null $offset = null, int|null $limit = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Returns an array with (sliced or full list) of elements in the specified collection.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$assoc</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>object</td>
+                <td>$sourceEntity</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int|null</td>
+                <td>$offset</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int|null</td>
+                <td>$limit</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_exists">
+        <div class="location">at         line 328</div>
+        <code>                    boolean
+    <strong>exists</strong>(object $entity, <abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr> $extraConditions = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Checks whether the given managed entity exists in the database.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><abbr title="Doctrine\Common\Collections\Criteria">Criteria</abbr></td>
+                <td>$extraConditions</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td>TRUE if the entity exists in the database, FALSE otherwise.</td>
         </tr>
     </table>
 
