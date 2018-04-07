@@ -115,6 +115,58 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="https://www.doctrine-project.org/2011/07/02/doctrine-2-1-rc3/">Doctrine 2.1 Release Candidate 3</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2011-07-02
+                            by
+                                    beberlei
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>We released Doctrine 2.1 Release Candidate 3 after some important
+changes to the new annotation reader. That is also why we didnt
+manage to keep our release date of June 30th. The new date is
+Monday.</p>
+<p>About the Annotations: We constantly had problems with the
+autoloading of annotations through PHP autoloaders, increasing with
+Symfony2 starting to use the reader with enabled autoloading. The
+problem with reusing the PHP autoloader can be explained easily:
+Not every Docblock Annotation has a corresponding PHP class that
+can be instantiated by Doctrines AnnotationReader. The question is
+how we detect the annotations from the documentation related
+comments only. The solution required a silent autoloader, meaning
+no failure should occur if an autoload is triggered for a
+non-existant class. Implementing such an autoloader has performance
+drawbacks though, which is why the Doctrine does not fail silently.
+Autoloading annotations was not compatible with Doctrines own class
+loader.</p>
+<p>That problem is why we removed PHP autoloading completely and
+reimplemented our own autoloading mechanism inside Doctrine
+Annotations. Now we have much more control about when errors occur
+and if we skip them or throw an exception.</p>
+<p>See <a href="https://gist.github.com/1059486">this following Gist</a> on how
+autoloading annotations works. This is not relevant if you use
+$config-&gt;newDefaultAnnotationDriver() with the ORM though, which
+will handle all the necessary bootstrapping for you.</p>
+<p>Additionally we have changed the annotation reader in other
+aspects. To be a valid annotation your class have to extend
+(backwards compatible way, will be removed in 3.0.x) or contain
+@Annotation inside the class level docblock.</p>
+<p>We will update the documentation for Doctrine Common accordingly in
+the next hours to allow you to understand all the changes made
+between 2.0 and 2.1.</p>
+<p>If you are using Annotations either in Doctrine 2 or within your
+own code please update and check the changes.</p>
+
+        </div>
+
+            </article>
+    <article>
+        <header>
             <h2><a href="https://www.doctrine-project.org/2011/06/28/doctrine-2-1-rc2/">Doctrine 2.1 Release Candidate 2</a></h2>
         </header>
 
@@ -178,36 +230,6 @@ the current state for those staying on 2.0. Additionally we will
 squash all the last bugs that we find.</p>
 <p>Grab the new code in the downloads section or on our
 <a href="http://pear.doctrine-project.org">PEAR channel</a></p>
-
-        </div>
-
-            </article>
-    <article>
-        <header>
-            <h2><a href="https://www.doctrine-project.org/2011/06/17/doctrine-2-0-6/">Doctrine 2.0.6 DBAL and ORM Releases</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on 2011-06-17
-                            by
-                                    beberlei
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>On wednesday we released Doctrine 2.0.6 of DBAL and ORM. Both
-versions include some bugfixes, DBAL for identifier quoting with
-MSSQL and issues with cascade remove, inheritance and the XML
-driver for the ORM.</p>
-<p>See the changelogs for more details:</p>
-<ul><li class="dash"> <a href="http://www.doctrine-project.org/jira/browse/DDC/fixforversion/10140">ORM</a></li>
-<li class="dash"> <a href="http://www.doctrine-project.org/jira/browse/DBAL/fixforversion/10141">DBAL</a></li>
-</ul>
-
-<p>Grab the download from our
-<a href="http://pear.doctrine-project.org">PEAR Channel</a> or from the
-download section of our website.</p>
 
         </div>
 

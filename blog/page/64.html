@@ -115,6 +115,37 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="https://www.doctrine-project.org/2009/06/24/thank-you-servergrove/">Thank you ServerGrove</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2009-06-24
+                            by
+                                    jwage
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>As you all may know, we recently
+<a href="http://www.doctrine-project.org/blog/doctrine-changing-homes">moved</a>
+the Doctrine infrastructure to a brand new home. This is all thanks
+to <a href="http://www.servergrove.net/">ServerGrove</a>. I contacted them a
+few months ago about potentially sponsoring us and they did not
+hesitate one bit. They were more than willing to setup a dedicated
+community server for us, free of charge. Within 48 hours of my
+e-mail I had a dedicated server ready to go. I had the server for
+about a month before I was able to make the move. They simply moved
+faster then I expected and have gone above and beyond anything I
+could have imagined.</p>
+<p>If you all need proper hosting support for your Symfony or Doctrine
+projects, I would highly recommend them.</p>
+
+        </div>
+
+            </article>
+    <article>
+        <header>
             <h2><a href="https://www.doctrine-project.org/2009/06/21/website-updates/">Website Updates</a></h2>
         </header>
 
@@ -196,121 +227,6 @@ play out, we can always add more time to the support life cycle of
 the 1.x series, but we hope to not have to. So, this Wednesday when
 PHP 5.3 is released, please switch to it if you can and help with
 the adoption.</p>
-
-        </div>
-
-            </article>
-    <article>
-        <header>
-            <h2><a href="https://www.doctrine-project.org/2009/06/19/using-views-with-doctrine/">Using Views with Doctrine</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on 2009-06-19
-                            by
-                                    jwage
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>I've seen a few requests recently on how you can use a view with
-Doctrine. This is very easy and I've also learned a few neat tricks
-that you can do to accomplish abnormal things while writing this
-article.</p>
-<a id="title.1"></a><h1>Creating the View</h1>
-<p>First I will demonstrate how you can turn a normal
-<code>Doctrine_Query</code> instance in to a view. This is just as easy as
-creating an instance of <code>Doctrine_View</code> and setting a reference
-between the query and the view.</p>
-<pre><code class="php">&lt;?php
-$q = Doctrine::getTable('BlogPost')
-  -&gt;createQuery('p')
-  -&gt;select('p.*, COUNT(c.id) as num_comments')
-  -&gt;leftJoin('p.Comments c')
-  -&gt;orderBy('p.id DESC')
-  -&gt;groupBy('p.id');
-
-$view = new Doctrine_View($q, 'test_view');
-</code></pre>
-<p>To create the view in the database you can call the
-<code>Doctrine_View::create()</code> method.</p>
-<pre><code class="php">&lt;?php
-$view-&gt;create();
-
-**TIP** You can drop the view just the same by calling the
-``Doctrine_View::drop()`` method.
-</code></pre>
-<pre><code class="php">&lt;?php
-    $view-&gt;drop();
-
-</code></pre>
-<a id="title.2"></a><h1>Executing the View</h1>
-<p>Now when the <code>Doctrine_Query</code> instance above is executed, it will
-execute the SQL for the view instead of parsing the DQL, generating
-the SQL and executing it.</p>
-<pre><code class="php">&lt;?php
-$blogPosts = $q-&gt;execute();
-</code></pre>
-<p>Executing the above would execute the following SQL query.</p>
-
-<pre><code class="">[sql]
-SELECT * FROM test_view
-</code></pre>
-<a id="title.3"></a><h1>Tweaking the View</h1>
-<p>Now here is where things get interesting. Say we wanted to take the
-SQL that the above <code>Doctrine_Query</code> generates, and modify it
-slightly with some custom SQL that otherwise could not make it
-through the DQL parser.</p>
-<p>We can get the SQL from the query, modify it, then manually create
-the view in our database.</p>
-<pre><code class="php">&lt;?php
-echo $q-&gt;getSql();
-</code></pre>
-<p>The above would output the following SQL.</p>
-
-<pre><code class="">[sql]
-SELECT b.id AS b__id, b.title AS b__title, b.excerpt AS b__excerpt, b.body AS b__body, COUNT(c.id) AS c__0 FROM blog_post b LEFT JOIN comment c ON b.id = c.blog_post_id GROUP BY b.id ORDER BY b.id DESC
-</code></pre>
-<p>Now lets say we wanted to add something to the SQL that is
-proprietary to your DBMS, or is some complex SQL that won't make it
-through the DQL parser. We can modify the above SQL then re-create
-the view with that SQL manually. Let's make a simple change and add
-the <code>USE INDEX</code> keyword to force MySQL to use a certain index for
-the query.</p>
-<blockquote><p><strong>NOTE</strong> The example I have chosen is a very simple one only to
-demonstrate the capabilities. This example may not be a real world
-scenario for you. The only purpose of me showing this is to open a
-door for you to solve potential problems for you in the future.</p>
-</blockquote>
-
-<pre><code class="">[sql]
-SELECT b.id AS b__id, b.title AS b__title, b.excerpt AS b__excerpt, b.body AS b__body, COUNT(c.id) AS c__0 FROM blog_post b LEFT JOIN comment c USE INDEX (blog_post_id_idx) ON b.id = c.blog_post_id GROUP BY b.id ORDER BY b.id DESC;
-</code></pre>
-<p>Now lets take this query and manually create the view with it.</p>
-<blockquote><p><strong>NOTE</strong> We must first drop the view as we already created it once
-in a previous step. This is just as easy as issuing the DROP VIEW
-command to MySQL. Afterward, re-create the view again with the
-modified SQL.</p>
-</blockquote>
-
-<pre><code class="">[sql]
-DROP VIEW test_view;
-CREATE VIEW test_view AS SELECT b.id AS b__id, b.title AS b__title, b.excerpt AS b__excerpt, b.body AS b__body, COUNT(c.id) AS c__0 FROM blog_post b LEFT JOIN comment c USE INDEX (blog_post_id_idx) ON b.id = c.blog_post_id GROUP BY b.id ORDER BY b.id DESC;
-</code></pre>
-<p>Now when we execute the code in the first part of this article it
-will execute the view which contains the customized SQL.</p>
-<pre><code class="php">&lt;?php
-$blogPosts = $q-&gt;execute();
-
-**CAUTION** If you customize the SQL, it must maintain the same
-structure, aliases, etc. in order for Doctrine to be able to
-hydrate the data in to the object graph.
-
-</code></pre>
-<p>That is it! Now you can easily use some custom SQL in your queries
-as views. The benefit of using a view is that it is easily reusable
-and it is much faster than executing a normal query in most cases.</p>
 
         </div>
 

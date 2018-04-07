@@ -115,6 +115,290 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="https://www.doctrine-project.org/2010/07/22/mongodb-for-ecommerce/">MongoDB ODM: MongoDB for eCommerce</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2010-07-22
+                            by
+                                    avalanche123
+                                    </p>
+
+        <hr />
+
+        <div>
+            <div style="float: left; width: 300px;">
+    <div style="padding: 15px; border: 1px solid #ccc; margin: 0 15px; background: #eee; color: #888">
+    <p style="margin: 0;">
+
+<p>Hi, my name is Bulat S. (my last name won't make it any easier, but
+in case you were wondering it's Shakirzyanov), I joined OpenSky in
+August 2009 (It's been almost a year since then, but it feels like
+ages). My official title in the company is Hacker, which also says
+a lot about me (that I don't like corporate titles for one).</p>
+</p>
+    <p style="margin: 10px 0 0;">
+
+<p>The last 6 weeks were truly amazing for me. Not only was I able to
+learn a new technology, I also managed to contribute back to the
+community. But let's go over everything step by step.</p>
+</p>
+    </div>
+</div>
+
+<p>Building an eCommerce system is not easy, and building a platform
+is even harder. When it comes to data in eCommerce, there is
+nothing definite, no real structure you could stick to, and no
+final requirements. Something as obvious as the &quot;item you add to
+cart&quot; could be overly complicated when it comes to data.</p>
+<p>There is a good example of how to model the database for handling
+variable product attributes;
+<a href="http://www.magentocommerce.com">Magento</a> is one of the most
+advanced open source eCommerce solutions available today. It uses
+<a href="http://en.wikipedia.org/wiki/Entity-attribute-value_model">EAV (Entity Attribute Value)</a> ,
+which solves the problem of variable attributes by sacrificing
+database level integrity and application performance. The amount of
+queries you need to perform to select one entity will grow with
+every attribute data type you introduce; however, it still is a
+viable solution.</p>
+<p>A document store on the other hand lets you save two absolutely
+different documents in the same collection. Because of its
+schema-less structure it is also possible to add or remove a
+document's properties after saving - it's a database that adapts to
+your data structure on the fly.</p>
+<p>At <a href="http://www.theopenskyproject.com/">OpenSky</a> , we decided to
+use <a href="http://www.mongodb.org/">MongoDB</a> for storage of products
+and use relational databases for order-related data since
+<a href="http://www.mongodb.org/">MongoDB</a> doesn't support transactions.</p>
+<p>So what is the benefit of using
+<a href="http://www.mongodb.org/">MongoDB</a> over MySQL, or any other
+RDBMS, for storing variable attribute data. Performance. This is
+the pseudo-query we would have to write to select one product, with
+id 1, and all of its attributes in a typical
+<a href="http://en.wikipedia.org/wiki/Entity-attribute-value_model">EAV model</a>:</p>
+<div class="right">
+    
+
+
+</div>
+
+
+<pre><code class="">[txt]
+SELECT * FROM `product` WHERE id = 1;
+SELECT * FROM `product_attributes` = WHERE product_id = 1;
+SELECT * FROM `product_values_int` WHERE product_id = 1;
+SELECT * FROM `product_values_varchar` WHERE product_id = 1;
+SELECT * FROM `product_values_datetime` WHERE product_id = 1;
+SELECT * FROM `product_values_text` WHERE product_id = 1;
+SELECT * FROM `product_values_float` WHERE product_id = 1;
+</code></pre>
+<p>After the above queries are run, there would be a huge step of data
+hydration into the product object, which
+<a href="http://www.magentocommerce.com">Magento</a> handles quite well,
+albeit slowly. Contrast this with what we would do in
+<a href="http://www.mongodb.org/">MongoDB</a>:</p>
+
+<pre><code class="">[javascript]
+db.products.find({'_id': '1'});
+</code></pre>
+<p>Not only is the selection simpler, but it also returns a JSON
+object, which can easily be hydrated into a native PHP object. And
+here is how a configurable product could be represented in
+<a href="http://www.mongodb.org/">MongoDB</a>:</p>
+
+<pre><code class="">[javascript]
+{
+    &quot;_id&quot;: ObjectId(&quot;4bffd798fdc2120019040000&quot;)
+    &quot;name&quot;: &quot;Configurable T-Shirt&quot;
+    &quot;options&quot;: [
+        {
+            &quot;name&quot;: &quot;small&quot;,
+            &quot;price&quot;: 12.99
+        },
+        {
+            &quot;name&quot;: &quot;medium&quot;,
+            &quot;price&quot;: 15.99
+        },
+        {
+            &quot;name&quot;: &quot;large&quot;,
+            &quot;price&quot;: 17.99
+        }
+    ]
+}
+
+**NOTE** There is no need for joins, as product options are a
+collection of embedded objects. Object references (akin foreign key
+relationships in RDBMSs) are also possible, but they are generally
+only necessary if you need to access the object independently. For
+instance, if I needed a page to list all product options across all
+products, I would probably put options into their own collection
+and reference them from the product document.
+
+</code></pre>
+<p>Of course, there are
+<a href="http://www.mongodb.org/display/DOCS/PHP+Language+Center#PHPLanguageCenter-LibraryandFrameworkTools">plenty of ORM libraries</a>
+for <a href="http://www.mongodb.org/">MongoDB</a> , which were either
+hard-to-extract parts of frameworks, not quite ORMs or used the
+<a href="http://martinfowler.com/eaaCatalog/activeRecord.html">ActiveRecord pattern</a>
+(which after using
+<a href="http://martinfowler.com/eaaCatalog/dataMapper.html">DataMapper</a>
+for quite some time, I wouldn't want to go back to). The very same
+day I started writing an object document mapper (ODM) to use at
+<a href="http://www.theopenskyproject.com/">OpenSky</a> ,
+<a href="http://www.twitter.com/jwage">Jon Wage</a> (developer for the
+Doctrine project) released a proof-of-concept
+<a href="http://www.doctrine-project.org/projects/mongodb_odm">MongoDB ODM</a> ,
+which you can
+<a href="http://github.com/doctrine/mongodb-odm">find on github</a>. After
+contacting Jon and giving his library a couple of tries and
+<a href="http://www.phpunit.de/">tests</a> , I decided to use it for
+<a href="http://www.theopenskyproject.com/">OpenSky</a>'s products domain
+layer.</p>
+<p>I started to submit patches and
+<a href="http://www.phpunit.de/">unit tests</a> to the project and soon
+joined the core team for
+<a href="http://www.doctrine-project.org/projects/mongodb_odm">MongoDB ODM</a>.
+Today, we are past first alpha release of the project, and this is
+my first post on the Doctrine blog (yay!).</p>
+<p>Getting back to our example, this is how the product and embedded
+option classes for the aforementioned data structure could look:</p>
+<pre><code class="php">&lt;?php
+// Product.php
+/**
+ * @Document(collection=&quot;products&quot;)
+ */
+class Product
+{
+
+    /**
+     * @Id
+     */
+    private $id;
+
+    /**
+     * @String
+     */
+    private $name;
+
+    /**
+     * @EmbedMany(targetDocument=&quot;Product\Option&quot;)
+     */
+    private $options = array();
+
+    public function getId()
+    {
+        return $this-&gt;id;
+    }
+
+    public function setName($name)
+    {
+        $this-&gt;name = $name;
+    }
+
+    public function getName()
+    {
+        return $this-&gt;name;
+    }
+
+    public function addOption(Product\Option $option)
+    {
+        $this-&gt;options[] = $option
+    }
+
+    //...
+}
+</code></pre>
+<p>And the Product class:</p>
+<pre><code class="php">&lt;?php
+// Product/Option.php
+namespace Product;
+/**
+ * @EmbeddedDocument
+ */
+class Option
+{
+
+    /**
+     * @String
+     */
+    private $name;
+
+    /**
+     * @Float
+     */
+    private $price;
+
+    public function setName($name)
+    {
+        $this-&gt;name = $name;
+    }
+
+    public function getName()
+    {
+        return $this-&gt;name;
+    }
+
+    public function setPrice($price)
+    {
+        $this-&gt;price = $price;
+    }
+
+    public function getPrice()
+    {
+        return $this-&gt;price;
+    }
+
+    //...
+}
+</code></pre>
+<p>Using the DocumentManager instance, we could easily persist the
+product with:</p>
+<pre><code class="php">&lt;?php
+$product = new Product();
+$product-&gt;setName('Configurable T-Shirt');
+
+$small = new Product\Option();
+$small-&gt;setName('small');
+$small-&gt;setPrice(12.99);
+$product-&gt;addOption($small);
+
+$medium = new Product\Option();
+$medium-&gt;setName('medium');
+$medium-&gt;setPrice(15.99);
+$product-&gt;addOption($medium);
+
+$large = new Product\Option();
+$large-&gt;setName('large');
+$large-&gt;setPrice(15.99);
+$product-&gt;addOption($large);
+
+$documentManager-&gt;persist($product);
+$documentManager-&gt;flush();
+
+**NOTE** MongoDB ODM intelligently uses
+`atomic operators &lt;http://www.mongodb.org/display/DOCS/Atomic+Operations&gt;`_
+to update data, which makes it really fast. It also supports
+inheritance (collection-per-class and single-collection
+inheritances), which is similar to table inheritance design
+patterns for ORMs. Check out the official Mongo ODM
+`project documentation &lt;http://www.doctrine-project.org/projects/mongodb_odm/1.0/docs/en&gt;`_
+for more information and examples. Complete instructions on how to
+setup your DocumentManager instance
+`can be found here &lt;http://www.doctrine-project.org/projects/mongodb_odm/1.0/docs/reference/introduction/en&gt;`_.
+
+</code></pre>
+<p>The above code would store the product object as a document in
+<a href="http://www.mongodb.org/">MongoDB</a>.</p>
+<p>There is much more to talk about in terms or technologies,
+techniques and practices we adopt and use at
+<a href="http://www.theopenskyproject.com/">OpenSky</a> , so this post is
+definitely not the last one.</p>
+
+        </div>
+
+            </article>
+    <article>
+        <header>
             <h2><a href="https://www.doctrine-project.org/2010/07/21/mongodb-odm-query-builder-api/">MongoDB ODM: Query Builder API</a></h2>
         </header>
 
@@ -444,408 +728,6 @@ foreach ($favorites as $favorite) {
 <p>That is it! It is easy to take advantage of the schema-less
 features of MongoDB with the Doctrine Object Document Mapper
 (ODM)!</p>
-
-        </div>
-
-            </article>
-    <article>
-        <header>
-            <h2><a href="https://www.doctrine-project.org/2010/07/19/your-own-orm-doctrine2/">Write your own ORM on top of Doctrine2</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on 2010-07-19
-                            by
-                                    beberlei
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p><strong>NOTE</strong></p>
-<blockquote><p>The Doctrine ActiveEntity Extension is just an experiment, nothing
-that will be developed much further from the Doctrine Dev Team. It
-is only a show-case for what is possible with Doctrine2. Please
-feel free to take the code and develop it further.</p>
-</blockquote>
-<p>Did you feel the urge to write your own Object-Relational Mapper
-after reading Martin Fowlers PoEAA? I am guilty to have tried
-implementing two different ORMs on my own, both now safely dumped
-into the trash.</p>
-<p>In isolation each ORM pattern is easy to describe, understand and
-even implement. However the combination of a large set of patterns
-into a single implementation introduces a lot of hard to solve
-complexity in your code. Even simple Object-Relational-Mappers
-require a lot of patterns to become useful: Metadata Mapping,
-Identity Map, Foreign Key Mapping, Association Table Mapping and
-Query Object. Implementations with more features at least need the
-UnitOfWork and probably many more, for example handling
-inheritance, locking, value objects and such.</p>
-<p>Doctrine2 already solves a lot of the head aching problems in a
-consistent approach. We have been working on this project for
-almost 2 years now, with all the experience we gained implementing
-Doctrine 1. Additionally we make use of well-understood concepts
-from other ORM implementations across various languages.</p>
-<p>We as developers think that Doctrine2 responsibilities are very
-well separated such that you can exchange larger parts of the
-Doctrine2 core without having to re-implement everything. So if you
-ever feel inspired to implement your own ORM, we would be happy to
-offer you Doctrine2 as a foundation to build upon.</p>
-<p>There are examples of other ORMs that have taken the re-use instead
-of re-implement road. For example the
-<a href="http://www.grails.org/GORM">Groovy Grails ORM</a> is an
-ActiveRecord implementation on top of the popular Hibernate Java
-ORM. Since Groovy is a java-virtual-machine language it can safely
-use the Hibernate ORM as a dependent library.</p>
-<p>This article will describe some possible extensions and show where
-you can hook into the Doctrine2 core to implement your own ORM. The
-article will be very code focused and also comes with a
-<a href="http://github.com/beberlei/Doctrine-ActiveEntity">Github project</a>
-where all the code and some tests are hosted.</p>
-<a id="title.1"></a><h1>Doctrine2 and ActiveRecord</h1>
-<p>Doctrine2 is implementing the DataMapper pattern, however many
-programmers think ActiveRecord is better for various reasons. For
-me data-mappers are superiour to ActiveRecord, however I do
-understand why ActiveRecord is so popular: Its very easy to get
-started and do cool stuff with it! If you want Doctrine2 to be
-ActiveRecord you can have it. Actually it is very easy to turn it
-into a powerful ActiveRecord implementation, keeping all the
-powerful features such as DQL.</p>
-<p>Some while ago Jonathan already released his approach, called the
-&quot;ActiveEntity&quot; extension. Its a single abstract php class that your
-entities have to implement, the code is still
-<a href="http://trac.doctrine-project.org/browser/extensions/ActiveEntity/branches/2.0-1.0/DoctrineExtensions/ActiveEntity.php">in our SVN repository</a>.
-However a more recent version of this code is available as
-<a href="http://github.com/beberlei/Doctrine-ActiveEntity">a project on Github</a>.
-I won't support this experiment any further, I hope somebody picks
-it up and starts maintaining it.</p>
-<p>With Jonathans old code, to allow active record entities, you have
-to bootstrap the ActiveEntity by passing a static EntityManager:</p>
-<pre><code class="php">&lt;?php
-\DoctrineExtensions\ActiveEntity::setEntityManager($em);
-</code></pre>
-<p>Now say we have a User Entity (using Jonathans old ActiveEntity):</p>
-<pre><code class="php">&lt;?php
-namespace Entities;
-
-use DoctrineExtensions\ActiveEntity;
-
-/** @Entity */
-class User extends ActiveEntity
-{
-    /** @Id @GeneratedValue @column(type=&quot;integer&quot;) */
-    private $id;
-
-    /** @Column(type=&quot;string&quot;) */
-    private $name;
-}
-</code></pre>
-<p>With PHP 5.3 late-static binding functionality we can now access
-the <code>EntityRepository</code>, a finder object for entities using a Ruby
-on Rails'ish notation:</p>
-<pre><code class="php">&lt;?php
-$user = User::find($id);
-$users = User::findBy(array(&quot;name&quot; =&gt; &quot;beberlei&quot;));
-$beberlei = User::findOneBy(array(&quot;name&quot; =&gt; &quot;beberlei&quot;));
-</code></pre>
-<p>The code to allow this functionality is very simple:</p>
-<pre><code class="php">&lt;?php
-public static function __callStatic($method, $arguments)
-{
-    return call_user_func_array(array(self::$_em-&gt;getRepository(get_called_class()), $method), $arguments);
-}
-</code></pre>
-<p>There are also some additional methods on the <code>ActiveEntity</code>
-class that use magic <strong>get and</strong>set and \_\_call methods to access
-the private properties of an Entity (such as the User id and name
-shown above). Additionally you can call save() or remove() on any
-instance.</p>
-<p>For starters this offers a great ActiveRecord implementation with
-all the powerful features that Doctrine2 offers, such as DQL and
-UnitOfWork. However we can still go much further:</p>
-<ul><li class="dash"> Eliminate the need to define ActiveEntity properties by metadata
-   mapping inference</li>
-<li class="dash"> Adding your own powerful Metadata Mapping Layer</li>
-<li class="dash"> Add a Doctrine 1.2 behaviour system using the PHP 5.3.99DEV
-   Traits functionalitiy</li>
-<li class="dash"> Add validation to properties of an ActiveEntity</li>
-</ul>
-
-<p>Lets begin with a simple introduction to the Doctrine Metadata
-Model to explain how this is all possible.</p>
-<a id="title.2"></a><h1>Doctrine2 Metadata Model</h1>
-<p>You probably already saw that Doctrine2 offers many different
-metadata configuration mechanisms: Annotations, YAML, XML and plain
-PHP. Any one of this implementations will transform into an
-instance of <code>Doctrine\ORM\ClassMetadata</code> which is then cached for
-subsequent web requests. The <code>ClassMetadataFactory</code> is
-responsible for creating and managing those metadata instances.</p>
-<p>Doctrine2 uses the <code>ClassMetadata</code> instance internally for all
-runtime access to your entities metadata, which means that you have
-to extend this class such that it works exactly the same from the
-outside.</p>
-<p>If you wanted to extend the inner workings of Doctrine2, this is
-indeed the way to go. First extend the EntityManager to replace the
-<code>ClassMetadataFactory</code> used. This piece of code is the only
-hackish workaround, everything else is rather nice :-)</p>
-<pre><code class="php">&lt;?php
-namespace DoctrineExtensions\ActiveEntity;
-
-use DoctrineExtensions\ActiveEntity\Mapping\ClassMetadataFactory;
-
-class ActiveEntityManager extends \Doctrine\ORM\EntityManager
-{
-    protected function __construct(Connection $conn, Configuration $config, EventManager $eventManager)
-    {
-        parent::__construct($conn, $config, $eventManager);
-
-        $metadataFactory = new ActiveClassMetadataFactory($this);
-        $metadataFactory-&gt;setCacheDriver($this-&gt;getConfiguration()-&gt;getMetadataCacheImpl());
-
-        // now this is the only hack required to get it work:
-        $reflProperty = new \ReflectionProperty('Doctrine\ORM\EntityManager', 'metadataFactory');
-        $reflProperty-&gt;setAccessible(true);
-        $reflProperty-&gt;setValue($this, $metadataFactory);
-    }
-
-    public static function create($conn, Configuration $config, EventManager $eventManager = null)
-    {
-        // ... copy paste from EntityManager::create()
-
-        return new ActiveEntityManager($conn, $config, $conn-&gt;getEventManager());
-    }
-}
-</code></pre>
-<p>And both the <code>ClassMetadataFactory</code> and <code>ClassMetadata</code>:</p>
-<pre><code class="php">&lt;?php
-namespace DoctrineExtensions\ActiveEntity\Mapping;
-
-class ActiveClassMetadataFactory extends \Doctrine\ORM\Mapping\ClassMetadataFactory
-{
-    protected function _newClassMetadataInstance($className)
-    {
-        return new ActiveClassMetadata($className);
-    }
-}
-
-class ActiveClassMetadata extends \Doctrine\ORM\Mapping\ClassMetadata
-{
-}
-</code></pre>
-<p>This is the foundation of your own Doctrine2-based ORM. We will see
-in the next section how we can use this.</p>
-<a id="title.3"></a><h1>Exchange Doctrine2 Reflection for Array-based Field Storage</h1>
-<p>Doctrine2 uses reflection to access the current values of an
-entity. This is necessary, because Doctrine2 is a Data Mapper that
-enforces clean separation between entities and persistence. If we
-extend it to be an ActiveRecord implementation this separation is
-not wanted anymore and we can opt for a new approach, using the
-get()/set() methods on our ActiveEntities.</p>
-<p>Defining the properties &quot;id&quot; and &quot;name&quot; will then not be necessary
-anymore, they will all be saved in an array hash-map called
-&quot;\_data&quot; inside the ActiveEntity. We cannot use annotations for
-metadata anymore, however the XML or YAML drivers would still work
-smoothly.</p>
-<p>To get started we have to modify our <code>ActiveClassMetadata</code> a bit
-to exchange the contents of reflClass and reflFields with our own
-classes. Looking at the <code>ClassMetadata</code> code and doing some
-project wide searches I found out about all the necessary changes.
-To replace the <code>ReflectionClass</code> we only need to exchange
-<code>getProperty</code> and keep the rest. To exchange
-<code>ReflectionProperty</code> we only have to overwrite
-<code>setAccessible()</code>, <code>getValue()</code> and <code>setValue()</code>.</p>
-<pre><code class="php">&lt;?php
-namespace DoctrineExtensions\ActiveEntity\Reflection;
-
-class ActiveEntityReflectionClass extends \ReflectionClass
-{
-    public function getProperty($name)
-    {
-        return new ActiveEntityPropertyReflection($this-&gt;name, $name);
-    }
-}
-
-class ActiveEntityReflectionProperty
-{
-    public $name = null;
-    public $class = null;
-
-    public function __construct($class, $name)
-    {
-        $this-&gt;class = $class;
-        $this-&gt;name = $name;
-    }
-
-    public function setAccessible($flag) {}
-
-    public function setValue($entity = null, $value = null)
-    {
-        $entity-&gt;set($this-&gt;name, $value);
-    }
-
-    public function getValue($entity = null)
-    {
-        return $entity-&gt;get($this-&gt;name);
-    }
-}
-</code></pre>
-<p>This is about enough to exchange reflection transformation against
-a simple ActiveRecord get/set approach. Now we need to replace the
-all the instantiations of <code>ReflectionClass</code> relevant for runtime
-mapping with our implementation:</p>
-<pre><code class="php">&lt;?php
-namespace DoctrineExtensions\ActiveEntity\Mapping;
-
-use DoctrineExtensions\ActiveEntity\Reflection\ActiveEntityReflectionClass;
-use DoctrineExtensions\ActiveEntity\Reflection\ActiveEntityReflectionProperty;
-
-class ActiveClassMetadata extends \Doctrine\ORM\Mapping\ClassMetadata
-{
-    public function __construct($entityName)
-    {
-        parent::__construct($entityName);
-        $this-&gt;reflClass = new ActiveEntityReflectionClass($entityName);
-        $this-&gt;namespace = $this-&gt;reflClass-&gt;getNamespaceName();
-        $this-&gt;table['name'] = $this-&gt;reflClass-&gt;getShortName();
-    }
-
-    /**
-     * Restores some state that can not be serialized/unserialized.
-     *
-     * @return void
-     */
-    public function __wakeup()
-    {
-        // lots of code here, see the Github Repository
-    }
-}
-</code></pre>
-<p>Again, this is enough and our ActiveEntity Mapping now works. We
-can heavily modify the <code>ActiveEntity</code> now to loose the
-requirement to specify properties for the defined metadata. We can
-rewrite the User entity to be:</p>
-<pre><code class="php">&lt;?php
-namespace Entities;
-
-use DoctrineExtensions\ActiveEntity\ActiveEntity;
-
-class User extends ActiveEntity
-{
-}
-</code></pre>
-<p>Using an XML or YAML Mapping is already enough for this
-ActiveEntity to work out of the box.</p>
-<a id="title.4"></a><h1>Implementing your own Metadata Mapping Driver</h1>
-<p>In the spirit of Doctrine 1.\* or GORM there should be a PHP based
-metadata mapping driver now and actually Doctrine2 ships with one
-already:</p>
-<pre><code class="php">&lt;?php
-$config = new \Doctrine\ORM\Configuration();
-$config-&gt;setMetadataDriverImpl(new \Doctrine\ORM\Mapping\Driver\StaticPHPDriver());
-// ...
-</code></pre>
-<p>This allows to specify the metadata within the User class:</p>
-<pre><code class="php">&lt;?php
-namespace Entities;
-
-use DoctrineExtensions\ActiveEntity\ActiveEntity;
-use DoctrineExtensions\ActiveEntity\Mapping\ActiveClassMetadata;
-
-class User extends ActiveEntity
-{
-    static public function loadMetadata(ActiveClassMetadata $cm)
-    {
-        // work with $cm here!
-    }
-}
-</code></pre>
-<p>You could extend that Static PHP Driver even more for the next
-section. We could add additional metadata information, such as
-names of behaviours to extend or validators or anything else.</p>
-<a id="title.5"></a><h1>Using Traits for Behaviours</h1>
-<p>We want to add a simple &quot;Timestampable&quot; behaviour now, hooking into
-the <code>loadClassMetadata</code> event
-<a href="http://www.doctrine-project.org/projects/orm/2.0/docs/reference/events/en#load-classmetadata-event">as described in the documentation</a>:</p>
-<p>Now this is untested code, as i don't have a PHP-5.3.99-DEV version
-compiled at this machine.</p>
-<p>The following trait can be used by our <code>User</code> entity:</p>
-<pre><code class="php">&lt;?php
-namespace DoctrineExtensions\ActiveEntity\Behaviour;
-
-trait Timestampable
-{
-    public function created()
-    {
-        return $this-&gt;get('created');
-    }
-
-    public function updated()
-    {
-        return $this-&gt;get('updated');
-    }
-
-    /** will be a prePersist lifecycle hook */
-    public function setCreated()
-    {
-        return $this-&gt;set('created', new \DateTime(&quot;now&quot;));
-    }
-
-    /** will be a preUpdate lifecycle hook */
-    public function setUpdated()
-    {
-        return $this-&gt;set('updated', new \DateTime(&quot;now&quot;));
-    }
-}
-
-class User extends ActiveEntity use Timestampable
-{
-
-}
-</code></pre>
-<p>We now need an Event that modifies the <code>ActiveClassMetadata</code> as
-required:</p>
-<pre><code class="php">&lt;?php
-namespace DoctrineExtensions\ActiveEntity\Behaviour;
-
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-
-class TimestampableEvent
-{
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
-    {
-        $classMetadata = $eventArgs-&gt;getClassMetadata();
-        $traits = $classMetadata-&gt;reflClass-&gt;getTraitNames();
-        if (!in_array(&quot;DoctrineExtensions\ActiveEntity\Behaviour\Timestampable&quot;, $traits)) {
-            return;
-        }
-
-        $classMetadata-&gt;mapField(array(
-            'type' =&gt; 'datetime',
-            'fieldName' =&gt; 'created',
-        ));
-        $classMetadata-&gt;mapField(array(
-            'type' =&gt; 'datetime',
-            'fieldName' =&gt; 'updated',
-        ));
-        $classMetadata-&gt;addLifecycleCallback(&quot;prePersist&quot;, &quot;setCreated&quot;);
-        $classMetadata-&gt;addLifecycleCallback(&quot;prePersist&quot;, &quot;setUpdated&quot;);
-        $classMetadata-&gt;addLifecycleCallback(&quot;preUpdate&quot;, &quot;setUpdated&quot;);
-    }
-}
-</code></pre>
-<p>You can now register this behaviour with your Entity Manager and
-just the usage of the trait <code>Timestampable</code> adds two additional
-fields and updates them accordingly.</p>
-<blockquote><p><strong>NOTE</strong></p>
-<p>Again, the trait code is untested. It should work, but I cannot
-guarantee! :)</p>
-</blockquote>
-<a id="title.6"></a><h1>Conclusion</h1>
-<p>What are you waiting for? This article showed a very deep
-modification of the Doctrine2 core to turn it into Active Record.
-The changes required some understanding of the inner workings of
-Doctrine2, however not many changes were required in the end.</p>
-<p><a href="http://github.com/beberlei/Doctrine-ActiveEntity">See the code on GitHub!</a></p>
 
         </div>
 

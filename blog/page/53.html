@@ -115,6 +115,356 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="https://www.doctrine-project.org/2010/02/17/doctrine2-behaviours-nutshell/">Doctrine 2 &quot;Behaviours&quot; in a Nutshell</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2010-02-17
+                            by
+                                    beberlei
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p><strong>NOTE</strong> This blog entry relates to an outdated Doctrine 2 Alpha
+    version. Please see the documentation for the most up to date
+    behavior.</p>
+<p>One of the most common fallacies out there about Doctrine 2
+abandoning Behaviours is that developers now have to implement
+fancy logic to re-implement them yourself. Doctrine 2's approach to
+completly separate ORM from your domain classes allows to build
+behaviours in a very clean, unobstrusive and simple object-oriented
+way. This article shows you how to implement some of the Doctrine 1
+behaviours in your Doctrine 2 code. For this I will rewrite the
+Doctrine 1.x manuals examples for each Behaviour.</p>
+<p>This example uses Annotations as example, yet this of course works
+with YAML and XML mappings. Additionally Doctrine 2 allows
+constructors to have required arguments as of a commit of the last
+week. This allows for some pretty slick enforcements in user-land
+code as you will see in this post.</p>
+<a id="title.1"></a><h1>Straightforward combination of &quot;Behaviours&quot;</h1>
+<p>All the code listed below is somehwat more verbose than the
+Doctrine 1 code, however much more bound to the domain of your
+model and very straightforward. There is no magic involved and you
+will fully understand what will be happening in each of the
+behaviours. The best of all, although not a simple trick, you will
+be able to combine ALL behaviours in one model class and still be
+completly on top of their inner workings.</p>
+<a id="title.2"></a><h1>Timestampable</h1>
+<p>Timestampable is a behaviour that requires you to hook into the
+pre-update event which is called whenever an entity is updated:</p>
+<pre><code class="php">&lt;?php
+/**
+ * @Id
+ * @HasLifecycleCallbacks
+ */
+class BlogPost
+{
+    /**
+     * @Column(type=&quot;DateTime&quot;)
+     */
+    private $created;
+
+    /**
+     * @Column(type=&quot;DateTime&quot;)
+     */
+    private $updated;
+
+    public function __construct()
+    {
+        // constructor is never called by Doctrine
+        $this-&gt;created = $this-&gt;updated = new DateTime(&quot;now&quot;);
+    }
+
+    /**
+     * @PreUpdate
+     */
+    public function updated()
+    {
+        $this-&gt;updated = new DateTime(&quot;now&quot;);
+    }
+}
+</code></pre>
+<a id="title.3"></a><h1>Sluggable</h1>
+<p>The sluggable behaviour is trivial to implement in Doctrine 2:</p>
+<pre><code class="php">&lt;?php
+class BlogPost
+{
+    /** @Column(type=&quot;string&quot;) */
+    private $slug;
+
+    /** @Column(type=&quot;string&quot;) */
+    private $title;
+
+    public function setTitle($title)
+    {
+        if ($this-&gt;slug == null) {
+            $this-&gt;slug = MyStringHelper::slugize($title);
+        }
+        $this-&gt;title = $title;
+    }
+
+    /**
+     * Put this method in if your slug should be &quot;editable&quot;
+     */
+    public function setSlug($slug)
+    {
+        $this-&gt;slug = $slug;
+    }
+}
+</code></pre>
+<p>See how its much more explicit in your code how and why the slug is
+generated.</p>
+<a id="title.4"></a><h1>NestedSet</h1>
+<p>This is one of the more complex behaviours in Doctrine 1 and it
+won't be necessarily more easy in Doctrine 2. However as this is an
+important feature we will provide an implementation as a
+<code>DoctrineExtensions</code> namespaced package that will be maintained
+by Doctrine Devs.</p>
+<a id="title.5"></a><h1>Searchable</h1>
+<p>There is currently no plan to port the Searchable behaviour to
+Doctrine 2, but the possibility to instantiate objects using <em>new</em>
+allows a very simple integration of a Doctrine 2 model with Apache
+Solr or Lucene with a little wrapper that re-creates detached
+instances from this powerful search engines.</p>
+<p>For example using
+<a href="http://ezcomponents.org/docs/api/trunk/introduction_Search.html">ezcSearch</a>
+we can make our BlogPost accessible for Solr:</p>
+<pre><code class="php">&lt;?php
+class BlogPost implements ezcBasePersistable, ezcSearchDefinitionProvider 
+{
+    public function getState()
+    {
+        return array(
+            'id' =&gt; $this-&gt;id,
+            'title' =&gt; $this-&gt;title,
+            'body' =&gt; $this-&gt;body,
+            'slug' =&gt; $this-&gt;slug,
+        );
+    }
+
+    public function setState($state)
+    {
+        foreach ($state AS $k =&gt; $v) {
+            $this-&gt;$k = $v;
+        }
+    }
+
+    static public function getDefinition() 
+    {
+        // define search schema
+        return $def;
+    }
+}
+</code></pre>
+<p>ezcSearch can then index a blog post whenever it is changed by
+hooking an EventListener into the Doctrine <code>PreUpdate</code> Event:</p>
+<pre><code class="php">&lt;?php
+class EzcSearchListener
+{
+    private $_searchSession;
+
+    public function __construct(ezcSearchSession $searchSession)
+    {
+        $this-&gt;_searchSession = $searchSession;
+    }
+
+    public function preUpdate(LifecycleEventArgs $args)
+    {
+        if ($args-&gt;getEntity() instanceof ezcBasePersistable) {
+            $this-&gt;_searchSession-&gt;index($args-&gt;getEntity());
+        }
+    }
+}
+</code></pre>
+<p>You can now hook this event into Doctrine's EntityManager:</p>
+<pre><code class="php">&lt;?php
+$searchListener = new EzcSearchListener(...);
+$em-&gt;getEventManager()-&gt;addEventListener(
+    array(Doctrine\ORM\Events::preUpdate), $searchListener
+);
+</code></pre>
+<p>Now when you search for your entities you get returned <code>BlogPost</code>
+instances from ezcSearchs Solr interface:</p>
+<pre><code class="php">&lt;?php
+// initialize a pre-configured query
+$q = $session-&gt;createFindQuery( 'BlogPost' );
+$searchWord = 'test';
+
+// where either body or title contains thr $searchWord
+$q-&gt;where(
+    $q-&gt;lOr(
+        $q-&gt;eq( 'body', $searchWord ),
+        $q-&gt;eq( 'title', $searchWord )
+    )
+);
+$searchedBlogPosts = $session-&gt;find( $q ); 
+</code></pre>
+<p>These instances are detached from the EntityManager when they get
+returned from ezcSearch and can be merged back into the persistence
+context:</p>
+<pre><code class="php">&lt;?php
+$searchedBlogPosts[0]-&gt;setTitle(&quot;ChangeFoo&quot;);
+$em-&gt;merge($searchedBlogPosts[0]);
+</code></pre>
+<p>Read about Merging, Detached instances and other cool stuff of
+Doctrines object model in the
+<a href="http://www.doctrine-project.org/documentation/manual/2_0/en/working-with-objects#merging-entities">Working with Objects</a>
+chapter of the manual.</p>
+<a id="title.6"></a><h1>Versionable</h1>
+<p>By default Doctrine 2 comes with a way to set a <em>version</em> column
+that is automatically incremented on each update. Using the event
+system it is easy to use this information to implement a
+versionable audit-log behaviour. The required code is more verbose
+than the simple configuration of Doctrine 1, however there is much
+less magic involved and you can implement this behaviour in a way
+that is trivial to understand for someone new looking at your
+code:</p>
+<pre><code class="php">&lt;?php
+/**
+ * @Entity
+ * @HasLifeCycleCallbacks
+ * @generatedValue(strategy=&quot;AUTO&quot;)
+ */
+class BlogPost
+{
+    /**
+     * @Id
+     * @Column(type=&quot;integer&quot;)
+     */
+    private $id;
+
+    /**
+     * @Column(type=&quot;string&quot;)
+     */
+    private $title;
+
+    /**
+     * @Column(type=&quot;text&quot;)
+     */
+    private $body;
+
+    /**
+     * @Column(type=&quot;integer&quot;)
+     * @version
+     */
+    private $version;
+
+    /**
+     * @OneToMany(targetEntity=&quot;BlogPostVersion&quot;, mappedBy=&quot;post&quot;)
+     */
+    private $auditLog = array();
+
+    /**
+     * @PrePersist
+     * @PreUpdate
+     */
+    public function logVersion()
+    {
+        $this-&gt;auditLog[] = new BlogPostVersion($this);  
+    }
+    // getters
+}
+
+/**
+ * @Entity
+ */
+class BlogPostVersion
+{
+    /**
+     * @Id
+     * @Column(type=&quot;integer&quot;)
+     * @generatedValue(strategy=&quot;AUTO&quot;)
+     */
+    private $id;
+
+    /**
+     * @Column(type=&quot;string&quot;)
+     */
+    private $title;
+
+    /**
+     * @Column(type=&quot;text&quot;)
+     */
+    private $body;
+
+    /**
+     * @Column(type=&quot;integer&quot;)
+     */
+    private $version;
+
+    /**
+     * @ManyToOne(targetEntity=&quot;BlogPost&quot;)
+     */
+    private $post;
+
+    public function __construct(BlogPost $post)
+    {
+        $this-&gt;post = $post;
+        $this-&gt;title = $post-&gt;getTitle();
+        $this-&gt;body = $post-&gt;getBody();
+        $this-&gt;version = $post-&gt;getCurrentVersion();       
+    }
+}
+</code></pre>
+<a id="title.7"></a><h1>I18N</h1>
+<p>Multi-Language content is an important topic and can be implemented
+in Doctrine 2, since its just a fancy name for a One-To-Many
+relation. However currently Doctrine 2 does not allow to persist
+keys by name, which makes a OneToMany implementation a bit more
+intensive then it could be. We plan to implement primitive value
+collections however which would simplify any attempt to implement
+nested structured content, that is not an entity by itself.</p>
+<a id="title.8"></a><h1>Soft Delete</h1>
+<p>We won't support soft-delete at all. If you want to implement a
+soft-delete alike behaviour its probably a good idea to look into
+the State pattern instead.</p>
+<a id="title.9"></a><h1>Blameable</h1>
+<p>Implementing this behaviour is just a matter of adding two fields
+<em>createdByUserId</em> and <em>modifiedByUserId</em> fields and setting them
+whenever one of your relevant fields change by hooking into setter
+methods:</p>
+<pre><code class="php">&lt;?php
+/**
+ * @Entity
+ */
+class BlogPost
+{
+    /**
+     * @Column(type=&quot;string&quot;)
+     */
+    private $title;
+
+    /**
+     * @Column(type=&quot;integer&quot;)
+     */
+    private $modifiedByUserId;
+
+    public function updateBlogPost($title, ..., User $user)
+    {
+        $this-&gt;title = $title;
+        $this-&gt;modifiedByUserId = $user-&gt;getId();
+    }
+}
+</code></pre>
+<a id="title.10"></a><h1>Sortable</h1>
+<p>Same as I18N, we are planning to support persistence of collection
+keys in the Doctrine 2 Core. This would allow to sort collections
+by using the possibilities of the
+<code>Doctrine\Common\Collections\Collection</code> interface.</p>
+<a id="title.11"></a><h1>Conclusion</h1>
+<p>Although slightly more complex than Doctrine 1s simple
+configuration options, most &quot;behaviours&quot; are still way easy to
+implement in Doctrine 2. The additional benefit of this
+straightforward approach:
+<em>You can combine behaviours in any way, inside your domain model, without having to wonder how the magic works together, you are completly on top of it.</em></p>
+
+        </div>
+
+            </article>
+    <article>
+        <header>
             <h2><a href="https://www.doctrine-project.org/2010/02/11/database-support-doctrine2/">Database-Driver Support in Doctrine 2</a></h2>
         </header>
 
@@ -217,83 +567,6 @@ are still some backwards-incompatible changes to come. Once we hit
 beta, efforts will concentrate on fixing bugs and further
 stabilizing the code base. The first beta release is currently
 scheduled for March 1st, 2010.</p>
-
-        </div>
-
-            </article>
-    <article>
-        <header>
-            <h2><a href="https://www.doctrine-project.org/2009/12/07/doctrine-1-2-1-released/">Doctrine 1.2.1 Released</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on 2009-12-07
-                            by
-                                    jwage
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>Today we are happy to bring you the first maintenance release for
-the Doctrine 1.2 version. We will continue to have regular
-maintenance releases for the 1.2 branch for the next 18 months. On
-average we will have one release per month containing bug fixes
-only. These releases are meant to be fully backwards compatible so
-it is recommended that you upgrade right away!</p>
-<p>Below are some of the changes made in this release:</p>
-<ul>
-  <li>
-
-<p>[r6834] Fixing issue with relationship ordering</p>
-</li>
-  <li>
-
-<p>[r6835] Fixes issue with oracle adapter statement using wrong
-constant</p>
-</li>
-  <li>
-
-<p>[r6836] Fixing issue with sfYaml autoload not returning true</p>
-</li>
-  <li>
-
-<p>[r6839] Fixes issue with array cache driver and deleting</p>
-</li>
-  <li>
-
-<p>[r6840] Fixed thrown Exceptions to be package-level</p>
-</li>
-  <li>
-
-<p>[r6842] Fixes issue with $length in migrations addColumn</p>
-</li>
-  <li>
-
-<p>[r6859] Fixed misplaced param when parsing join condition</p>
-</li>
-  <li>
-
-<p>[r6883] Added empty init() method implementation to avoid method
-does not exist error</p>
-</li>
-  <li>
-
-<p>[r6889] Fixing issue with nested set createRoot() method and string
-root column</p>
-</li>
-  <li>
-
-<p>[r6893] Adding \_cleanup() call to start of migrations diff to make
-sure directory is clean</p>
-</li>
-</ul>
-
-<p>You can view the full
-<a href="http://www.doctrine-project.org/change_log/1_2_1">change log</a>
-and <a href="http://www.doctrine-project.org/download#1_2">download</a> now!
-If you encounter any issues please report them in
-<a href="http://www.doctrine-project.org/jira">Jira</a>.</p>
 
         </div>
 

@@ -115,6 +115,69 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="https://www.doctrine-project.org/2009/09/14/moving-to-jira/">Moving to JIRA</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2009-09-14
+                            by
+                                    romanb
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>While we really like Trac, especially its subversion integration,
+it has a lot of shortcomings for bigger projects in the area of
+project &amp; issue/ticket management. Hence we decided to evaluate
+alternatives and ended up with choosing
+<a href="http://www.atlassian.com/software/jira/">JIRA</a>. Its normally not
+free software but the generous guys from Atlassian granted us a
+free open source license. A big thanks from all of us to Atlassian
+for their support of open source projects.</p>
+<p>From now on all the project management, release management and
+issue/ticket management will happen in our
+<a href="http://doctrine-project.org/jira">new JIRA instance</a>. While it
+is open for everyone in read-only mode, we strongly encourage you
+to create an account soon so that you can create/modify/comment
+issues and content in JIRA.</p>
+<p>Trac is from now on closed for tickets. All new tickets need to be
+reported through JIRA. We are not going to automatically import all
+tickets from Trac to JIRA because that does not work very well and
+would require to import all user accounts as well, which can not be
+done easily either. We will continue to work on the &quot;old&quot; tickets,
+always starting with porting a ticket over to JIRA before working
+on it. If you want to help, you recreate tickets that are
+especially important to you in JIRA yourself. You can still log in
+to Trac and view tickets for the purpose of migrating them to JIRA
+but you can not modify them or create new ones.</p>
+<blockquote><p><strong>CAUTION</strong> When you recreate an issue in JIRA, please make sure
+you close the issue in Trac with the resolution: &quot;migrated&quot;.</p>
+</blockquote>
+<p>Trac will not be completely shut down, however. The following
+functionality will stay open:</p>
+<ul><li class="dash"> Wiki</li>
+<li class="dash"> Timeline</li>
+<li class="dash"> Browse Source</li>
+</ul>
+
+<p>That is, the wiki and the subversion integration. We basically use
+Trac as the subversion viewer that we coupled with JIRA. Any
+changeset numbers or file references in JIRA issues will link to
+the changesets/sources in Trac.</p>
+<p>We're looking forward to working with JIRA and we think it is an
+improvement for all users. We hope you enjoy all the new
+functionality provided by JIRA, like voting for issues that are
+important to you, tracking issues and much more.</p>
+<p>So, head over to our
+<a href="http://doctrine-project.org/jira">JIRA instance</a> , create an
+account and start creating issues and explore the features.</p>
+
+        </div>
+
+            </article>
+    <article>
+        <header>
             <h2><a href="https://www.doctrine-project.org/2009/09/01/doctrine2-preview-release/">Doctrine 2 Preview Release</a></h2>
         </header>
 
@@ -324,133 +387,6 @@ MacBlanco:bin guilhermeblanco$ ./pdepend --summary-xml=/Users/guilhermeblanco/su
 <p>Here is the generated summary. If you have any other ideas/tools
 that we should apply in our codebase to generate other metrics,
 please drop us a message!</p>
-
-        </div>
-
-            </article>
-    <article>
-        <header>
-            <h2><a href="https://www.doctrine-project.org/2009/08/22/transactions-and-performance/">Transactions and Performance</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on 2009-08-22
-                            by
-                                    romanb
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>In this post I want to clarify some things about transactions and
-performance of PHP applications in general. I want to show you that
-it is very easy to lose a lot of performance without using any
-&quot;heavy&quot; framework at all and I also want to show that frameworks
-can actually help you avoid a lot of these problems transparently.
-I want to sensibilize you for the fact that there are a lot of
-factors in PHP application performance and that you can very easily
-lose the performance that you hoped to gain by not using framework
-X or Z or building your own (&quot;Not Invented Here&quot;-syndrome) by
-several orders of magnitude through rather trivial errors or
-misconceptions.</p>
-<p>Given a MySql database with InnoDB tables, which of the following
-code snippets that insert 20 users do you think is faster? First
-the Doctrine (2) version:</p>
-<pre><code class="php">&lt;?php
-// Using Doctrine 2 to insert 20 users
-for ($i=0; $i&lt;20; ++$i) {
-    $user = new CmsUser;
-    $user-&gt;name = 'Guilherme';
-    $user-&gt;status = 'Slave';
-    $user-&gt;username = 'gblanco';
-    $em-&gt;persist($user);
-}
-
-$s = microtime(true);
-$em-&gt;flush();
-$e = microtime(true);
-echo ($e - $s) . &quot;&lt;br/&gt;&quot;;
-</code></pre>
-<p>Now the good old mysql\_query version:</p>
-<pre><code class="php">&lt;?php
-$s = microtime(true);
-for ($i=0; $i&lt;20; ++$i) {
-    mysql_query(&quot;INSERT INTO cms_users (name, status, username) VALUES ('Guilherme', 'Slave', 'gblanco')&quot;, $link);
-}
-$e = microtime(true);
-echo ($e - $s) . &quot;&lt;br/&gt;&quot;;
-</code></pre>
-<p>Even this comparison is not fair since flush() is doing a lot more
-stuff but anyhow. The results might surprise some of you:</p>
-
-<pre><code class="">Doctrine 2: 0.0094 seconds
-mysql_query: 0.0165 seconds
-</code></pre>
-<p>Yes, our good old mysql\_query code is almost twice as slow even
-though it does a lot less, provides no features, no abstraction, no
-basic protection against SQL injection, etc. Why is that? The
-answer is: transactions. In the Doctrine 2 example, Doctrine takes
-over transaction management for us and efficiently executes all
-inserts in a single, short transaction. In the plain mysql\_query
-example, there is no transaction demarcation and since MySql by
-default operates in autocommit mode, every mysql\_query call will
-implicitly commit the transaction and start a new one. Thats 20
-transactions. Here is the revised code of the second example with
-proper transaction demarcation:</p>
-<pre><code class="php">&lt;?php
-$s = microtime(true);
-mysql_query('START TRANSACTION', $link);
-for ($i=0; $i&lt;20; ++$i) {
-    mysql_query(&quot;INSERT INTO cms_users (name, status, username) VALUES ('Guilherme', 'Slave', 'gblanco')&quot;, $link);
-}
-mysql_query('COMMIT', $link);
-$e = microtime(true);
-echo ($e - $s) . &quot;&lt;br/&gt;&quot;;
-</code></pre>
-<p>The result:</p>
-
-<pre><code class="">mysql_query: 0.0028 seconds
-</code></pre>
-<p>Thats a huge difference. We can conclude:</p>
-<p><strong>Bad or no transaction management/demarcation can reduce performance by several orders of magnitude.</strong></p>
-<p>Many people are used to autocommit mode without really being aware
-of what it is doing. It does not mean there is no transaction
-unless you issue START/BEGIN TRANSACTION or PDO#beginTransaction().
-It means after every single query a transaction is committed
-automatically and a new one started. Methods like
-PDO#beginTransaction() merely suspend autocommit mode for a short
-duration (until you call PDO#commit()/PDO#rollback()).</p>
-<p>To clarify:</p>
-<p><strong>You can not talk to your database outside of a transaction.</strong></p>
-<p>Even SELECT queries get wrapped in a small transaction in
-autocommit mode. However since SELECT statements usually don't
-result in any write locks (like INSERT/UPDATE/DELETE) the penalty
-of these transactions is usually not that big.</p>
-<p>Doctrine 2 can help a lot here. You can modify your objects
-anywhere, persist and delete objects anywhere and once you call
-<code>EntityManager#flush()</code> Doctrine 2 will efficiently make all
-updates in a single transaction.</p>
-<p>What I wanted to highlight with this post is that there are a lot
-of factors that influence the performance of your application, and
-raw execution speed of the code is certainly not one of the most
-influential ones. You can very easily lose 10 times the performance
-by trivial things such as the one shown above (bad/no transaction
-demarcation) than what you gained by choosing some &quot;ultra
-lightweight&quot; PHP framework or a homegrown solution.</p>
-<p>There are many more factors, like network load, inefficient
-database indices or no indices, and much more. Don't just always
-look at the raw execution speed of your code. Use code that is well
-tested, established, used by lots of people and developed by lots
-of people. Don't reinvent the wheel and use existing tools or help
-make existing tools better! (Oh, and use the right tool for the
-job, of course!)</p>
-<p>Most of the time when you think your own solutions are much better
-and have a lot less bugs than existing ones then thats most likely
-just because noone else is using it and so the bugs are never found
-:-).</p>
-<p>PS: If you're still confused by the autocommit mode, let me
-recommend this excellent page from the Hibernate project:
-<a href="https://www.hibernate.org/403.html">Non-transactional data access and the auto-commit mode</a></p>
 
         </div>
 

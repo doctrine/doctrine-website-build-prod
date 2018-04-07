@@ -115,6 +115,38 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="https://www.doctrine-project.org/2012/01/03/doctrine2-2-beta2/">Doctrine 2.2 Beta 2</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2012-01-03
+                            by
+                                    Benjamin Eberlei
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>Sadly we did not manage to hold our schedule with a 2.2 release in 2011, we had to do some larger changes before the final release. This means we are releasing another Beta of Doctrine DBAL and ORM. The final release is rescheduled to 19th January.</p>
+<ul><li>DBAL Changelog &lt;http://www.doctrine-project.org/jira/browse/DBAL/fixforversion/10189&gt;`_</li>
+<li>ORM Changelog &lt;http://www.doctrine-project.org/jira/browse/DDC/fixforversion/10188&gt;`_</li>
+</ul>
+
+<p>Please try and test this code with your production applications and report any backwards compatibility breaks to the <a href="http://www.doctrine-project.org/jira">Bug Tracker</a> or the Mailing List. See the <a href="https://github.com/doctrine/doctrine2/blob/master/UPGRADE_TO_2_2">UPGRADE_2_2</a> file to see backwards incompatible changes.</p>
+<p>You can install the Beta through <a href="https://github.com/doctrine/doctrine2">Github</a> , <a href="http://pear.doctrine-project.org">PEAR</a> by download or through <a href="http://www.packagist.org">Composer</a>:</p>
+<blockquote><p>{
+    &quot;require&quot;:
+    {
+        &quot;doctrine/orm&quot;: &quot;2.2.0-BETA2&quot;
+    }
+}</p>
+</blockquote>
+
+        </div>
+
+            </article>
+    <article>
+        <header>
             <h2><a href="https://www.doctrine-project.org/2011/12/20/doctrine2-2-beta/">Doctrine 2.2 Beta</a></h2>
         </header>
 
@@ -181,109 +213,6 @@ for details.</p>
 <p>You can get the code from <a href="http://pear.doctrine-project.org">PEAR</a> , the
 download section or directly from
 <a href="">Github &lt;https://github.com/doctrine/doctrine2/tree/2.1.5</a>.</p>
-
-        </div>
-
-            </article>
-    <article>
-        <header>
-            <h2><a href="https://www.doctrine-project.org/2011/12/15/symfony-bundles-move/">Our Symfony Bundles move to Doctrine organization</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on 2011-12-15
-                            by
-                                    Benjamin Eberlei
-                                    </p>
-
-        <hr />
-
-        <div>
-            <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Important first point: This move does not affect Symfony 2.0 apps at all, only the Symfony master is affected.</p>
-</div>
-<p>The Symfony2 Doctrine related Bundles move to the Doctrine organization. The DoctrineBundle being in the core for the 2.0 release it is now maintained in a more decoupled way from Symfony for several reasons:</p>
-<ul><li>No coupling of release cycles anymore.</li>
-<li>Move code to the organization that actually maintains it.</li>
-<li>Avoid Symfony suggesting Doctrine is the only way for persistence, Symfony wants to focus on providing View and Controller and not make suggestions about the model.</li>
-</ul>
-
-<p>The DoctrineFixturesBundle, DoctrineMigrationsBundle and DoctrineMongoDBBundle are now maintained in the Doctrine organization, however forks have been created in the Symfony repository to make all the 2.0 apps out there backwards compatible. You find the new repositories here:</p>
-<ul><li>https://github.com/doctrine/DoctrineBundle</li>
-<li>https://github.com/doctrine/DoctrineMongoDBBundle</li>
-<li>https://github.com/doctrine/DoctrineFixturesBundle</li>
-<li>https://github.com/doctrine/DoctrineMigrationsBundle</li>
-</ul>
-
-<p>What do you need to change in your code? Not very much. For the DoctrineBundle for example the following:</p>
-<ul><li>Update the deps file to include the DoctrineBundle
-    ::
-        [empty]
-        [DoctrineBundle]
-            git=http://github.com/doctrine/DoctrineBundle.git
-            target=/bundles/Doctrine/Bundle/DoctrineBundle</li>
-<li>Change the Bundle class
-    .. code-block :: php
-        $bundles = array(
-            //..
-            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-            //..
-        );</li>
-<li>Change references to Registry</li>
-</ul>
-
-<p>The `Symfony\Bundle\DoctrineBundle\Registry` class may be type-hinted in your code. You have to change this code to point to `Doctrine\Bundle\DoctrineBundle\Registry`.</p>
-<p>A full deps file for all Doctrine bundles now looks like:</p>
-
-<pre><code class="">[empty]
-[data-fixtures]
-    git=http://github.com/doctrine/data-fixtures.git
-
-[migrations]
-    git=http://github.com/doctrine/migrations.git
-
-[DoctrineBundle]
-    git=http://github.com/doctrine/DoctrineBundle.git
-    target=/bundles/Doctrine/Bundle/DoctrineBundle
-
-[DoctrineMigrationsBundle]
-    git=http://github.com/doctrine/DoctrineMigrationsBundle.git
-    target=/bundles/Doctrine/Bundle/MigrationsBundle
-
-[DoctrineFixturesBundle]
-    git=http://github.com/doctrine/DoctrineFixturesBundle.git
-    target=/bundles/Doctrine/Bundle/FixturesBundle
-</code></pre>
-<p>And the autoload.php:</p>
-<pre><code class="php">$loader-&gt;registerNamespaces(array(
-    'Symfony'          =&gt; array(__DIR__.'/../vendor/symfony/src', __DIR__.'/../vendor/bundles'),
-    'Sensio'           =&gt; __DIR__.'/../vendor/bundles',
-    'JMS'              =&gt; __DIR__.'/../vendor/bundles',
-    'Doctrine\\Bundle' =&gt; __DIR__.'/../vendor/bundles',
-    'Doctrine\\DBAL\\Migrations' =&gt; __DIR__.'/../vendor/migrations/lib',
-    'Doctrine\\Common\\DataFixtures' =&gt; __DIR__.'/../vendor/data-fixtures/lib',
-    'Doctrine\\Common' =&gt; __DIR__.'/../vendor/doctrine-common/lib',
-    'Doctrine\\DBAL'   =&gt; __DIR__.'/../vendor/doctrine-dbal/lib',
-    'Doctrine'         =&gt; __DIR__.'/../vendor/doctrine/lib',
-    'Monolog'          =&gt; __DIR__.'/../vendor/monolog/src',
-    'Assetic'          =&gt; __DIR__.'/../vendor/assetic/src',
-    'Metadata'         =&gt; __DIR__.'/../vendor/metadata/src',
-));
-</code></pre>
-<p>And the Kernel:</p>
-<pre><code class="php">$bundles = array(
-    new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-    new Symfony\Bundle\SecurityBundle\SecurityBundle(),
-    new Symfony\Bundle\TwigBundle\TwigBundle(),
-    new Symfony\Bundle\MonologBundle\MonologBundle(),
-    new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
-    new Symfony\Bundle\AsseticBundle\AsseticBundle(),
-    new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-    new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
-    new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-    new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
-    new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-);
-</code></pre>
 
         </div>
 
