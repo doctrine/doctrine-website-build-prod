@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Record-based Retrieval Security Template - Doctrine1 ORM (Doctrine1)</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="description" content="PHP 5 Doctrine1 Object Relational Mapper (ORM)
+">
+
+        <meta name="keywords" content="php,doctrine1,orm">
+
+                    <meta name="robots" content="index, follow">
+        
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine1/en/latest/cookbook/record-based-retrieval-security-template.html" />
+    
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://www.doctrine-project.org/css/style.css?3625e4" rel="stylesheet" type="text/css" />
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+
+        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://www.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://www.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://www.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://www.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://www.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://www.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://www.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://www.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://www.doctrine-project.org/images/mstile-310x310.png" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@doctrineorm" />
+        <meta name="twitter:creator" content="@doctrineorm" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.doctrine-project.org/projects/doctrine1/en/latest/cookbook/record-based-retrieval-security-template.html" />
+        <meta property="og:title" content="Record-based Retrieval Security Template - Doctrine1 ORM (Doctrine1)" />
+        <meta property="og:description" content="PHP 5 Doctrine1 Object Relational Mapper (ORM)
+" />
+        <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://www.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "url": "https://www.doctrine-project.org",
+            "logo": "https://www.doctrine-project.org/images/doctrine-logo.svg"
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "url": "https://www.doctrine-project.org",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.doctrine-project.org?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "name": "Doctrine",
+            "url": "https://www.doctrine-project.org",
+            "sameAs": [
+                "https://twitter.com/doctrineorm"
+            ]
+        }
+        </script>
+
+                    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Course",
+            "name": "Doctrine Doctrine1 ORM",
+            "description": "Record-based Retrieval Security Template",
+            "provider": {
+                "@type": "Organization",
+                "name": "Doctrine",
+                "sameAs": "https://www.doctrine-project.org"
+            }
+        }
+        </script>
+    
+        
+            </head>
+    <body>
+                    <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="https://www.doctrine-project.org/projects.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu projects-dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/annotations.html">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/cache.html">Cache</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/collections.html">Collections</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/common.html">Common</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/dbal.html">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/inflector.html">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/lexer.html">Lexer</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/migrations.html">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb.html">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb-odm.html">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/orm.html">ORM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/phpcr-odm.html">PHPCR ODM</a>
+                                                                <a class="dropdown-item bg-secondary text-white font-weight-bold" href="https://www.doctrine-project.org/projects.html">View All</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/team/">Team</a>
+                        </li>
+                    </ul>
+
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                </div>
+
+                <div class="search-results rounded">
+                    <div id="hits">
+                        <!-- Hits widget will appear here -->
+                    </div>
+
+                    <a href="https://www.algolia.com" target="_blank"><img src="https://www.doctrine-project.org/images/search-by-algolia.png" class="float-right" style="width: 150px;" /></a>
+                </div>
+            </nav>
+        
+            <div class="container-wrapper container-fluid">
+        <div class="row row-offcanvas row-offcanvas-right">
+                            <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
+                    <div class="sidebar-sticky">
+                        
+<div class="toc"><ul><li id="code-igniter-and-doctrine-html-title-1" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1">CodeIgniter and Doctrine</a></li><ul><li id="code-igniter-and-doctrine-html-title-1-1" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1.1">Download Doctrine</a></li><li id="code-igniter-and-doctrine-html-title-1-2" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1.2">Setup Doctrine</a></li><li id="code-igniter-and-doctrine-html-title-1-3" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1.3">Setup Command Line Interface</a></li><li id="code-igniter-and-doctrine-html-title-1-4" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1.4">Start Using Doctrine</a></li></ul><li id="creating-a-unit-of-work-using-doctrine-html-title-1" class="toc-item"><a href="creating-a-unit-of-work-using-doctrine.html#title.1">Writing a Unit of Work in PHP Doctrine</a></li><li id="index-html-title-1" class="toc-item"><a href="index.html#title.1">Cookbook</a></li><li id="master-and-slave-connections-html-title-1" class="toc-item"><a href="master-and-slave-connections.html#title.1">Master and Slave Connections</a></li><li id="my-first-project-html-title-1" class="toc-item"><a href="my-first-project.html#title.1">Introduction</a></li><li id="my-first-project-html-title-2" class="toc-item"><a href="my-first-project.html#title.2">Download</a></li><li id="my-first-project-html-title-3" class="toc-item"><a href="my-first-project.html#title.3">Running the CLI</a></li><li id="my-first-project-html-title-4" class="toc-item"><a href="my-first-project.html#title.4">Defining Schema</a></li><li id="my-first-project-html-title-5" class="toc-item"><a href="my-first-project.html#title.5">Test Data Fixtures</a></li><li id="my-first-project-html-title-6" class="toc-item"><a href="my-first-project.html#title.6">Building Everything Now that you have written your schema files and</a></li><li id="my-first-project-html-title-7" class="toc-item"><a href="my-first-project.html#title.7">Running Tests</a></li><li id="plug-and-play-schema-information-with-templates-html-title-1" class="toc-item"><a href="plug-and-play-schema-information-with-templates.html#title.1">Plug and Play Schema Information with Templates</a></li><li id="record-based-retrieval-security-template-html-title-1" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1">Record-based Retrieval Security Template</a></li><ul><li id="record-based-retrieval-security-template-html-title-1-1" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.1">Introduction</a></li><li id="record-based-retrieval-security-template-html-title-1-2" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.2">Template</a></li><li id="record-based-retrieval-security-template-html-title-1-3" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.3">YAML schema syntax</a></li><li id="record-based-retrieval-security-template-html-title-1-4" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.4">Using the template</a></li><li id="record-based-retrieval-security-template-html-title-1-5" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.5">User setup</a></li><li id="record-based-retrieval-security-template-html-title-1-6" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.6">Querying</a></li><li id="record-based-retrieval-security-template-html-title-1-7" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.7">Restrictions</a></li></ul><li id="taking-advantage-of-column-aggregation-inheritance-html-title-1" class="toc-item"><a href="taking-advantage-of-column-aggregation-inheritance.html#title.1">Taking Advantage of Column Aggregation Inheritance</a></li></ul></div>
+                    </div>
+                </nav>
+            
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-9 pt-3 px-4">
+                <div class="row">
+                                        
+                                                                <nav class="breadcrumbs d-none d-sm-block d-md-block d-lg-block d-xl-block" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects.html">Projects</a></li>
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine1.html">Doctrine1</a></li>
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine1/en/latest/">Documentation</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Record-based Retrieval Security Template</li>
+                            </ol>
+                        </nav>
+                                    </div>
+
+                                    <div class="alert caution bg-light-yellow text-dark border"><i class="fas fa-exclamation-circle text-warning mr-2"></i> This project is no longer maintained and has been archived.</div>
+                
+                <div class="row">
+                    <div class="col-12">
+                                                    <button type="button" class="btn btn-primary btn-sm float-right toc-toggle" data-toggle="offcanvas" id="toc-toggle">Table of Contents</button>
+
+                                                            <ul class="list-inline">
+                                                                            <li class="list-inline-item mr-0">
+                                            <a href="/projects/doctrine1/en/latest/cookbook/record-based-retrieval-security-template.html" class="project-version-switcher badge badge-warning">master</a>
+                                        </li>
+                                    
+                                    
+                                    <li class="list-inline-item ml-2"><a href="https://github.com/doctrine/doctrine1-documentation/edit/master/source/en/cookbook/record-based-retrieval-security-template.rst" class="badge badge-primary">Edit</a></li>
+
+                                </ul>
+                            
+                            
+<p></p>
+<hr />
+<a class="section-anchor" id="title.1" name="title.1"></a><h1 class="section-header"><a href="#title.1">Record-based Retrieval Security Template<i class="fas fa-link"></i></a></h1>
+<hr />
+<a class="section-anchor" id="title.1.1" name="title.1.1"></a><h2 class="section-header"><a href="#title.1.1">Introduction<i class="fas fa-link"></i></a></h2>
+<p>This is a tutorial &amp; how-to on using a security template and listener to
+restrict a user to specific records, or a range of specific records
+based on credentials and a user table association. Basically fine
+grained user access control.</p>
+<p>This template was created for a project which had a few credentials,
+division\_manager, district\_manager, branch\_manager, and salesperson.
+We have a list of accounts, their related sales and all sorts of
+sensitive information for each account. Each logged in user should be
+allowed to only view the accounts and related information based off
+their credentials + either the division, district, branch or salesperson
+they are allowed to view.</p>
+<p>So a division manager can view all info for all accounts within his
+division. A salesperson can only view the accounts they are assign.</p>
+<p>The template has been a work in progress so the code below may not
+actually be the final code I'm using today. But since it is now working
+for all situations I'm asking of it, I thought I would post it as is.</p>
+<hr />
+<a class="section-anchor" id="title.1.2" name="title.1.2"></a><h2 class="section-header"><a href="#title.1.2">Template<i class="fas fa-link"></i></a></h2>
+<blockquote><p>class gsSecurityTemplate extends Doctrine\_Template { protected</p>
+</blockquote>
+<p>$\_options = array();</p>
+
+<pre><code class="">/**
+ * __construct
+ *
+ * @param string $options
+ * @return void
+ */
+public function __construct(array $options)
+{
+    if (!isset($options['conditions']) || empty($options['conditions'])) {
+        throw new Doctrine_Exception('Unable to create security template without conditions');
+    }
+
+    $this-&gt;_options = $options;
+}
+
+public function setUp()
+{
+    $this-&gt;addListener(new gsSecurityListener($this-&gt;_options));
+}
+</code></pre>
+<p>}</p>
+<p>class gsSecurityListener extends Doctrine\_Record\_Listener { private
+static $<em>user\_id = 0, $</em>credentials = array(), $\_alias\_count = 30;</p>
+
+<pre><code class="">protected $_options = array();
+
+/**
+ * __construct
+ *
+ * @param string $options
+ * @return void
+ */
+public function __construct(array $options)
+{
+    $this-&gt;_options = $options;
+}
+
+public function preDqlSelect(Doctrine_Event $event)
+{
+    $invoker = $event-&gt;getInvoker();
+    $class   = get_class($invoker);
+    $params  = $event-&gt;getParams();
+
+    if($class == $params['alias']) {
+        return;
+    }
+
+    $q       = $event-&gt;getQuery();
+
+    // only apply to the main protected table not chained tables... may break some situations
+    if(!$q-&gt;contains('FROM '.$class)) {
+        return;
+    }
+
+    $wheres = array();
+    $pars   = array();
+
+    $from = $q-&gt;getDqlPart('from');
+
+    foreach ($this-&gt;_options['conditions'] as $rel_name =&gt; $conditions) {
+        $apply = false;
+        foreach ($conditions['apply_to'] as $val) {
+            if (in_array($val,self::$_credentials)) {
+                $apply = true;
+                break;
+            }
+        }
+
+        if ($apply) {
+            $alias = $params['alias'];
+            $aliases = array();
+            $aliases[] = $alias;
+
+            foreach ($conditions['through'] as $key =&gt; $table) {
+                $index = 0;
+                $found = false;
+                foreach ($from as $index =&gt; $val) {
+                    if (strpos($val,$table) !== false) {
+                        $found = true;
+                        break;
+                    }
+
+                }
+
+                if ($found) {
+                    $vals = explode(' ', substr($from[$index],strpos($from[$index],$table)));
+                    $alias = (count($vals) == 2) ? $vals[1]:$vals[0];
+                    $aliases[] = $alias;
+                } else {
+                    $newalias = strtolower(substr($table,0,3)).self::$_alias_count++;
+                    $q-&gt;leftJoin(end($aliases).'.'.$table.' '.$newalias);
+                    $aliases[] = $newalias;
+                }
+            }
+
+            $wheres[] = '('.end($aliases).'.'.$conditions['field'].' = ? )';
+            $pars[] = self::$_user_id;
+        }
+    }
+
+    if(!empty($wheres)) {
+        $q-&gt;addWhere( '('.implode(' OR ',$wheres).')',$pars);
+    }
+}
+
+static public function setUserId($id)
+{
+    self::$_user_id = $id;
+}
+
+static public function setCredentials($vals)
+{
+    self::$_credentials = $vals;
+}
+</code></pre>
+<p>}</p>
+<hr />
+<a class="section-anchor" id="title.1.3" name="title.1.3"></a><h2 class="section-header"><a href="#title.1.3">YAML schema syntax<i class="fas fa-link"></i></a></h2>
+<p>Here is the schema I used this template with. I've removed lots of extra
+options, other templates I was using, indexes and table names. It may
+not work out of the box without the indexes - YMMV.</p>
+<p>Account: actAs: gsSecurityTemplate: conditions: Division: through: [
+Division, UserDivision ] field: user\_id apply\_to: [ division\_manager
+] Branch: through: [ Branch, UserBranch ] field: user\_id apply\_to: [
+branch\_manager ] Salesperson: through: [ Salesperson, UserSalesperson ]
+field: user\_id apply\_to: [ salesperson ] District: through: [ Branch,
+District, UserDistrict ] field: user\_id apply\_to: [ district\_manager
+] columns: id: { type: integer(4), primary: true, autoincrement: true,
+unsigned: true } parent\_id: { type: integer(4), primary: false,
+autoincrement: false, unsigned: true} business\_class\_id: { type:
+integer(2), unsigned: true } salesperson\_id: { type: integer(4),
+unsigned: true } branch\_id: { type: integer(4), unsigned: true }
+division\_id: { type: integer(1), unsigned: true } sold\_to: { type:
+integer(4), unsigned: true }</p>
+<p>Division: columns: id: { type: integer(1), autoincrement: true, primary:
+true, unsigned: true } name: { type: string(32) } code: { type:
+string(4) }</p>
+<p>District: actAs: gsSecurityTemplate: conditions: Division: through: [
+Division, UserDivision ] field: user\_id apply\_to: [ division\_manager
+] relations: Division: foreignAlias: Districts local: division\_id
+onDelete: RESTRICT columns: id: { type: integer(4), autoincrement: true,
+primary: true, unsigned: true } name: { type: string(64) } code: { type:
+string(4) } division\_id: { type: integer(1), unsigned: true }</p>
+<p>Branch: actAs: gsSecurityTemplate: conditions: Division: through: [
+Division, UserDivision ] field: user\_id apply\_to: [ division\_manager
+] District: through: [ District, UserDistrict ] field: user\_id
+apply\_to: [ district\_manager ] relations: Division: local:
+division\_id foreignAlias: Branches onDelete: CASCADE District:
+foreignAlias: Branches local: district\_id onDelete: RESTRICT columns:
+id: { type: integer(4), primary: true, autoincrement: true, unsigned:
+true } name: { type: string(64) } code: { type: string(4) }
+district\_id: { type: integer(4), unsigned: true } division\_id: { type:
+integer(1), unsigned: true } is\_active: { type: boolean, default: true
+}</p>
+<p>User: relations: Divisions: class: Division refClass: UserDivision
+local: user\_id foreign: division\_id Districts: class: District
+refClass: UserDistrict local: user\_id foreign: district\_id Branches:
+class: Branch refClass: UserBranch local: user\_id foreign: branch\_id
+Salespersons: class: Salesperson refClass: UserSalesperson local:
+user\_id foreign: salespersons\_id columns: id: { type: integer(4),
+autoincrement: true, primary: true, unsigned: true } name: { type:
+string(128) } is\_admin: { type: boolean, default: false } is\_active: {
+type: boolean, default: true } is\_division\_manager: { type: boolean,
+default: false } is\_district\_manager: { type: boolean, default: false
+} is\_branch\_manager: { type: boolean, default: false }
+is\_salesperson: { type: boolean, default: false } last\_login: { type:
+timestamp }</p>
+<p>UserDivision: tableName: user\_divisions columns: id: { type:
+integer(4), autoincrement: true, primary: true, unsigned: true }
+user\_id: { type: integer(4), primary: true, unsigned: true }
+division\_id: { type: integer(1), primary: true, unsigned: true }</p>
+<p>UserDistrict: tableName: user\_districts columns: id: { type:
+integer(4), autoincrement: true, primary: true, unsigned: true }
+user\_id: { type: integer(4), primary: true, unsigned: true }
+district\_id: { type: integer(4), primary: true, unsigned: true }</p>
+<p>UserBranch: tableName: user\_branches columns: id: { type: integer(4),
+autoincrement: true, primary: true, unsigned: true } user\_id: { type:
+integer(4), primary: true, unsigned: true } branch\_id: { type:
+integer(4), primary: true, unsigned: true }</p>
+<p>UserSalesperson: tableName: user\_salespersons columns: id: { type:
+integer(4), autoincrement: true, primary: true, unsigned: true }
+user\_id: { type: integer(4), primary: true, unsigned: true }
+salespersons\_id: { type: integer(4), primary: true, unsigned: true }</p>
+<p>You can see from the User model that the credentials are set within the
+db. All hardcoded in this situation.</p>
+<hr />
+<a class="section-anchor" id="title.1.4" name="title.1.4"></a><h2 class="section-header"><a href="#title.1.4">Using the template<i class="fas fa-link"></i></a></h2>
+<p>Once you've built your models from the schema, you should see something
+like the following in your model's setUp function.</p>
+<blockquote><p>$gssecuritytemplate0 = new gsSecurityTemplate(array('conditions' =&gt;</p>
+</blockquote>
+<p>array('Division' =&gt; array( 'through' =&gt; array( 0 =&gt; 'Division', 1 =&gt;
+'UserDivision', ), 'field' =&gt; 'user\_id', 'apply\_to' =&gt; array( 0 =&gt;
+'division\_manager', ), 'exclude\_for' =&gt; array( 0 =&gt; 'admin', ), ),
+'Branch' =&gt; array( 'through' =&gt; array( 0 =&gt; 'Branch', 1 =&gt; 'UserBranch',
+), 'field' =&gt; 'user\_id', 'apply\_to' =&gt; array( 0 =&gt; 'branch\_manager',
+), 'exclude\_for' =&gt; array( 0 =&gt; 'admin', 1 =&gt; 'division\_manager', 2 =&gt;
+'district\_manager', ), ), 'Salesperson' =&gt; array( 'through' =&gt; array( 0
+=&gt; 'Salesperson', 1 =&gt; 'UserSalesperson', ), 'field' =&gt; 'user\_id',
+'apply\_to' =&gt; array( 0 =&gt; 'salesperson', ), 'exclude\_for' =&gt; array( 0
+=&gt; 'admin', 1 =&gt; 'division\_manager', 2 =&gt; 'district\_manager', 3 =&gt;
+'branch\_manager', ), ), 'District' =&gt; array( 'through' =&gt; array( 0 =&gt;
+'Branch', 1 =&gt; 'District', 2 =&gt; 'UserDistrict', ), 'field' =&gt;
+'user\_id', 'apply\_to' =&gt; array( 0 =&gt; 'district\_manager', ),
+'exclude\_for' =&gt; array( 0 =&gt; 'admin', 1 =&gt; 'division\_manager', ),
+)))); `this-&gt;actAs(`\ gssecuritytemplate0);
+The last part you need to use is to provide the template with the
+running user's credentials and id. In my project's session bootstrapping
+I have the following ( I use the symfony MVC framework ).</p>
+<blockquote><p>public function initialize($context,</p>
+</blockquote>
+<p>`parameters = null) { parent::initialize(`\ context,`parameters = null); gsSecurityListener::setUserId(`\ this-&gt;getAttribute('user\_id'));gsSecurityListener::setCredentials($this-&gt;listCredentials());</p>
+<p>}</p>
+<p>This provides the credentials the user was given when they logged in as
+well as their id.</p>
+<hr />
+<a class="section-anchor" id="title.1.5" name="title.1.5"></a><h2 class="section-header"><a href="#title.1.5">User setup<i class="fas fa-link"></i></a></h2>
+<p>In my case, I create users and provide a checkbox for their credentials,
+one for each type I have. Lets take Division Manager as an example. In
+my case we have 3 divisions, East, Central, West. When I create a user I
+assign it the West division, and check off that they are a division
+manager. I can then proceed to login, and my account listing page will
+restrict the accounts I see automatically to my division.</p>
+<hr />
+<a class="section-anchor" id="title.1.6" name="title.1.6"></a><h2 class="section-header"><a href="#title.1.6">Querying<i class="fas fa-link"></i></a></h2>
+<p>Now if you query the Account model, the template is triggered and based
+on your credentials the results will be restricted.</p>
+<p>The query below</p>
+<blockquote><p>$accounts = Doctrine\_Query::create()-&gt;from('Account</p>
+</blockquote>
+<p>a')-&gt;leftJoin('a.Branches b')-&gt;where('a.company\_name LIKE
+?','A%')-&gt;execute();</p>
+<p>produces the resulting sql.</p>
+<blockquote><p>SELECT ... FROM accounts a2 LEFT JOIN branches b2 ON a2.branch\_id =</p>
+</blockquote>
+<p>b2.id LEFT JOIN divisions d2 ON a2.division\_id = d2.id LEFT JOIN
+user\_divisions u2 ON d2.id = u2.division\_id WHERE a2.company\_name
+LIKE ? AND u2.user\_id = ? ORDER BY a2.company\_name</p>
+<p>The results you get back will always be restricted to the division you
+have been assigned. Since in our schema we've defined restrictions on
+the Branch and Districts as well if I were to want to provide a user
+with a drop down of potential branches, I can simply query the branches
+as I normally would, and only the ones in my division would be returned
+to choose from.</p>
+<hr />
+<a class="section-anchor" id="title.1.7" name="title.1.7"></a><h2 class="section-header"><a href="#title.1.7">Restrictions<i class="fas fa-link"></i></a></h2>
+<p>For the time being, this module only protects tables in the FROM clause,
+since doctrine currently runs the query listener for the new tables
+added to the query by the template, and thus we get a pretty nasty query
+in the end that doesn't work. If I can figure out how to detect such
+situations reliably I'll update the article.</p>
+<p></p>
+                                            </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+                            
+        <button id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://www.doctrine-project.org/components/highlightjs/highlight.pack.js?3970aa"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script src="https://www.doctrine-project.org/js/main.js?f32c09"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+
+        <script type="text/javascript">
+            var projectSlug = 'doctrine1';
+            var versionSlug = 'latest';
+
+            new Main();
+
+            new Search(projectSlug, versionSlug);
+        </script>
+
+            <script src="https://www.doctrine-project.org/js/sidebar.js?6349dd"></script>
+
+    <script type="text/javascript">
+        new Sidebar();
+    </script>
+
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Taking Advantage of Column Aggregation Inheritance - Doctrine1 ORM (Doctrine1)</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="description" content="PHP 5 Doctrine1 Object Relational Mapper (ORM)
+">
+
+        <meta name="keywords" content="php,doctrine1,orm">
+
+                    <meta name="robots" content="index, follow">
+        
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine1/en/latest/cookbook/taking-advantage-of-column-aggregation-inheritance.html" />
+    
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://www.doctrine-project.org/css/style.css?3625e4" rel="stylesheet" type="text/css" />
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+
+        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://www.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://www.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://www.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://www.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://www.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://www.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://www.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://www.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://www.doctrine-project.org/images/mstile-310x310.png" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@doctrineorm" />
+        <meta name="twitter:creator" content="@doctrineorm" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.doctrine-project.org/projects/doctrine1/en/latest/cookbook/taking-advantage-of-column-aggregation-inheritance.html" />
+        <meta property="og:title" content="Taking Advantage of Column Aggregation Inheritance - Doctrine1 ORM (Doctrine1)" />
+        <meta property="og:description" content="PHP 5 Doctrine1 Object Relational Mapper (ORM)
+" />
+        <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://www.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "url": "https://www.doctrine-project.org",
+            "logo": "https://www.doctrine-project.org/images/doctrine-logo.svg"
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "url": "https://www.doctrine-project.org",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.doctrine-project.org?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "name": "Doctrine",
+            "url": "https://www.doctrine-project.org",
+            "sameAs": [
+                "https://twitter.com/doctrineorm"
+            ]
+        }
+        </script>
+
+                    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Course",
+            "name": "Doctrine Doctrine1 ORM",
+            "description": "Taking Advantage of Column Aggregation Inheritance",
+            "provider": {
+                "@type": "Organization",
+                "name": "Doctrine",
+                "sameAs": "https://www.doctrine-project.org"
+            }
+        }
+        </script>
+    
+        
+            </head>
+    <body>
+                    <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="https://www.doctrine-project.org/projects.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu projects-dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/annotations.html">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/cache.html">Cache</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/collections.html">Collections</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/common.html">Common</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/dbal.html">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/inflector.html">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/lexer.html">Lexer</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/migrations.html">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb.html">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb-odm.html">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/orm.html">ORM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/phpcr-odm.html">PHPCR ODM</a>
+                                                                <a class="dropdown-item bg-secondary text-white font-weight-bold" href="https://www.doctrine-project.org/projects.html">View All</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/team/">Team</a>
+                        </li>
+                    </ul>
+
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                </div>
+
+                <div class="search-results rounded">
+                    <div id="hits">
+                        <!-- Hits widget will appear here -->
+                    </div>
+
+                    <a href="https://www.algolia.com" target="_blank"><img src="https://www.doctrine-project.org/images/search-by-algolia.png" class="float-right" style="width: 150px;" /></a>
+                </div>
+            </nav>
+        
+            <div class="container-wrapper container-fluid">
+        <div class="row row-offcanvas row-offcanvas-right">
+                            <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
+                    <div class="sidebar-sticky">
+                        
+<div class="toc"><ul><li id="code-igniter-and-doctrine-html-title-1" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1">CodeIgniter and Doctrine</a></li><ul><li id="code-igniter-and-doctrine-html-title-1-1" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1.1">Download Doctrine</a></li><li id="code-igniter-and-doctrine-html-title-1-2" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1.2">Setup Doctrine</a></li><li id="code-igniter-and-doctrine-html-title-1-3" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1.3">Setup Command Line Interface</a></li><li id="code-igniter-and-doctrine-html-title-1-4" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1.4">Start Using Doctrine</a></li></ul><li id="creating-a-unit-of-work-using-doctrine-html-title-1" class="toc-item"><a href="creating-a-unit-of-work-using-doctrine.html#title.1">Writing a Unit of Work in PHP Doctrine</a></li><li id="index-html-title-1" class="toc-item"><a href="index.html#title.1">Cookbook</a></li><li id="master-and-slave-connections-html-title-1" class="toc-item"><a href="master-and-slave-connections.html#title.1">Master and Slave Connections</a></li><li id="my-first-project-html-title-1" class="toc-item"><a href="my-first-project.html#title.1">Introduction</a></li><li id="my-first-project-html-title-2" class="toc-item"><a href="my-first-project.html#title.2">Download</a></li><li id="my-first-project-html-title-3" class="toc-item"><a href="my-first-project.html#title.3">Running the CLI</a></li><li id="my-first-project-html-title-4" class="toc-item"><a href="my-first-project.html#title.4">Defining Schema</a></li><li id="my-first-project-html-title-5" class="toc-item"><a href="my-first-project.html#title.5">Test Data Fixtures</a></li><li id="my-first-project-html-title-6" class="toc-item"><a href="my-first-project.html#title.6">Building Everything Now that you have written your schema files and</a></li><li id="my-first-project-html-title-7" class="toc-item"><a href="my-first-project.html#title.7">Running Tests</a></li><li id="plug-and-play-schema-information-with-templates-html-title-1" class="toc-item"><a href="plug-and-play-schema-information-with-templates.html#title.1">Plug and Play Schema Information with Templates</a></li><li id="record-based-retrieval-security-template-html-title-1" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1">Record-based Retrieval Security Template</a></li><ul><li id="record-based-retrieval-security-template-html-title-1-1" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.1">Introduction</a></li><li id="record-based-retrieval-security-template-html-title-1-2" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.2">Template</a></li><li id="record-based-retrieval-security-template-html-title-1-3" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.3">YAML schema syntax</a></li><li id="record-based-retrieval-security-template-html-title-1-4" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.4">Using the template</a></li><li id="record-based-retrieval-security-template-html-title-1-5" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.5">User setup</a></li><li id="record-based-retrieval-security-template-html-title-1-6" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.6">Querying</a></li><li id="record-based-retrieval-security-template-html-title-1-7" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.7">Restrictions</a></li></ul><li id="taking-advantage-of-column-aggregation-inheritance-html-title-1" class="toc-item"><a href="taking-advantage-of-column-aggregation-inheritance.html#title.1">Taking Advantage of Column Aggregation Inheritance</a></li></ul></div>
+                    </div>
+                </nav>
+            
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-9 pt-3 px-4">
+                <div class="row">
+                                        
+                                                                <nav class="breadcrumbs d-none d-sm-block d-md-block d-lg-block d-xl-block" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects.html">Projects</a></li>
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine1.html">Doctrine1</a></li>
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine1/en/latest/">Documentation</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Taking Advantage of Column Aggregation Inheritance</li>
+                            </ol>
+                        </nav>
+                                    </div>
+
+                                    <div class="alert caution bg-light-yellow text-dark border"><i class="fas fa-exclamation-circle text-warning mr-2"></i> This project is no longer maintained and has been archived.</div>
+                
+                <div class="row">
+                    <div class="col-12">
+                                                    <button type="button" class="btn btn-primary btn-sm float-right toc-toggle" data-toggle="offcanvas" id="toc-toggle">Table of Contents</button>
+
+                                                            <ul class="list-inline">
+                                                                            <li class="list-inline-item mr-0">
+                                            <a href="/projects/doctrine1/en/latest/cookbook/taking-advantage-of-column-aggregation-inheritance.html" class="project-version-switcher badge badge-warning">master</a>
+                                        </li>
+                                    
+                                    
+                                    <li class="list-inline-item ml-2"><a href="https://github.com/doctrine/doctrine1-documentation/edit/master/source/en/cookbook/taking-advantage-of-column-aggregation-inheritance.rst" class="badge badge-primary">Edit</a></li>
+
+                                </ul>
+                            
+                            
+<p></p>
+<hr />
+<a class="section-anchor" id="title.1" name="title.1"></a><h1 class="section-header"><a href="#title.1">Taking Advantage of Column Aggregation Inheritance<i class="fas fa-link"></i></a></h1>
+<p>First, let me give a brief explanation of what column aggregation
+inheritance is and how it works. With column aggregation inheritance all
+classes share the same table, and all columns must exist in the parent.
+Doctrine is able to know which class each row in the database belongs to
+by automatically setting a &quot;type&quot; column so that Doctrine can cast the
+correct class when hydrating data from the database. Even if you query
+the top level column aggregation class, the collection will return
+instances of the class that each row belongs to.</p>
+<p>Now that you have a basic understand of column aggregation inheritance
+lets put it to use. In this example we will setup some models which will
+allow us to use one address table for storing all of our addresses
+across the entire application. Any record will be able to have multiple
+addresses, and all the information will be stored in one table. First
+lets define our Address</p>
+<blockquote><p>class Address extends Doctrine\_Record { public function</p>
+</blockquote>
+<p>setTableDefinition() { $this-&gt;hasColumn('address1', 'string', 255);
+$this-&gt;hasColumn('address2', 'string', 255);
+$this-&gt;hasColumn('address3', 'string', 255); $this-&gt;hasColumn('city',
+'string', 255); $this-&gt;hasColumn('state', 'string', 2);
+$this-&gt;hasColumn('zipcode', 'string', 15); $this-&gt;hasColumn('type',
+'string', 255); $this-&gt;hasColumn('record\_id', 'integer');</p>
+
+<pre><code class="">$this-&gt;option('export', 'tables');
+
+$this-&gt;setSubClasses(array('UserAddress'    =&gt; array('type' =&gt; 'UserAddress'),
+                           'CompanyAddress' =&gt; array('type' =&gt; 'CompanyAddress')));
+
+</code></pre>
+<p>}</p>
+<p>Note the option set above to only export tables because we do not want
+to export any foreign key constraints since record\_id is going to
+relate to many different records.</p>
+<p>We are going to setup a User so it can have multiple addresses, so we
+will need to setup a UserAddress child class that User can relate to.</p>
+<blockquote><p>class UserAddress extends Address { public function setUp() {</p>
+</blockquote>
+<p>$this-&gt;hasOne('User', array('local' =&gt; 'record\_id', 'foreign' =&gt;
+'id')); } }</p>
+<p>Now lets define our User and link it to the UserAddress model so it can
+have multiple addresses. class User extends Doctrine\_Record { public
+function setTableDefinition() { $this-&gt;hasColumn('username', 'string',
+255); $this-&gt;hasColumn('password', 'string', 255); }</p>
+
+<pre><code class="">public function setUp()
+{
+    $this-&gt;hasMany('UserAddress as Addresses', array('local'    =&gt; 'id',
+                                                     'foreign'  =&gt; 'record_id'));
+}
+</code></pre>
+<p>}</p>
+<p>Now say we have a Company record which also needs ot have many
+addresses. First we need to setup the CompanyAddress child class</p>
+<blockquote><p>class CompanyAddress extends Address { public function setUp() {</p>
+</blockquote>
+<p>$this-&gt;hasOne('Company', array('local' =&gt; 'record\_id', 'foreign' =&gt;
+'id')); } }</p>
+<p>Now lets define our Company and link it to the CompanyAddress model so
+it can have multiple addresses. class Company extends Doctrine\_Record {
+public function setTableDefinition() { $this-&gt;hasColumn('name',
+'string', 255); }</p>
+
+<pre><code class="">public function setUp()
+{
+    $this-&gt;hasMany('CompanyAddress as Addresses', array('local'    =&gt; 'id',
+                                                        'foreign'  =&gt; 'record_id'));
+}
+</code></pre>
+<p>}</p>
+<p>Now both Users and Companies can have multiple addresses and the data is
+all stored in one address table.</p>
+<p>Now lets create the tables and insert some records</p>
+<blockquote><p>Doctrine\_Core::createTablesFromArray(array('User', 'Company',</p>
+</blockquote>
+<p>'Address'));</p>
+<p>$user = new User(); $user-&gt;username = 'jwage'; $user-&gt;password =
+'changeme'; $user-&gt;Addresses[0]-&gt;address1 = '123 Road Dr.';
+$user-&gt;Addresses[0]-&gt;city = 'Nashville'; $user-&gt;Addresses[0]-&gt;state =
+'TN'; $user-&gt;save();</p>
+<p>$company = new Company(); $company-&gt;name = 'centre{source}';
+$company-&gt;Addresses[0]-&gt;address1 = '123 Road Dr.';
+$company-&gt;Addresses[0]-&gt;city = 'Nashville';
+$company-&gt;Addresses[0]-&gt;state = 'TN'; $company-&gt;save();</p>
+<p>Query for the user and its addresses</p>
+<blockquote><p>$users = Doctrine\_Query::create() -&gt;from('User u')</p>
+</blockquote>
+<p>-&gt;leftJoin('u.Addresses a') -&gt;execute();</p>
+<p>echo $users[0]-&gt;username; // jwage echo
+`users[0]-&gt;Addresses[0]-&gt;address1 = '123 Road Dr.'; echo get_class(`\ users[0]-&gt;Addresses[0]);// UserAddress</p>
+<p>Query for the company and its addresses</p>
+<blockquote><p>$companies = Doctrine\_Query::create() -&gt;from('Company c')</p>
+</blockquote>
+<p>-&gt;leftJoin('c.Addresses a') -&gt;execute();</p>
+<p>echo $companies[0]-&gt;name; // centre{source} echo
+`companies[0]-&gt;Addresses[0]-&gt;address1 = '123 Road Dr.'; echo get_class(`\ companies[0]-&gt;Addresses[0]);// CompanyAddress</p>
+<p>Now lets query the Addresses directly and you will notice each child
+record returned is hydrated as the appropriate child class that created
+the record initially.</p>
+<p>`addresses = Doctrine_Query::create() -&gt;from('Address a') -&gt;execute(); echo get_class(`\ addresses[0]);// UserAddress echo get\_class($addresses[1]); // CompanyAddress</p>
+<p></p>
+                                            </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+                            
+        <button id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://www.doctrine-project.org/components/highlightjs/highlight.pack.js?3970aa"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script src="https://www.doctrine-project.org/js/main.js?f32c09"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+
+        <script type="text/javascript">
+            var projectSlug = 'doctrine1';
+            var versionSlug = 'latest';
+
+            new Main();
+
+            new Search(projectSlug, versionSlug);
+        </script>
+
+            <script src="https://www.doctrine-project.org/js/sidebar.js?6349dd"></script>
+
+    <script type="text/javascript">
+        new Sidebar();
+    </script>
+
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

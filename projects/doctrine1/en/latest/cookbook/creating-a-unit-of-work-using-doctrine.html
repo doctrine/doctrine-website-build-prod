@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Writing a Unit of Work in PHP Doctrine - Doctrine1 ORM (Doctrine1)</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="description" content="PHP 5 Doctrine1 Object Relational Mapper (ORM)
+">
+
+        <meta name="keywords" content="php,doctrine1,orm">
+
+                    <meta name="robots" content="index, follow">
+        
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine1/en/latest/cookbook/creating-a-unit-of-work-using-doctrine.html" />
+    
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://www.doctrine-project.org/css/style.css?3625e4" rel="stylesheet" type="text/css" />
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+
+        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://www.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://www.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://www.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://www.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://www.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://www.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://www.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://www.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://www.doctrine-project.org/images/mstile-310x310.png" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@doctrineorm" />
+        <meta name="twitter:creator" content="@doctrineorm" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.doctrine-project.org/projects/doctrine1/en/latest/cookbook/creating-a-unit-of-work-using-doctrine.html" />
+        <meta property="og:title" content="Writing a Unit of Work in PHP Doctrine - Doctrine1 ORM (Doctrine1)" />
+        <meta property="og:description" content="PHP 5 Doctrine1 Object Relational Mapper (ORM)
+" />
+        <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://www.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "url": "https://www.doctrine-project.org",
+            "logo": "https://www.doctrine-project.org/images/doctrine-logo.svg"
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "url": "https://www.doctrine-project.org",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.doctrine-project.org?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "name": "Doctrine",
+            "url": "https://www.doctrine-project.org",
+            "sameAs": [
+                "https://twitter.com/doctrineorm"
+            ]
+        }
+        </script>
+
+                    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Course",
+            "name": "Doctrine Doctrine1 ORM",
+            "description": "Writing a Unit of Work in PHP Doctrine",
+            "provider": {
+                "@type": "Organization",
+                "name": "Doctrine",
+                "sameAs": "https://www.doctrine-project.org"
+            }
+        }
+        </script>
+    
+        
+            </head>
+    <body>
+                    <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="https://www.doctrine-project.org/projects.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu projects-dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/annotations.html">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/cache.html">Cache</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/collections.html">Collections</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/common.html">Common</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/dbal.html">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/inflector.html">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/lexer.html">Lexer</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/migrations.html">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb.html">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb-odm.html">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/orm.html">ORM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/phpcr-odm.html">PHPCR ODM</a>
+                                                                <a class="dropdown-item bg-secondary text-white font-weight-bold" href="https://www.doctrine-project.org/projects.html">View All</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/team/">Team</a>
+                        </li>
+                    </ul>
+
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                </div>
+
+                <div class="search-results rounded">
+                    <div id="hits">
+                        <!-- Hits widget will appear here -->
+                    </div>
+
+                    <a href="https://www.algolia.com" target="_blank"><img src="https://www.doctrine-project.org/images/search-by-algolia.png" class="float-right" style="width: 150px;" /></a>
+                </div>
+            </nav>
+        
+            <div class="container-wrapper container-fluid">
+        <div class="row row-offcanvas row-offcanvas-right">
+                            <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
+                    <div class="sidebar-sticky">
+                        
+<div class="toc"><ul><li id="code-igniter-and-doctrine-html-title-1" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1">CodeIgniter and Doctrine</a></li><ul><li id="code-igniter-and-doctrine-html-title-1-1" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1.1">Download Doctrine</a></li><li id="code-igniter-and-doctrine-html-title-1-2" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1.2">Setup Doctrine</a></li><li id="code-igniter-and-doctrine-html-title-1-3" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1.3">Setup Command Line Interface</a></li><li id="code-igniter-and-doctrine-html-title-1-4" class="toc-item"><a href="code-igniter-and-doctrine.html#title.1.4">Start Using Doctrine</a></li></ul><li id="creating-a-unit-of-work-using-doctrine-html-title-1" class="toc-item"><a href="creating-a-unit-of-work-using-doctrine.html#title.1">Writing a Unit of Work in PHP Doctrine</a></li><li id="index-html-title-1" class="toc-item"><a href="index.html#title.1">Cookbook</a></li><li id="master-and-slave-connections-html-title-1" class="toc-item"><a href="master-and-slave-connections.html#title.1">Master and Slave Connections</a></li><li id="my-first-project-html-title-1" class="toc-item"><a href="my-first-project.html#title.1">Introduction</a></li><li id="my-first-project-html-title-2" class="toc-item"><a href="my-first-project.html#title.2">Download</a></li><li id="my-first-project-html-title-3" class="toc-item"><a href="my-first-project.html#title.3">Running the CLI</a></li><li id="my-first-project-html-title-4" class="toc-item"><a href="my-first-project.html#title.4">Defining Schema</a></li><li id="my-first-project-html-title-5" class="toc-item"><a href="my-first-project.html#title.5">Test Data Fixtures</a></li><li id="my-first-project-html-title-6" class="toc-item"><a href="my-first-project.html#title.6">Building Everything Now that you have written your schema files and</a></li><li id="my-first-project-html-title-7" class="toc-item"><a href="my-first-project.html#title.7">Running Tests</a></li><li id="plug-and-play-schema-information-with-templates-html-title-1" class="toc-item"><a href="plug-and-play-schema-information-with-templates.html#title.1">Plug and Play Schema Information with Templates</a></li><li id="record-based-retrieval-security-template-html-title-1" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1">Record-based Retrieval Security Template</a></li><ul><li id="record-based-retrieval-security-template-html-title-1-1" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.1">Introduction</a></li><li id="record-based-retrieval-security-template-html-title-1-2" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.2">Template</a></li><li id="record-based-retrieval-security-template-html-title-1-3" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.3">YAML schema syntax</a></li><li id="record-based-retrieval-security-template-html-title-1-4" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.4">Using the template</a></li><li id="record-based-retrieval-security-template-html-title-1-5" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.5">User setup</a></li><li id="record-based-retrieval-security-template-html-title-1-6" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.6">Querying</a></li><li id="record-based-retrieval-security-template-html-title-1-7" class="toc-item"><a href="record-based-retrieval-security-template.html#title.1.7">Restrictions</a></li></ul><li id="taking-advantage-of-column-aggregation-inheritance-html-title-1" class="toc-item"><a href="taking-advantage-of-column-aggregation-inheritance.html#title.1">Taking Advantage of Column Aggregation Inheritance</a></li></ul></div>
+                    </div>
+                </nav>
+            
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-9 pt-3 px-4">
+                <div class="row">
+                                        
+                                                                <nav class="breadcrumbs d-none d-sm-block d-md-block d-lg-block d-xl-block" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects.html">Projects</a></li>
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine1.html">Doctrine1</a></li>
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine1/en/latest/">Documentation</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Writing a Unit of Work in PHP Doctrine</li>
+                            </ol>
+                        </nav>
+                                    </div>
+
+                                    <div class="alert caution bg-light-yellow text-dark border"><i class="fas fa-exclamation-circle text-warning mr-2"></i> This project is no longer maintained and has been archived.</div>
+                
+                <div class="row">
+                    <div class="col-12">
+                                                    <button type="button" class="btn btn-primary btn-sm float-right toc-toggle" data-toggle="offcanvas" id="toc-toggle">Table of Contents</button>
+
+                                                            <ul class="list-inline">
+                                                                            <li class="list-inline-item mr-0">
+                                            <a href="/projects/doctrine1/en/latest/cookbook/creating-a-unit-of-work-using-doctrine.html" class="project-version-switcher badge badge-warning">master</a>
+                                        </li>
+                                    
+                                    
+                                    <li class="list-inline-item ml-2"><a href="https://github.com/doctrine/doctrine1-documentation/edit/master/source/en/cookbook/creating-a-unit-of-work-using-doctrine.rst" class="badge badge-primary">Edit</a></li>
+
+                                </ul>
+                            
+                            
+<p></p>
+<hr />
+<a class="section-anchor" id="title.1" name="title.1"></a><h1 class="section-header"><a href="#title.1">Writing a Unit of Work in PHP Doctrine<i class="fas fa-link"></i></a></h1>
+<p>:Authors: - Jon Lebensold
+:Contact: http://jon.lebensold.ca/</p>
+<p>In this tutorial, we're going to create a Unit Of Work object that will
+simplify performing transactions with Doctrine Models. The Goal here is
+to centralize all of our commits to the database into one class which
+will perform them transactionally.</p>
+<p>Afterwards, we can extend this class to include logging and error
+handling in case a commit fails.</p>
+<p>It is helpful to think of the Unit of Work as a way of putting
+everything that we would want to update, insert and delete into one bag
+before sending it to the database.</p>
+<p>Let's create a Doctrine YAML file with a Project Model:</p>
+<p>Project: tableName: lookup\_project columns: id: primary: true
+autoincrement: true type: integer(4) name: string(255)</p>
+<p>With Doctrine models, saving a Project should be as simple as this:</p>
+<blockquote><p>$project = new Project(); $project-&gt;name = 'new project';</p>
+</blockquote>
+<p>$project-&gt;save();</p>
+<p>However, as soon as we want to perform database transactions or logging
+becomes a requirement, having save(); statements all over the place can
+create a lot of duplication.</p>
+<p>To start with, let's create a UnitOfWork class:</p>
+<blockquote><p>class UnitOfWork { protected $*createOrUpdateCollection = array();</p>
+</blockquote>
+<p>protected $*deleteCollection = array(); }</p>
+<p>Because Doctrine is clever enough to know when to UPDATE and when to
+INSERT, we can combine those two operations in one collection. We'll
+store all the delete's that we're planning to form in
+$\_deleteCollection.</p>
+<p>Now we need to add some code to our class to make sure the same object
+isn't added twice.</p>
+<blockquote><p>protected function</p>
+</blockquote>
+<p><em>existsInCollections(`model) { // does the model already belong to the createOrUpdate collection? foreach (`\ this-&gt;</em>createOrUpdateCollectionas `m) { if (`\ model-&gt;getOid() == $m-&gt;getOid()) { return true; }}</p>
+
+<pre><code class="">// does the model already belong to the delete collection?
+foreach ($this-&gt;_deleteCollection as $m) {
+    if ($model-&gt;getOid() == $m-&gt;getOid()) {
+        return true;
+    }
+</code></pre>
+<p>}</p>
+<p>return false; }</p>
+<p>Now we can add our public methods that will be used by code outside of
+the UnitOfWork:</p>
+<blockquote><p>public function</p>
+</blockquote>
+<p>registerModelForCreateOrUpdate(`model) { // code to check to see if the model exists already if (`\ this-&gt;\_existsInCollections($model)){ throw new Exception('model already in another collection for this
+transaction'); }</p>
+
+<pre><code class="">// no? add it
+$this-&gt;_createOrUpdateCollection[] = $model;
+</code></pre>
+<p>}</p>
+<p>public function
+registerModelForDelete(`model) { // code to check to see if the model exists already if (`\ this-&gt;\_existsInCollections($model)){ throw new Exception('model already in another collection for this
+transaction'); }</p>
+
+<pre><code class="">// no? add it
+$this-&gt;_deleteCollection[] = $model;
+</code></pre>
+<p>}</p>
+<p>Before we write the transaction code, we should also be able to let
+other code clear the Unit Of Work. We'll use this method internally as
+well in order to flush the collections after our transaction is
+succesful.</p>
+<blockquote><p>public function clearAll() { $this-&gt;*deleteCollection = array();</p>
+</blockquote>
+<p>$this-&gt;*createOrUpdateCollection = array(); }</p>
+<p>With skeleton in place, we can now write the code that performs the
+Doctrine transaction:</p>
+<blockquote><p>public function commitAll() { $conn = Doctrine\_Manager::connection();</p>
+</blockquote>
+
+<pre><code class="">try {
+      $conn-&gt;beginTransaction();
+
+      $this-&gt;_performCreatesOrUpdates($conn);
+      $this-&gt;_performDeletes($conn);
+
+      $conn-&gt;commit();
+} catch(Doctrine_Exception $e) {
+    $conn-&gt;rollback();
+}
+
+$this-&gt;clearAll();
+</code></pre>
+<p>}</p>
+<p>Now we're assuming that we've already started a Doctrine connection. In
+order for this object to work, we need to initialize Doctrine. It's
+often best to put this kind of code in a config.php file which is loaded
+once using require\_once();</p>
+<blockquote><p>define('SANDBOX\_PATH', dirname(<strong>FILE</strong>)); define('DOCTRINE\_PATH',</p>
+</blockquote>
+<p>SANDBOX\_PATH . DIRECTORY\_SEPARATOR . 'lib'); define('MODELS\_PATH',
+SANDBOX\_PATH . DIRECTORY\_SEPARATOR . 'models');
+define('YAML\_SCHEMA\_PATH', SANDBOX\_PATH . DIRECTORY\_SEPARATOR .
+'schema'); define('DB\_PATH', 'mysql://root:@localhost/database');</p>
+<p>require\_once(DOCTRINE\_PATH . DIRECTORY\_SEPARATOR . 'Doctrine.php');</p>
+<p>spl\_autoload\_register(array('Doctrine', 'autoload'));
+Doctrine\_Manager::getInstance()-&gt;setAttribute(Doctrine\_Core::ATTR\_MODEL\_LOADING,
+Doctrine\_Core::MODEL\_LOADING\_CONSERVATIVE);</p>
+<p>$connection = Doctrine\_Manager::connection(DB\_PATH, 'main');</p>
+<p>Doctrine\_Core::loadModels(MODELS\_PATH);</p>
+<p>With all that done, we can now invoke the Unit of Work to perform a
+whole range of operations in one clean transaction without adding
+complexity to the rest of our code base.</p>
+<blockquote><p>$t = Doctrine\_Core::getTable('Project'); $lastProjects =</p>
+</blockquote>
+<p>$t-&gt;findByName('new project');</p>
+<p>$unitOfWork = new UnitOfWork();</p>
+<p>// prepare an UPDATE $lastProjects[0]-&gt;name = 'old project';
+`unitOfWork-&gt;registerModelForCreateOrUpdate(`\ lastProjects[0]);
+// prepare a CREATE $project = new Project(); $project-&gt;name = 'new
+project name';</p>
+<p>`unitOfWork-&gt;registerModelForCreateOrUpdate(`\ project);
+// prepare a DELETE `unitOfWork-&gt;registerModelForDelete(`\ lastProjects[3]);
+// perform the transaction $unitOfWork-&gt;commitAll();</p>
+<p>The end result should look like this:</p>
+<blockquote><p>class UnitOfWork { /\<em>\</em> \<em> Collection of models to be persisted \</em> \*</p>
+</blockquote>
+<p>@var array Doctrine\_Record \*/ protected $\_createOrUpdateCollection =
+array();</p>
+
+<pre><code class="">/**
+ * Collection of models to be persisted
+ *
+ * @var array Doctrine_Record
+ */
+protected $_deleteCollection = array();
+
+/**
+ * Add a model object to the create collection
+ *
+ * @param Doctrine_Record $model
+ */
+public function registerModelForCreateOrUpdate($model)
+{
+    // code to check to see if the model exists already
+    if ($this-&gt;_existsInCollections($model)) {
+        throw new Exception('model already in another collection for this transaction');
+    }
+
+    // no? add it
+    $this-&gt;_createOrUpdateCollection[] = $model;
+}
+
+/**
+ * Add a model object to the delete collection
+ *
+ * @param Doctrine_Record $model
+ */
+public function registerModelForDelete($model)
+{
+      // code to check to see if the model exists already
+      if ($this-&gt;_existsInCollections($model)) {
+          throw new Exception('model already in another collection for this transaction');
+      }
+
+      // no? add it
+      $this-&gt;_deleteCollection[] = $model;
+}
+
+/**
+ * Clear the Unit of Work
+ */
+public function ClearAll()
+{
+    $this-&gt;_deleteCollection = array();
+    $this-&gt;_createOrUpdateCollection = array();
+}
+
+/**
+ * Perform a Commit and clear the Unit Of Work. Throw an Exception if it fails and roll back.
+ */
+public function commitAll()
+{
+    $conn = Doctrine_Manager::connection();
+
+    try {
+        $conn-&gt;beginTransaction();
+
+        $this-&gt;performCreatesOrUpdates($conn);
+        $this-&gt;performDeletes($conn);
+
+        $conn-&gt;commit();
+    } catch(Doctrine_Exception $e) {
+        $conn-&gt;rollback();
+    }
+
+    $this-&gt;clearAll();
+}
+
+protected function _performCreatesOrUpdates($conn)
+{
+    foreach ($this-&gt;_createOrUpdateCollection as $model) {
+        $model-&gt;save($conn);
+    }
+}
+
+protected function _performDeletes($conn)
+{
+    foreach ($this-&gt;_deleteCollection as $model) {
+        $model-&gt;delete($conn);
+    }
+}
+
+protected function _existsInCollections($model)
+{
+   foreach ($this-&gt;_createOrUpdateCollection as $m) {
+        if ($model-&gt;getOid() == $m-&gt;getOid()) {
+            return true;
+        }
+   }
+
+   foreach ($this-&gt;_deleteCollection as $m) {
+        if ($model-&gt;getOid() == $m-&gt;getOid()) {
+            return true;
+        }
+   }
+
+   return false;
+}
+</code></pre>
+<p>}</p>
+<p>Thanks for reading, feel free to check out http://jon.lebensold.ca or
+mail me at jon@lebensold.ca if you have any questions.</p>
+<p></p>
+                                            </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+                            
+        <button id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://www.doctrine-project.org/components/highlightjs/highlight.pack.js?3970aa"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script src="https://www.doctrine-project.org/js/main.js?f32c09"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+
+        <script type="text/javascript">
+            var projectSlug = 'doctrine1';
+            var versionSlug = 'latest';
+
+            new Main();
+
+            new Search(projectSlug, versionSlug);
+        </script>
+
+            <script src="https://www.doctrine-project.org/js/sidebar.js?6349dd"></script>
+
+    <script type="text/javascript">
+        new Sidebar();
+    </script>
+
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>

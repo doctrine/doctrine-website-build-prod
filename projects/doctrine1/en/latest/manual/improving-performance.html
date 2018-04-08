@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Improving Performance - Doctrine1 ORM (Doctrine1)</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="description" content="PHP 5 Doctrine1 Object Relational Mapper (ORM)
+">
+
+        <meta name="keywords" content="php,doctrine1,orm">
+
+                    <meta name="robots" content="index, follow">
+        
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine1/en/latest/manual/improving-performance.html" />
+    
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://www.doctrine-project.org/css/style.css?3625e4" rel="stylesheet" type="text/css" />
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+
+        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://www.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://www.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://www.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://www.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://www.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://www.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://www.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://www.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://www.doctrine-project.org/images/mstile-310x310.png" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@doctrineorm" />
+        <meta name="twitter:creator" content="@doctrineorm" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.doctrine-project.org/projects/doctrine1/en/latest/manual/improving-performance.html" />
+        <meta property="og:title" content="Improving Performance - Doctrine1 ORM (Doctrine1)" />
+        <meta property="og:description" content="PHP 5 Doctrine1 Object Relational Mapper (ORM)
+" />
+        <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://www.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "url": "https://www.doctrine-project.org",
+            "logo": "https://www.doctrine-project.org/images/doctrine-logo.svg"
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "url": "https://www.doctrine-project.org",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.doctrine-project.org?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "name": "Doctrine",
+            "url": "https://www.doctrine-project.org",
+            "sameAs": [
+                "https://twitter.com/doctrineorm"
+            ]
+        }
+        </script>
+
+                    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Course",
+            "name": "Doctrine Doctrine1 ORM",
+            "description": "Improving Performance",
+            "provider": {
+                "@type": "Organization",
+                "name": "Doctrine",
+                "sameAs": "https://www.doctrine-project.org"
+            }
+        }
+        </script>
+    
+        
+            </head>
+    <body>
+                    <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="https://www.doctrine-project.org/projects.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu projects-dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/annotations.html">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/cache.html">Cache</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/collections.html">Collections</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/common.html">Common</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/dbal.html">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/inflector.html">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/lexer.html">Lexer</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/migrations.html">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb.html">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb-odm.html">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/orm.html">ORM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/phpcr-odm.html">PHPCR ODM</a>
+                                                                <a class="dropdown-item bg-secondary text-white font-weight-bold" href="https://www.doctrine-project.org/projects.html">View All</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/team/">Team</a>
+                        </li>
+                    </ul>
+
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                </div>
+
+                <div class="search-results rounded">
+                    <div id="hits">
+                        <!-- Hits widget will appear here -->
+                    </div>
+
+                    <a href="https://www.algolia.com" target="_blank"><img src="https://www.doctrine-project.org/images/search-by-algolia.png" class="float-right" style="width: 150px;" /></a>
+                </div>
+            </nav>
+        
+            <div class="container-wrapper container-fluid">
+        <div class="row row-offcanvas row-offcanvas-right">
+                            <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
+                    <div class="sidebar-sticky">
+                        
+<div class="toc"><ul><li id="about-author-html-title-1" class="toc-item"><a href="about-author.html#title.1">About the Author</a></li><li id="about-sensio-html-title-1" class="toc-item"><a href="about-sensio.html#title.1">About Sensio</a></li><li id="acknowledgements-html-title-1" class="toc-item"><a href="acknowledgements.html#title.1">Acknowledgements and Contributors</a></li><ul><li id="acknowledgements-html-title-1-1" class="toc-item"><a href="acknowledgements.html#title.1.1">Contributors</a></li><ul><li id="acknowledgements-html-title-1-1-1" class="toc-item"><a href="acknowledgements.html#title.1.1.1">Roman S. Borschel</a></li><li id="acknowledgements-html-title-1-1-2" class="toc-item"><a href="acknowledgements.html#title.1.1.2">Guilherme Blanco</a></li><li id="acknowledgements-html-title-1-1-3" class="toc-item"><a href="acknowledgements.html#title.1.1.3">Konsta Vesterinen</a></li></ul><li id="acknowledgements-html-title-1-2" class="toc-item"><a href="acknowledgements.html#title.1.2">Companies</a></li><ul><li id="acknowledgements-html-title-1-2-1" class="toc-item"><a href="acknowledgements.html#title.1.2.1">centre{source}</a></li><li id="acknowledgements-html-title-1-2-2" class="toc-item"><a href="acknowledgements.html#title.1.2.2">Sensio Labs</a></li></ul><li id="acknowledgements-html-title-1-3" class="toc-item"><a href="acknowledgements.html#title.1.3">Other Contributors</a></li></ul><li id="behaviors-html-title-1" class="toc-item"><a href="behaviors.html#title.1">Behaviors</a></li><ul><li id="behaviors-html-title-1-1" class="toc-item"><a href="behaviors.html#title.1.1">Introduction</a></li><li id="behaviors-html-title-1-2" class="toc-item"><a href="behaviors.html#title.1.2">Simple Templates</a></li><li id="behaviors-html-title-1-3" class="toc-item"><a href="behaviors.html#title.1.3">Templates with Relations</a></li><li id="behaviors-html-title-1-4" class="toc-item"><a href="behaviors.html#title.1.4">Delegate Methods</a></li><li id="behaviors-html-title-1-5" class="toc-item"><a href="behaviors.html#title.1.5">Creating Behaviors</a></li><li id="behaviors-html-title-1-6" class="toc-item"><a href="behaviors.html#title.1.6">Core Behaviors</a></li><ul><li id="behaviors-html-title-1-6-1" class="toc-item"><a href="behaviors.html#title.1.6.1">Introduction</a></li><li id="behaviors-html-title-1-6-2" class="toc-item"><a href="behaviors.html#title.1.6.2">Versionable</a></li><li id="behaviors-html-title-1-6-3" class="toc-item"><a href="behaviors.html#title.1.6.3">Timestampable</a></li><li id="behaviors-html-title-1-6-4" class="toc-item"><a href="behaviors.html#title.1.6.4">Sluggable</a></li><li id="behaviors-html-title-1-6-5" class="toc-item"><a href="behaviors.html#title.1.6.5">I18n</a></li><li id="behaviors-html-title-1-6-6" class="toc-item"><a href="behaviors.html#title.1.6.6">NestedSet</a></li><li id="behaviors-html-title-1-6-7" class="toc-item"><a href="behaviors.html#title.1.6.7">Searchable</a></li><li id="behaviors-html-title-1-6-8" class="toc-item"><a href="behaviors.html#title.1.6.8">Geographical</a></li><li id="behaviors-html-title-1-6-9" class="toc-item"><a href="behaviors.html#title.1.6.9">SoftDelete</a></li></ul><li id="behaviors-html-title-1-7" class="toc-item"><a href="behaviors.html#title.1.7">Nesting Behaviors</a></li><li id="behaviors-html-title-1-8" class="toc-item"><a href="behaviors.html#title.1.8">Generating Files</a></li><li id="behaviors-html-title-1-9" class="toc-item"><a href="behaviors.html#title.1.9">Querying Generated Classes</a></li><li id="behaviors-html-title-1-10" class="toc-item"><a href="behaviors.html#title.1.10">Conclusion</a></li></ul><li id="caching-html-title-1" class="toc-item"><a href="caching.html#title.1">Caching</a></li><ul><li id="caching-html-title-1-1" class="toc-item"><a href="caching.html#title.1.1">Introduction</a></li><li id="caching-html-title-1-2" class="toc-item"><a href="caching.html#title.1.2">Drivers</a></li><ul><li id="caching-html-title-1-2-1" class="toc-item"><a href="caching.html#title.1.2.1">Memcache</a></li><li id="caching-html-title-1-2-2" class="toc-item"><a href="caching.html#title.1.2.2">APC</a></li></ul><li id="caching-html-title-1-3" class="toc-item"><a href="caching.html#title.1.3">Query Cache &amp; Result Cache</a></li><ul><li id="caching-html-title-1-3-1" class="toc-item"><a href="caching.html#title.1.3.1">Introduction</a></li><li id="caching-html-title-1-3-2" class="toc-item"><a href="caching.html#title.1.3.2">Query Cache</a></li><ul></ul><li id="caching-html-title-1-3-3" class="toc-item"><a href="caching.html#title.1.3.3">Result Cache</a></li><ul></ul></ul><li id="caching-html-title-1-4" class="toc-item"><a href="caching.html#title.1.4">Conclusion</a></li></ul><li id="coding-standards-html-title-1" class="toc-item"><a href="coding-standards.html#title.1">Coding Standards</a></li><ul><li id="coding-standards-html-title-1-1" class="toc-item"><a href="coding-standards.html#title.1.1">PHP File Formatting</a></li><ul><li id="coding-standards-html-title-1-1-1" class="toc-item"><a href="coding-standards.html#title.1.1.1">General</a></li><li id="coding-standards-html-title-1-1-2" class="toc-item"><a href="coding-standards.html#title.1.1.2">Indentation</a></li><li id="coding-standards-html-title-1-1-3" class="toc-item"><a href="coding-standards.html#title.1.1.3">Maximum Line Length</a></li><li id="coding-standards-html-title-1-1-4" class="toc-item"><a href="coding-standards.html#title.1.1.4">Line Termination</a></li></ul><li id="coding-standards-html-title-1-2" class="toc-item"><a href="coding-standards.html#title.1.2">Naming Conventions</a></li><ul><li id="coding-standards-html-title-1-2-1" class="toc-item"><a href="coding-standards.html#title.1.2.1">Classes</a></li><li id="coding-standards-html-title-1-2-2" class="toc-item"><a href="coding-standards.html#title.1.2.2">Interfaces</a></li><li id="coding-standards-html-title-1-2-3" class="toc-item"><a href="coding-standards.html#title.1.2.3">Filenames</a></li><li id="coding-standards-html-title-1-2-4" class="toc-item"><a href="coding-standards.html#title.1.2.4">Functions and Methods</a></li><li id="coding-standards-html-title-1-2-5" class="toc-item"><a href="coding-standards.html#title.1.2.5">Variables</a></li><li id="coding-standards-html-title-1-2-6" class="toc-item"><a href="coding-standards.html#title.1.2.6">Constants</a></li><li id="coding-standards-html-title-1-2-7" class="toc-item"><a href="coding-standards.html#title.1.2.7">Record Columns</a></li></ul><li id="coding-standards-html-title-1-3" class="toc-item"><a href="coding-standards.html#title.1.3">Coding Style</a></li><ul><li id="coding-standards-html-title-1-3-1" class="toc-item"><a href="coding-standards.html#title.1.3.1">PHP Code Demarcation</a></li><li id="coding-standards-html-title-1-3-2" class="toc-item"><a href="coding-standards.html#title.1.3.2">Strings</a></li><ul></ul><li id="coding-standards-html-title-1-3-3" class="toc-item"><a href="coding-standards.html#title.1.3.3">Arrays</a></li><li id="coding-standards-html-title-1-3-4" class="toc-item"><a href="coding-standards.html#title.1.3.4">Classes</a></li><li id="coding-standards-html-title-1-3-5" class="toc-item"><a href="coding-standards.html#title.1.3.5">Functions and Methods</a></li><li id="coding-standards-html-title-1-3-6" class="toc-item"><a href="coding-standards.html#title.1.3.6">Control Statements</a></li><li id="coding-standards-html-title-1-3-7" class="toc-item"><a href="coding-standards.html#title.1.3.7">Inline Documentation</a></li></ul><li id="coding-standards-html-title-1-4" class="toc-item"><a href="coding-standards.html#title.1.4">Conclusion</a></li></ul><li id="component-overview-html-title-1" class="toc-item"><a href="component-overview.html#title.1">Component Overview</a></li><ul><li id="component-overview-html-title-1-1" class="toc-item"><a href="component-overview.html#title.1.1">Manager</a></li><ul><li id="component-overview-html-title-1-1-1" class="toc-item"><a href="component-overview.html#title.1.1.1">Retrieving Connections</a></li></ul><li id="component-overview-html-title-1-2" class="toc-item"><a href="component-overview.html#title.1.2">Connection</a></li><ul><li id="component-overview-html-title-1-2-1" class="toc-item"><a href="component-overview.html#title.1.2.1">Available Drivers</a></li><li id="component-overview-html-title-1-2-2" class="toc-item"><a href="component-overview.html#title.1.2.2">Creating Connections</a></li><li id="component-overview-html-title-1-2-3" class="toc-item"><a href="component-overview.html#title.1.2.3">Flushing the Connection</a></li></ul><li id="component-overview-html-title-1-3" class="toc-item"><a href="component-overview.html#title.1.3">Table</a></li><ul><li id="component-overview-html-title-1-3-1" class="toc-item"><a href="component-overview.html#title.1.3.1">Getting a Table Object</a></li><li id="component-overview-html-title-1-3-2" class="toc-item"><a href="component-overview.html#title.1.3.2">Getting Column Information</a></li><li id="component-overview-html-title-1-3-3" class="toc-item"><a href="component-overview.html#title.1.3.3">Getting Relation Information</a></li><li id="component-overview-html-title-1-3-4" class="toc-item"><a href="component-overview.html#title.1.3.4">Finder Methods</a></li><ul></ul><li id="component-overview-html-title-1-3-5" class="toc-item"><a href="component-overview.html#title.1.3.5">Custom Finders</a></li></ul><li id="component-overview-html-title-1-4" class="toc-item"><a href="component-overview.html#title.1.4">Record</a></li><ul><li id="component-overview-html-title-1-4-1" class="toc-item"><a href="component-overview.html#title.1.4.1">Properties</a></li><li id="component-overview-html-title-1-4-2" class="toc-item"><a href="component-overview.html#title.1.4.2">Updating Records</a></li><li id="component-overview-html-title-1-4-3" class="toc-item"><a href="component-overview.html#title.1.4.3">Replacing Records</a></li><li id="component-overview-html-title-1-4-4" class="toc-item"><a href="component-overview.html#title.1.4.4">Refreshing Records</a></li><li id="component-overview-html-title-1-4-5" class="toc-item"><a href="component-overview.html#title.1.4.5">Refreshing relationships</a></li><li id="component-overview-html-title-1-4-6" class="toc-item"><a href="component-overview.html#title.1.4.6">Deleting Records</a></li><li id="component-overview-html-title-1-4-7" class="toc-item"><a href="component-overview.html#title.1.4.7">Using Expression Values</a></li><li id="component-overview-html-title-1-4-8" class="toc-item"><a href="component-overview.html#title.1.4.8">Getting Record State</a></li><li id="component-overview-html-title-1-4-9" class="toc-item"><a href="component-overview.html#title.1.4.9">Getting Object Copy</a></li><li id="component-overview-html-title-1-4-10" class="toc-item"><a href="component-overview.html#title.1.4.10">Saving a Blank Record</a></li><li id="component-overview-html-title-1-4-11" class="toc-item"><a href="component-overview.html#title.1.4.11">Mapping Custom Values</a></li><li id="component-overview-html-title-1-4-12" class="toc-item"><a href="component-overview.html#title.1.4.12">Serializing</a></li><li id="component-overview-html-title-1-4-13" class="toc-item"><a href="component-overview.html#title.1.4.13">Checking Existence</a></li><li id="component-overview-html-title-1-4-14" class="toc-item"><a href="component-overview.html#title.1.4.14">Function Callbacks for Columns</a></li></ul><li id="component-overview-html-title-1-5" class="toc-item"><a href="component-overview.html#title.1.5">Collection</a></li><ul><li id="component-overview-html-title-1-5-1" class="toc-item"><a href="component-overview.html#title.1.5.1">Accessing Elements</a></li><li id="component-overview-html-title-1-5-2" class="toc-item"><a href="component-overview.html#title.1.5.2">Adding new Elements</a></li><li id="component-overview-html-title-1-5-3" class="toc-item"><a href="component-overview.html#title.1.5.3">Getting Collection Count</a></li><li id="component-overview-html-title-1-5-4" class="toc-item"><a href="component-overview.html#title.1.5.4">Saving the Collection</a></li><li id="component-overview-html-title-1-5-5" class="toc-item"><a href="component-overview.html#title.1.5.5">Deleting the Collection</a></li><li id="component-overview-html-title-1-5-6" class="toc-item"><a href="component-overview.html#title.1.5.6">Key Mapping</a></li><li id="component-overview-html-title-1-5-7" class="toc-item"><a href="component-overview.html#title.1.5.7">Loading Related Records</a></li></ul><li id="component-overview-html-title-1-6" class="toc-item"><a href="component-overview.html#title.1.6">Validator</a></li><ul><li id="component-overview-html-title-1-6-1" class="toc-item"><a href="component-overview.html#title.1.6.1">More Validation</a></li><li id="component-overview-html-title-1-6-2" class="toc-item"><a href="component-overview.html#title.1.6.2">Valid or Not Valid</a></li><ul></ul></ul><li id="component-overview-html-title-1-7" class="toc-item"><a href="component-overview.html#title.1.7">Profiler</a></li><ul><li id="component-overview-html-title-1-7-1" class="toc-item"><a href="component-overview.html#title.1.7.1">Basic Usage</a></li></ul><li id="component-overview-html-title-1-8" class="toc-item"><a href="component-overview.html#title.1.8">Locking Manager</a></li><ul><li id="component-overview-html-title-1-8-1" class="toc-item"><a href="component-overview.html#title.1.8.1">Optimistic Locking</a></li><li id="component-overview-html-title-1-8-2" class="toc-item"><a href="component-overview.html#title.1.8.2">Pessimistic Locking</a></li><li id="component-overview-html-title-1-8-3" class="toc-item"><a href="component-overview.html#title.1.8.3">Examples</a></li><li id="component-overview-html-title-1-8-4" class="toc-item"><a href="component-overview.html#title.1.8.4">Technical Details</a></li></ul><li id="component-overview-html-title-1-9" class="toc-item"><a href="component-overview.html#title.1.9">Views</a></li><ul><li id="component-overview-html-title-1-9-1" class="toc-item"><a href="component-overview.html#title.1.9.1">Using Views</a></li></ul><li id="component-overview-html-title-1-10" class="toc-item"><a href="component-overview.html#title.1.10">Conclusion</a></li></ul><li id="configuration-html-title-1" class="toc-item"><a href="configuration.html#title.1">Configuration</a></li><ul><li id="configuration-html-title-1-1" class="toc-item"><a href="configuration.html#title.1.1">Levels of Configuration</a></li><li id="configuration-html-title-1-2" class="toc-item"><a href="configuration.html#title.1.2">Default Attributes</a></li><ul><li id="configuration-html-title-1-2-1" class="toc-item"><a href="configuration.html#title.1.2.1">Default Column Options</a></li><li id="configuration-html-title-1-2-2" class="toc-item"><a href="configuration.html#title.1.2.2">Default Added Auto Id</a></li></ul><li id="configuration-html-title-1-3" class="toc-item"><a href="configuration.html#title.1.3">Portability</a></li><ul><li id="configuration-html-title-1-3-1" class="toc-item"><a href="configuration.html#title.1.3.1">Portability Mode Attributes</a></li><li id="configuration-html-title-1-3-2" class="toc-item"><a href="configuration.html#title.1.3.2">Examples</a></li></ul><li id="configuration-html-title-1-4" class="toc-item"><a href="configuration.html#title.1.4">Identifier quoting</a></li><li id="configuration-html-title-1-5" class="toc-item"><a href="configuration.html#title.1.5">Hydration Overwriting</a></li><li id="configuration-html-title-1-6" class="toc-item"><a href="configuration.html#title.1.6">Configure Table Class</a></li><li id="configuration-html-title-1-7" class="toc-item"><a href="configuration.html#title.1.7">Configure Query Class</a></li><li id="configuration-html-title-1-8" class="toc-item"><a href="configuration.html#title.1.8">Configure Collection Class</a></li><li id="configuration-html-title-1-9" class="toc-item"><a href="configuration.html#title.1.9">Disabling Cascading Saves</a></li><li id="configuration-html-title-1-10" class="toc-item"><a href="configuration.html#title.1.10">Exporting</a></li><li id="configuration-html-title-1-11" class="toc-item"><a href="configuration.html#title.1.11">Naming convention attributes</a></li><ul><li id="configuration-html-title-1-11-1" class="toc-item"><a href="configuration.html#title.1.11.1">Index name format</a></li><li id="configuration-html-title-1-11-2" class="toc-item"><a href="configuration.html#title.1.11.2">Sequence name format</a></li><li id="configuration-html-title-1-11-3" class="toc-item"><a href="configuration.html#title.1.11.3">Table name format</a></li><li id="configuration-html-title-1-11-4" class="toc-item"><a href="configuration.html#title.1.11.4">Database name format</a></li><li id="configuration-html-title-1-11-5" class="toc-item"><a href="configuration.html#title.1.11.5">Validation attributes</a></li><li id="configuration-html-title-1-11-6" class="toc-item"><a href="configuration.html#title.1.11.6">Validation mode constants</a></li><li id="configuration-html-title-1-11-7" class="toc-item"><a href="configuration.html#title.1.11.7">Examples</a></li></ul><li id="configuration-html-title-1-12" class="toc-item"><a href="configuration.html#title.1.12">Conclusion</a></li></ul><li id="connections-html-title-1" class="toc-item"><a href="connections.html#title.1">Connections</a></li><ul><li id="connections-html-title-1-1" class="toc-item"><a href="connections.html#title.1.1">Introduction</a></li><li id="connections-html-title-1-2" class="toc-item"><a href="connections.html#title.1.2">Opening Connections</a></li><li id="connections-html-title-1-3" class="toc-item"><a href="connections.html#title.1.3">Retrieve Connections</a></li><li id="connections-html-title-1-4" class="toc-item"><a href="connections.html#title.1.4">Current Connection</a></li><li id="connections-html-title-1-5" class="toc-item"><a href="connections.html#title.1.5">Change Current Connection</a></li><li id="connections-html-title-1-6" class="toc-item"><a href="connections.html#title.1.6">Iterating Connections</a></li><li id="connections-html-title-1-7" class="toc-item"><a href="connections.html#title.1.7">Get Connection Name</a></li><li id="connections-html-title-1-8" class="toc-item"><a href="connections.html#title.1.8">Close Connection</a></li><li id="connections-html-title-1-9" class="toc-item"><a href="connections.html#title.1.9">Get All Connections</a></li><li id="connections-html-title-1-10" class="toc-item"><a href="connections.html#title.1.10">Count Connections</a></li><li id="connections-html-title-1-11" class="toc-item"><a href="connections.html#title.1.11">Creating and Dropping Database</a></li><ul><li id="connections-html-title-1-11-1" class="toc-item"><a href="connections.html#title.1.11.1">For a Specific Connection</a></li></ul><li id="connections-html-title-1-12" class="toc-item"><a href="connections.html#title.1.12">Writing Custom Connections</a></li><li id="connections-html-title-1-13" class="toc-item"><a href="connections.html#title.1.13">Conclusion</a></li></ul><li id="data-fixtures-html-title-1" class="toc-item"><a href="data-fixtures.html#title.1">Data Fixtures</a></li><ul><li id="data-fixtures-html-title-1-1" class="toc-item"><a href="data-fixtures.html#title.1.1">Importing</a></li><li id="data-fixtures-html-title-1-2" class="toc-item"><a href="data-fixtures.html#title.1.2">Dumping</a></li><li id="data-fixtures-html-title-1-3" class="toc-item"><a href="data-fixtures.html#title.1.3">Implement</a></li><li id="data-fixtures-html-title-1-4" class="toc-item"><a href="data-fixtures.html#title.1.4">Writing</a></li><li id="data-fixtures-html-title-1-5" class="toc-item"><a href="data-fixtures.html#title.1.5">Fixtures For Nested Sets</a></li><li id="data-fixtures-html-title-1-6" class="toc-item"><a href="data-fixtures.html#title.1.6">Fixtures For I18n</a></li><li id="data-fixtures-html-title-1-7" class="toc-item"><a href="data-fixtures.html#title.1.7">Conclusion</a></li></ul><li id="data-hydrators-html-title-1" class="toc-item"><a href="data-hydrators.html#title.1">Data Hydrators</a></li><ul><li id="data-hydrators-html-title-1-1" class="toc-item"><a href="data-hydrators.html#title.1.1">Core Hydration Methods</a></li><ul><li id="data-hydrators-html-title-1-1-1" class="toc-item"><a href="data-hydrators.html#title.1.1.1">Record</a></li><li id="data-hydrators-html-title-1-1-2" class="toc-item"><a href="data-hydrators.html#title.1.1.2">Array</a></li><li id="data-hydrators-html-title-1-1-3" class="toc-item"><a href="data-hydrators.html#title.1.1.3">Scalar</a></li><li id="data-hydrators-html-title-1-1-4" class="toc-item"><a href="data-hydrators.html#title.1.1.4">Single Scalar</a></li><li id="data-hydrators-html-title-1-1-5" class="toc-item"><a href="data-hydrators.html#title.1.1.5">On Demand</a></li><li id="data-hydrators-html-title-1-1-6" class="toc-item"><a href="data-hydrators.html#title.1.1.6">Nested Set Record Hierarchy</a></li><li id="data-hydrators-html-title-1-1-7" class="toc-item"><a href="data-hydrators.html#title.1.1.7">Nested Set Array Hierarchy</a></li></ul><li id="data-hydrators-html-title-1-2" class="toc-item"><a href="data-hydrators.html#title.1.2">Writing Hydration Method</a></li></ul><li id="data-validation-html-title-1" class="toc-item"><a href="data-validation.html#title.1">Data Validation</a></li><ul><li id="data-validation-html-title-1-1" class="toc-item"><a href="data-validation.html#title.1.1">Introduction</a></li><li id="data-validation-html-title-1-2" class="toc-item"><a href="data-validation.html#title.1.2">Examples</a></li><li id="data-validation-html-title-1-3" class="toc-item"><a href="data-validation.html#title.1.3">Conclusion</a></li></ul><li id="database-abstraction-layer-html-title-1" class="toc-item"><a href="database-abstraction-layer.html#title.1">Database Abstraction Layer</a></li><ul><li id="database-abstraction-layer-html-title-1-1" class="toc-item"><a href="database-abstraction-layer.html#title.1.1">Export</a></li><ul><li id="database-abstraction-layer-html-title-1-1-1" class="toc-item"><a href="database-abstraction-layer.html#title.1.1.1">Introduction</a></li><li id="database-abstraction-layer-html-title-1-1-2" class="toc-item"><a href="database-abstraction-layer.html#title.1.1.2">Creating Databases</a></li><li id="database-abstraction-layer-html-title-1-1-3" class="toc-item"><a href="database-abstraction-layer.html#title.1.1.3">Creating Tables</a></li><li id="database-abstraction-layer-html-title-1-1-4" class="toc-item"><a href="database-abstraction-layer.html#title.1.1.4">Creating Foreign Keys</a></li><li id="database-abstraction-layer-html-title-1-1-5" class="toc-item"><a href="database-abstraction-layer.html#title.1.1.5">Altering table</a></li><li id="database-abstraction-layer-html-title-1-1-6" class="toc-item"><a href="database-abstraction-layer.html#title.1.1.6">Creating Indexes</a></li><li id="database-abstraction-layer-html-title-1-1-7" class="toc-item"><a href="database-abstraction-layer.html#title.1.1.7">Deleting database elements</a></li></ul><li id="database-abstraction-layer-html-title-1-2" class="toc-item"><a href="database-abstraction-layer.html#title.1.2">Import</a></li><ul><li id="database-abstraction-layer-html-title-1-2-1" class="toc-item"><a href="database-abstraction-layer.html#title.1.2.1">Introduction</a></li><li id="database-abstraction-layer-html-title-1-2-2" class="toc-item"><a href="database-abstraction-layer.html#title.1.2.2">Listing Databases</a></li><li id="database-abstraction-layer-html-title-1-2-3" class="toc-item"><a href="database-abstraction-layer.html#title.1.2.3">Listing Sequences</a></li><li id="database-abstraction-layer-html-title-1-2-4" class="toc-item"><a href="database-abstraction-layer.html#title.1.2.4">Listing Constraints</a></li><li id="database-abstraction-layer-html-title-1-2-5" class="toc-item"><a href="database-abstraction-layer.html#title.1.2.5">Listing Table Columns</a></li><li id="database-abstraction-layer-html-title-1-2-6" class="toc-item"><a href="database-abstraction-layer.html#title.1.2.6">Listing Table Indexes</a></li><li id="database-abstraction-layer-html-title-1-2-7" class="toc-item"><a href="database-abstraction-layer.html#title.1.2.7">Listing Tables</a></li><li id="database-abstraction-layer-html-title-1-2-8" class="toc-item"><a href="database-abstraction-layer.html#title.1.2.8">Listing Views</a></li></ul><li id="database-abstraction-layer-html-title-1-3" class="toc-item"><a href="database-abstraction-layer.html#title.1.3">DataDict</a></li><ul><li id="database-abstraction-layer-html-title-1-3-1" class="toc-item"><a href="database-abstraction-layer.html#title.1.3.1">Introduction</a></li><li id="database-abstraction-layer-html-title-1-3-2" class="toc-item"><a href="database-abstraction-layer.html#title.1.3.2">Getting portable declaration</a></li><li id="database-abstraction-layer-html-title-1-3-3" class="toc-item"><a href="database-abstraction-layer.html#title.1.3.3">Getting Native Declaration</a></li></ul><li id="database-abstraction-layer-html-title-1-4" class="toc-item"><a href="database-abstraction-layer.html#title.1.4">Drivers</a></li><ul><li id="database-abstraction-layer-html-title-1-4-1" class="toc-item"><a href="database-abstraction-layer.html#title.1.4.1">Mysql</a></li><ul></ul></ul><li id="database-abstraction-layer-html-title-1-5" class="toc-item"><a href="database-abstraction-layer.html#title.1.5">Conclusion</a></li></ul><li id="defining-models-html-title-1" class="toc-item"><a href="defining-models.html#title.1">Defining Models</a></li><ul><li id="defining-models-html-title-1-1" class="toc-item"><a href="defining-models.html#title.1.1">Columns</a></li><ul><li id="defining-models-html-title-1-1-1" class="toc-item"><a href="defining-models.html#title.1.1.1">Column Lengths</a></li><li id="defining-models-html-title-1-1-2" class="toc-item"><a href="defining-models.html#title.1.1.2">Column Aliases</a></li><li id="defining-models-html-title-1-1-3" class="toc-item"><a href="defining-models.html#title.1.1.3">Default values</a></li><li id="defining-models-html-title-1-1-4" class="toc-item"><a href="defining-models.html#title.1.1.4">Data types</a></li><ul></ul><li id="defining-models-html-title-1-1-5" class="toc-item"><a href="defining-models.html#title.1.1.5">Examples</a></li></ul><li id="defining-models-html-title-1-2" class="toc-item"><a href="defining-models.html#title.1.2">Relationships</a></li><ul><li id="defining-models-html-title-1-2-1" class="toc-item"><a href="defining-models.html#title.1.2.1">Introduction</a></li><li id="defining-models-html-title-1-2-2" class="toc-item"><a href="defining-models.html#title.1.2.2">Foreign Key Associations</a></li><ul></ul><li id="defining-models-html-title-1-2-3" class="toc-item"><a href="defining-models.html#title.1.2.3">Join Table Associations</a></li><ul></ul><li id="defining-models-html-title-1-2-4" class="toc-item"><a href="defining-models.html#title.1.2.4">Foreign Key Constraints</a></li><ul></ul></ul><li id="defining-models-html-title-1-3" class="toc-item"><a href="defining-models.html#title.1.3">Indexes</a></li><ul><li id="defining-models-html-title-1-3-1" class="toc-item"><a href="defining-models.html#title.1.3.1">Introduction</a></li><li id="defining-models-html-title-1-3-2" class="toc-item"><a href="defining-models.html#title.1.3.2">Adding indexes</a></li><li id="defining-models-html-title-1-3-3" class="toc-item"><a href="defining-models.html#title.1.3.3">Index options</a></li><li id="defining-models-html-title-1-3-4" class="toc-item"><a href="defining-models.html#title.1.3.4">Special indexes</a></li></ul><li id="defining-models-html-title-1-4" class="toc-item"><a href="defining-models.html#title.1.4">Checks</a></li><li id="defining-models-html-title-1-5" class="toc-item"><a href="defining-models.html#title.1.5">Table Options</a></li><li id="defining-models-html-title-1-6" class="toc-item"><a href="defining-models.html#title.1.6">Record Filters</a></li><li id="defining-models-html-title-1-7" class="toc-item"><a href="defining-models.html#title.1.7">Transitive Persistence</a></li><ul><li id="defining-models-html-title-1-7-1" class="toc-item"><a href="defining-models.html#title.1.7.1">Application-Level Cascades</a></li><ul></ul><li id="defining-models-html-title-1-7-2" class="toc-item"><a href="defining-models.html#title.1.7.2">Database-Level Cascades</a></li></ul><li id="defining-models-html-title-1-8" class="toc-item"><a href="defining-models.html#title.1.8">Conclusion</a></li></ul><li id="dql-doctrine-query-language-html-title-1" class="toc-item"><a href="dql-doctrine-query-language.html#title.1">DQL: Doctrine Query Language</a></li><ul><li id="dql-doctrine-query-language-html-title-1-1" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.1">Introduction</a></li><li id="dql-doctrine-query-language-html-title-1-2" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.2">SELECT queries</a></li><ul><li id="dql-doctrine-query-language-html-title-1-2-1" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.2.1">Aggregate values</a></li></ul><li id="dql-doctrine-query-language-html-title-1-3" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.3">UPDATE queries</a></li><li id="dql-doctrine-query-language-html-title-1-4" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.4">DELETE Queries</a></li><li id="dql-doctrine-query-language-html-title-1-5" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.5">FROM clause</a></li><li id="dql-doctrine-query-language-html-title-1-6" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.6">JOIN syntax</a></li><ul><li id="dql-doctrine-query-language-html-title-1-6-1" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.6.1">ON keyword</a></li><li id="dql-doctrine-query-language-html-title-1-6-2" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.6.2">WITH keyword</a></li></ul><li id="dql-doctrine-query-language-html-title-1-7" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.7">INDEXBY keyword</a></li><li id="dql-doctrine-query-language-html-title-1-8" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.8">WHERE clause</a></li><li id="dql-doctrine-query-language-html-title-1-9" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.9">Conditional expressions</a></li><ul><li id="dql-doctrine-query-language-html-title-1-9-1" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.9.1">Literals</a></li><li id="dql-doctrine-query-language-html-title-1-9-2" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.9.2">Input parameters</a></li><li id="dql-doctrine-query-language-html-title-1-9-3" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.9.3">Operators and operator precedence</a></li><li id="dql-doctrine-query-language-html-title-1-9-4" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.9.4">In expressions</a></li><li id="dql-doctrine-query-language-html-title-1-9-5" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.9.5">Like Expressions</a></li><li id="dql-doctrine-query-language-html-title-1-9-6" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.9.6">Exists Expressions</a></li><li id="dql-doctrine-query-language-html-title-1-9-7" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.9.7">All and Any Expressions</a></li><li id="dql-doctrine-query-language-html-title-1-9-8" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.9.8">Subqueries</a></li></ul><li id="dql-doctrine-query-language-html-title-1-10" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.10">Functional Expressions</a></li><ul><li id="dql-doctrine-query-language-html-title-1-10-1" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.10.1">String functions</a></li><li id="dql-doctrine-query-language-html-title-1-10-2" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.10.2">Arithmetic functions</a></li></ul><li id="dql-doctrine-query-language-html-title-1-11" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.11">Subqueries</a></li><ul><li id="dql-doctrine-query-language-html-title-1-11-1" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.11.1">Introduction</a></li><li id="dql-doctrine-query-language-html-title-1-11-2" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.11.2">Comparisons using subqueries</a></li></ul><li id="dql-doctrine-query-language-html-title-1-12" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.12">GROUP BY, HAVING clauses</a></li><li id="dql-doctrine-query-language-html-title-1-13" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.13">ORDER BY clause</a></li><ul><li id="dql-doctrine-query-language-html-title-1-13-1" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.13.1">Introduction</a></li><li id="dql-doctrine-query-language-html-title-1-13-2" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.13.2">Sorting by an aggregate value</a></li><li id="dql-doctrine-query-language-html-title-1-13-3" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.13.3">Using random order</a></li></ul><li id="dql-doctrine-query-language-html-title-1-14" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.14">LIMIT and OFFSET clauses</a></li><ul><li id="dql-doctrine-query-language-html-title-1-14-1" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.14.1">Driver Portability</a></li><li id="dql-doctrine-query-language-html-title-1-14-2" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.14.2">The limit-subquery-algorithm</a></li></ul><li id="dql-doctrine-query-language-html-title-1-15" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.15">Named Queries</a></li><ul><li id="dql-doctrine-query-language-html-title-1-15-1" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.15.1">Creating a Named Query</a></li><li id="dql-doctrine-query-language-html-title-1-15-2" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.15.2">Accessing Named Query</a></li><li id="dql-doctrine-query-language-html-title-1-15-3" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.15.3">Executing a Named Query</a></li><li id="dql-doctrine-query-language-html-title-1-15-4" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.15.4">Cross-Accessing Named Query</a></li></ul><li id="dql-doctrine-query-language-html-title-1-16" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.16">BNF</a></li><li id="dql-doctrine-query-language-html-title-1-17" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.17">Magic Finders</a></li><li id="dql-doctrine-query-language-html-title-1-18" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.18">Debugging Queries</a></li><li id="dql-doctrine-query-language-html-title-1-19" class="toc-item"><a href="dql-doctrine-query-language.html#title.1.19">Conclusion</a></li></ul><li id="event-listeners-html-title-1" class="toc-item"><a href="event-listeners.html#title.1">Event Listeners</a></li><ul><li id="event-listeners-html-title-1-1" class="toc-item"><a href="event-listeners.html#title.1.1">Introduction</a></li><li id="event-listeners-html-title-1-2" class="toc-item"><a href="event-listeners.html#title.1.2">Connection Listeners</a></li><ul><li id="event-listeners-html-title-1-2-1" class="toc-item"><a href="event-listeners.html#title.1.2.1">Creating a New Listener</a></li><li id="event-listeners-html-title-1-2-2" class="toc-item"><a href="event-listeners.html#title.1.2.2">Attaching listeners</a></li><li id="event-listeners-html-title-1-2-3" class="toc-item"><a href="event-listeners.html#title.1.2.3">Pre and Post Connect</a></li><li id="event-listeners-html-title-1-2-4" class="toc-item"><a href="event-listeners.html#title.1.2.4">Transaction Listeners</a></li><li id="event-listeners-html-title-1-2-5" class="toc-item"><a href="event-listeners.html#title.1.2.5">Query Execution Listeners</a></li></ul><li id="event-listeners-html-title-1-3" class="toc-item"><a href="event-listeners.html#title.1.3">Hydration Listeners</a></li><li id="event-listeners-html-title-1-4" class="toc-item"><a href="event-listeners.html#title.1.4">Record Listeners</a></li><li id="event-listeners-html-title-1-5" class="toc-item"><a href="event-listeners.html#title.1.5">Record Hooks</a></li><li id="event-listeners-html-title-1-6" class="toc-item"><a href="event-listeners.html#title.1.6">DQL Hooks</a></li><li id="event-listeners-html-title-1-7" class="toc-item"><a href="event-listeners.html#title.1.7">Chaining Listeners</a></li><li id="event-listeners-html-title-1-8" class="toc-item"><a href="event-listeners.html#title.1.8">The Event object</a></li><ul><li id="event-listeners-html-title-1-8-1" class="toc-item"><a href="event-listeners.html#title.1.8.1">Getting the Invoker</a></li><li id="event-listeners-html-title-1-8-2" class="toc-item"><a href="event-listeners.html#title.1.8.2">Event Codes</a></li><li id="event-listeners-html-title-1-8-3" class="toc-item"><a href="event-listeners.html#title.1.8.3">Getting the Invoker</a></li><li id="event-listeners-html-title-1-8-4" class="toc-item"><a href="event-listeners.html#title.1.8.4">Skip Next Operation</a></li><li id="event-listeners-html-title-1-8-5" class="toc-item"><a href="event-listeners.html#title.1.8.5">Skip Next Listener</a></li></ul><li id="event-listeners-html-title-1-9" class="toc-item"><a href="event-listeners.html#title.1.9">Conclusion</a></li></ul><li id="exceptions-and-warnings-html-title-1" class="toc-item"><a href="exceptions-and-warnings.html#title.1">Exceptions and Warnings</a></li><ul><li id="exceptions-and-warnings-html-title-1-1" class="toc-item"><a href="exceptions-and-warnings.html#title.1.1">Manager exceptions</a></li><li id="exceptions-and-warnings-html-title-1-2" class="toc-item"><a href="exceptions-and-warnings.html#title.1.2">Relation exceptions</a></li><li id="exceptions-and-warnings-html-title-1-3" class="toc-item"><a href="exceptions-and-warnings.html#title.1.3">Connection exceptions</a></li><li id="exceptions-and-warnings-html-title-1-4" class="toc-item"><a href="exceptions-and-warnings.html#title.1.4">Query exceptions</a></li><li id="exceptions-and-warnings-html-title-1-5" class="toc-item"><a href="exceptions-and-warnings.html#title.1.5">Conclusion</a></li></ul><li id="extensions-html-title-1" class="toc-item"><a href="extensions.html#title.1">Extensions</a></li><li id="getting-started-html-title-1" class="toc-item"><a href="getting-started.html#title.1">Getting Started</a></li><ul><li id="getting-started-html-title-1-1" class="toc-item"><a href="getting-started.html#title.1.1">Checking Requirements</a></li><li id="getting-started-html-title-1-2" class="toc-item"><a href="getting-started.html#title.1.2">Installing</a></li><ul><li id="getting-started-html-title-1-2-1" class="toc-item"><a href="getting-started.html#title.1.2.1">Sandbox</a></li><li id="getting-started-html-title-1-2-2" class="toc-item"><a href="getting-started.html#title.1.2.2">SVN</a></li><ul></ul><li id="getting-started-html-title-1-2-3" class="toc-item"><a href="getting-started.html#title.1.2.3">SVN Externals</a></li><li id="getting-started-html-title-1-2-4" class="toc-item"><a href="getting-started.html#title.1.2.4">PEAR Installer</a></li><li id="getting-started-html-title-1-2-5" class="toc-item"><a href="getting-started.html#title.1.2.5">Download Pear Package</a></li></ul><li id="getting-started-html-title-1-3" class="toc-item"><a href="getting-started.html#title.1.3">Implementing</a></li><ul><li id="getting-started-html-title-1-3-1" class="toc-item"><a href="getting-started.html#title.1.3.1">Including Doctrine Libraries</a></li><li id="getting-started-html-title-1-3-2" class="toc-item"><a href="getting-started.html#title.1.3.2">Require Doctrine Base Class</a></li><li id="getting-started-html-title-1-3-3" class="toc-item"><a href="getting-started.html#title.1.3.3">Register Autoloader</a></li><ul></ul><li id="getting-started-html-title-1-3-4" class="toc-item"><a href="getting-started.html#title.1.3.4">Bootstrap File</a></li><li id="getting-started-html-title-1-3-5" class="toc-item"><a href="getting-started.html#title.1.3.5">Test Script</a></li></ul><li id="getting-started-html-title-1-4" class="toc-item"><a href="getting-started.html#title.1.4">Conclusion</a></li></ul><li id="hierarchical-data-html-title-1" class="toc-item"><a href="hierarchical-data.html#title.1">Hierarchical Data</a></li><ul><li id="hierarchical-data-html-title-1-1" class="toc-item"><a href="hierarchical-data.html#title.1.1">Introduction</a></li><li id="hierarchical-data-html-title-1-2" class="toc-item"><a href="hierarchical-data.html#title.1.2">Nested Set</a></li><ul><li id="hierarchical-data-html-title-1-2-1" class="toc-item"><a href="hierarchical-data.html#title.1.2.1">Introduction</a></li><li id="hierarchical-data-html-title-1-2-2" class="toc-item"><a href="hierarchical-data.html#title.1.2.2">Setting Up</a></li><li id="hierarchical-data-html-title-1-2-3" class="toc-item"><a href="hierarchical-data.html#title.1.2.3">Multiple Trees</a></li><li id="hierarchical-data-html-title-1-2-4" class="toc-item"><a href="hierarchical-data.html#title.1.2.4">Working with Trees</a></li><ul></ul><li id="hierarchical-data-html-title-1-2-5" class="toc-item"><a href="hierarchical-data.html#title.1.2.5">Advanced Usage</a></li><ul></ul><li id="hierarchical-data-html-title-1-2-6" class="toc-item"><a href="hierarchical-data.html#title.1.2.6">Rendering with Indention</a></li></ul><li id="hierarchical-data-html-title-1-3" class="toc-item"><a href="hierarchical-data.html#title.1.3">Conclusion</a></li></ul><li id="imprint-html-title-1" class="toc-item"><a href="imprint.html#title.1">Imprint</a></li><li id="improving-performance-html-title-1" class="toc-item"><a href="improving-performance.html#title.1">Improving Performance</a></li><ul><li id="improving-performance-html-title-1-1" class="toc-item"><a href="improving-performance.html#title.1.1">Introduction</a></li><li id="improving-performance-html-title-1-2" class="toc-item"><a href="improving-performance.html#title.1.2">Compile</a></li><li id="improving-performance-html-title-1-3" class="toc-item"><a href="improving-performance.html#title.1.3">Conservative Fetching</a></li><li id="improving-performance-html-title-1-4" class="toc-item"><a href="improving-performance.html#title.1.4">Bundle your Class Files</a></li><li id="improving-performance-html-title-1-5" class="toc-item"><a href="improving-performance.html#title.1.5">Use a Bytecode Cache</a></li><li id="improving-performance-html-title-1-6" class="toc-item"><a href="improving-performance.html#title.1.6">Free Objects</a></li><li id="improving-performance-html-title-1-7" class="toc-item"><a href="improving-performance.html#title.1.7">Other Tips</a></li><li id="improving-performance-html-title-1-8" class="toc-item"><a href="improving-performance.html#title.1.8">Conclusion</a></li></ul><li id="index-html-title-1" class="toc-item"><a href="index.html#title.1">Doctrine  ORM Manual</a></li><li id="inheritance-html-title-1" class="toc-item"><a href="inheritance.html#title.1">Inheritance</a></li><ul><li id="inheritance-html-title-1-1" class="toc-item"><a href="inheritance.html#title.1.1">Simple</a></li><li id="inheritance-html-title-1-2" class="toc-item"><a href="inheritance.html#title.1.2">Concrete</a></li><li id="inheritance-html-title-1-3" class="toc-item"><a href="inheritance.html#title.1.3">Column Aggregation</a></li><li id="inheritance-html-title-1-4" class="toc-item"><a href="inheritance.html#title.1.4">Conclusion</a></li></ul><li id="introduction-to-connections-html-title-1" class="toc-item"><a href="introduction-to-connections.html#title.1">Introduction to Connections</a></li><ul><li id="introduction-to-connections-html-title-1-1" class="toc-item"><a href="introduction-to-connections.html#title.1.1">DSN, the Data Source Name</a></li><ul><li id="introduction-to-connections-html-title-1-1-1" class="toc-item"><a href="introduction-to-connections.html#title.1.1.1">Main Parts</a></li><ul></ul><li id="introduction-to-connections-html-title-1-1-2" class="toc-item"><a href="introduction-to-connections.html#title.1.1.2">Providing the DSN</a></li><li id="introduction-to-connections-html-title-1-1-3" class="toc-item"><a href="introduction-to-connections.html#title.1.1.3">Examples</a></li></ul><li id="introduction-to-connections-html-title-1-2" class="toc-item"><a href="introduction-to-connections.html#title.1.2">Opening New Connections</a></li><li id="introduction-to-connections-html-title-1-3" class="toc-item"><a href="introduction-to-connections.html#title.1.3">Lazy Database Connecting</a></li><li id="introduction-to-connections-html-title-1-4" class="toc-item"><a href="introduction-to-connections.html#title.1.4">Testing your Connection</a></li><li id="introduction-to-connections-html-title-1-5" class="toc-item"><a href="introduction-to-connections.html#title.1.5">Conclusion</a></li></ul><li id="introduction-to-models-html-title-1" class="toc-item"><a href="introduction-to-models.html#title.1">Introduction to Models</a></li><ul><li id="introduction-to-models-html-title-1-1" class="toc-item"><a href="introduction-to-models.html#title.1.1">Introduction</a></li><li id="introduction-to-models-html-title-1-2" class="toc-item"><a href="introduction-to-models.html#title.1.2">Generating Models</a></li><ul><li id="introduction-to-models-html-title-1-2-1" class="toc-item"><a href="introduction-to-models.html#title.1.2.1">Existing Databases</a></li><ul></ul><li id="introduction-to-models-html-title-1-2-2" class="toc-item"><a href="introduction-to-models.html#title.1.2.2">Schema Files</a></li></ul><li id="introduction-to-models-html-title-1-3" class="toc-item"><a href="introduction-to-models.html#title.1.3">Manually Writing Models</a></li><li id="introduction-to-models-html-title-1-4" class="toc-item"><a href="introduction-to-models.html#title.1.4">Autoloading Models</a></li><ul><li id="introduction-to-models-html-title-1-4-1" class="toc-item"><a href="introduction-to-models.html#title.1.4.1">Conservative</a></li><li id="introduction-to-models-html-title-1-4-2" class="toc-item"><a href="introduction-to-models.html#title.1.4.2">Aggressive</a></li></ul><li id="introduction-to-models-html-title-1-5" class="toc-item"><a href="introduction-to-models.html#title.1.5">Conclusion</a></li></ul><li id="introduction-html-title-1" class="toc-item"><a href="introduction.html#title.1">Introduction</a></li><ul><li id="introduction-html-title-1-1" class="toc-item"><a href="introduction.html#title.1.1">About this Version</a></li><li id="introduction-html-title-1-2" class="toc-item"><a href="introduction.html#title.1.2">How to Contribute</a></li><li id="introduction-html-title-1-3" class="toc-item"><a href="introduction.html#title.1.3">What is Doctrine?</a></li><li id="introduction-html-title-1-4" class="toc-item"><a href="introduction.html#title.1.4">What is an ORM?</a></li><li id="introduction-html-title-1-5" class="toc-item"><a href="introduction.html#title.1.5">What is the Problem?</a></li><li id="introduction-html-title-1-6" class="toc-item"><a href="introduction.html#title.1.6">Minimum Requirements</a></li><li id="introduction-html-title-1-7" class="toc-item"><a href="introduction.html#title.1.7">Basic Overview</a></li><li id="introduction-html-title-1-8" class="toc-item"><a href="introduction.html#title.1.8">Doctrine Explained</a></li><li id="introduction-html-title-1-9" class="toc-item"><a href="introduction.html#title.1.9">Key Concepts</a></li><li id="introduction-html-title-1-10" class="toc-item"><a href="introduction.html#title.1.10">Further Reading</a></li><li id="introduction-html-title-1-11" class="toc-item"><a href="introduction.html#title.1.11">Conclusion</a></li></ul><li id="license-html-title-1" class="toc-item"><a href="license.html#title.1">Attribution-Share Alike 3.0 Unported License</a></li><li id="migrations-html-title-1" class="toc-item"><a href="migrations.html#title.1">Migrations</a></li><ul><li id="migrations-html-title-1-1" class="toc-item"><a href="migrations.html#title.1.1">Performing Migrations</a></li><li id="migrations-html-title-1-2" class="toc-item"><a href="migrations.html#title.1.2">Implement</a></li><li id="migrations-html-title-1-3" class="toc-item"><a href="migrations.html#title.1.3">Writing Migration Classes</a></li><li id="migrations-html-title-1-4" class="toc-item"><a href="migrations.html#title.1.4">Conclusion</a></li></ul><li id="native-sql-html-title-1" class="toc-item"><a href="native-sql.html#title.1">Native SQL</a></li><ul><li id="native-sql-html-title-1-1" class="toc-item"><a href="native-sql.html#title.1.1">Introduction</a></li><li id="native-sql-html-title-1-2" class="toc-item"><a href="native-sql.html#title.1.2">Component Queries</a></li><li id="native-sql-html-title-1-3" class="toc-item"><a href="native-sql.html#title.1.3">Fetching from Multiple Components</a></li><li id="native-sql-html-title-1-4" class="toc-item"><a href="native-sql.html#title.1.4">Conclusion</a></li></ul><li id="real-world-examples-html-title-1" class="toc-item"><a href="real-world-examples.html#title.1">Real World Examples</a></li><ul><li id="real-world-examples-html-title-1-1" class="toc-item"><a href="real-world-examples.html#title.1.1">User Management System</a></li><li id="real-world-examples-html-title-1-2" class="toc-item"><a href="real-world-examples.html#title.1.2">Forum Application</a></li><li id="real-world-examples-html-title-1-3" class="toc-item"><a href="real-world-examples.html#title.1.3">Conclusion</a></li></ul><li id="searching-html-title-1" class="toc-item"><a href="searching.html#title.1">Searching</a></li><ul><li id="searching-html-title-1-1" class="toc-item"><a href="searching.html#title.1.1">Introduction</a></li><li id="searching-html-title-1-2" class="toc-item"><a href="searching.html#title.1.2">Index structure</a></li><li id="searching-html-title-1-3" class="toc-item"><a href="searching.html#title.1.3">Index Building</a></li><li id="searching-html-title-1-4" class="toc-item"><a href="searching.html#title.1.4">Text Analyzers</a></li><li id="searching-html-title-1-5" class="toc-item"><a href="searching.html#title.1.5">Query language</a></li><li id="searching-html-title-1-6" class="toc-item"><a href="searching.html#title.1.6">Performing Searches</a></li><li id="searching-html-title-1-7" class="toc-item"><a href="searching.html#title.1.7">File searches</a></li><li id="searching-html-title-1-8" class="toc-item"><a href="searching.html#title.1.8">Conclusion</a></li></ul><li id="technology-html-title-1" class="toc-item"><a href="technology.html#title.1">Technology</a></li><ul><li id="technology-html-title-1-1" class="toc-item"><a href="technology.html#title.1.1">Introduction</a></li><li id="technology-html-title-1-2" class="toc-item"><a href="technology.html#title.1.2">Architecture</a></li><ul><li id="technology-html-title-1-2-1" class="toc-item"><a href="technology.html#title.1.2.1">Doctrine CORE</a></li><li id="technology-html-title-1-2-2" class="toc-item"><a href="technology.html#title.1.2.2">Doctrine DBAL</a></li><li id="technology-html-title-1-2-3" class="toc-item"><a href="technology.html#title.1.2.3">Doctrine ORM</a></li></ul><li id="technology-html-title-1-3" class="toc-item"><a href="technology.html#title.1.3">Design Patterns Used</a></li><li id="technology-html-title-1-4" class="toc-item"><a href="technology.html#title.1.4">Speed</a></li><li id="technology-html-title-1-5" class="toc-item"><a href="technology.html#title.1.5">Conclusion</a></li></ul><li id="transactions-html-title-1" class="toc-item"><a href="transactions.html#title.1">Transactions</a></li><ul><li id="transactions-html-title-1-1" class="toc-item"><a href="transactions.html#title.1.1">Introduction</a></li><li id="transactions-html-title-1-2" class="toc-item"><a href="transactions.html#title.1.2">Nesting</a></li><li id="transactions-html-title-1-3" class="toc-item"><a href="transactions.html#title.1.3">Savepoints</a></li><li id="transactions-html-title-1-4" class="toc-item"><a href="transactions.html#title.1.4">Isolation Levels</a></li><li id="transactions-html-title-1-5" class="toc-item"><a href="transactions.html#title.1.5">Conclusion</a></li></ul><li id="unit-testing-html-title-1" class="toc-item"><a href="unit-testing.html#title.1">Unit Testing</a></li><ul><li id="unit-testing-html-title-1-1" class="toc-item"><a href="unit-testing.html#title.1.1">Running tests</a></li><ul><li id="unit-testing-html-title-1-1-1" class="toc-item"><a href="unit-testing.html#title.1.1.1">CLI</a></li><li id="unit-testing-html-title-1-1-2" class="toc-item"><a href="unit-testing.html#title.1.1.2">Browser</a></li></ul><li id="unit-testing-html-title-1-2" class="toc-item"><a href="unit-testing.html#title.1.2">Writing Tests</a></li><ul><li id="unit-testing-html-title-1-2-1" class="toc-item"><a href="unit-testing.html#title.1.2.1">Ticket Tests</a></li><li id="unit-testing-html-title-1-2-2" class="toc-item"><a href="unit-testing.html#title.1.2.2">Methods for testing</a></li><ul></ul><li id="unit-testing-html-title-1-2-3" class="toc-item"><a href="unit-testing.html#title.1.2.3">Mock Drivers</a></li><li id="unit-testing-html-title-1-2-4" class="toc-item"><a href="unit-testing.html#title.1.2.4">Test Class Guidelines</a></li><li id="unit-testing-html-title-1-2-5" class="toc-item"><a href="unit-testing.html#title.1.2.5">Test Method Guidelines</a></li></ul><li id="unit-testing-html-title-1-3" class="toc-item"><a href="unit-testing.html#title.1.3">Conclusion</a></li></ul><li id="utilities-html-title-1" class="toc-item"><a href="utilities.html#title.1">Utilities</a></li><ul><li id="utilities-html-title-1-1" class="toc-item"><a href="utilities.html#title.1.1">Pagination</a></li><ul><li id="utilities-html-title-1-1-1" class="toc-item"><a href="utilities.html#title.1.1.1">Introduction</a></li><li id="utilities-html-title-1-1-2" class="toc-item"><a href="utilities.html#title.1.1.2">Working with Pager</a></li><li id="utilities-html-title-1-1-3" class="toc-item"><a href="utilities.html#title.1.1.3">Controlling Range Styles</a></li><ul></ul><li id="utilities-html-title-1-1-4" class="toc-item"><a href="utilities.html#title.1.1.4">Advanced layouts with pager</a></li><ul></ul><li id="utilities-html-title-1-1-5" class="toc-item"><a href="utilities.html#title.1.1.5">Customizing pager layout</a></li></ul><li id="utilities-html-title-1-2" class="toc-item"><a href="utilities.html#title.1.2">Facade</a></li><ul><li id="utilities-html-title-1-2-1" class="toc-item"><a href="utilities.html#title.1.2.1">Creating &amp; Dropping Databases</a></li><li id="utilities-html-title-1-2-2" class="toc-item"><a href="utilities.html#title.1.2.2">Convenience Methods</a></li><li id="utilities-html-title-1-2-3" class="toc-item"><a href="utilities.html#title.1.2.3">Tasks</a></li></ul><li id="utilities-html-title-1-3" class="toc-item"><a href="utilities.html#title.1.3">Command Line Interface</a></li><ul><li id="utilities-html-title-1-3-1" class="toc-item"><a href="utilities.html#title.1.3.1">Introduction The Doctrine Cli is a collection of tasks that help you</a></li><li id="utilities-html-title-1-3-2" class="toc-item"><a href="utilities.html#title.1.3.2">Tasks</a></li><li id="utilities-html-title-1-3-3" class="toc-item"><a href="utilities.html#title.1.3.3">Usage</a></li></ul><li id="utilities-html-title-1-4" class="toc-item"><a href="utilities.html#title.1.4">Sandbox</a></li><ul><li id="utilities-html-title-1-4-1" class="toc-item"><a href="utilities.html#title.1.4.1">Installation</a></li></ul><li id="utilities-html-title-1-5" class="toc-item"><a href="utilities.html#title.1.5">Conclusion</a></li></ul><li id="working-with-models-html-title-1" class="toc-item"><a href="working-with-models.html#title.1">Working with Models</a></li><ul><li id="working-with-models-html-title-1-1" class="toc-item"><a href="working-with-models.html#title.1.1">Define Test Schema</a></li><li id="working-with-models-html-title-1-2" class="toc-item"><a href="working-with-models.html#title.1.2">Dealing with Relations</a></li><ul><li id="working-with-models-html-title-1-2-1" class="toc-item"><a href="working-with-models.html#title.1.2.1">Creating Related Records</a></li><li id="working-with-models-html-title-1-2-2" class="toc-item"><a href="working-with-models.html#title.1.2.2">Retrieving Related Records</a></li><li id="working-with-models-html-title-1-2-3" class="toc-item"><a href="working-with-models.html#title.1.2.3">Updating Related Records</a></li><li id="working-with-models-html-title-1-2-4" class="toc-item"><a href="working-with-models.html#title.1.2.4">Clearing Related Records</a></li><li id="working-with-models-html-title-1-2-5" class="toc-item"><a href="working-with-models.html#title.1.2.5">Deleting Related Records</a></li><li id="working-with-models-html-title-1-2-6" class="toc-item"><a href="working-with-models.html#title.1.2.6">Working with Related Records</a></li><ul></ul></ul><li id="working-with-models-html-title-1-3" class="toc-item"><a href="working-with-models.html#title.1.3">Many-to-Many Relations</a></li><ul><li id="working-with-models-html-title-1-3-1" class="toc-item"><a href="working-with-models.html#title.1.3.1">Creating a New Link</a></li><li id="working-with-models-html-title-1-3-2" class="toc-item"><a href="working-with-models.html#title.1.3.2">Deleting a Link</a></li></ul><li id="working-with-models-html-title-1-4" class="toc-item"><a href="working-with-models.html#title.1.4">Fetching Objects</a></li><ul><li id="working-with-models-html-title-1-4-1" class="toc-item"><a href="working-with-models.html#title.1.4.1">Sample Queries</a></li><li id="working-with-models-html-title-1-4-2" class="toc-item"><a href="working-with-models.html#title.1.4.2">Field Lazy Loading</a></li></ul><li id="working-with-models-html-title-1-5" class="toc-item"><a href="working-with-models.html#title.1.5">Arrays and Objects</a></li><ul><li id="working-with-models-html-title-1-5-1" class="toc-item"><a href="working-with-models.html#title.1.5.1">To Array</a></li><li id="working-with-models-html-title-1-5-2" class="toc-item"><a href="working-with-models.html#title.1.5.2">From Array</a></li><li id="working-with-models-html-title-1-5-3" class="toc-item"><a href="working-with-models.html#title.1.5.3">Synchronize With Array</a></li></ul><li id="working-with-models-html-title-1-6" class="toc-item"><a href="working-with-models.html#title.1.6">Overriding the Constructor</a></li><li id="working-with-models-html-title-1-7" class="toc-item"><a href="working-with-models.html#title.1.7">Conclusion</a></li></ul><li id="yaml-schema-files-html-title-1" class="toc-item"><a href="yaml-schema-files.html#title.1">YAML Schema Files</a></li><ul><li id="yaml-schema-files-html-title-1-1" class="toc-item"><a href="yaml-schema-files.html#title.1.1">Introduction</a></li><li id="yaml-schema-files-html-title-1-2" class="toc-item"><a href="yaml-schema-files.html#title.1.2">Abbreviated Syntax</a></li><li id="yaml-schema-files-html-title-1-3" class="toc-item"><a href="yaml-schema-files.html#title.1.3">Verbose Syntax</a></li><li id="yaml-schema-files-html-title-1-4" class="toc-item"><a href="yaml-schema-files.html#title.1.4">Relationships</a></li><ul><li id="yaml-schema-files-html-title-1-4-1" class="toc-item"><a href="yaml-schema-files.html#title.1.4.1">Detect Relations</a></li><li id="yaml-schema-files-html-title-1-4-2" class="toc-item"><a href="yaml-schema-files.html#title.1.4.2">Customizing Relationships</a></li><li id="yaml-schema-files-html-title-1-4-3" class="toc-item"><a href="yaml-schema-files.html#title.1.4.3">One to One</a></li><li id="yaml-schema-files-html-title-1-4-4" class="toc-item"><a href="yaml-schema-files.html#title.1.4.4">One to Many</a></li><li id="yaml-schema-files-html-title-1-4-5" class="toc-item"><a href="yaml-schema-files.html#title.1.4.5">Many to Many</a></li></ul><li id="yaml-schema-files-html-title-1-5" class="toc-item"><a href="yaml-schema-files.html#title.1.5">Features &amp; Examples</a></li><ul><li id="yaml-schema-files-html-title-1-5-1" class="toc-item"><a href="yaml-schema-files.html#title.1.5.1">Connection Binding</a></li><li id="yaml-schema-files-html-title-1-5-2" class="toc-item"><a href="yaml-schema-files.html#title.1.5.2">Attributes</a></li><li id="yaml-schema-files-html-title-1-5-3" class="toc-item"><a href="yaml-schema-files.html#title.1.5.3">Enums</a></li><li id="yaml-schema-files-html-title-1-5-4" class="toc-item"><a href="yaml-schema-files.html#title.1.5.4">ActAs Behaviors</a></li><li id="yaml-schema-files-html-title-1-5-5" class="toc-item"><a href="yaml-schema-files.html#title.1.5.5">Listeners</a></li><li id="yaml-schema-files-html-title-1-5-6" class="toc-item"><a href="yaml-schema-files.html#title.1.5.6">Options</a></li><li id="yaml-schema-files-html-title-1-5-7" class="toc-item"><a href="yaml-schema-files.html#title.1.5.7">Indexes</a></li><li id="yaml-schema-files-html-title-1-5-8" class="toc-item"><a href="yaml-schema-files.html#title.1.5.8">Inheritance</a></li><ul></ul><li id="yaml-schema-files-html-title-1-5-9" class="toc-item"><a href="yaml-schema-files.html#title.1.5.9">Column Aliases</a></li><li id="yaml-schema-files-html-title-1-5-10" class="toc-item"><a href="yaml-schema-files.html#title.1.5.10">Packages</a></li><ul></ul><li id="yaml-schema-files-html-title-1-5-11" class="toc-item"><a href="yaml-schema-files.html#title.1.5.11">Global Schema Information</a></li></ul><li id="yaml-schema-files-html-title-1-6" class="toc-item"><a href="yaml-schema-files.html#title.1.6">Using Schema Files</a></li><li id="yaml-schema-files-html-title-1-7" class="toc-item"><a href="yaml-schema-files.html#title.1.7">Conclusion</a></li></ul></ul></div>
+                    </div>
+                </nav>
+            
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-9 pt-3 px-4">
+                <div class="row">
+                                        
+                                                                <nav class="breadcrumbs d-none d-sm-block d-md-block d-lg-block d-xl-block" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects.html">Projects</a></li>
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine1.html">Doctrine1</a></li>
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine1/en/latest/">Documentation</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Improving Performance</li>
+                            </ol>
+                        </nav>
+                                    </div>
+
+                                    <div class="alert caution bg-light-yellow text-dark border"><i class="fas fa-exclamation-circle text-warning mr-2"></i> This project is no longer maintained and has been archived.</div>
+                
+                <div class="row">
+                    <div class="col-12">
+                                                    <button type="button" class="btn btn-primary btn-sm float-right toc-toggle" data-toggle="offcanvas" id="toc-toggle">Table of Contents</button>
+
+                                                            <ul class="list-inline">
+                                                                            <li class="list-inline-item mr-0">
+                                            <a href="/projects/doctrine1/en/latest/manual/improving-performance.html" class="project-version-switcher badge badge-warning">master</a>
+                                        </li>
+                                    
+                                    
+                                    <li class="list-inline-item ml-2"><a href="https://github.com/doctrine/doctrine1-documentation/edit/master/source/en/manual/improving-performance.rst" class="badge badge-primary">Edit</a></li>
+
+                                </ul>
+                            
+                            
+<p></p>
+<hr />
+<a class="section-anchor" id="title.1" name="title.1"></a><h1 class="section-header"><a href="#title.1">Improving Performance<i class="fas fa-link"></i></a></h1>
+<hr />
+<a class="section-anchor" id="title.1.1" name="title.1.1"></a><h2 class="section-header"><a href="#title.1.1">Introduction<i class="fas fa-link"></i></a></h2>
+<p>Performance is a very important aspect of all medium to large sized
+applications. Doctrine is a large abstraction library that provides a database
+abstraction layer as well as object-relational mapping. While this provides a
+lot of benefits like portability and ease of development it's inevitable that
+this leads to drawbacks in terms of performance.  This chapter tries to help
+you to get the best performance out of Doctrine.</p>
+<a id="improving-performance-compile"></a>
+<hr />
+<a class="section-anchor" id="title.1.2" name="title.1.2"></a><h2 class="section-header"><a href="#title.1.2">Compile<i class="fas fa-link"></i></a></h2>
+<p>Doctrine is quite big framework and usually dozens of files are being included
+on each request. This brings a lot of overhead. In fact these file operations
+are as time consuming as sending multiple queries to database server. The clean
+separation of class per file works well in developing environment, however when
+project goes commercial distribution the speed overcomes the clean separation
+of class per file convention.</p>
+<p>Doctrine offers method called compile to solve this issue. The
+compile method makes a single file of most used Doctrine components which can
+then be included on top of your script. By default the file is created into
+Doctrine root by the name Doctrine.compiled.php.</p>
+<p>Compiling is a method for making a single file of most used doctrine runtime
+components including the compiled file instead of multiple files (in worst
+cases dozens of files) can improve performance by an order of magnitude. In
+cases where this might fail, a Doctrine_Exception is throw detailing the
+error.</p>
+<p>Lets create a compile script named compile.php to handle the
+compiling of DoctrineL:</p>
+
+<pre><code class="">// compile.php
+
+require_once( '/path/to/doctrine/lib/Doctrine.php' );
+spl_autoload_register( array( 'Doctrine', 'autoload' ) );
+
+Doctrine_Core::compile( 'Doctrine.compiled.php' );
+</code></pre>
+<p>Now we can execute compile.php and a file named
+Doctrine.compiled.php will be generated in the root of your
+<code>doctrine_test</code> folder:</p>
+<pre><code class="sh">$ php compile.php
+</code></pre>
+<p>If you wish to only compile in the database drivers you are using you
+can pass an array of drivers as the second argument to compile.
+For this example we are only using MySQL so lets tell Doctrine to only
+compile the <code>mysql</code> driver:</p>
+
+<pre><code class="">// compile.php
+
+// ...
+Doctrine_Core::compile( 'Doctrine.compiled.php', array( 'mysql' ) );
+</code></pre>
+<p>Now you can change your bootstrap.php script to include the compiled
+Doctrine:</p>
+
+<pre><code class="">// bootstrap.php
+
+// ...
+require_once( 'Doctrine.compiled.php' );
+// ...
+</code></pre>
+<hr />
+<a class="section-anchor" id="title.1.3" name="title.1.3"></a><h2 class="section-header"><a href="#title.1.3">Conservative Fetching<i class="fas fa-link"></i></a></h2>
+<p>Maybe the most important rule is to be conservative and only fetch the data you
+actually need. This may sound trivial but laziness or lack of knowledge about
+the possibilities that are available often lead to a lot of unnecessary
+overhead.</p>
+<p>Take a look at this example:</p>
+
+<pre><code class="">$record = $table-&gt;find( $id );
+</code></pre>
+<p>How often do you find yourself writing code like that? It's convenient but it's
+very often not what you need. The example above will pull all columns of the
+record out of the database and populate the newly created object with that
+data. This not only means unnecessary network traffic but also means that
+Doctrine has to populate data into objects that is never used.</p>
+<p>I'm sure you all know why a query like the following is not ideal:</p>
+<pre><code class="sql">SELECT
+*
+FROM my_table
+</code></pre>
+<p>The above is bad in any application and this is also true when using Doctrine.
+In fact it's even worse when using Doctrine because populating objects with
+data that is not needed is a waste of time.</p>
+<p>Another important rule that belongs in this category is: <strong>Only fetch objects
+when you really need them</strong>. Doctrine has the ability to fetch &quot;array graphs&quot;
+instead of object graphs. At first glance this may sound strange because why
+use an object-relational mapper in the first place then? Take a second to think
+about it. PHP is by nature a precedural language that has been enhanced with a
+lot of features for decent OOP.  Arrays are still the most efficient data
+structures you can use in PHP.  Objects have the most value when they're used
+to accomplish complex business logic. It's a waste of resources when data gets
+wrapped in costly object structures when you have no benefit of that. Take a
+look at the following code that fetches all comments with some related data for
+an article, passing them to the view for display afterwards:</p>
+
+<pre><code class="">$q = Doctrine_Query::create()
+    -&gt;select( 'b.title, b.author, b.created_at' )
+    -&gt;addSelect( 'COUNT(t.id) as num_comments' )
+    -&gt;from( 'BlogPost b' )
+    -&gt;leftJoin( 'b.Comments c' )
+    -&gt;where( 'b.id = ?' )
+    -&gt;orderBy( 'b.created_at DESC' );
+
+$blogPosts = $q-&gt;execute( array( 1 ) );
+</code></pre>
+<p>Now imagine you have a view or template that renders the most recent
+blog posts:</p>
+<pre><code class="html+php">&lt;?php foreach ( $blogPosts as $blogPost ): ?&gt;
+    &lt;li&gt;
+        &lt;strong&gt;
+            &lt;?php echo $blogPost['title'] ?&gt;
+        &lt;/strong&gt;
+
+        - Posted on &lt;?php echo $blogPost['created_at'] ?&gt;
+        by &lt;?php echo $blogPost['author'] ?&gt;.
+
+        &lt;small&gt;
+            (&lt;?php echo $blogPost['num_comments'] ?&gt;)
+        &lt;/small&gt;
+    &lt;/li&gt;
+&lt;?php endforeach; ?&gt;
+</code></pre>
+<p>Can you think of any benefit of having objects in the view instead of
+arrays? You're not going to execute business logic in the view, are you?
+One parameter can save you a lot of unnecessary processing:</p>
+
+<pre><code class="">$blogPosts = $q-&gt;execute( array( 1 ), Doctrine_Core::HYDRATE_ARRAY );
+</code></pre>
+<p>If you prefer you can also use the setHydrationMethod method:</p>
+
+<pre><code class="">$q-&gt;setHydrationMode( Doctrine_Core::HYDRATE_ARRAY );
+$blogPosts = $q-&gt;execute( array( 1 ) );
+</code></pre>
+<p>The above code will hydrate the data into arrays instead of objects
+which is much less expensive.</p>
+<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>One great thing about array hydration is that if you use the
+ArrayAccess on your objects you can easily switch your queries to use
+array hydration and your code will work exactly the same. For example the
+above code we wrote to render the list of the most recent blog posts would
+work when we switch the query behind it to array hydration.</p>
+</div>
+<p>Sometimes, you may want the direct output from PDO instead of an object or an
+array. To do this, set the hydration mode to
+Doctrine_Core::HYDRATE_NONE. Here's an example:</p>
+
+<pre><code class="">$q = Doctrine_Query::create()
+    -&gt;select( 'SUM(d.amount)' )
+    -&gt;from( 'Donation d' );
+
+$results = $q-&gt;execute( array(), Doctrine_Core::HYDRATE_NONE );
+</code></pre>
+<p>You will need to print the results and find the value in the array
+depending on your DQL query:</p>
+
+<pre><code class="">print_r( $results );
+</code></pre>
+<p>In this example the result would be accessible with the following code:</p>
+
+<pre><code class="">$total = $results[0][1];
+</code></pre>
+<div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i><p>There are two important differences between <code>HYDRATE_ARRAY</code> and
+<code>HYDRATE_NONE</code> which you should consider before choosing which to use.
+<code>HYDRATE_NONE</code> is the fastest but the result is an array with numeric
+keys and so results would be referenced as <code>$result[0][0]</code> instead of
+<code>$result[0]['my_field']</code> with <code>HYDRATE_ARRAY</code>. Best practice would to
+use <code>HYDRATE_NONE</code> when retrieving large record sets or when doing many
+similar queries. Otherwise, <code>HYDRATE_ARRAY</code> is more comfortable and
+should be preferred.</p>
+</div>
+<hr />
+<a class="section-anchor" id="title.1.4" name="title.1.4"></a><h2 class="section-header"><a href="#title.1.4">Bundle your Class Files<i class="fas fa-link"></i></a></h2>
+<p>When using Doctrine or any other large OO library or framework the number of
+files that need to be included on a regular HTTP request rises significantly.
+50-100 includes per request are not uncommon. This has a significant
+performance impact because it results in a lot of disk operations. While this
+is generally no issue in a dev environment, it's not suited for production. The
+recommended way to handle this problem is to bundle the most-used classes of
+your libraries into a single file for production, stripping out any unnecessary
+whitespaces, linebreaks and comments. This way you get a significant
+performance improvement even without a bytecode cache (see next section). The
+best way to create such a bundle is probably as part of an automated build
+process i.e. with Phing.</p>
+<hr />
+<a class="section-anchor" id="title.1.5" name="title.1.5"></a><h2 class="section-header"><a href="#title.1.5">Use a Bytecode Cache<i class="fas fa-link"></i></a></h2>
+<p>A bytecode cache like APC will cache the bytecode that is generated by php
+prior to executing it. That means that the parsing of a file and the creation
+of the bytecode happens only once and not on every request.  This is especially
+useful when using large libraries and/or frameworks.  Together with file
+bundling for production this should give you a significant performance
+improvement. To get the most out of a bytecode cache you should contact the
+manual pages since most of these caches have a lot of configuration options
+which you can tweak to optimize the cache to your needs.</p>
+<hr />
+<a class="section-anchor" id="title.1.6" name="title.1.6"></a><h2 class="section-header"><a href="#title.1.6">Free Objects<i class="fas fa-link"></i></a></h2>
+<p>As of version 5.2.5, PHP is not able to garbage collect object graphs that have
+circular references, e.g. Parent has a reference to Child which has a reference
+to Parent. Since many doctrine model objects have such relations, PHP will not
+free their memory even when the objects go out of scope.</p>
+<p>For most PHP applications, this problem is of little consequence, since PHP
+scripts tend to be short-lived. Longer-lived scripts, e.g. bulk data importers
+and exporters, can run out of memory unless you manually break the circular
+reference chains. Doctrine provides a free function on
+Doctrine_Collection, and
+Doctrine_Query which eliminates the circular references on those
+objects, freeing them up for garbage collection. Usage might look like:</p>
+<p>Free objects when mass inserting records:</p>
+
+<pre><code class="">for ( $i = 0; $i &lt; 1000; $i++ )
+{
+    $object = createBigObject();
+    $object-&gt;save();
+    $object-&gt;free( true );
+}
+</code></pre>
+<p>You can also free query objects in the same way:</p>
+
+<pre><code class="">for ( $i = 0; $i &lt; 1000; $i++ )
+{
+    $q = Doctrine_Query::create()
+        -&gt;from( 'User u' );
+
+    $results = $q-&gt;fetchArray();
+    $q-&gt;free();
+}
+</code></pre>
+<p>Or even better if you can reuse the same query object for each query in
+the loop that would be ideal:</p>
+
+<pre><code class="">$q = Doctrine_Query::create()
+    -&gt;from('User u');
+
+for ( $i = 0; $i &lt; 1000; $i++ )
+{
+    $results = $q-&gt;fetchArray();
+    $q-&gt;free();
+}
+</code></pre>
+<hr />
+<a class="section-anchor" id="title.1.7" name="title.1.7"></a><h2 class="section-header"><a href="#title.1.7">Other Tips<i class="fas fa-link"></i></a></h2>
+<ul><li>Helping the DQL parser
+    There are two possible ways when it comes to using DQL. The first one is
+    writing the plain DQL queries and passing them to
+    <code>Doctrine_Connection::query( $dql )</code>. The second one is to use a
+    Doctrine_Query object and its fluent interface. The latter should
+    be preferred for all but very simple queries. The reason is that using the
+    Doctrine_Query object and it's methods makes the life of the DQL
+    parser a little bit easier. It reduces the amount of query parsing that needs
+    to be done and is therefore faster.</li>
+<li>Efficient relation handling
+    When you want to add a relation between two components you should not do something like the following:
+    .. note::
+        The following example assumes a many-many between <code>Role</code> and <code>User</code>.
+    ::
+        $role = new Role();
+        $role-&gt;name = 'New Role Name';
+        $user-&gt;Roles[] = $newRole;
+    .. caution::
+        The above code will load all roles of the user from the
+        database if they're not yet loaded! Just to add one new link!
+    The following is the recommended way instead:
+    ::
+        $userRole          = new UserRole();
+        $userRole-&gt;role_id = $role_id;
+        $userRole-&gt;user_id = $user_id;
+        $userRole-&gt;save();</li>
+</ul>
+
+<hr />
+<a class="section-anchor" id="title.1.8" name="title.1.8"></a><h2 class="section-header"><a href="#title.1.8">Conclusion<i class="fas fa-link"></i></a></h2>
+<p>Lots of methods exist for improving performance in Doctrine. It is highly
+recommended that you consider some of the methods described above.</p>
+<p>Now lets move on to learn about some of the <a href="technology.html">Technology</a>
+used in Doctrine.</p>
+<p></p>
+                                            </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+                            
+        <button id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://www.doctrine-project.org/components/highlightjs/highlight.pack.js?3970aa"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script src="https://www.doctrine-project.org/js/main.js?f32c09"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+
+        <script type="text/javascript">
+            var projectSlug = 'doctrine1';
+            var versionSlug = 'latest';
+
+            new Main();
+
+            new Search(projectSlug, versionSlug);
+        </script>
+
+            <script src="https://www.doctrine-project.org/js/sidebar.js?6349dd"></script>
+
+    <script type="text/javascript">
+        new Sidebar();
+    </script>
+
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>
