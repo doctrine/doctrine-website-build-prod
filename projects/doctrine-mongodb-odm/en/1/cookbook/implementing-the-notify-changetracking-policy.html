@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Implementing the Notify ChangeTracking Policy - MongoDB Object Document Mapper (MongoDB ODM)</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="description" content="PHP Doctrine MongoDB Object Document Mapper (ODM) provides transparent persistence for PHP objects to MongoDB.
+">
+
+        <meta name="keywords" content="php,mongodb,odm,mapper,mapping,object">
+
+                    <meta name="robots" content="index, follow">
+        
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/1.2/cookbook/implementing-the-notify-changetracking-policy.html" />
+    
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+
+        <link href="https://www.doctrine-project.org/css/style.css?3625e4" rel="stylesheet" type="text/css" />
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+
+        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://www.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://www.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://www.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://www.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://www.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://www.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://www.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://www.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://www.doctrine-project.org/images/mstile-310x310.png" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@doctrineorm" />
+        <meta name="twitter:creator" content="@doctrineorm" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/1/cookbook/implementing-the-notify-changetracking-policy.html" />
+        <meta property="og:title" content="Implementing the Notify ChangeTracking Policy - MongoDB Object Document Mapper (MongoDB ODM)" />
+        <meta property="og:description" content="PHP Doctrine MongoDB Object Document Mapper (ODM) provides transparent persistence for PHP objects to MongoDB.
+" />
+        <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://www.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "url": "https://www.doctrine-project.org",
+            "logo": "https://www.doctrine-project.org/images/doctrine-logo.svg"
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "url": "https://www.doctrine-project.org",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.doctrine-project.org?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "name": "Doctrine",
+            "url": "https://www.doctrine-project.org",
+            "sameAs": [
+                "https://twitter.com/doctrineorm"
+            ]
+        }
+        </script>
+
+                    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Course",
+            "name": "Doctrine MongoDB Object Document Mapper",
+            "description": "Implementing the Notify ChangeTracking Policy",
+            "provider": {
+                "@type": "Organization",
+                "name": "Doctrine",
+                "sameAs": "https://www.doctrine-project.org"
+            }
+        }
+        </script>
+    
+        
+            </head>
+    <body>
+                    <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="https://www.doctrine-project.org/projects.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu projects-dropdown-menu" aria-labelledby="navbarDropdown">
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/annotations.html">Annotations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/cache.html">Cache</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/collections.html">Collections</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/common.html">Common</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/dbal.html">DBAL</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/inflector.html">Inflector</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/lexer.html">Lexer</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/migrations.html">Migrations</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb.html">MongoDB</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/mongodb-odm.html">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/orm.html">ORM</a>
+                                                                    <a class="dropdown-item" href="https://www.doctrine-project.org/projects/phpcr-odm.html">PHPCR ODM</a>
+                                                                <a class="dropdown-item bg-secondary text-white font-weight-bold" href="https://www.doctrine-project.org/projects.html">View All</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/about/">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/contribute/">Contribute</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/community/">Community</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.doctrine-project.org/team/">Team</a>
+                        </li>
+                    </ul>
+
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                </div>
+
+                <div class="search-results rounded">
+                    <div id="hits">
+                        <!-- Hits widget will appear here -->
+                    </div>
+
+                    <a href="https://www.algolia.com" target="_blank"><img src="https://www.doctrine-project.org/images/search-by-algolia.png" class="float-right" style="width: 150px;" /></a>
+                </div>
+            </nav>
+        
+            <div class="container-wrapper container-fluid">
+        <div class="row row-offcanvas row-offcanvas-right">
+                            <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
+                    <div class="sidebar-sticky">
+                        
+<div class="toc"><ul><li id="blending-orm-and-mongodb-odm-html-blending-the-orm-and-mongodb-odm" class="toc-item"><a href="blending-orm-and-mongodb-odm.html#blending-the-orm-and-mongodb-odm">Blending the ORM and MongoDB ODM</a></li><ul><li id="blending-orm-and-mongodb-odm-html-define-product" class="toc-item"><a href="blending-orm-and-mongodb-odm.html#define-product">Define Product</a></li><li id="blending-orm-and-mongodb-odm-html-define-entity" class="toc-item"><a href="blending-orm-and-mongodb-odm.html#define-entity">Define Entity</a></li><li id="blending-orm-and-mongodb-odm-html-event-subscriber" class="toc-item"><a href="blending-orm-and-mongodb-odm.html#event-subscriber">Event Subscriber</a></li><li id="blending-orm-and-mongodb-odm-html-working-with-products-and-orders" class="toc-item"><a href="blending-orm-and-mongodb-odm.html#working-with-products-and-orders">Working with Products and Orders</a></li></ul><li id="implementing-array-access-for-domain-objects-html-implementing-arrayaccess-for-domain-objects" class="toc-item"><a href="implementing-array-access-for-domain-objects.html#implementing-arrayaccess-for-domain-objects">Implementing ArrayAccess for Domain Objects</a></li><ul><li id="implementing-array-access-for-domain-objects-html-option-1" class="toc-item"><a href="implementing-array-access-for-domain-objects.html#option-1">Option 1</a></li><li id="implementing-array-access-for-domain-objects-html-option-2" class="toc-item"><a href="implementing-array-access-for-domain-objects.html#option-2">Option 2</a></li><li id="implementing-array-access-for-domain-objects-html-read-only" class="toc-item"><a href="implementing-array-access-for-domain-objects.html#read-only">Read-only</a></li></ul><li id="implementing-the-notify-changetracking-policy-html-implementing-the-notify-changetracking-policy" class="toc-item"><a href="implementing-the-notify-changetracking-policy.html#implementing-the-notify-changetracking-policy">Implementing the Notify ChangeTracking Policy</a></li><ul><li id="implementing-the-notify-changetracking-policy-html-implementing-notifypropertychanged" class="toc-item"><a href="implementing-the-notify-changetracking-policy.html#implementing-notifypropertychanged">Implementing NotifyPropertyChanged</a></li></ul><li id="implementing-wakeup-or-clone-html-implementing-wakeup-or-clone" class="toc-item"><a href="implementing-wakeup-or-clone.html#implementing-wakeup-or-clone">Implementing Wakeup or Clone</a></li><ul><li id="implementing-wakeup-or-clone-html-safely-implementing-wakeup" class="toc-item"><a href="implementing-wakeup-or-clone.html#safely-implementing-wakeup">Safely implementing \_\_wakeup</a></li><li id="implementing-wakeup-or-clone-html-safely-implementing-clone" class="toc-item"><a href="implementing-wakeup-or-clone.html#safely-implementing-clone">Safely implementing \_\_clone</a></li><li id="implementing-wakeup-or-clone-html-summary" class="toc-item"><a href="implementing-wakeup-or-clone.html#summary">Summary</a></li></ul><li id="mapping-classes-to-orm-and-odm-html-mapping-classes-to-the-orm-and-odm" class="toc-item"><a href="mapping-classes-to-orm-and-odm.html#mapping-classes-to-the-orm-and-odm">Mapping Classes to the ORM and ODM</a></li><ul><li id="mapping-classes-to-orm-and-odm-html-test-subject" class="toc-item"><a href="mapping-classes-to-orm-and-odm.html#test-subject">Test Subject</a></li><li id="mapping-classes-to-orm-and-odm-html-mapping-information" class="toc-item"><a href="mapping-classes-to-orm-and-odm.html#mapping-information">Mapping Information</a></li><ul><li id="mapping-classes-to-orm-and-odm-html-orm" class="toc-item"><a href="mapping-classes-to-orm-and-odm.html#orm">ORM</a></li><li id="mapping-classes-to-orm-and-odm-html-mongodb-odm" class="toc-item"><a href="mapping-classes-to-orm-and-odm.html#mongodb-odm">MongoDB ODM</a></li></ul><li id="mapping-classes-to-orm-and-odm-html-repository-classes" class="toc-item"><a href="mapping-classes-to-orm-and-odm.html#repository-classes">Repository Classes</a></li></ul><li id="resolve-target-document-listener-html-keeping-your-modules-independent" class="toc-item"><a href="resolve-target-document-listener.html#keeping-your-modules-independent">Keeping Your Modules Independent</a></li><ul><li id="resolve-target-document-listener-html-background" class="toc-item"><a href="resolve-target-document-listener.html#background">Background</a></li><li id="resolve-target-document-listener-html-configuration" class="toc-item"><a href="resolve-target-document-listener.html#configuration">Configuration</a></li><li id="resolve-target-document-listener-html-final-thoughts" class="toc-item"><a href="resolve-target-document-listener.html#final-thoughts">Final Thoughts</a></li></ul><li id="simple-search-engine-html-simple-search-engine" class="toc-item"><a href="simple-search-engine.html#simple-search-engine">Simple Search Engine</a></li><ul><li id="simple-search-engine-html-sample-model-product" class="toc-item"><a href="simple-search-engine.html#sample-model-product">Sample Model: Product</a></li><li id="simple-search-engine-html-working-with-keywords" class="toc-item"><a href="simple-search-engine.html#working-with-keywords">Working with Keywords</a></li><li id="simple-search-engine-html-searching-keywords" class="toc-item"><a href="simple-search-engine.html#searching-keywords">Searching Keywords</a></li><ul><li id="simple-search-engine-html-user-input" class="toc-item"><a href="simple-search-engine.html#user-input">User Input</a></li></ul><li id="simple-search-engine-html-embedded-documents" class="toc-item"><a href="simple-search-engine.html#embedded-documents">Embedded Documents</a></li><ul><li id="simple-search-engine-html-definition" class="toc-item"><a href="simple-search-engine.html#definition">Definition</a></li></ul></ul><li id="soft-delete-extension-html-soft-delete-extension" class="toc-item"><a href="soft-delete-extension.html#soft-delete-extension">Soft Delete Extension</a></li><ul><li id="soft-delete-extension-html-installation" class="toc-item"><a href="soft-delete-extension.html#installation">Installation</a></li><li id="soft-delete-extension-html-setup" class="toc-item"><a href="soft-delete-extension.html#setup">Setup</a></li><li id="soft-delete-extension-html-softdeleteable-interface" class="toc-item"><a href="soft-delete-extension.html#softdeleteable-interface">SoftDeleteable Interface</a></li><li id="soft-delete-extension-html-example-implementation" class="toc-item"><a href="soft-delete-extension.html#example-implementation">Example Implementation</a></li><li id="soft-delete-extension-html-usage" class="toc-item"><a href="soft-delete-extension.html#usage">Usage</a></li><li id="soft-delete-extension-html-events" class="toc-item"><a href="soft-delete-extension.html#events">Events</a></li><li id="soft-delete-extension-html-cascading-soft-deletes" class="toc-item"><a href="soft-delete-extension.html#cascading-soft-deletes">Cascading Soft Deletes</a></li></ul><li id="validation-of-documents-html-validation-of-documents" class="toc-item"><a href="validation-of-documents.html#validation-of-documents">Validation of Documents</a></li></ul></div>
+                    </div>
+                </nav>
+            
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-9 pt-3 px-4">
+                <div class="row">
+                                        
+                                                                <nav class="breadcrumbs d-none d-sm-block d-md-block d-lg-block d-xl-block" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects.html">Projects</a></li>
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/mongodb-odm.html">MongoDB ODM</a></li>
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/1/">Documentation</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Implementing the Notify ChangeTracking Policy</li>
+                            </ol>
+                        </nav>
+                                    </div>
+
+                
+                <div class="row">
+                    <div class="col-12">
+                                                    <button type="button" class="btn btn-primary btn-sm float-right toc-toggle" data-toggle="offcanvas" id="toc-toggle">Table of Contents</button>
+
+                                                            <ul class="list-inline">
+                                                                            <li class="list-inline-item mr-0">
+                                            <a href="/projects/doctrine-mongodb-odm/en/latest/cookbook/implementing-the-notify-changetracking-policy.html" class="project-version-switcher badge badge-secondary">master</a>
+                                        </li>
+                                                                            <li class="list-inline-item mr-0">
+                                            <a href="/projects/doctrine-mongodb-odm/en/1.2/cookbook/implementing-the-notify-changetracking-policy.html" class="project-version-switcher badge badge-secondary">1.2</a>
+                                        </li>
+                                                                            <li class="list-inline-item mr-0">
+                                            <a href="/projects/doctrine-mongodb-odm/en/1.1/cookbook/implementing-the-notify-changetracking-policy.html" class="project-version-switcher badge badge-secondary">1.1</a>
+                                        </li>
+                                                                            <li class="list-inline-item mr-0">
+                                            <a href="/projects/doctrine-mongodb-odm/en/1/cookbook/implementing-the-notify-changetracking-policy.html" class="project-version-switcher badge badge-warning">1</a>
+                                        </li>
+                                    
+                                    
+                                    <li class="list-inline-item ml-2"><a href="https://github.com/doctrine/mongodb-odm/edit/1.0.x/docs/en/cookbook/implementing-the-notify-changetracking-policy.rst" class="badge badge-primary">Edit</a></li>
+
+                                </ul>
+                            
+                            
+<p></p>
+<a class="section-anchor" id="implementing-the-notify-changetracking-policy" name="implementing-the-notify-changetracking-policy"></a><h1 class="section-header"><a href="#implementing-the-notify-changetracking-policy">Implementing the Notify ChangeTracking Policy<i class="fas fa-link"></i></a></h1>
+<div class="section-author"><p>The NOTIFY change-tracking policy is the most effective
+change-tracking policy provided by Doctrine but it requires some
+boilerplate code. This recipe will show you how this boilerplate
+code should look like. We will implement it on a
+<a href="http://martinfowler.com/eaaCatalog/layerSupertype.html">Layer Supertype</a>
+for all our domain objects.</p></div>
+<a class="section-anchor" id="implementing-notifypropertychanged" name="implementing-notifypropertychanged"></a><h2 class="section-header"><a href="#implementing-notifypropertychanged">Implementing NotifyPropertyChanged<i class="fas fa-link"></i></a></h2>
+<p>The NOTIFY policy is based on the assumption that the entities
+notify interested listeners of changes to their properties. For
+that purpose, a class that wants to use this policy needs to
+implement the <code>NotifyPropertyChanged</code> interface from the
+<code>Doctrine\Common</code> namespace.</p>
+<pre><code class="php">&lt;?php
+
+use Doctrine\Common\NotifyPropertyChanged,
+    Doctrine\Common\PropertyChangedListener;
+
+abstract class DomainObject implements NotifyPropertyChanged
+{
+    private $_listeners = array();
+
+    public function addPropertyChangedListener(PropertyChangedListener $listener)
+    {
+        $this-&gt;_listeners[] = $listener;
+    }
+
+    /** Notifies listeners of a change. */
+    protected function _onPropertyChanged($propName, $oldValue, $newValue)
+    {
+        if ($this-&gt;_listeners) {
+            foreach ($this-&gt;_listeners as $listener) {
+                $listener-&gt;propertyChanged($this, $propName, $oldValue, $newValue);
+            }
+        }
+    }
+}
+</code></pre>
+<p>Then, in each property setter of concrete, derived domain classes,
+you need to invoke \_onPropertyChanged as follows to notify
+listeners:</p>
+<pre><code class="php">&lt;?php
+
+// Mapping not shown, either in annotations, xml or yaml as usual
+class MyEntity extends DomainObject
+{
+    private $data;
+    // ... other fields as usual
+
+    public function setData($data)
+    {
+        if ($data != $this-&gt;data) { // check: is it actually modified?
+            $this-&gt;_onPropertyChanged('data', $this-&gt;data, $data);
+            $this-&gt;data = $data;
+        }
+    }
+}
+</code></pre>
+<p>The check whether the new value is different from the old one is
+not mandatory but recommended. That way you can avoid unnecessary
+updates and also have full control over when you consider a
+property changed.</p>
+<p></p>
+                                            </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+                            
+        <button id="back-to-top" title="Go to top">Top</button>
+
+        <script
+          src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script src="https://www.doctrine-project.org/components/highlightjs/highlight.pack.js?3970aa"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
+
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script src="https://www.doctrine-project.org/js/main.js?f32c09"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+
+        <script type="text/javascript">
+            var projectSlug = 'mongodb-odm';
+            var versionSlug = '1';
+
+            new Main();
+
+            new Search(projectSlug, versionSlug);
+        </script>
+
+            <script src="https://www.doctrine-project.org/js/sidebar.js?482a20"></script>
+
+    <script type="text/javascript">
+        new Sidebar();
+    </script>
+
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        
+            </body>
+</html>
