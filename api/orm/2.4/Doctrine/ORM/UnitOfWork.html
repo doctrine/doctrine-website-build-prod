@@ -1,0 +1,3310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Doctrine\ORM\UnitOfWork | API</title>
+
+            <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/sami.css">
+        <script src="../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../js/bootstrap.min.js"></script>
+        <script src="../../js/typeahead.min.js"></script>
+        <script src="../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Doctrine_ORM_UnitOfWork" data-root-path="../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                <script>
+            $('option[data-version="'+window.projectVersion+'"]').prop('selected', true);
+        </script>
+        <form id="search-form" action="../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../index.html">API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../classes.html">Classes</a></li>
+                                            <li><a href="../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../traits.html">Traits</a></li>
+                    <li><a href="../../doc-index.html">Index</a></li>
+                    <li><a href="../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                        <li><a href="../../Doctrine.html">Doctrine</a></li><li class="backslash">\</li><li><a href="../../Doctrine/ORM.html">ORM</a></li><li class="backslash">\</li><li>UnitOfWork</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>
+            UnitOfWork
+                
+        </h1>
+    </div>
+
+    <p>    class
+    <strong>UnitOfWork</strong>        implements
+        <abbr title="Doctrine\Common\PropertyChangedListener">PropertyChangedListener</abbr>
+</p>
+
+        
+    
+
+            <div class="description">
+            <p>The UnitOfWork is responsible for tracking changes to objects during an
+"object-level" transaction and for writing out changes to the database
+in the correct order.</p>                                </div>
+    
+    
+            <h2>Constants</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td>STATE_MANAGED</td>
+                <td class="last">
+                    <p><em>An entity is in MANAGED state when its persistence is managed by an EntityManager.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>STATE_NEW</td>
+                <td class="last">
+                    <p><em>An entity is new if it has just been instantiated (i.e. using the "new" operator)
+and is not (yet) managed by an EntityManager.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>STATE_DETACHED</td>
+                <td class="last">
+                    <p><em>A detached entity is an instance with persistent state and identity that is not
+(or no longer) associated with an EntityManager (and a UnitOfWork).</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>STATE_REMOVED</td>
+                <td class="last">
+                    <p><em>A removed entity instance is an instance with a persistent identity,
+associated with an EntityManager, whose persistent state will be deleted
+on commit.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>HINT_DEFEREAGERLOAD</td>
+                <td class="last">
+                    <p><em>Hint used to collect all primary keys of associated entities during hydration
+and execute it in a dedicated query afterwards</em></p>
+                    <p></p>
+                </td>
+            </tr>
+            </table>
+
+    
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method___construct">__construct</a>(<a href="../../Doctrine/ORM/EntityManager.html"><abbr title="Doctrine\ORM\EntityManager">EntityManager</abbr></a> $em)
+        
+                                            <p>Initializes a new UnitOfWork instance, bound to the given EntityManager.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_commit">commit</a>(null|object|array $entity = null)
+        
+                                            <p>Commits the UnitOfWork, executing all operations that have been postponed
+up to this point. The state of all managed entities will be synchronized with
+the database.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getEntityChangeSet">getEntityChangeSet</a>(object $entity)
+        
+                                            <p>Gets the changeset for an entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_computeChangeSet">computeChangeSet</a>(<a href="../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $class, object $entity)
+        
+                                            <p>Computes the changes that happened to a single entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_computeChangeSets">computeChangeSets</a>()
+        
+                                            <p>Computes all the changes that have been done to entities and collections
+since the last commit and stores these changes in the _entityChangeSet map
+temporarily for access by the persisters, until the UoW commit is finished.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_recomputeSingleEntityChangeSet">recomputeSingleEntityChangeSet</a>(<a href="../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $class, object $entity)
+        
+                                            <p>INTERNAL:
+Computes the changeset of an individual entity, independently of the
+computeChangeSets() routine that is used at the beginning of a UnitOfWork#commit().</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_scheduleForInsert">scheduleForInsert</a>(object $entity)
+        
+                                            <p>Schedules an entity for insertion into the database.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isScheduledForInsert">isScheduledForInsert</a>(object $entity)
+        
+                                            <p>Checks whether an entity is scheduled for insertion.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_scheduleForUpdate">scheduleForUpdate</a>(object $entity)
+        
+                                            <p>Schedules an entity for being updated.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_scheduleExtraUpdate">scheduleExtraUpdate</a>(object $entity, array $changeset)
+        
+                                            <p>INTERNAL:
+Schedules an extra update that will be executed immediately after the
+regular entity updates within the currently running commit cycle.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isScheduledForUpdate">isScheduledForUpdate</a>(object $entity)
+        
+                                            <p>Checks whether an entity is registered as dirty in the unit of work.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isScheduledForDirtyCheck">isScheduledForDirtyCheck</a>(object $entity)
+        
+                                            <p>Checks whether an entity is registered to be checked in the unit of work.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_scheduleForDelete">scheduleForDelete</a>(object $entity)
+        
+                                            <p>INTERNAL:
+Schedules an entity for deletion.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isScheduledForDelete">isScheduledForDelete</a>(object $entity)
+        
+                                            <p>Checks whether an entity is registered as removed/deleted with the unit
+of work.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isEntityScheduled">isEntityScheduled</a>(object $entity)
+        
+                                            <p>Checks whether an entity is scheduled for insertion, update or deletion.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_addToIdentityMap">addToIdentityMap</a>(object $entity)
+        
+                                            <p>INTERNAL:
+Registers an entity in the identity map.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    int
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getEntityState">getEntityState</a>(object $entity, int|null $assume = null)
+        
+                                            <p>Gets the state of an entity with regard to the current unit of work.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_removeFromIdentityMap">removeFromIdentityMap</a>(object $entity)
+        
+                                            <p>INTERNAL:
+Removes an entity from the identity map. This effectively detaches the
+entity from the persistence management of Doctrine.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    object
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getByIdHash">getByIdHash</a>(string $idHash, string $rootClassName)
+        
+                                            <p>INTERNAL:
+Gets an entity in the identity map by its identifier hash.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    object|bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_tryGetByIdHash">tryGetByIdHash</a>(string $idHash, string $rootClassName)
+        
+                                            <p>INTERNAL:
+Tries to get an entity by its identifier hash. If no entity is found for
+the given hash, FALSE is returned.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isInIdentityMap">isInIdentityMap</a>(object $entity)
+        
+                                            <p>Checks whether an entity is registered in the identity map of this UnitOfWork.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_containsIdHash">containsIdHash</a>(string $idHash, string $rootClassName)
+        
+                                            <p>INTERNAL:
+Checks whether an identifier hash exists in the identity map.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_persist">persist</a>(object $entity)
+        
+                                            <p>Persists an entity as part of the current unit of work.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_remove">remove</a>(object $entity)
+        
+                                            <p>Deletes an entity as part of the current unit of work.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    object
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_merge">merge</a>(object $entity)
+        
+                                            <p>Merges the state of the given detached entity into this UnitOfWork.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_detach">detach</a>(object $entity)
+        
+                                            <p>Detaches an entity from the persistence management. It's persistence will
+no longer be managed by Doctrine.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_refresh">refresh</a>(object $entity)
+        
+                                            <p>Refreshes the state of the given entity from the database, overwriting
+any local, unpersisted changes.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_lock">lock</a>(object $entity, int $lockMode, int $lockVersion = null)
+        
+                                            <p>Acquire a lock on the given entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Internal/CommitOrderCalculator.html"><abbr title="Doctrine\ORM\Internal\CommitOrderCalculator">CommitOrderCalculator</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getCommitOrderCalculator">getCommitOrderCalculator</a>()
+        
+                                            <p>Gets the CommitOrderCalculator used by the UnitOfWork to order commits.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_clear">clear</a>(string|null $entityName = null)
+        
+                                            <p>Clears the UnitOfWork.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_scheduleOrphanRemoval">scheduleOrphanRemoval</a>(object $entity)
+        
+                                            <p>INTERNAL:
+Schedules an orphaned entity for removal. The remove() operation will be
+invoked on that entity at the beginning of the next commit of this
+UnitOfWork.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_scheduleCollectionDeletion">scheduleCollectionDeletion</a>(<a href="../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $coll)
+        
+                                            <p>INTERNAL:
+Schedules a complete collection for removal when this UnitOfWork commits.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isCollectionScheduledForDeletion">isCollectionScheduledForDeletion</a>(<a href="../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $coll)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    object
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_createEntity">createEntity</a>(string $className, array $data, array $hints = array())
+        
+                                            <p>INTERNAL:
+Creates an entity. Used for reconstitution of persistent entities.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_triggerEagerLoads">triggerEagerLoads</a>()
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_loadCollection">loadCollection</a>(<a href="../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $collection)
+        
+                                            <p>Initializes (loads) an uninitialized persistent collection of an entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getIdentityMap">getIdentityMap</a>()
+        
+                                            <p>Gets the identity map of the UnitOfWork.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getOriginalEntityData">getOriginalEntityData</a>(object $entity)
+        
+                                            <p>Gets the original data of an entity. The original data is the data that was
+present at the time the entity was reconstituted from the database.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setOriginalEntityData">setOriginalEntityData</a>(object $entity, array $data)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setOriginalEntityProperty">setOriginalEntityProperty</a>(string $oid, string $property, mixed $value)
+        
+                                            <p>INTERNAL:
+Sets a property value of the original data array of an entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getEntityIdentifier">getEntityIdentifier</a>(object $entity)
+        
+                                            <p>Gets the identifier of an entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    mixed
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getSingleIdentifierValue">getSingleIdentifierValue</a>(object $entity)
+        
+                                            <p>Processes an entity instance to extract their identifier values.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    object|bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_tryGetById">tryGetById</a>(mixed $id, string $rootClassName)
+        
+                                            <p>Tries to find an entity with the given identifier in the identity map of
+this UnitOfWork.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_scheduleForDirtyCheck">scheduleForDirtyCheck</a>(object $entity)
+        
+                                            <p>Schedules an entity for dirty-checking at commit-time.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_hasPendingInsertions">hasPendingInsertions</a>()
+        
+                                            <p>Checks whether the UnitOfWork has any pending insertions.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    integer
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_size">size</a>()
+        
+                                            <p>Calculates the size of the UnitOfWork. The size of the UnitOfWork is the
+number of entities in the identity map.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Persisters/BasicEntityPersister.html"><abbr title="Doctrine\ORM\Persisters\BasicEntityPersister">BasicEntityPersister</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getEntityPersister">getEntityPersister</a>(string $entityName)
+        
+                                            <p>Gets the EntityPersister for an Entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Doctrine/ORM/Persisters/AbstractCollectionPersister.html"><abbr title="Doctrine\ORM\Persisters\AbstractCollectionPersister">AbstractCollectionPersister</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getCollectionPersister">getCollectionPersister</a>(array $association)
+        
+                                            <p>Gets a collection persister for a collection-valued association.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_registerManaged">registerManaged</a>(object $entity, array $id, array $data)
+        
+                                            <p>INTERNAL:
+Registers an entity as managed.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_clearEntityChangeSet">clearEntityChangeSet</a>(string $oid)
+        
+                                            <p>INTERNAL:
+Clears the property changeset of the entity with the given OID.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_propertyChanged">propertyChanged</a>(object $entity, string $propertyName, mixed $oldValue, mixed $newValue)
+        
+                                            <p>Notifies this UnitOfWork of a property change in an entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getScheduledEntityInsertions">getScheduledEntityInsertions</a>()
+        
+                                            <p>Gets the currently scheduled entity insertions in this UnitOfWork.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getScheduledEntityUpdates">getScheduledEntityUpdates</a>()
+        
+                                            <p>Gets the currently scheduled entity updates in this UnitOfWork.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getScheduledEntityDeletions">getScheduledEntityDeletions</a>()
+        
+                                            <p>Gets the currently scheduled entity deletions in this UnitOfWork.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getScheduledCollectionDeletions">getScheduledCollectionDeletions</a>()
+        
+                                            <p>Gets the currently scheduled complete collection deletions</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getScheduledCollectionUpdates">getScheduledCollectionUpdates</a>()
+        
+                                            <p>Gets the currently scheduled collection inserts, updates and deletes.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_initializeObject">initializeObject</a>(object $obj)
+        
+                                            <p>Helper method to initialize a lazy loading proxy or persistent collection.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_markReadOnly">markReadOnly</a>(object $object)
+        
+                                            <p>Marks an entity as read-only so that it will not be considered for updates during UnitOfWork#commit().</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isReadOnly">isReadOnly</a>(object $object)
+        
+                                            <p>Is this entity read only?</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method___construct">
+        <div class="location">at         line 262</div>
+        <code>                    
+    <strong>__construct</strong>(<a href="../../Doctrine/ORM/EntityManager.html"><abbr title="Doctrine\ORM\EntityManager">EntityManager</abbr></a> $em)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Initializes a new UnitOfWork instance, bound to the given EntityManager.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/EntityManager.html"><abbr title="Doctrine\ORM\EntityManager">EntityManager</abbr></a></td>
+                <td>$em</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_commit">
+        <div class="location">at         line 288</div>
+        <code>                    void
+    <strong>commit</strong>(null|object|array $entity = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Commits the UnitOfWork, executing all operations that have been postponed
+up to this point. The state of all managed entities will be synchronized with
+the database.</p>                    <p>The operations are executed in the following order:</p>
+
+<p>1) All entity insertions
+2) All entity updates
+3) All collection deletions
+4) All collection updates
+5) All entity deletions</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>null|object|array</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a target="_blank" href="http://php.net/Exception">Exception</a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getEntityChangeSet">
+        <div class="location">at         line 476</div>
+        <code>                    array
+    <strong>getEntityChangeSet</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the changeset for an entity.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_computeChangeSet">
+        <div class="location">at         line 521</div>
+        <code>                    void
+    <strong>computeChangeSet</strong>(<a href="../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $class, object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Computes the changes that happened to a single entity.</p>                    <p>Modifies/populates the following properties:</p>
+
+<p>{@link _originalEntityData}
+If the entity is NEW or MANAGED but not yet fully persisted (only has an id)
+then it was not fetched from the database and therefore we have no original
+entity data yet. All of the current entity data is stored as the original entity data.</p>
+
+<p>{@link _entityChangeSets}
+The changes detected on all properties of the entity are stored there.
+A change is a tuple array where the first entry is the old value and the second
+entry is the new value of the property. Changesets are used by persisters
+to INSERT/UPDATE the persistent entity state.</p>
+
+<p>{@link _entityUpdates}
+If the entity is already fully MANAGED (has been fetched from the database before)
+and any changes to its properties are detected, then a reference to the entity is stored
+there to mark it for an update.</p>
+
+<p>{@link _collectionDeletions}
+If a PersistentCollection has been de-referenced in a fully MANAGED entity,
+then this collection is marked for deletion.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a></td>
+                <td>$class</td>
+                <td>The class descriptor of the entity.</td>
+            </tr>
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity for which to compute the changes.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_computeChangeSets">
+        <div class="location">at         line 708</div>
+        <code>                    void
+    <strong>computeChangeSets</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Computes all the changes that have been done to entities and collections
+since the last commit and stores these changes in the _entityChangeSet map
+temporarily for access by the persisters, until the UoW commit is finished.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_recomputeSingleEntityChangeSet">
+        <div class="location">at         line 885</div>
+        <code>                    void
+    <strong>recomputeSingleEntityChangeSet</strong>(<a href="../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $class, object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Computes the changeset of an individual entity, independently of the
+computeChangeSets() routine that is used at the beginning of a UnitOfWork#commit().</p>                    <p>The passed entity must be a managed entity. If the entity already has a change set
+because this method is invoked during a commit cycle then the change sets are added.
+whereby changes detected in this method prevail.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a></td>
+                <td>$class</td>
+                <td>The class descriptor of the entity.</td>
+            </tr>
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity for which to (re)calculate the change set.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMInvalidArgumentException.html"><abbr title="Doctrine\ORM\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></a></td>
+                <td>If the passed entity is not MANAGED.</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_scheduleForInsert">
+        <div class="location">at         line 1150</div>
+        <code>                    void
+    <strong>scheduleForInsert</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Schedules an entity for insertion into the database.</p>                    <p>If the entity already has an identifier, it will be added to the identity map.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to schedule for insertion.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMInvalidArgumentException.html"><abbr title="Doctrine\ORM\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></a></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a target="_blank" href="http://php.net/InvalidArgumentException">InvalidArgumentException</a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isScheduledForInsert">
+        <div class="location">at         line 1187</div>
+        <code>                    boolean
+    <strong>isScheduledForInsert</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Checks whether an entity is scheduled for insertion.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_scheduleForUpdate">
+        <div class="location">at         line 1201</div>
+        <code>                    void
+    <strong>scheduleForUpdate</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Schedules an entity for being updated.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to schedule for being updated.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMInvalidArgumentException.html"><abbr title="Doctrine\ORM\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_scheduleExtraUpdate">
+        <div class="location">at         line 1232</div>
+        <code>                    void
+    <strong>scheduleExtraUpdate</strong>(object $entity, array $changeset)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Schedules an extra update that will be executed immediately after the
+regular entity updates within the currently running commit cycle.</p>                    <p>Extra updates for entities are stored as (entity, changeset) tuples.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity for which to schedule an extra update.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$changeset</td>
+                <td>The changeset of the entity (what to update).</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isScheduledForUpdate">
+        <div class="location">at         line 1255</div>
+        <code>                    boolean
+    <strong>isScheduledForUpdate</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Checks whether an entity is registered as dirty in the unit of work.</p>                    <p>Note: Is not very useful currently as dirty entities are only registered
+at commit time.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isScheduledForDirtyCheck">
+        <div class="location">at         line 1267</div>
+        <code>                    boolean
+    <strong>isScheduledForDirtyCheck</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Checks whether an entity is registered to be checked in the unit of work.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_scheduleForDelete">
+        <div class="location">at         line 1282</div>
+        <code>                    void
+    <strong>scheduleForDelete</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Schedules an entity for deletion.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isScheduledForDelete">
+        <div class="location">at         line 1320</div>
+        <code>                    boolean
+    <strong>isScheduledForDelete</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Checks whether an entity is registered as removed/deleted with the unit
+of work.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isEntityScheduled">
+        <div class="location">at         line 1332</div>
+        <code>                    boolean
+    <strong>isEntityScheduled</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Checks whether an entity is scheduled for insertion, update or deletion.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_addToIdentityMap">
+        <div class="location">at         line 1356</div>
+        <code>                    boolean
+    <strong>addToIdentityMap</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Registers an entity in the identity map.</p>                    <p>Note that entities in a hierarchy are registered with the class name of
+the root entity.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to register.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td>TRUE if the registration was successful, FALSE if the identity of
+                the entity in question is already managed.</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMInvalidArgumentException.html"><abbr title="Doctrine\ORM\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getEntityState">
+        <div class="location">at         line 1387</div>
+        <code>                    int
+    <strong>getEntityState</strong>(object $entity, int|null $assume = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the state of an entity with regard to the current unit of work.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int|null</td>
+                <td>$assume</td>
+                <td>The state to assume if the state is not yet known (not MANAGED or REMOVED).
+                        This parameter can be set to improve performance of entity state detection
+                        by potentially avoiding a database lookup if the distinction between NEW and DETACHED
+                        is either known or does not matter for the caller of the method.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>int</td>
+            <td>The entity state.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_removeFromIdentityMap">
+        <div class="location">at         line 1470</div>
+        <code>                    boolean
+    <strong>removeFromIdentityMap</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Removes an entity from the identity map. This effectively detaches the
+entity from the persistence management of Doctrine.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMInvalidArgumentException.html"><abbr title="Doctrine\ORM\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getByIdHash">
+        <div class="location">at         line 1505</div>
+        <code>                    object
+    <strong>getByIdHash</strong>(string $idHash, string $rootClassName)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Gets an entity in the identity map by its identifier hash.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$idHash</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$rootClassName</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>object</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_tryGetByIdHash">
+        <div class="location">at         line 1522</div>
+        <code>                    object|bool
+    <strong>tryGetByIdHash</strong>(string $idHash, string $rootClassName)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Tries to get an entity by its identifier hash. If no entity is found for
+the given hash, FALSE is returned.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$idHash</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$rootClassName</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>object|bool</td>
+            <td>The found entity or FALSE.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isInIdentityMap">
+        <div class="location">at         line 1538</div>
+        <code>                    boolean
+    <strong>isInIdentityMap</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Checks whether an entity is registered in the identity map of this UnitOfWork.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_containsIdHash">
+        <div class="location">at         line 1567</div>
+        <code>                    boolean
+    <strong>containsIdHash</strong>(string $idHash, string $rootClassName)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Checks whether an identifier hash exists in the identity map.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$idHash</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$rootClassName</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_persist">
+        <div class="location">at         line 1579</div>
+        <code>                    void
+    <strong>persist</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Persists an entity as part of the current unit of work.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to persist.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_remove">
+        <div class="location">at         line 1656</div>
+        <code>                    void
+    <strong>remove</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Deletes an entity as part of the current unit of work.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to remove.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_merge">
+        <div class="location">at         line 1730</div>
+        <code>                    object
+    <strong>merge</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Merges the state of the given detached entity into this UnitOfWork.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>object</td>
+            <td>The managed copy of the entity.</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/OptimisticLockException.html"><abbr title="Doctrine\ORM\OptimisticLockException">OptimisticLockException</abbr></a></td>
+                <td>If the entity uses optimistic locking through a version
+        attribute and the version check against the managed copy fails.</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_detach">
+        <div class="location">at         line 1963</div>
+        <code>                    void
+    <strong>detach</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Detaches an entity from the persistence management. It's persistence will
+no longer be managed by Doctrine.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to detach.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_refresh">
+        <div class="location">at         line 2024</div>
+        <code>                    void
+    <strong>refresh</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Refreshes the state of the given entity from the database, overwriting
+any local, unpersisted changes.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to refresh.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a target="_blank" href="http://php.net/InvalidArgumentException">InvalidArgumentException</a></td>
+                <td>If the entity is not MANAGED.</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_lock">
+        <div class="location">at         line 2296</div>
+        <code>                    void
+    <strong>lock</strong>(object $entity, int $lockMode, int $lockVersion = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Acquire a lock on the given entity.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$lockMode</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$lockVersion</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMInvalidArgumentException.html"><abbr title="Doctrine\ORM\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></a></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../Doctrine/ORM/TransactionRequiredException.html"><abbr title="Doctrine\ORM\TransactionRequiredException">TransactionRequiredException</abbr></a></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../Doctrine/ORM/OptimisticLockException.html"><abbr title="Doctrine\ORM\OptimisticLockException">OptimisticLockException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getCommitOrderCalculator">
+        <div class="location">at         line 2354</div>
+        <code>                    <a href="../../Doctrine/ORM/Internal/CommitOrderCalculator.html"><abbr title="Doctrine\ORM\Internal\CommitOrderCalculator">CommitOrderCalculator</abbr></a>
+    <strong>getCommitOrderCalculator</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the CommitOrderCalculator used by the UnitOfWork to order commits.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Internal/CommitOrderCalculator.html"><abbr title="Doctrine\ORM\Internal\CommitOrderCalculator">CommitOrderCalculator</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_clear">
+        <div class="location">at         line 2370</div>
+        <code>                    void
+    <strong>clear</strong>(string|null $entityName = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Clears the UnitOfWork.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string|null</td>
+                <td>$entityName</td>
+                <td>if given, only entities of this type will get detached.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_scheduleOrphanRemoval">
+        <div class="location">at         line 2420</div>
+        <code>                    void
+    <strong>scheduleOrphanRemoval</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Schedules an orphaned entity for removal. The remove() operation will be
+invoked on that entity at the beginning of the next commit of this
+UnitOfWork.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_scheduleCollectionDeletion">
+        <div class="location">at         line 2433</div>
+        <code>                    void
+    <strong>scheduleCollectionDeletion</strong>(<a href="../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $coll)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Schedules a complete collection for removal when this UnitOfWork commits.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a></td>
+                <td>$coll</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isCollectionScheduledForDeletion">
+        <div class="location">at         line 2451</div>
+        <code>                    bool
+    <strong>isCollectionScheduledForDeletion</strong>(<a href="../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $coll)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a></td>
+                <td>$coll</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_createEntity">
+        <div class="location">at         line 2488</div>
+        <code>                    object
+    <strong>createEntity</strong>(string $className, array $data, array $hints = array())
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Creates an entity. Used for reconstitution of persistent entities.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$className</td>
+                <td>The name of the entity class.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$data</td>
+                <td>The data for the entity.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$hints</td>
+                <td>Any hints to account for during reconstitution/lookup of the entity.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>object</td>
+            <td>The managed entity instance.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_triggerEagerLoads">
+        <div class="location">at         line 2758</div>
+        <code>                    void
+    <strong>triggerEagerLoads</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_loadCollection">
+        <div class="location">at         line 2790</div>
+        <code>                    void
+    <strong>loadCollection</strong>(<a href="../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $collection)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Initializes (loads) an uninitialized persistent collection of an entity.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a></td>
+                <td>$collection</td>
+                <td>The collection to initialize.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getIdentityMap">
+        <div class="location">at         line 2813</div>
+        <code>                    array
+    <strong>getIdentityMap</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the identity map of the UnitOfWork.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getOriginalEntityData">
+        <div class="location">at         line 2826</div>
+        <code>                    array
+    <strong>getOriginalEntityData</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the original data of an entity. The original data is the data that was
+present at the time the entity was reconstituted from the database.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setOriginalEntityData">
+        <div class="location">at         line 2845</div>
+        <code>                    void
+    <strong>setOriginalEntityData</strong>(object $entity, array $data)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$data</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setOriginalEntityProperty">
+        <div class="location">at         line 2862</div>
+        <code>                    void
+    <strong>setOriginalEntityProperty</strong>(string $oid, string $property, mixed $value)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Sets a property value of the original data array of an entity.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$oid</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$property</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>mixed</td>
+                <td>$value</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getEntityIdentifier">
+        <div class="location">at         line 2877</div>
+        <code>                    array
+    <strong>getEntityIdentifier</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the identifier of an entity.</p>                    <p>The returned value is always an array of identifier values. If the entity
+has a composite identifier then the identifier values are in the same
+order as the identifier field names as returned by ClassMetadata#getIdentifierFieldNames().</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td>The identifier values.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getSingleIdentifierValue">
+        <div class="location">at         line 2891</div>
+        <code>                    mixed
+    <strong>getSingleIdentifierValue</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Processes an entity instance to extract their identifier values.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity instance.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>mixed</td>
+            <td>A scalar value.</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMInvalidArgumentException.html"><abbr title="Doctrine\ORM\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_tryGetById">
+        <div class="location">at         line 2916</div>
+        <code>                    object|bool
+    <strong>tryGetById</strong>(mixed $id, string $rootClassName)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Tries to find an entity with the given identifier in the identity map of
+this UnitOfWork.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>mixed</td>
+                <td>$id</td>
+                <td>The entity identifier to look for.</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$rootClassName</td>
+                <td>The name of the root class of the mapped entity hierarchy.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>object|bool</td>
+            <td>Returns the entity with the specified identifier if it exists in
+                    this UnitOfWork, FALSE otherwise.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_scheduleForDirtyCheck">
+        <div class="location">at         line 2936</div>
+        <code>                    void
+    <strong>scheduleForDirtyCheck</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Schedules an entity for dirty-checking at commit-time.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to schedule for dirty-checking.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_hasPendingInsertions">
+        <div class="location">at         line 2948</div>
+        <code>                    boolean
+    <strong>hasPendingInsertions</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Checks whether the UnitOfWork has any pending insertions.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td>TRUE if this UnitOfWork has pending insertions, FALSE otherwise.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_size">
+        <div class="location">at         line 2959</div>
+        <code>                    integer
+    <strong>size</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Calculates the size of the UnitOfWork. The size of the UnitOfWork is the
+number of entities in the identity map.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>integer</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getEntityPersister">
+        <div class="location">at         line 2973</div>
+        <code>                    <a href="../../Doctrine/ORM/Persisters/BasicEntityPersister.html"><abbr title="Doctrine\ORM\Persisters\BasicEntityPersister">BasicEntityPersister</abbr></a>
+    <strong>getEntityPersister</strong>(string $entityName)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the EntityPersister for an Entity.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$entityName</td>
+                <td>The name of the Entity.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Persisters/BasicEntityPersister.html"><abbr title="Doctrine\ORM\Persisters\BasicEntityPersister">BasicEntityPersister</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getCollectionPersister">
+        <div class="location">at         line 3010</div>
+        <code>                    <a href="../../Doctrine/ORM/Persisters/AbstractCollectionPersister.html"><abbr title="Doctrine\ORM\Persisters\AbstractCollectionPersister">AbstractCollectionPersister</abbr></a>
+    <strong>getCollectionPersister</strong>(array $association)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets a collection persister for a collection-valued association.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$association</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Doctrine/ORM/Persisters/AbstractCollectionPersister.html"><abbr title="Doctrine\ORM\Persisters\AbstractCollectionPersister">AbstractCollectionPersister</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_registerManaged">
+        <div class="location">at         line 3043</div>
+        <code>                    void
+    <strong>registerManaged</strong>(object $entity, array $id, array $data)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Registers an entity as managed.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$id</td>
+                <td>The identifier values.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$data</td>
+                <td>The original entity data.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_clearEntityChangeSet">
+        <div class="location">at         line 3066</div>
+        <code>                    void
+    <strong>clearEntityChangeSet</strong>(string $oid)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>INTERNAL:
+Clears the property changeset of the entity with the given OID.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$oid</td>
+                <td>The entity's OID.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_propertyChanged">
+        <div class="location">at         line 3083</div>
+        <code>                    void
+    <strong>propertyChanged</strong>(object $entity, string $propertyName, mixed $oldValue, mixed $newValue)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Notifies this UnitOfWork of a property change in an entity.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity that owns the property.</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$propertyName</td>
+                <td>The name of the property that changed.</td>
+            </tr>
+                    <tr>
+                <td>mixed</td>
+                <td>$oldValue</td>
+                <td>The old value of the property.</td>
+            </tr>
+                    <tr>
+                <td>mixed</td>
+                <td>$newValue</td>
+                <td>The new value of the property.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getScheduledEntityInsertions">
+        <div class="location">at         line 3107</div>
+        <code>                    array
+    <strong>getScheduledEntityInsertions</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the currently scheduled entity insertions in this UnitOfWork.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getScheduledEntityUpdates">
+        <div class="location">at         line 3117</div>
+        <code>                    array
+    <strong>getScheduledEntityUpdates</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the currently scheduled entity updates in this UnitOfWork.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getScheduledEntityDeletions">
+        <div class="location">at         line 3127</div>
+        <code>                    array
+    <strong>getScheduledEntityDeletions</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the currently scheduled entity deletions in this UnitOfWork.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getScheduledCollectionDeletions">
+        <div class="location">at         line 3137</div>
+        <code>                    array
+    <strong>getScheduledCollectionDeletions</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the currently scheduled complete collection deletions</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getScheduledCollectionUpdates">
+        <div class="location">at         line 3147</div>
+        <code>                    array
+    <strong>getScheduledCollectionUpdates</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the currently scheduled collection inserts, updates and deletes.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_initializeObject">
+        <div class="location">at         line 3159</div>
+        <code>                    void
+    <strong>initializeObject</strong>(object $obj)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Helper method to initialize a lazy loading proxy or persistent collection.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$obj</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_markReadOnly">
+        <div class="location">at         line 3196</div>
+        <code>                    void
+    <strong>markReadOnly</strong>(object $object)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Marks an entity as read-only so that it will not be considered for updates during UnitOfWork#commit().</p>                    <p>This operation cannot be undone as some parts of the UnitOfWork now keep gathering information
+on this object that might be necessary to perform a correct update.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$object</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMInvalidArgumentException.html"><abbr title="Doctrine\ORM\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isReadOnly">
+        <div class="location">at         line 3214</div>
+        <code>                    bool
+    <strong>isReadOnly</strong>(object $object)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Is this entity read only?</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$object</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Doctrine/ORM/ORMInvalidArgumentException.html"><abbr title="Doctrine\ORM\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>
