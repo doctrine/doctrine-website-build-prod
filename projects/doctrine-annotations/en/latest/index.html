@@ -180,7 +180,7 @@
                             <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
                     <div class="sidebar-sticky">
                         
-<div class="toc"><ul><li id="index-html-introduction" class="toc-item"><a href="index.html#introduction">Introduction</a></li></ul></div>
+<div class="toc"><ul><li id="index-html-introduction" class="toc-item"><a href="index.html#introduction">Introduction</a></li><li id="index-html-installation" class="toc-item"><a href="index.html#installation">Installation</a></li><li id="index-html-create-an-annotation-class" class="toc-item"><a href="index.html#create-an-annotation-class">Create an annotation class</a></li><li id="index-html-reading-annotations" class="toc-item"><a href="index.html#reading-annotations">Reading annotations</a></li><ul><li id="index-html-reader-api" class="toc-item"><a href="index.html#reader-api">Reader API</a></li><ul><li id="index-html-access-all-annotations-of-a-class" class="toc-item"><a href="index.html#access-all-annotations-of-a-class">Access all annotations of a class</a></li><li id="index-html-access-one-annotation-of-a-class" class="toc-item"><a href="index.html#access-one-annotation-of-a-class">Access one annotation of a class</a></li><li id="index-html-access-all-annotations-of-a-method" class="toc-item"><a href="index.html#access-all-annotations-of-a-method">Access all annotations of a method</a></li><li id="index-html-access-one-annotation-of-a-method" class="toc-item"><a href="index.html#access-one-annotation-of-a-method">Access one annotation of a method</a></li><li id="index-html-access-all-annotations-of-a-property" class="toc-item"><a href="index.html#access-all-annotations-of-a-property">Access all annotations of a property</a></li><li id="index-html-access-one-annotation-of-a-property" class="toc-item"><a href="index.html#access-one-annotation-of-a-property">Access one annotation of a property</a></li></ul></ul></ul></div>
                     </div>
                 </nav>
             
@@ -215,7 +215,76 @@
                             
 <p></p>
 <a class="section-anchor" id="introduction" name="introduction"></a><h1 class="section-header"><a href="#introduction">Introduction<i class="fas fa-link"></i></a></h1>
-<p>Annotations documentation is COMING SOON!</p>
+<p>Doctrine Annotations offers to implement custom annotation
+functionality for PHP classes.</p>
+<pre><code class="php">class Foo
+{
+    /**
+     * @MyAnnotation(myProperty=&quot;value&quot;)
+     */
+    private $bar;
+}
+</code></pre>
+<p>Annotations aren't implemented in PHP itself which is why
+this component offers a way to use the PHP doc-blocks as a
+place for the well known annotation syntax using the
+<code>@</code> char.</p>
+<p>Annotations in Doctrine are used for the ORM
+configuration to build the class mapping, but it can
+be used in other projects for other purposes too.</p>
+<a class="section-anchor" id="installation" name="installation"></a><h1 class="section-header"><a href="#installation">Installation<i class="fas fa-link"></i></a></h1>
+<p>You can install the Annotation component with composer:</p>
+<pre><code class="">$ composer require doctrine/annotation
+</code></pre>
+<a class="section-anchor" id="create-an-annotation-class" name="create-an-annotation-class"></a><h1 class="section-header"><a href="#create-an-annotation-class">Create an annotation class<i class="fas fa-link"></i></a></h1>
+<p>An annotation class is a representation of the later
+used annotation configuration in classes. The annotation
+class of the previous example looks like this:</p>
+<pre><code class="php">/**
+ * @Annotation
+ */
+final class MyAnnotation
+{
+    public $myProperty;
+}
+</code></pre>
+<p>The annotation class is declared as an annotation by
+<code>@Annotation</code>.</p>
+<a class="section-anchor" id="reading-annotations" name="reading-annotations"></a><h1 class="section-header"><a href="#reading-annotations">Reading annotations<i class="fas fa-link"></i></a></h1>
+<p>The access to the annotations happens by reflection of the class
+containing them. There are multiple reader-classes implementing the
+<code>Doctrine\Common\Annotations\Reader</code> interface, that can
+access the annotations of a class. A common one is
+<code>Doctrine\Common\Annotations\AnnotationReader</code>:</p>
+<pre><code class="php">$reflectionClass = new ReflectionClass(Foo::class);
+$property = $reflectionClass-&gt;getProperty('bar');
+
+$reader = new AnnotationReader();
+$myAnnotation = $reader-&gt;getPropertyAnnotation($property, 'bar');
+
+echo $myAnnotation-&gt;myProperty; // result: &quot;value&quot;
+</code></pre>
+<p>A reader has multiple methods to access the annotations
+of a class.</p>
+<a class="section-anchor" id="reader-api" name="reader-api"></a><h2 class="section-header"><a href="#reader-api">Reader API<i class="fas fa-link"></i></a></h2>
+<a class="section-anchor" id="access-all-annotations-of-a-class" name="access-all-annotations-of-a-class"></a><h3 class="section-header"><a href="#access-all-annotations-of-a-class">Access all annotations of a class<i class="fas fa-link"></i></a></h3>
+<pre><code class="php">public function getClassAnnotations(\ReflectionClass $class);
+</code></pre>
+<a class="section-anchor" id="access-one-annotation-of-a-class" name="access-one-annotation-of-a-class"></a><h3 class="section-header"><a href="#access-one-annotation-of-a-class">Access one annotation of a class<i class="fas fa-link"></i></a></h3>
+<pre><code class="php">public function getClassAnnotation(\ReflectionClass $class, $annotationName);
+</code></pre>
+<a class="section-anchor" id="access-all-annotations-of-a-method" name="access-all-annotations-of-a-method"></a><h3 class="section-header"><a href="#access-all-annotations-of-a-method">Access all annotations of a method<i class="fas fa-link"></i></a></h3>
+<pre><code class="php">public function getMethodAnnotations(\ReflectionMethod $method);
+</code></pre>
+<a class="section-anchor" id="access-one-annotation-of-a-method" name="access-one-annotation-of-a-method"></a><h3 class="section-header"><a href="#access-one-annotation-of-a-method">Access one annotation of a method<i class="fas fa-link"></i></a></h3>
+<pre><code class="php">public function getMethodAnnotation(\ReflectionMethod $method, $annotationName);
+</code></pre>
+<a class="section-anchor" id="access-all-annotations-of-a-property" name="access-all-annotations-of-a-property"></a><h3 class="section-header"><a href="#access-all-annotations-of-a-property">Access all annotations of a property<i class="fas fa-link"></i></a></h3>
+<pre><code class="php">public function getPropertyAnnotations(\ReflectionProperty $property);
+</code></pre>
+<a class="section-anchor" id="access-one-annotation-of-a-property" name="access-one-annotation-of-a-property"></a><h3 class="section-header"><a href="#access-one-annotation-of-a-property">Access one annotation of a property<i class="fas fa-link"></i></a></h3>
+<pre><code class="php">public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName);
+</code></pre>
 <p></p>
                                             </div>
                 </div>
