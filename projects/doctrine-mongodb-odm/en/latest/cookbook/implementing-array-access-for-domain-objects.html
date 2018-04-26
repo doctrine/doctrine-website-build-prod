@@ -279,12 +279,12 @@ at runtime. Note that this implementation has 2 main caveats:</p>
 
 abstract class DomainObject implements ArrayAccess
 {
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this-&gt;$offset);
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this-&gt;$offset = $value;
     }
@@ -294,7 +294,7 @@ abstract class DomainObject implements ArrayAccess
         return $this-&gt;$offset;
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this-&gt;$offset = null;
     }
@@ -314,14 +314,14 @@ caveats:</p>
 
 abstract class DomainObject implements ArrayAccess
 {
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         // In this example we say that exists means it is not null
         $value = $this-&gt;{&quot;get$offset&quot;}();
         return $value !== null;
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this-&gt;{&quot;set$offset&quot;}($value);
     }
@@ -331,7 +331,7 @@ abstract class DomainObject implements ArrayAccess
         return $this-&gt;{&quot;get$offset&quot;}();
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this-&gt;{&quot;set$offset&quot;}(null);
     }
@@ -346,12 +346,12 @@ exception (i.e. BadMethodCallException).</p>
 
 abstract class DomainObject implements ArrayAccess
 {
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         // option 1 or option 2
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new BadMethodCallException(&quot;Array access of class &quot; . get_class($this) . &quot; is read-only!&quot;);
     }
@@ -361,7 +361,7 @@ abstract class DomainObject implements ArrayAccess
         // option 1 or option 2
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new BadMethodCallException(&quot;Array access of class &quot; . get_class($this) . &quot; is read-only!&quot;);
     }

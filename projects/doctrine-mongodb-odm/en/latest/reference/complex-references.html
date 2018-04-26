@@ -364,17 +364,16 @@ class Comment
 }
 </code></pre>
 <p>Lastly, the <code>CommentRepository</code> class will need a <code>findSomeComments()</code>
-method which shall return <code>Doctrine\MongoDB\CursorInterface</code>. When this method
+method which shall return <code>Doctrine\ODM\MongoDB\Iterator\Iterator</code>. When this method
 is called to populate the reference, Doctrine will provide the Blogpost instance
 (i.e. owning document) as the first argument:</p>
 <pre><code class="php">&lt;?php
 
+use Doctrine\ODM\MongoDB\Iterator\Iterator;
+
 class CommentRepository extends \Doctrine\ODM\MongoDB\DocumentRepository
 {
-    /**
-     * @return \Doctrine\ODM\MongoDB\Cursor
-     */
-    public function findSomeComments(BlogPost $blogPost)
+    public function findSomeComments(BlogPost $blogPost): Iterator
     {
         return $this-&gt;createQueryBuilder()
             -&gt;field('blogPost')-&gt;references($blogPost);
