@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Introduction - Collections - Doctrine</title>
+        <title>Lazy Collections - Collections - Doctrine</title>
 
         <meta charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="theme-color" content="#ffffff">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <meta name="description" content="Doctrine Collections Documentation: Introduction ">
+        <meta name="description" content="Doctrine Collections Documentation: Lazy Collections ">
 
-        <meta name="keywords" content="php,collections,iterators,documentation,introduction">
+        <meta name="keywords" content="php,collections,iterators,documentation,lazy,collections">
 
                     <meta name="robots" content="index, follow">
         
-                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-collections/en/latest" />
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-collections/en/latest/lazy-collections.html" />
     
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -55,9 +55,9 @@
         <meta name="twitter:site" content="@doctrineorm" />
         <meta name="twitter:creator" content="@doctrineorm" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.doctrine-project.org/projects/doctrine-collections/en/latest" />
-        <meta property="og:title" content="Introduction - Collections - Doctrine" />
-        <meta property="og:description" content="Doctrine Collections Documentation: Introduction " />
+        <meta property="og:url" content="https://www.doctrine-project.org/projects/doctrine-collections/en/latest/lazy-collections.html" />
+        <meta property="og:title" content="Lazy Collections - Collections - Doctrine" />
+        <meta property="og:description" content="Doctrine Collections Documentation: Lazy Collections " />
         <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="1200" />
@@ -103,7 +103,7 @@
             "@context": "http://schema.org",
             "@type": "Course",
             "name": "Doctrine Collections",
-            "description": "Introduction",
+            "description": "Lazy Collections",
             "provider": {
                 "@type": "Organization",
                 "name": "Doctrine",
@@ -200,15 +200,16 @@
             
             <main role="main" class="col-md-9 ml-sm-auto col-lg-9 pt-3 px-4">
                 <div class="row">
+                                        
                                                                 <nav class="breadcrumbs d-none d-sm-block d-md-block d-lg-block d-xl-block" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects.html">Projects</a></li>
                                 <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/collections.html">Collections</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Documentation</li>
+                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine-collections/en/latest/">Documentation</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Lazy Collections</li>
                             </ol>
                         </nav>
-                    
-                                                        </div>
+                                    </div>
 
                 
                 <div class="row">
@@ -217,7 +218,7 @@
 
                                                             
                                 <div class="dropdown show d-inline-block">
-                                    <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-collections/en/latest" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-collections/en/latest/lazy-collections.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         master
                                     </a>
 
@@ -225,7 +226,7 @@
                                                                                     <h6 class="dropdown-header">Maintained</h6>
 
                                                                                             
-                                                <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-collections/en/latest">
+                                                <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-collections/en/latest/lazy-collections.html">
                                                     master
 
                                                     
@@ -234,218 +235,32 @@
                                                                             </div>
                                 </div>
 
-                                <a href="https://github.com/doctrine/collections/edit/master/docs/en/index.rst" class="btn btn-primary btn-sm">Edit</a>
+                                <a href="https://github.com/doctrine/collections/edit/master/docs/en/lazy-collections.rst" class="btn btn-primary btn-sm">Edit</a>
                             
                             
 <p></p>
-<a class="section-anchor" id="introduction" name="introduction"></a><h1 class="section-header"><a href="#introduction">Introduction<i class="fas fa-link"></i></a></h1>
-<p>Doctrine Collections is a library that contains classes for working with
-arrays of data. Here is an example using the simple
-<code>Doctrine\Common\Collections\ArrayCollection</code> class:</p>
-<pre><code class="php">&lt;?php
+<a class="section-anchor" id="lazy-collections" name="lazy-collections"></a><h1 class="section-header"><a href="#lazy-collections">Lazy Collections<i class="fas fa-link"></i></a></h1>
+<p>To create a lazy collection you can extend the
+<code>Doctrine\Common\Collections\AbstractLazyCollection</code> class
+and define the <code>doInitialize</code> method. Here is an example where
+we lazily query the database for a collection of user records:</p>
+<pre><code class="php">use Doctrine\DBAL\Connection;
 
-use Doctrine\Common\Collections\ArrayCollection;
+class UsersLazyCollection extends AbstractLazyCollection
+{
+    /** @var Connection */
+    private $connection;
 
-$collection = new ArrayCollection([1, 2, 3]);
+    public function __construct(Connection $connection)
+    {
+        $this-&gt;connection = $connection;
+    }
 
-$filteredCollection = $collection-&gt;filter(function($count) {
-    return $count &gt; 1;
-}); // [2, 3]
-</code></pre>
-<a class="section-anchor" id="available-methods" name="available-methods"></a><h1 class="section-header"><a href="#available-methods">Available Methods<i class="fas fa-link"></i></a></h1>
-<p>Doctrine Collections provides an interface named <code>Doctrine\Common\Collections\Collection</code>
-that resembles the nature of a regular PHP array. That is,
-it is essentially an <strong>ordered map</strong> that can also be used
-like a list.</p>
-<p>A Collection has an internal iterator just like a PHP array. In addition,
-a Collection can be iterated with external iterators, which is preferable.
-To use an external iterator simply use the foreach language construct to
-iterate over the collection, which calls <code>getIterator()</code> internally, or
-explicitly retrieve an iterator though <code>getIterator()</code> which can then be
-used to iterate over the collection. You can not rely on the internal iterator
-of the collection being at a certain position unless you explicitly positioned it before.</p>
-<p>The methods available on the interface are:</p>
-<a class="section-anchor" id="add" name="add"></a><h2 class="section-header"><a href="#add">add<i class="fas fa-link"></i></a></h2>
-<p>Adds an element at the end of the collection.</p>
-<pre><code class="php">$collection-&gt;add('test');
-</code></pre>
-<a class="section-anchor" id="clear" name="clear"></a><h2 class="section-header"><a href="#clear">clear<i class="fas fa-link"></i></a></h2>
-<p>Clears the collection, removing all elements.</p>
-<pre><code class="php">$collection-&gt;clear();
-</code></pre>
-<a class="section-anchor" id="contains" name="contains"></a><h2 class="section-header"><a href="#contains">contains<i class="fas fa-link"></i></a></h2>
-<p>Checks whether an element is contained in the collection. This is an O(n) operation, where n is the size of the collection.</p>
-<pre><code class="php">$collection = new Collection(['test']);
-
-$contains = $collection-&gt;contains('test'); // true
-</code></pre>
-<a class="section-anchor" id="containskey" name="containskey"></a><h2 class="section-header"><a href="#containskey">containsKey<i class="fas fa-link"></i></a></h2>
-<p>Checks whether the collection contains an element with the specified key/index.</p>
-<pre><code class="php">$collection = new Collection(['test' =&gt; true]);
-
-$contains = $collection-&gt;containsKey('test'); // true
-</code></pre>
-<a class="section-anchor" id="current" name="current"></a><h2 class="section-header"><a href="#current">current<i class="fas fa-link"></i></a></h2>
-<p>Gets the element of the collection at the current iterator position.</p>
-<pre><code class="php">$collection = new Collection(['first', 'second', 'third']);
-
-$current = $collection-&gt;current(); // first
-</code></pre>
-<a class="section-anchor" id="get" name="get"></a><h2 class="section-header"><a href="#get">get<i class="fas fa-link"></i></a></h2>
-<p>Gets the element at the specified key/index.</p>
-<pre><code class="php">$collection = new Collection([
-    'key' =&gt; 'value',
-]);
-
-$value = $collection-&gt;get('key'); // value
-</code></pre>
-<a class="section-anchor" id="getkeys" name="getkeys"></a><h2 class="section-header"><a href="#getkeys">getKeys<i class="fas fa-link"></i></a></h2>
-<p>Gets all keys/indices of the collection.</p>
-<pre><code class="php">$collection = new Collection(['a', 'b', 'c']);
-
-$keys = $collection-&gt;getKeys(); // [0, 1, 2]
-</code></pre>
-<a class="section-anchor" id="getvalues" name="getvalues"></a><h2 class="section-header"><a href="#getvalues">getValues<i class="fas fa-link"></i></a></h2>
-<p>Gets all values of the collection.</p>
-<pre><code class="php">$collection = new Collection([
-    'key1' =&gt; 'value1',
-    'key2' =&gt; 'value2',
-    'key3' =&gt; 'value3',
-]);
-
-$values = $collection-&gt;getValues(); // ['value1', 'value2', 'value3']
-</code></pre>
-<a class="section-anchor" id="isempty" name="isempty"></a><h2 class="section-header"><a href="#isempty">isEmpty<i class="fas fa-link"></i></a></h2>
-<p>Checks whether the collection is empty (contains no elements).</p>
-<pre><code class="php">$collection = new Collection(['a', 'b', 'c']);
-
-$isEmpty = $collection-&gt;isEmpty(); // false
-</code></pre>
-<a class="section-anchor" id="first" name="first"></a><h2 class="section-header"><a href="#first">first<i class="fas fa-link"></i></a></h2>
-<p>Sets the internal iterator to the first element in the collection and returns this element.</p>
-<pre><code class="php">$collection = new Collection(['first', 'second', 'third']);
-
-$first = $collection-&gt;first(); // furst
-</code></pre>
-<a class="section-anchor" id="exists" name="exists"></a><h2 class="section-header"><a href="#exists">exists<i class="fas fa-link"></i></a></h2>
-<p>Tests for the existence of an element that satisfies the given predicate.</p>
-<pre><code class="php">$collection = new Collection(['first', 'second', 'third']);
-
-$exists = $collection-&gt;exists(function($key, $value) {
-    return $value === 'first';
-}); // true
-</code></pre>
-<a class="section-anchor" id="filter" name="filter"></a><h2 class="section-header"><a href="#filter">filter<i class="fas fa-link"></i></a></h2>
-<p>Returns all the elements of this collection that satisfy the predicate. The order of the elements is preserved.</p>
-<pre><code class="php">$collection = new ArrayCollection([1, 2, 3]);
-
-$filteredCollection = $collection-&gt;filter(function($count) {
-    return $count &gt; 1;
-}); // [2, 3]
-</code></pre>
-<a class="section-anchor" id="forall" name="forall"></a><h2 class="section-header"><a href="#forall">forAll<i class="fas fa-link"></i></a></h2>
-<p>Tests whether the given predicate holds for all elements of this collection.</p>
-<pre><code class="php">$collection = new ArrayCollection([1, 2, 3]);
-
-$forAll = $collection-&gt;forAll(function($key, $value) {
-    return $count &gt; 1;
-}); // false
-</code></pre>
-<a class="section-anchor" id="indexof" name="indexof"></a><h2 class="section-header"><a href="#indexof">indexOf<i class="fas fa-link"></i></a></h2>
-<p>Gets the index/key of a given element. The comparison of two elements is strict, that means not only the value but also the type must match. For objects this means reference equality.</p>
-<pre><code class="php">$collection = new ArrayCollection([1, 2, 3]);
-
-$indexOf = $collection-&gt;indexOf(3); // 2
-</code></pre>
-<a class="section-anchor" id="key" name="key"></a><h2 class="section-header"><a href="#key">key<i class="fas fa-link"></i></a></h2>
-<p>Gets the key/index of the element at the current iterator position.</p>
-<pre><code class="php">$collection = new ArrayCollection([1, 2, 3]);
-
-$collection-&gt;next();
-
-$key = $collection-&gt;key(); // 1
-</code></pre>
-<a class="section-anchor" id="last" name="last"></a><h2 class="section-header"><a href="#last">last<i class="fas fa-link"></i></a></h2>
-<p>Sets the internal iterator to the last element in the collection and returns this element.</p>
-<pre><code class="php">$collection = new ArrayCollection([1, 2, 3]);
-
-$last = $collection-&gt;last(); // 3
-</code></pre>
-<a class="section-anchor" id="map" name="map"></a><h2 class="section-header"><a href="#map">map<i class="fas fa-link"></i></a></h2>
-<p>Applies the given function to each element in the collection and returns a new collection with the elements returned by the function.</p>
-<pre><code class="php">$collection = new ArrayCollection([1, 2, 3]);
-
-$mappedCollection = $collection-&gt;map(function($value) {
-    return $value + 1;
-}); // [2, 3, 4]
-</code></pre>
-<a class="section-anchor" id="matching" name="matching"></a><h2 class="section-header"><a href="#matching">matching<i class="fas fa-link"></i></a></h2>
-<p>Selects all elements from a selectable that match the expression and
-returns a new collection containing these elements.</p>
-<pre><code class="php">use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\Expr\Comparison;
-
-$collection = new ArrayCollection([
-    [
-        'name' =&gt; 'jwage',
-    ],
-    [
-        'name' =&gt; 'romanb',
-    ],
-]);
-
-$expr = new Comparison('name', '=', 'jwage');
-
-$criteria = new Criteria();
-
-$criteria-&gt;where($expr);
-
-$matched = $collection-&gt;matching($criteria); // ['jwage']
-</code></pre>
-<p>You can read more about expressions <a href="index.html#expressions">here</a>.</p>
-<a class="section-anchor" id="next" name="next"></a><h2 class="section-header"><a href="#next">next<i class="fas fa-link"></i></a></h2>
-<p>Moves the internal iterator position to the next element and returns this element.</p>
-<pre><code class="php">$collection = new ArrayCollection([1, 2, 3]);
-
-$next = $collection-&gt;next(); // 2
-</code></pre>
-<a class="section-anchor" id="partition" name="partition"></a><h2 class="section-header"><a href="#partition">partition<i class="fas fa-link"></i></a></h2>
-<p>Partitions this collection in two collections according to a predicate. Keys are preserved in the resulting collections.</p>
-<pre><code class="php">$collection = new ArrayCollection([1, 2, 3]);
-
-$mappedCollection = $collection-&gt;partition(function($key, $value) {
-    return $value &gt; 1
-}); // [[2, 3], [1]]
-</code></pre>
-<a class="section-anchor" id="remove" name="remove"></a><h2 class="section-header"><a href="#remove">remove<i class="fas fa-link"></i></a></h2>
-<p>Removes the element at the specified index from the collection.</p>
-<pre><code class="php">$collection = new ArrayCollection([1, 2, 3]);
-
-$collection-&gt;remove(0); // [2, 3]
-</code></pre>
-<a class="section-anchor" id="removeelement" name="removeelement"></a><h2 class="section-header"><a href="#removeelement">removeElement<i class="fas fa-link"></i></a></h2>
-<p>Removes the specified element from the collection, if it is found.</p>
-<pre><code class="php">$collection = new ArrayCollection([1, 2, 3]);
-
-$collection-&gt;removeElement(3); // [1, 2]
-</code></pre>
-<a class="section-anchor" id="set" name="set"></a><h2 class="section-header"><a href="#set">set<i class="fas fa-link"></i></a></h2>
-<p>Sets an element in the collection at the specified key/index.</p>
-<pre><code class="php">$collection = new ArrayCollection();
-
-$collection-&gt;set('name', 'jwage');
-</code></pre>
-<a class="section-anchor" id="slice" name="slice"></a><h2 class="section-header"><a href="#slice">slice<i class="fas fa-link"></i></a></h2>
-<p>Extracts a slice of $length elements starting at position $offset from the Collection. If $length is null it returns all elements from $offset to the end of the Collection. Keys have to be preserved by this method. Calling this method will only return the selected slice and NOT change the elements contained in the collection slice is called on.</p>
-<pre><code class="php">$collection = new ArrayCollection([0, 1, 2, 3, 4, 5]);
-
-$slice = $collection-&gt;slice(1, 2); // [1, 2]
-</code></pre>
-<a class="section-anchor" id="toarray" name="toarray"></a><h2 class="section-header"><a href="#toarray">toArray<i class="fas fa-link"></i></a></h2>
-<p>Gets a native PHP array representation of the collection.</p>
-<pre><code class="php">$collection = new ArrayCollection([0, 1, 2, 3, 4, 5]);
-
-$array = $collection-&gt;toArray(); // [0, 1, 2, 3, 4, 5]
+    protected function doInitialize() : void
+    {
+        $this-&gt;collection = $this-&gt;connection-&gt;fetchAll('SELECT * FROM users');
+    }
+}
 </code></pre>
 <p></p>
                                             </div>
