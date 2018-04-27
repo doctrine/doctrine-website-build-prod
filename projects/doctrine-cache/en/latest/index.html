@@ -194,7 +194,7 @@
                             <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
                     <div class="sidebar-sticky">
                         
-<div class="toc"><ul><li id="index-html-introduction" class="toc-item"><a href="index.html#introduction">Introduction</a></li></ul></div>
+<div class="toc"><ul><li id="index-html-introduction" class="toc-item"><a href="index.html#introduction">Introduction</a></li><li id="index-html-drivers" class="toc-item"><a href="index.html#drivers">Drivers</a></li><ul><li id="index-html-apccache" class="toc-item"><a href="index.html#apccache">ApcCache</a></li><li id="index-html-apcucache" class="toc-item"><a href="index.html#apcucache">ApcuCache</a></li><li id="index-html-arraycache" class="toc-item"><a href="index.html#arraycache">ArrayCache</a></li><li id="index-html-chaincache" class="toc-item"><a href="index.html#chaincache">ChainCache</a></li><li id="index-html-couchbasebucketcache" class="toc-item"><a href="index.html#couchbasebucketcache">CouchbaseBucketCache</a></li><li id="index-html-filesystemcache" class="toc-item"><a href="index.html#filesystemcache">FilesystemCache</a></li><li id="index-html-memecachecache" class="toc-item"><a href="index.html#memecachecache">MemecacheCache</a></li><li id="index-html-memcachedcache" class="toc-item"><a href="index.html#memcachedcache">MemcachedCache</a></li><li id="index-html-mongodbcache" class="toc-item"><a href="index.html#mongodbcache">MongoDBCache</a></li><li id="index-html-phpfilecache" class="toc-item"><a href="index.html#phpfilecache">PhpFileCache</a></li><li id="index-html-prediscache" class="toc-item"><a href="index.html#prediscache">PredisCache</a></li><li id="index-html-rediscache" class="toc-item"><a href="index.html#rediscache">RedisCache</a></li><li id="index-html-riakcache" class="toc-item"><a href="index.html#riakcache">RiakCache</a></li><li id="index-html-sqlite3cache" class="toc-item"><a href="index.html#sqlite3cache">SQLite3Cache</a></li><li id="index-html-voidcache" class="toc-item"><a href="index.html#voidcache">VoidCache</a></li><li id="index-html-wincachecache" class="toc-item"><a href="index.html#wincachecache">WinCacheCache</a></li><li id="index-html-xcachecache" class="toc-item"><a href="index.html#xcachecache">XcacheCache</a></li><li id="index-html-zenddatacache" class="toc-item"><a href="index.html#zenddatacache">ZendDataCache</a></li></ul><li id="index-html-custom-drivers" class="toc-item"><a href="index.html#custom-drivers">Custom Drivers</a></li></ul></div>
                     </div>
                 </nav>
             
@@ -239,7 +239,193 @@
                             
 <p></p>
 <a class="section-anchor" id="introduction" name="introduction"></a><h1 class="section-header"><a href="#introduction">Introduction<i class="fas fa-link"></i></a></h1>
-<p>Cache documentation is COMING SOON!</p>
+<p>Doctrine Cache is a library that provides an interface for caching data.
+It comes with implementations for some of the most popular caching data
+stores. Here is what the <code>Cache</code> interface looks like.</p>
+<pre><code class="php">namespace Doctrine\Common\Cache;
+
+interface Cache
+{
+    public function fetch($id);
+    public function contains($id);
+    public function save($id, $data, $lifeTime = 0);
+    public function delete($id);
+    public function getStats();
+}
+</code></pre>
+<p>Here is an example that uses Memcache.</p>
+<pre><code class="php">use Doctrine\Common\Cache\MemcacheCache;
+
+$memcache = new Memcache();
+$cache = new MemcacheCache();
+$cache-&gt;setMemcache($memcache);
+
+$cache-&gt;set('key', 'value');
+
+echo $cache-&gt;get('key') // prints &quot;value&quot;
+</code></pre>
+<a class="section-anchor" id="drivers" name="drivers"></a><h1 class="section-header"><a href="#drivers">Drivers<i class="fas fa-link"></i></a></h1>
+<p>Doctrine ships with several common drivers that you can easily use.
+Below you can find information about all the available drivers.</p>
+<a class="section-anchor" id="apccache" name="apccache"></a><h2 class="section-header"><a href="#apccache">ApcCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>ApcCache</code> driver uses the <code>apc_fetch</code>, <code>apc_exists</code>, etc. functions that come
+with PHP so no additional setup is required in order to use it.</p>
+<pre><code class="php">$cache = new ApcCache();
+</code></pre>
+<a class="section-anchor" id="apcucache" name="apcucache"></a><h2 class="section-header"><a href="#apcucache">ApcuCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>ApcCache</code> driver uses the <code>apcu_fetch</code>, <code>apcu_exists</code>, etc. functions that come
+with PHP so no additional setup is required in order to use it.</p>
+<pre><code class="php">$cache = new ApcuCache();
+</code></pre>
+<a class="section-anchor" id="arraycache" name="arraycache"></a><h2 class="section-header"><a href="#arraycache">ArrayCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>ArrayCache</code> driver stores the cache data in PHPs memory and is not persisted anywhere.
+This can be useful for caching things in memory for a single process when you don't need
+the cache to be persistent across processes.</p>
+<pre><code class="php">$cache = new ArrayCache();
+</code></pre>
+<a class="section-anchor" id="chaincache" name="chaincache"></a><h2 class="section-header"><a href="#chaincache">ChainCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>ChainCache</code> driver lets you chain multiple other drivers together easily.</p>
+<pre><code class="php">$arrayCache = new ArrayCache();
+$apcuCache = new ApcuCache();
+
+$cache = new ChainCache([$arrayCache, $apcuCache]);
+</code></pre>
+<a class="section-anchor" id="couchbasebucketcache" name="couchbasebucketcache"></a><h2 class="section-header"><a href="#couchbasebucketcache">CouchbaseBucketCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>CouchbaseBucketCache</code> driver uses Couchbase to store the cache data.</p>
+<pre><code class="php">$bucketName = 'bucket-name';
+
+$authenticator = new Couchbase\PasswordAuthenticator();
+$authenticator-&gt;username('username')-&gt;password('password');
+
+$cluster = new CouchbaseCluster('couchbase://127.0.0.1');
+
+$cluster-&gt;authenticate($authenticator);
+$bucket = $cluster-&gt;openBucket($bucketName);
+
+$cache = new CouchbaseBucketCache($bucket);
+</code></pre>
+<a class="section-anchor" id="filesystemcache" name="filesystemcache"></a><h2 class="section-header"><a href="#filesystemcache">FilesystemCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>FilesystemCache</code> driver stores the cache data on the local filesystem.</p>
+<pre><code class="php">$cache = new FilesystemCache('/path/to/cache/directory');
+</code></pre>
+<a class="section-anchor" id="memecachecache" name="memecachecache"></a><h2 class="section-header"><a href="#memecachecache">MemecacheCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>MemcacheCache</code> drivers stores the cache data in Memcache.</p>
+<pre><code class="php">$memcache = new Memcache();
+$memcache-&gt;connect('localhost', 11211);
+
+$cache = new MemcacheCache();
+$cache-&gt;setMemcache($memcache);
+</code></pre>
+<a class="section-anchor" id="memcachedcache" name="memcachedcache"></a><h2 class="section-header"><a href="#memcachedcache">MemcachedCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>MemcachedCache</code> drivers stores the cache data in Memcached.</p>
+<pre><code class="php">$memcached = new Memcached();
+
+$cache = new MemcachedCache();
+$cache-&gt;setMemcached($memcached);
+</code></pre>
+<a class="section-anchor" id="mongodbcache" name="mongodbcache"></a><h2 class="section-header"><a href="#mongodbcache">MongoDBCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>MongoDBCache</code> drivers stores the cache data in a MongoDB collection.</p>
+<pre><code class="php">$manager = new MongoDB\Driver\Manager(&quot;mongodb://localhost:27017&quot;);
+
+$collection = new MongoDB\Collection($manager, 'database_name', 'collection_name');
+
+$cache = new MongoDBCache($collection);
+</code></pre>
+<a class="section-anchor" id="phpfilecache" name="phpfilecache"></a><h2 class="section-header"><a href="#phpfilecache">PhpFileCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>PhpFileCache</code> driver stores the cache data on the local filesystem like the
+<code>FilesystemCache</code> driver except the data is serialized using the <code>serialize()</code>
+and <code>unserialize()</code> functions available in PHP. The files are included so this means
+that the data can be cached in PHPs opcache.</p>
+<pre><code class="php">$cache = new PhpFileCache('/path/to/cache/directory');
+</code></pre>
+<a class="section-anchor" id="prediscache" name="prediscache"></a><h2 class="section-header"><a href="#prediscache">PredisCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>PredisCache</code> driver stores the cache data in Redis
+and depends on the <code>predis/predis</code> package which can be installed with composer.</p>
+<pre><code class="bash">$ composer require predis/predis
+</code></pre>
+<p>Then you can use the <code>Predis\Client</code> class to pass to the <code>PredisCache</code> class.</p>
+<pre><code class="php">$client = new Predis\Client();
+
+$cache = new PredisCache($client);
+</code></pre>
+<a class="section-anchor" id="rediscache" name="rediscache"></a><h2 class="section-header"><a href="#rediscache">RedisCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>RedisCache</code> driver stores the cache data in Redis and depends on the
+<code>phpredis</code> extension which can be found <a href="https://github.com/phpredis/phpredis">here</a>.</p>
+<pre><code class="php">$redis = new Redis();
+
+$cache = new RedisCache($redis);
+</code></pre>
+<a class="section-anchor" id="riakcache" name="riakcache"></a><h2 class="section-header"><a href="#riakcache">RiakCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>RiakCache</code> driver stores the cache data in Riak and depends on the
+<code>riak</code> extension which can be found <a href="https://github.com/php-riak/php_riak">here</a>.</p>
+<pre><code class="php">$connection = new Riak\Connection('localhost', 8087);
+
+$bucket = new Riak\Bucket($connection, 'bucket_name');
+
+$cache = new RiakCache($bucket);
+</code></pre>
+<a class="section-anchor" id="sqlite3cache" name="sqlite3cache"></a><h2 class="section-header"><a href="#sqlite3cache">SQLite3Cache<i class="fas fa-link"></i></a></h2>
+<p>The <code>SQLite3Cache</code> driver stores the cache data in a SQLite database and depends on the
+<code>sqlite3</code> extension which can be found <a href="http://php.net/manual/en/book.sqlite3.php">here</a>.</p>
+<pre><code class="php">$db = new SQLite3('mydatabase.db');
+
+$cache = new SQLite3Cache($db, 'table_name');
+</code></pre>
+<a class="section-anchor" id="voidcache" name="voidcache"></a><h2 class="section-header"><a href="#voidcache">VoidCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>VoidCache</code> driver does not store the cache data anywhere. This can
+be useful for test environments where you don't want to cache the data
+anywhere but need to satisfy the dependency for the <code>Doctrine\Common\Cache\Cache</code>
+interface.</p>
+<pre><code class="php">$cache = new VoidCache();
+</code></pre>
+<a class="section-anchor" id="wincachecache" name="wincachecache"></a><h2 class="section-header"><a href="#wincachecache">WinCacheCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>WinCacheCache</code> driver uses the <code>wincache_ucache_get</code>, <code>wincache_ucache_exists</code>, etc. functions that come
+with the <code>wincache</code> extension which can be found <a href="http://php.net/manual/en/book.wincache.php">here</a>.</p>
+<pre><code class="php">$cache = new WinCacheCache();
+</code></pre>
+<a class="section-anchor" id="xcachecache" name="xcachecache"></a><h2 class="section-header"><a href="#xcachecache">XcacheCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>XcacheCache</code> driver uses functions that come with the <code>xcache</code>
+extension which can be found <a href="https://xcache.lighttpd.net/">here</a>.</p>
+<pre><code class="php">$cache = new XcacheCache();
+</code></pre>
+<a class="section-anchor" id="zenddatacache" name="zenddatacache"></a><h2 class="section-header"><a href="#zenddatacache">ZendDataCache<i class="fas fa-link"></i></a></h2>
+<p>The <code>ZendDataCache</code> driver uses the Zend Data Cache API available in the Zend Platform.</p>
+<pre><code class="php">$cache = new ZendDataCache();
+</code></pre>
+<a class="section-anchor" id="custom-drivers" name="custom-drivers"></a><h1 class="section-header"><a href="#custom-drivers">Custom Drivers<i class="fas fa-link"></i></a></h1>
+<p>If you want to implement your own cache driver, you just need to implement
+the <code>Doctrine\Common\Cache\Cache</code> interface. Here is an example implementation
+skeleton.</p>
+<pre><code class="php">use Doctrine\Common\Cache\Cache;
+
+class MyCacheDriver implements Cache
+{
+    public function fetch($id)
+    {
+        // fetch $id from the cache
+    }
+
+    public function contains($id)
+    {
+        // check if $id exists in the cache
+    }
+
+    public function save($id, $data, $lifeTime = 0)
+    {
+        // save $data under $id in the cache for $lifetime
+    }
+
+    public function delete($id)
+    {
+        // delete $id from the cache
+    }
+
+    public function getStats()
+    {
+        // get cache stats
+    }
+}
+</code></pre>
 <p></p>
                                             </div>
                 </div>
