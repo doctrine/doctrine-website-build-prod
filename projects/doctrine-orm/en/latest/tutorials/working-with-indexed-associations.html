@@ -569,12 +569,22 @@ This feature cannot be implemented for one-to-many associations, because they ar
 
             new Search(projectSlug, versionSlug);
 
+            function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
+                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                            }
+
             function googleTranslateElementInit() {
                 $('#google_translate_element').html('');
 
                 new google.translate.TranslateElement(
                     {pageLanguage: 'en'}, 'google_translate_element'
                 );
+
+                $('#google_translate_element select').on('change', function() {
+                    var language = $('#google_translate_element select option:selected').text();
+
+                    googleAnalyticsEvent('Translate', 'click', language);
+                });
             }
         </script>
 

@@ -327,12 +327,22 @@ backported to 2.0 and a new 2.0.9 version was released.</p>
 
             new Search(projectSlug, versionSlug);
 
+            function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
+                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                            }
+
             function googleTranslateElementInit() {
                 $('#google_translate_element').html('');
 
                 new google.translate.TranslateElement(
                     {pageLanguage: 'en'}, 'google_translate_element'
                 );
+
+                $('#google_translate_element select').on('change', function() {
+                    var language = $('#google_translate_element select option:selected').text();
+
+                    googleAnalyticsEvent('Translate', 'click', language);
+                });
             }
         </script>
 
