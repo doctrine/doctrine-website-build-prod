@@ -244,8 +244,7 @@
 maps docblock annotations to PHP classes. Because not all docblock annotations are used
 for metadata purposes a filter is applied to ignore or skip classes that are not Doctrine annotations.</p>
 <p>Take a look at the following code snippet:</p>
-<pre><code class="php">&lt;?php
-namespace MyProject\Entities;
+<pre><code class="php">namespace MyProject\Entities;
 
 use Doctrine\ORM\Mapping AS ORM;
 use Symfony\Component\Validation\Constraints AS Assert;
@@ -288,8 +287,7 @@ part of the <a href="https://github.com/php-fig/fig-standards/blob/master/accept
 there is no other way to solve the architectural problems of autoloading annotation classes in a straightforward fashion. Additionally if you think about PHP
 autoloading then you recognize it is a global as well.</p>
 <p>To anticipate the configuration section, making the above PHP class work with Doctrine Annotations requires this setup:</p>
-<pre><code class="php">&lt;?php
-use Doctrine\Common\Annotations\AnnotationReader;
+<pre><code class="php">use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
 AnnotationRegistry::registerFile(&quot;/path/to/doctrine/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php&quot;);
@@ -307,15 +305,13 @@ for which we do not throw exceptions. Setting this is necessary in our example c
 be thrown during the parsing of the docblock of <code>MyProject\Entities\User#id</code>.</p>
 <a class="section-anchor" id="setup-and-configuration" name="setup-and-configuration"></a><h2 class="section-header"><a href="#setup-and-configuration">Setup and Configuration<i class="fas fa-link"></i></a></h2>
 <p>To use the annotations library is simple, you just need to create a new <code>AnnotationReader</code> instance:</p>
-<pre><code class="php">&lt;?php
-$reader = new \Doctrine\Common\Annotations\AnnotationReader();
+<pre><code class="php">$reader = new \Doctrine\Common\Annotations\AnnotationReader();
 </code></pre>
 <p>This creates a simple annotation reader with no caching other than in memory (in php arrays).
 Since parsing docblocks can be expensive you should cache this process by using
 a caching reader.</p>
 <p>You can use a file caching reader:</p>
-<pre><code class="php">&lt;?php
-use Doctrine\Common\Annotations\FileCacheReader;
+<pre><code class="php">use Doctrine\Common\Annotations\FileCacheReader;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 $reader = new FileCacheReader(
@@ -329,8 +325,7 @@ is very important during development. If you don't set it to true you have to de
 This gives faster performance, however should only be used in production, because of its inconvenience
 during development.</p>
 <p>You can also use one of the <code>Doctrine\Common\Cache\Cache</code> cache implementations to cache the annotations:</p>
-<pre><code class="php">&lt;?php
-use Doctrine\Common\Annotations\AnnotationReader;
+<pre><code class="php">use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ApcCache;
 
@@ -352,8 +347,7 @@ defined.</p>
 </blockquote>
 <p>By default the annotation reader returns a list of annotations with numeric indexes. If you want your annotations
 to be indexed by their class name you can wrap the reader in an IndexedReader:</p>
-<pre><code class="php">&lt;?php
-use Doctrine\Common\Annotations\AnnotationReader;
+<pre><code class="php">use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\IndexedReader;
 
 $reader = new IndexedReader(new AnnotationReader());
@@ -381,8 +375,7 @@ Never is a loader to throw a warning or exception if the loading failed otherwis
 a huge pain.</p>
 </div>
 <p>A sample loader callback could look like:</p>
-<pre><code class="php">&lt;?php
-use Doctrine\Common\Annotations\AnnotationRegistry;
+<pre><code class="php">use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 AnnotationRegistry::registerLoader(function($class) {
@@ -406,8 +399,7 @@ AnnotationRegistry::registerLoader(array($loader, &quot;loadClass&quot;));
 </ul>
 
 <p>You can disable this behavior for specific names if your docblocks do not follow strict requirements:</p>
-<pre><code class="php">&lt;?php
-$reader = new \Doctrine\Common\Annotations\AnnotationReader();
+<pre><code class="php">$reader = new \Doctrine\Common\Annotations\AnnotationReader();
 AnnotationReader::addGlobalIgnoredName('foo');
 </code></pre>
 <a class="section-anchor" id="php-imports" name="php-imports"></a><h3 class="section-header"><a href="#php-imports">PHP Imports<i class="fas fa-link"></i></a></h3>
@@ -416,8 +408,7 @@ and register them for the annotation processing. Only if you are using PHP Impor
 usage of annotations and throw exceptions if you misspelled an annotation. This mechanism is enabled by default.</p>
 <p>To ease the upgrade path, we still allow you to disable this mechanism. Note however that we will remove this
 in future versions:</p>
-<pre><code class="php">&lt;?php
-$reader = new \Doctrine\Common\Annotations\AnnotationReader();
+<pre><code class="php">$reader = new \Doctrine\Common\Annotations\AnnotationReader();
 $reader-&gt;setEnabledPhpImports(false);
 </code></pre>
 <p></p>

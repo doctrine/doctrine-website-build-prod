@@ -242,29 +242,28 @@
 <a class="section-anchor" id="custom-annotation-classes" name="custom-annotation-classes"></a><h1 class="section-header"><a href="#custom-annotation-classes">Custom Annotation Classes<i class="fas fa-link"></i></a></h1>
 <p>If you want to define your own annotations you just have to group them in a namespace and register this namespace
 in the AnnotationRegistry. Annotation classes have to contain a class-level docblock with the text <code>@Annotation</code>:</p>
-<pre><code class="php">&lt;?php
-namespace MyCompany\Annotations;
+<pre><code class="php">namespace MyCompany\Annotations;
 
 /** @Annotation */
 class Bar
 {
-    //some code
+    // some code
 }
 </code></pre>
 <a class="section-anchor" id="inject-annotation-values" name="inject-annotation-values"></a><h2 class="section-header"><a href="#inject-annotation-values">Inject annotation values<i class="fas fa-link"></i></a></h2>
 <p>The annotation parser check if the annotation constructor has arguments,
 if so then we will pass the value array, otherwise will try to inject values into public properties directly:</p>
-<pre><code class="php">&lt;?php
-namespace MyCompany\Annotations;
+<pre><code class="php">namespace MyCompany\Annotations;
 
 /**
-* @Annotation
-*
-* Some Annotation using a constructor
-*/
+ * @Annotation
+ *
+ * Some Annotation using a constructor
+ */
 class Bar
 {
     private $foo;
+
     public function __construct(array $values)
     {
         $this-&gt;foo = $values['foo'];
@@ -272,10 +271,10 @@ class Bar
 }
 
 /**
-* @Annotation
-*
-* Some Annotation without a constructor
-*/
+ * @Annotation
+ *
+ * Some Annotation without a constructor
+ */
 class Foo
 {
     public $bar;
@@ -283,7 +282,7 @@ class Foo
 </code></pre>
 <a class="section-anchor" id="annotation-target" name="annotation-target"></a><h2 class="section-header"><a href="#annotation-target">Annotation Target<i class="fas fa-link"></i></a></h2>
 <p><code>@Target</code> indicates the kinds of class element to which an annotation type is applicable.
-Then you could define one or more targets :</p>
+Then you could define one or more targets:</p>
 <ul><li class="dash"> <code>CLASS</code> Allowed in the class docblock</li>
 <li class="dash"> <code>PROPERTY</code> Allowed in the property docblock</li>
 <li class="dash"> <code>METHOD</code> Allowed in the method docblock</li>
@@ -292,25 +291,24 @@ Then you could define one or more targets :</p>
 </ul>
 
 <p>If the annotations is not allowed in the current context you got an <code>AnnotationException</code></p>
-<pre><code class="php">&lt;?php
-namespace MyCompany\Annotations;
+<pre><code class="php">namespace MyCompany\Annotations;
 
 /**
-* @Annotation
-* @Target({&quot;METHOD&quot;,&quot;PROPERTY&quot;})
-*/
+ * @Annotation
+ * @Target({&quot;METHOD&quot;,&quot;PROPERTY&quot;})
+ */
 class Bar
 {
-    //some code
+    // some code
 }
 
 /**
-* @Annotation
-* @Target(&quot;CLASS&quot;)
-*/
+ * @Annotation
+ * @Target(&quot;CLASS&quot;)
+ */
 class Foo
 {
-    //some code
+    // some code
 }
 </code></pre>
 <a class="section-anchor" id="attribute-types" name="attribute-types"></a><h2 class="section-header"><a href="#attribute-types">Attribute types<i class="fas fa-link"></i></a></h2>
@@ -318,45 +316,53 @@ class Foo
 The data type could be validated using the <code>@var</code> annotation on the annotation properties
 or using the annotations <code>@Attributes</code> and <code>@Attribute</code>.</p>
 <p>If the data type not match you got an <code>AnnotationException</code></p>
-<pre><code class="php">&lt;?php
-namespace MyCompany\Annotations;
+<pre><code class="php">namespace MyCompany\Annotations;
 
 /**
-* @Annotation
-* @Target({&quot;METHOD&quot;,&quot;PROPERTY&quot;})
-*/
+ * @Annotation
+ * @Target({&quot;METHOD&quot;,&quot;PROPERTY&quot;})
+ */
 class Bar
 {
     /** @var mixed */
     public $mixed;
+
     /** @var boolean */
     public $boolean;
+
     /** @var bool */
     public $bool;
+
     /** @var float */
     public $float;
+
     /** @var string */
     public $string;
+
     /** @var integer */
     public $integer;
+
     /** @var array */
     public $array;
+
     /** @var SomeAnnotationClass */
     public $annotation;
+
     /** @var array&lt;integer&gt; */
     public $arrayOfIntegers;
+
     /** @var array&lt;SomeAnnotationClass&gt; */
     public $arrayOfAnnotations;
 }
 
 /**
-* @Annotation
-* @Target({&quot;METHOD&quot;,&quot;PROPERTY&quot;})
-* @Attributes({
-*   @Attribute(&quot;stringProperty&quot;, type = &quot;string&quot;),
-*   @Attribute(&quot;annotProperty&quot;,  type = &quot;SomeAnnotationClass&quot;),
-* })
-*/
+ * @Annotation
+ * @Target({&quot;METHOD&quot;,&quot;PROPERTY&quot;})
+ * @Attributes({
+ *   @Attribute(&quot;stringProperty&quot;, type = &quot;string&quot;),
+ *   @Attribute(&quot;annotProperty&quot;,  type = &quot;SomeAnnotationClass&quot;),
+ * })
+ */
 class Foo
 {
     public function __construct(array $values)
@@ -364,15 +370,15 @@ class Foo
         $this-&gt;stringProperty = $values['stringProperty'];
         $this-&gt;annotProperty = $values['annotProperty'];
     }
-   // some code
+
+    // some code
 }
 </code></pre>
 <a class="section-anchor" id="annotation-required" name="annotation-required"></a><h2 class="section-header"><a href="#annotation-required">Annotation Required<i class="fas fa-link"></i></a></h2>
 <p><code>@Required</code> indicates that the field must be specified when the annotation is used.
 If it is not used you get an <code>AnnotationException</code> stating that this value can not be null.</p>
 <p>Declaring a required field:</p>
-<pre><code class="php">&lt;?php
-/**
+<pre><code class="php">/**
  * @Annotation
  * @Target(&quot;ALL&quot;)
  */
@@ -383,8 +389,7 @@ class Foo
 }
 </code></pre>
 <p>Usage:</p>
-<pre><code class="php">&lt;?php
-/** @Foo(requiredField=&quot;value&quot;) */
+<pre><code class="php">/** @Foo(requiredField=&quot;value&quot;) */
 public $direction;                  // Valid
 
  /** @Foo */
@@ -397,9 +402,8 @@ public $direction;                  // Required field missing, throws an Annotat
 <li class="dash">The annotation parser check the given value and throws an <code>AnnotationException</code> if the value not match.</li>
 </ul>
 
-<p>Declaring an enumerated property :</p>
-<pre><code class="php">&lt;?php
-/**
+<p>Declaring an enumerated property:</p>
+<pre><code class="php">/**
  * @Annotation
  * @Target(&quot;ALL&quot;)
  */
@@ -411,9 +415,8 @@ class Direction
     public $value;
 }
 </code></pre>
-<p>Annotation usage :</p>
-<pre><code class="php">&lt;?php
-/** @Direction(&quot;NORTH&quot;) */
+<p>Annotation usage:</p>
+<pre><code class="php">/** @Direction(&quot;NORTH&quot;) */
 public $direction;                  // Valid value
 
  /** @Direction(&quot;NORTHEAST&quot;) */
@@ -422,20 +425,19 @@ public $direction;                  // Invalid value, throws an AnnotationExcept
 </code></pre>
 <a class="section-anchor" id="constants" name="constants"></a><h2 class="section-header"><a href="#constants">Constants<i class="fas fa-link"></i></a></h2>
 <p>The use of constants and class constants are available on the annotations parser.</p>
-<p>The following usage are allowed :</p>
-<pre><code class="php">&lt;?php
-namespace MyCompany\Entity;
+<p>The following usage are allowed:</p>
+<pre><code class="php">namespace MyCompany\Entity;
 
 use MyCompany\Annotations\Foo;
 use MyCompany\Annotations\Bar;
 use MyCompany\Entity\SomeClass;
 
 /**
-* @Foo(PHP_EOL)
-* @Bar(Bar::FOO)
-* @Foo({SomeClass::FOO, SomeClass::BAR})
-* @Bar({SomeClass::FOO_KEY = SomeClass::BAR_VALUE})
-*/
+ * @Foo(PHP_EOL)
+ * @Bar(Bar::FOO)
+ * @Foo({SomeClass::FOO, SomeClass::BAR})
+ * @Bar({SomeClass::FOO_KEY = SomeClass::BAR_VALUE})
+ */
 class User
 {
 }
@@ -448,8 +450,7 @@ When a constant is changed the cache must be cleaned.</p>
 <a class="section-anchor" id="usage" name="usage"></a><h2 class="section-header"><a href="#usage">Usage<i class="fas fa-link"></i></a></h2>
 <p>Using the library API is simple. Using the annotations described in the previous section
 you can now annotate other classes with your annotations:</p>
-<pre><code class="php">&lt;?php
-namespace MyCompany\Entity;
+<pre><code class="php">namespace MyCompany\Entity;
 
 use MyCompany\Annotations\Foo;
 use MyCompany\Annotations\Bar;
@@ -463,8 +464,7 @@ class User
 }
 </code></pre>
 <p>Now we can write a script to get the annotations above:</p>
-<pre><code class="php">&lt;?php
-$reflClass = new ReflectionClass('MyCompany\Entity\User');
+<pre><code class="php">$reflClass = new ReflectionClass('MyCompany\Entity\User');
 $classAnnotations = $reader-&gt;getClassAnnotations($reflClass);
 
 foreach ($classAnnotations AS $annot) {
