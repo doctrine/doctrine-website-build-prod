@@ -287,8 +287,8 @@ part of the <a href="https://github.com/php-fig/fig-standards/blob/master/accept
 there is no other way to solve the architectural problems of autoloading annotation classes in a straightforward fashion. Additionally if you think about PHP
 autoloading then you recognize it is a global as well.</p>
 <p>To anticipate the configuration section, making the above PHP class work with Doctrine Annotations requires this setup:</p>
-<pre><code class="php">use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
+<pre><code class="php">use Doctrine\Annotations\AnnotationReader;
+use Doctrine\Annotations\AnnotationRegistry;
 
 AnnotationRegistry::registerFile(&quot;/path/to/doctrine/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php&quot;);
 AnnotationRegistry::registerAutoloadNamespace(&quot;Symfony\Component\Validator\Constraint&quot;, &quot;/path/to/symfony/src&quot;);
@@ -305,14 +305,14 @@ for which we do not throw exceptions. Setting this is necessary in our example c
 be thrown during the parsing of the docblock of <code>MyProject\Entities\User#id</code>.</p>
 <a class="section-anchor" id="setup-and-configuration" name="setup-and-configuration"></a><h2 class="section-header"><a href="#setup-and-configuration">Setup and Configuration<i class="fas fa-link"></i></a></h2>
 <p>To use the annotations library is simple, you just need to create a new <code>AnnotationReader</code> instance:</p>
-<pre><code class="php">$reader = new \Doctrine\Common\Annotations\AnnotationReader();
+<pre><code class="php">$reader = new \Doctrine\Annotations\AnnotationReader();
 </code></pre>
 <p>This creates a simple annotation reader with no caching other than in memory (in php arrays).
 Since parsing docblocks can be expensive you should cache this process by using
 a caching reader.</p>
 <p>You can use a file caching reader:</p>
-<pre><code class="php">use Doctrine\Common\Annotations\FileCacheReader;
-use Doctrine\Common\Annotations\AnnotationReader;
+<pre><code class="php">use Doctrine\Annotations\FileCacheReader;
+use Doctrine\Annotations\AnnotationReader;
 
 $reader = new FileCacheReader(
     new AnnotationReader(),
@@ -325,8 +325,8 @@ is very important during development. If you don't set it to true you have to de
 This gives faster performance, however should only be used in production, because of its inconvenience
 during development.</p>
 <p>You can also use one of the <code>Doctrine\Common\Cache\Cache</code> cache implementations to cache the annotations:</p>
-<pre><code class="php">use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\CachedReader;
+<pre><code class="php">use Doctrine\Annotations\AnnotationReader;
+use Doctrine\Annotations\CachedReader;
 use Doctrine\Common\Cache\ApcCache;
 
 $reader = new CachedReader(
@@ -347,8 +347,8 @@ defined.</p>
 </blockquote>
 <p>By default the annotation reader returns a list of annotations with numeric indexes. If you want your annotations
 to be indexed by their class name you can wrap the reader in an IndexedReader:</p>
-<pre><code class="php">use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\IndexedReader;
+<pre><code class="php">use Doctrine\Annotations\AnnotationReader;
+use Doctrine\Annotations\IndexedReader;
 
 $reader = new IndexedReader(new AnnotationReader());
 </code></pre>
@@ -359,7 +359,7 @@ or indexed format.</p>
 <a class="section-anchor" id="registering-annotations" name="registering-annotations"></a><h3 class="section-header"><a href="#registering-annotations">Registering Annotations<i class="fas fa-link"></i></a></h3>
 <p>As explained in the Introduction Doctrine Annotations uses its own autoloading mechanism to determine if a
 given annotation has a corresponding PHP class that can be autoloaded. For Annotation Autoloading you have
-to configure the <code>Doctrine\Common\Annotations\AnnotationRegistry</code>. There are three different mechanisms
+to configure the <code>Doctrine\Annotations\AnnotationRegistry</code>. There are three different mechanisms
 to configure annotation autoloading:</p>
 <ul><li class="dash">  Calling <code>AnnotationRegistry#registerFile($file)</code> to register a file that contains one or more Annotation classes.</li>
 <li class="dash">  Calling <code>AnnotationRegistry#registerNamespace($namespace, $dirs = null)</code> to register that the given namespace
@@ -375,7 +375,7 @@ Never is a loader to throw a warning or exception if the loading failed otherwis
 a huge pain.</p>
 </div>
 <p>A sample loader callback could look like:</p>
-<pre><code class="php">use Doctrine\Common\Annotations\AnnotationRegistry;
+<pre><code class="php">use Doctrine\Annotations\AnnotationRegistry;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 AnnotationRegistry::registerLoader(function($class) {
@@ -399,7 +399,7 @@ AnnotationRegistry::registerLoader(array($loader, &quot;loadClass&quot;));
 </ul>
 
 <p>You can disable this behavior for specific names if your docblocks do not follow strict requirements:</p>
-<pre><code class="php">$reader = new \Doctrine\Common\Annotations\AnnotationReader();
+<pre><code class="php">$reader = new \Doctrine\Annotations\AnnotationReader();
 AnnotationReader::addGlobalIgnoredName('foo');
 </code></pre>
 <a class="section-anchor" id="php-imports" name="php-imports"></a><h3 class="section-header"><a href="#php-imports">PHP Imports<i class="fas fa-link"></i></a></h3>
@@ -408,7 +408,7 @@ and register them for the annotation processing. Only if you are using PHP Impor
 usage of annotations and throw exceptions if you misspelled an annotation. This mechanism is enabled by default.</p>
 <p>To ease the upgrade path, we still allow you to disable this mechanism. Note however that we will remove this
 in future versions:</p>
-<pre><code class="php">$reader = new \Doctrine\Common\Annotations\AnnotationReader();
+<pre><code class="php">$reader = new \Doctrine\Annotations\AnnotationReader();
 $reader-&gt;setEnabledPhpImports(false);
 </code></pre>
 <p></p>
