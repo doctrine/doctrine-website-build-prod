@@ -601,6 +601,25 @@ $query = $em-&gt;createQuery(&quot;SELECT IDENTITY(c.location, 'latitude') AS la
 <pre><code class="php">&lt;?php
 $query = $em-&gt;createQuery('SELECT u FROM User u JOIN Blacklist b WITH u.email = b.email');
 </code></pre>
+<p>With an arbitrary join the result differs from the joins using a mapped property.
+The result of an arbitrary join is an one dimensional array with a mix of the entity from the <code>SELECT</code>
+and the joined entity fitting to the filtering of the query. In case of the example with <code>User</code>
+and <code>Blacklist</code>, it can look like this:</p>
+<ul><li class="dash">User</li>
+<li class="dash">Blacklist</li>
+<li class="dash">Blacklist</li>
+<li class="dash">User</li>
+<li class="dash">Blacklist</li>
+<li class="dash">User</li>
+<li class="dash">Blacklist</li>
+<li class="dash">Blacklist</li>
+<li class="dash">Blacklist</li>
+</ul>
+
+<p>In this form of join, the <code>Blacklist</code> entities found by the filtering in the <code>WITH</code> part are not fetched by an accessor
+method on <code>User</code>, but are already part of the result. In case the accessor method for Blacklists is invoked on a User instance,
+it loads all the related <code>Blacklist</code> objects corresponding to this <code>User</code>. This change of behaviour needs to be considered
+when the DQL is switched to an arbitrary join.</p>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The differences between WHERE, WITH and HAVING clauses may be
 confusing.</p>
 <ul><li class="dash">WHERE is applied to the results of an entire query</li>
