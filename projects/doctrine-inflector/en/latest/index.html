@@ -197,7 +197,7 @@
                             <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
                     <div class="sidebar-sticky">
                         
-<div class="toc"><ul><li id="index-html-introduction" class="toc-item"><a href="index.html#introduction">Introduction</a></li><li id="index-html-installation" class="toc-item"><a href="index.html#installation">Installation</a></li><li id="index-html-tableize" class="toc-item"><a href="index.html#tableize">Tableize</a></li><li id="index-html-classify" class="toc-item"><a href="index.html#classify">Classify</a></li><li id="index-html-camelize" class="toc-item"><a href="index.html#camelize">Camelize</a></li><li id="index-html-ucwords" class="toc-item"><a href="index.html#ucwords">ucwords</a></li><li id="index-html-pluralize" class="toc-item"><a href="index.html#pluralize">Pluralize</a></li><li id="index-html-singularize" class="toc-item"><a href="index.html#singularize">Singularize</a></li><li id="index-html-rules" class="toc-item"><a href="index.html#rules">Rules</a></li><li id="index-html-reset" class="toc-item"><a href="index.html#reset">Reset</a></li><li id="index-html-slugify" class="toc-item"><a href="index.html#slugify">Slugify</a></li></ul></div>
+<div class="toc"><ul><li id="index-html-introduction" class="toc-item"><a href="index.html#introduction">Introduction</a></li><li id="index-html-installation" class="toc-item"><a href="index.html#installation">Installation</a></li><li id="index-html-default-setup" class="toc-item"><a href="index.html#default-setup">Default Setup</a></li><li id="index-html-custom-setup" class="toc-item"><a href="index.html#custom-setup">Custom Setup</a></li><li id="index-html-tableize" class="toc-item"><a href="index.html#tableize">Tableize</a></li><li id="index-html-classify" class="toc-item"><a href="index.html#classify">Classify</a></li><li id="index-html-camelize" class="toc-item"><a href="index.html#camelize">Camelize</a></li><li id="index-html-capitalize" class="toc-item"><a href="index.html#capitalize">capitalize</a></li><li id="index-html-pluralize" class="toc-item"><a href="index.html#pluralize">Pluralize</a></li><li id="index-html-singularize" class="toc-item"><a href="index.html#singularize">Singularize</a></li><li id="index-html-slugify" class="toc-item"><a href="index.html#slugify">Slugify</a></li></ul></div>
                     </div>
                 </nav>
             
@@ -253,56 +253,74 @@ class.</p>
 <pre><code class="">$ composer require doctrine/inflector
 </code></pre>
 <p>Here are the available methods that you can use:</p>
+<a class="section-anchor" id="default-setup" name="default-setup"></a><h1 class="section-header"><a href="#default-setup">Default Setup<i class="fas fa-link"></i></a></h1>
+<p>If you want to use the default rules that come with Doctrine you can use the following.</p>
+<pre><code class="php">use Doctrine\Inflector\InflectorFactory;
+
+$inflectorFactory = new InflectorFactory();
+
+$inflector = $inflectorFactory-&gt;createInflector();
+</code></pre>
+<a class="section-anchor" id="custom-setup" name="custom-setup"></a><h1 class="section-header"><a href="#custom-setup">Custom Setup<i class="fas fa-link"></i></a></h1>
+<p>If you want to setup custom singular and plural rules, you can configure the inflector like this.</p>
+<pre><code class="php">use Doctrine\Inflector\InflectorFactory;
+use Doctrine\Inflector\Rules\Irregular;
+use Doctrine\Inflector\Rules\Rule;
+use Doctrine\Inflector\Rules\Rules;
+use Doctrine\Inflector\Rules\Uninflected;
+use Doctrine\Inflector\Rules\Word;
+
+$inflectorFactory = new InflectorFactory();
+
+$inflector = $inflectorFactory-&gt;createInflector(
+    $inflectorFactory-&gt;createSingularRuleset(
+        new Rules(
+            new Rule('/^(bil)er$/i', '\1'),
+            new Rule('/^(inflec|contribu)tors$/i', '\1ta')
+        ),
+        new Uninflected(new Word('singulars')),
+        new Irregular(new Rule('spins', 'spinor'))
+    ),
+    $inflectorFactory-&gt;createPluralRuleset(
+        new Rules(new Rule('/^(alert)$/i', '\1ables')),
+        new Uninflected(new Word('noflect'), new Word('abtuse')),
+        new Irregular(
+            new Rule('amaze', 'amazable'),
+            new Rule('phone', 'phonezes')
+        )
+    )
+);
+</code></pre>
 <a class="section-anchor" id="tableize" name="tableize"></a><h1 class="section-header"><a href="#tableize">Tableize<i class="fas fa-link"></i></a></h1>
 <p>Converts <code>ModelName</code> to <code>model_name</code>:</p>
-<pre><code class="php">echo Inflector::tableize('ModelName'); // model_name
+<pre><code class="php">echo $inflector-&gt;tableize('ModelName'); // model_name
 </code></pre>
 <a class="section-anchor" id="classify" name="classify"></a><h1 class="section-header"><a href="#classify">Classify<i class="fas fa-link"></i></a></h1>
 <p>Converts <code>model_name</code> to <code>ModelName</code>:</p>
-<pre><code class="php">echo Inflector::classify('model_name'); // ModelName
+<pre><code class="php">echo $inflector-&gt;classify('model_name'); // ModelName
 </code></pre>
 <a class="section-anchor" id="camelize" name="camelize"></a><h1 class="section-header"><a href="#camelize">Camelize<i class="fas fa-link"></i></a></h1>
 <p>This method uses <a href="#classify">Classify</a> and then converts the first character to lowercase:</p>
-<pre><code class="php">echo Inflector::camelize('model_name'); // modelName
+<pre><code class="php">echo $inflector-&gt;camelize('model_name'); // modelName
 </code></pre>
-<a class="section-anchor" id="ucwords" name="ucwords"></a><h1 class="section-header"><a href="#ucwords">ucwords<i class="fas fa-link"></i></a></h1>
+<a class="section-anchor" id="capitalize" name="capitalize"></a><h1 class="section-header"><a href="#capitalize">capitalize<i class="fas fa-link"></i></a></h1>
 <p>Takes a string and capitalizes all of the words, like PHP's built-in
-ucwords function. This extends that behavior, however, by allowing the
+<code>ucwords</code> function. This extends that behavior, however, by allowing the
 word delimiters to be configured, rather than only separating on
 whitespace.</p>
 <p>Here is an example:</p>
 <pre><code class="php">$string = 'top-o-the-morning to all_of_you!';
 
-echo Inflector::ucwords($string); // Top-O-The-Morning To All_of_you!
+echo $inflector-&gt;capitalize($string); // Top-O-The-Morning To All_of_you!
 
-echo Inflector::ucwords($string, '-_ '); // Top-O-The-Morning To All_Of_You!
+echo $inflector-&gt;capitalize($string, '-_ '); // Top-O-The-Morning To All_Of_You!
 </code></pre>
 <a class="section-anchor" id="pluralize" name="pluralize"></a><h1 class="section-header"><a href="#pluralize">Pluralize<i class="fas fa-link"></i></a></h1>
 <p>Returns a word in plural form.</p>
-<pre><code class="php">echo Inflector::pluralize('browser'); // browsers
+<pre><code class="php">echo $inflector-&gt;pluralize('browser'); // browsers
 </code></pre>
 <a class="section-anchor" id="singularize" name="singularize"></a><h1 class="section-header"><a href="#singularize">Singularize<i class="fas fa-link"></i></a></h1>
-<pre><code class="php">echo Inflector::singularize('browsers'); // browser
-</code></pre>
-<a class="section-anchor" id="rules" name="rules"></a><h1 class="section-header"><a href="#rules">Rules<i class="fas fa-link"></i></a></h1>
-<p>Customize the rules for pluralization and singularization:</p>
-<pre><code class="php">Inflector::rules('plural', ['/^(inflect)or$/i' =&gt; '\1ables']);
-Inflector::rules('plural', [
-    'rules' =&gt; ['/^(inflect)ors$/i' =&gt; '\1ables'],
-    'uninflected' =&gt; ['dontinflectme'],
-    'irregular' =&gt; ['red' =&gt; 'redlings']
-]);
-</code></pre>
-<p>The arguments for the <code>rules</code> method are:</p>
-<ul><li class="dash"><code>$type</code> - The type of inflection, either <code>plural</code> or <code>singular</code></li>
-<li class="dash"><code>$rules</code> - An array of rules to be added.</li>
-<li class="dash"><code>$reset</code> - If true, will unset default inflections for all new rules that are being defined in $rules.</li>
-</ul>
-
-<a class="section-anchor" id="reset" name="reset"></a><h1 class="section-header"><a href="#reset">Reset<i class="fas fa-link"></i></a></h1>
-<p>Clears Inflectors inflected value caches, and resets the inflection
-rules to the initial values.</p>
-<pre><code class="php">Inflector::reset();
+<pre><code class="php">echo $inflector-&gt;singularize('browsers'); // browser
 </code></pre>
 <a class="section-anchor" id="slugify" name="slugify"></a><h1 class="section-header"><a href="#slugify">Slugify<i class="fas fa-link"></i></a></h1>
 <p>You can easily use the Inflector to create a slug from a string of text
