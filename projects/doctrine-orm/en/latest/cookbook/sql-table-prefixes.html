@@ -20,7 +20,7 @@
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?a4b3e9" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?a9fab4" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
@@ -145,9 +145,6 @@
                                                                     <a class="dropdown-item notranslate" href="https://www.doctrine-project.org/projects/reflection.html">Reflection</a>
                                                                 <a class="dropdown-item bg-secondary text-white font-weight-bold" href="https://www.doctrine-project.org/projects.html">View All</a>
                             </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="https://www.doctrine-project.org/about/">About</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="https://www.doctrine-project.org/contribute/" id="navbarContributeDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Contribute</a>
@@ -287,41 +284,78 @@ separate them from other vendor products in the same database.</p>
 DoctrineExtensions namespace. You create this file in your
 library/DoctrineExtensions directory, but will need to set up
 appropriate autoloaders.</p>
-<pre><code class="php">&lt;?php
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="220b41b74a3d9bda9d8e4923493c98591364b11f"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="220b41b74a3d9bda9d8e4923493c98591364b11f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-1" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-1">1</a></td><td class="code-line" rowspan="34"><span class="hljs-meta">&lt;?php</span>
 
-namespace DoctrineExtensions;
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">DoctrineExtensions</span>;
 
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Doctrine\ORM\Mapping;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Event</span>\<span class="hljs-title">LoadClassMetadataEventArgs</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>;
 
-class TablePrefix
-{
-    protected $prefix = '';
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TablePrefix</span>
+</span>{
+    <span class="hljs-keyword">protected</span> $prefix = <span class="hljs-string">''</span>;
 
-    public function __construct($prefix)
-    {
-        $this-&gt;prefix = (string) $prefix;
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">($prefix)</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;prefix = (string) $prefix;
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
-    {
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadClassMetadata</span><span class="hljs-params">(LoadClassMetadataEventArgs $eventArgs)</span>
+    </span>{
         $classMetadata = $eventArgs-&gt;getClassMetadata();
 
-        if ($classMetadata-&gt;inheritanceType !== Mapping\InheritanceType::SINGLE_TABLE ||
+        <span class="hljs-keyword">if</span> ($classMetadata-&gt;inheritanceType !== Mapping\InheritanceType::SINGLE_TABLE ||
             $classMetadata-&gt;getName() === $classMetadata-&gt;rootEntityName) {
-            $classMetadata-&gt;setTableName($this-&gt;prefix . $classMetadata-&gt;getTableName());
+            $classMetadata-&gt;setTableName(<span class="hljs-keyword">$this</span>-&gt;prefix . $classMetadata-&gt;getTableName());
         }
 
-        foreach ($classMetadata-&gt;associationMappings as $fieldName =&gt; $mapping) {
-            if ($mapping['type'] == Mapping\ClassMetadata::MANY_TO_MANY &amp;&amp; $mapping['isOwningSide']) {
-                $mappedTableName = $mapping['joinTable']['name'];
-                $classMetadata-&gt;associationMappings[$fieldName]['joinTable']['name'] = $this-&gt;prefix . $mappedTableName;
+        <span class="hljs-keyword">foreach</span> ($classMetadata-&gt;associationMappings <span class="hljs-keyword">as</span> $fieldName =&gt; $mapping) {
+            <span class="hljs-keyword">if</span> ($mapping[<span class="hljs-string">'type'</span>] == Mapping\ClassMetadata::MANY_TO_MANY &amp;&amp; $mapping[<span class="hljs-string">'isOwningSide'</span>]) {
+                $mappedTableName = $mapping[<span class="hljs-string">'joinTable'</span>][<span class="hljs-string">'name'</span>];
+                $classMetadata-&gt;associationMappings[$fieldName][<span class="hljs-string">'joinTable'</span>][<span class="hljs-string">'name'</span>] = <span class="hljs-keyword">$this</span>-&gt;prefix . $mappedTableName;
             }
         }
     }
 
-}
-</code></pre>
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-2" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-3" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-4" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-5" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-6" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-7" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-8" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-9" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-10" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-11" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-12" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-13" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-14" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-15" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-16" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-17" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-18" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-19" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-20" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-21" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-22" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-23" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-24" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-25" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-26" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-27" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-28" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-29" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-30" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-31" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-32" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-33" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-34" class="line-number-anchor" /><a href="#line-number-220b41b74a3d9bda9d8e4923493c98591364b11f-34">34</a></td></tr></table></div></code></pre>
 <a class="section-anchor" id="telling-the-entitymanager-about-our-listener" name="telling-the-entitymanager-about-our-listener"></a><h2 class="section-header"><a href="#telling-the-entitymanager-about-our-listener">Telling the EntityManager about our listener<i class="fas fa-link"></i></a></h2>
 <p>A listener of this type must be set up before the EntityManager has
 been initialised, otherwise an Entity might be created or cached
@@ -329,18 +363,32 @@ before the prefix has been set.</p>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>If you set this listener up, be aware that you will need
 to clear your caches and drop then recreate your database schema.</p>
 </div>
-<pre><code class="php">&lt;?php
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="ed530336cedebc12e887fb502535d60d63136bcf"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="ed530336cedebc12e887fb502535d60d63136bcf"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ed530336cedebc12e887fb502535d60d63136bcf-1" class="line-number-anchor" /><a href="#line-number-ed530336cedebc12e887fb502535d60d63136bcf-1">1</a></td><td class="code-line" rowspan="11"><span class="hljs-meta">&lt;?php</span>
 
-// $connectionOptions and $config set earlier
+<span class="hljs-comment">// $connectionOptions and $config set earlier</span>
 
-$evm = new \Doctrine\Common\EventManager;
+$evm = <span class="hljs-keyword">new</span> \Doctrine\Common\EventManager;
 
-// Table Prefix
-$tablePrefix = new \DoctrineExtensions\TablePrefix('prefix_');
+<span class="hljs-comment">// Table Prefix</span>
+$tablePrefix = <span class="hljs-keyword">new</span> \DoctrineExtensions\TablePrefix(<span class="hljs-string">'prefix_'</span>);
 $evm-&gt;addEventListener(\Doctrine\ORM\Events::loadClassMetadata, $tablePrefix);
 
-$em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config, $evm);
-</code></pre>
+$em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config, $evm);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ed530336cedebc12e887fb502535d60d63136bcf-2" class="line-number-anchor" /><a href="#line-number-ed530336cedebc12e887fb502535d60d63136bcf-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ed530336cedebc12e887fb502535d60d63136bcf-3" class="line-number-anchor" /><a href="#line-number-ed530336cedebc12e887fb502535d60d63136bcf-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ed530336cedebc12e887fb502535d60d63136bcf-4" class="line-number-anchor" /><a href="#line-number-ed530336cedebc12e887fb502535d60d63136bcf-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ed530336cedebc12e887fb502535d60d63136bcf-5" class="line-number-anchor" /><a href="#line-number-ed530336cedebc12e887fb502535d60d63136bcf-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ed530336cedebc12e887fb502535d60d63136bcf-6" class="line-number-anchor" /><a href="#line-number-ed530336cedebc12e887fb502535d60d63136bcf-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ed530336cedebc12e887fb502535d60d63136bcf-7" class="line-number-anchor" /><a href="#line-number-ed530336cedebc12e887fb502535d60d63136bcf-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ed530336cedebc12e887fb502535d60d63136bcf-8" class="line-number-anchor" /><a href="#line-number-ed530336cedebc12e887fb502535d60d63136bcf-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ed530336cedebc12e887fb502535d60d63136bcf-9" class="line-number-anchor" /><a href="#line-number-ed530336cedebc12e887fb502535d60d63136bcf-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ed530336cedebc12e887fb502535d60d63136bcf-10" class="line-number-anchor" /><a href="#line-number-ed530336cedebc12e887fb502535d60d63136bcf-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ed530336cedebc12e887fb502535d60d63136bcf-11" class="line-number-anchor" /><a href="#line-number-ed530336cedebc12e887fb502535d60d63136bcf-11">11</a></td></tr></table></div></code></pre>
 <p></p>
                                             </div>
                 </div>
@@ -365,8 +413,6 @@ $em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config, $evm);
             src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
-
-        <script src="https://www.doctrine-project.org/components/highlightjs/highlight.pack.js?3970aa"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
 
@@ -412,7 +458,7 @@ $em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config, $evm);
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?2a2af0"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
         <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
 
         <script type="text/javascript">

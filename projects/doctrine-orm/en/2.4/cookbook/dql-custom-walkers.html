@@ -20,7 +20,7 @@
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?a4b3e9" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?a9fab4" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
@@ -145,9 +145,6 @@
                                                                     <a class="dropdown-item notranslate" href="https://www.doctrine-project.org/projects/reflection.html">Reflection</a>
                                                                 <a class="dropdown-item bg-secondary text-white font-weight-bold" href="https://www.doctrine-project.org/projects.html">View All</a>
                             </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="https://www.doctrine-project.org/about/">About</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="https://www.doctrine-project.org/contribute/" id="navbarContributeDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Contribute</a>
@@ -313,8 +310,12 @@ points. There are probably much more use-cases.</p>
 <p>Say you have a blog and posts all with one category and one author.
 A query for the front-page or any archive page might look something
 like:</p>
-<pre><code class="sql">SELECT p, c, a FROM BlogPost p JOIN p.category c JOIN p.author a WHERE ...
-</code></pre>
+<pre class="code-block-table"><code class="sql"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="b4eef1427006f070d28b818d038616af75804f2e"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="b4eef1427006f070d28b818d038616af75804f2e"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-b4eef1427006f070d28b818d038616af75804f2e-1" class="line-number-anchor" /><a href="#line-number-b4eef1427006f070d28b818d038616af75804f2e-1">1</a></td><td class="code-line" rowspan="1"><span class="hljs-keyword">SELECT</span> p, c, a <span class="hljs-keyword">FROM</span> BlogPost p <span class="hljs-keyword">JOIN</span> p.category c <span class="hljs-keyword">JOIN</span> p.author a <span class="hljs-keyword">WHERE</span> ...</td></tr></table></div></code></pre>
 <p>Now in this query the blog post is the root entity, meaning its the
 one that is hydrated directly from the query and returned as an
 array of blog posts. In contrast the comment and author are loaded
@@ -323,73 +324,140 @@ for deeper use in the object tree.</p>
 posts that match the WHERE clause of this query to be able to
 predict the number of pages to show to the user. A draft of the DQL
 query for pagination would look like:</p>
-<pre><code class="sql">SELECT count(DISTINCT p.id) FROM BlogPost p JOIN p.category c JOIN p.author a WHERE ...
-</code></pre>
+<pre class="code-block-table"><code class="sql"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="13dab06ad31e3f6cfe86508fb865bcfbf06094fc"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="13dab06ad31e3f6cfe86508fb865bcfbf06094fc"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-13dab06ad31e3f6cfe86508fb865bcfbf06094fc-1" class="line-number-anchor" /><a href="#line-number-13dab06ad31e3f6cfe86508fb865bcfbf06094fc-1">1</a></td><td class="code-line" rowspan="1"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">count</span>(<span class="hljs-keyword">DISTINCT</span> p.id) <span class="hljs-keyword">FROM</span> BlogPost p <span class="hljs-keyword">JOIN</span> p.category c <span class="hljs-keyword">JOIN</span> p.author a <span class="hljs-keyword">WHERE</span> ...</td></tr></table></div></code></pre>
 <p>Now you could go and write each of these queries by hand, or you
 can use a tree walker to modify the AST for you. Lets see how the
 API would look for this use-case:</p>
-<pre><code class="php">&lt;?php
-$pageNum = 1;
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="cff41885f44983687ea2b6255edc0d131a34a834"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="cff41885f44983687ea2b6255edc0d131a34a834"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-cff41885f44983687ea2b6255edc0d131a34a834-1" class="line-number-anchor" /><a href="#line-number-cff41885f44983687ea2b6255edc0d131a34a834-1">1</a></td><td class="code-line" rowspan="7"><span class="hljs-meta">&lt;?php</span>
+$pageNum = <span class="hljs-number">1</span>;
 $query = $em-&gt;createQuery($dql);
-$query-&gt;setFirstResult( ($pageNum-1) * 20)-&gt;setMaxResults(20);
+$query-&gt;setFirstResult( ($pageNum<span class="hljs-number">-1</span>) * <span class="hljs-number">20</span>)-&gt;setMaxResults(<span class="hljs-number">20</span>);
 
 $totalResults = Paginate::count($query);
-$results = $query-&gt;getResult();
-</code></pre>
+$results = $query-&gt;getResult();</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cff41885f44983687ea2b6255edc0d131a34a834-2" class="line-number-anchor" /><a href="#line-number-cff41885f44983687ea2b6255edc0d131a34a834-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cff41885f44983687ea2b6255edc0d131a34a834-3" class="line-number-anchor" /><a href="#line-number-cff41885f44983687ea2b6255edc0d131a34a834-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cff41885f44983687ea2b6255edc0d131a34a834-4" class="line-number-anchor" /><a href="#line-number-cff41885f44983687ea2b6255edc0d131a34a834-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cff41885f44983687ea2b6255edc0d131a34a834-5" class="line-number-anchor" /><a href="#line-number-cff41885f44983687ea2b6255edc0d131a34a834-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cff41885f44983687ea2b6255edc0d131a34a834-6" class="line-number-anchor" /><a href="#line-number-cff41885f44983687ea2b6255edc0d131a34a834-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cff41885f44983687ea2b6255edc0d131a34a834-7" class="line-number-anchor" /><a href="#line-number-cff41885f44983687ea2b6255edc0d131a34a834-7">7</a></td></tr></table></div></code></pre>
 <p>The <code>Paginate::count(Query $query)</code> looks like:</p>
-<pre><code class="php">&lt;?php
-class Paginate
-{
-    static public function count(Query $query)
-    {
-        /* @var $countQuery Query */
-        $countQuery = clone $query;
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="d1f7b24448c99957b6d012b14c910768bdbb925f"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="d1f7b24448c99957b6d012b14c910768bdbb925f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-1" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-1">1</a></td><td class="code-line" rowspan="14"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Paginate</span>
+</span>{
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">count</span><span class="hljs-params">(Query $query)</span>
+    </span>{
+        <span class="hljs-comment">/* <span class="hljs-doctag">@var</span> $countQuery Query */</span>
+        $countQuery = <span class="hljs-keyword">clone</span> $query;
 
-        $countQuery-&gt;setHint(Query::HINT_CUSTOM_TREE_WALKERS, array('DoctrineExtensions\Paginate\CountSqlWalker'));
-        $countQuery-&gt;setFirstResult(null)-&gt;setMaxResults(null);
+        $countQuery-&gt;setHint(Query::HINT_CUSTOM_TREE_WALKERS, <span class="hljs-keyword">array</span>(<span class="hljs-string">'DoctrineExtensions\Paginate\CountSqlWalker'</span>));
+        $countQuery-&gt;setFirstResult(<span class="hljs-keyword">null</span>)-&gt;setMaxResults(<span class="hljs-keyword">null</span>);
 
-        return $countQuery-&gt;getSingleScalarResult();
+        <span class="hljs-keyword">return</span> $countQuery-&gt;getSingleScalarResult();
     }
-}
-</code></pre>
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-2" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-3" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-4" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-5" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-6" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-7" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-8" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-9" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-10" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-11" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-12" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-13" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-14" class="line-number-anchor" /><a href="#line-number-d1f7b24448c99957b6d012b14c910768bdbb925f-14">14</a></td></tr></table></div></code></pre>
 <p>It clones the query, resets the limit clause first and max results
 and registers the <code>CountSqlWalker</code> customer tree walker which
 will modify the AST to execute a count query. The walkers
 implementation is:</p>
-<pre><code class="php">&lt;?php
-class CountSqlWalker extends TreeWalkerAdapter
-{
-    /**
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="21baf1fe53a6f3fd6aae8cce0a423fe1cf809728"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="21baf1fe53a6f3fd6aae8cce0a423fe1cf809728"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-1" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-1">1</a></td><td class="code-line" rowspan="33"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CountSqlWalker</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TreeWalkerAdapter</span>
+</span>{
+    <span class="hljs-comment">/**
      * Walks down a SelectStatement AST node, thereby generating the appropriate SQL.
      *
-     * @return string The SQL.
-     */
-    public function walkSelectStatement(SelectStatement $AST)
-    {
-        $parent = null;
-        $parentName = null;
-        foreach ($this-&gt;_getQueryComponents() AS $dqlAlias =&gt; $qComp) {
-            if ($qComp['parent'] === null &amp;&amp; $qComp['nestingLevel'] == 0) {
+     * <span class="hljs-doctag">@return</span> string The SQL.
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">walkSelectStatement</span><span class="hljs-params">(SelectStatement $AST)</span>
+    </span>{
+        $parent = <span class="hljs-keyword">null</span>;
+        $parentName = <span class="hljs-keyword">null</span>;
+        <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;_getQueryComponents() <span class="hljs-keyword">AS</span> $dqlAlias =&gt; $qComp) {
+            <span class="hljs-keyword">if</span> ($qComp[<span class="hljs-string">'parent'</span>] === <span class="hljs-keyword">null</span> &amp;&amp; $qComp[<span class="hljs-string">'nestingLevel'</span>] == <span class="hljs-number">0</span>) {
                 $parent = $qComp;
                 $parentName = $dqlAlias;
-                break;
+                <span class="hljs-keyword">break</span>;
             }
         }
 
-        $pathExpression = new PathExpression(
+        $pathExpression = <span class="hljs-keyword">new</span> PathExpression(
             PathExpression::TYPE_STATE_FIELD | PathExpression::TYPE_SINGLE_VALUED_ASSOCIATION, $parentName,
-            $parent['metadata']-&gt;getSingleIdentifierFieldName()
+            $parent[<span class="hljs-string">'metadata'</span>]-&gt;getSingleIdentifierFieldName()
         );
         $pathExpression-&gt;type = PathExpression::TYPE_STATE_FIELD;
 
-        $AST-&gt;selectClause-&gt;selectExpressions = array(
-            new SelectExpression(
-                new AggregateExpression('count', $pathExpression, true), null
+        $AST-&gt;selectClause-&gt;selectExpressions = <span class="hljs-keyword">array</span>(
+            <span class="hljs-keyword">new</span> SelectExpression(
+                <span class="hljs-keyword">new</span> AggregateExpression(<span class="hljs-string">'count'</span>, $pathExpression, <span class="hljs-keyword">true</span>), <span class="hljs-keyword">null</span>
             )
         );
     }
-}
-</code></pre>
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-2" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-3" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-4" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-5" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-6" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-7" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-8" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-9" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-10" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-11" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-12" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-13" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-14" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-15" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-16" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-17" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-18" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-19" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-20" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-21" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-22" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-23" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-24" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-25" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-26" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-27" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-28" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-29" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-30" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-31" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-32" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-33" class="line-number-anchor" /><a href="#line-number-21baf1fe53a6f3fd6aae8cce0a423fe1cf809728-33">33</a></td></tr></table></div></code></pre>
 <p>This will delete any given select expressions and replace them with
 a distinct count query for the root entities primary key. This will
 only work if your entity has only one identifier field (composite
@@ -402,41 +470,77 @@ can be set via <code>Query::setHint($name, $value)</code> as shown in the
 previous example with the <code>HINT_CUSTOM_TREE_WALKERS</code> query hint.</p>
 <p>We will implement a custom Output Walker that allows to specify the
 SQL\_NO\_CACHE query hint.</p>
-<pre><code class="php">&lt;?php
-$dql = &quot;SELECT p, c, a FROM BlogPost p JOIN p.category c JOIN p.author a WHERE ...&quot;;
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="61bde0bef2bd3fdba5420d0864def4fd697b3206"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="61bde0bef2bd3fdba5420d0864def4fd697b3206"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-61bde0bef2bd3fdba5420d0864def4fd697b3206-1" class="line-number-anchor" /><a href="#line-number-61bde0bef2bd3fdba5420d0864def4fd697b3206-1">1</a></td><td class="code-line" rowspan="6"><span class="hljs-meta">&lt;?php</span>
+$dql = <span class="hljs-string">"SELECT p, c, a FROM BlogPost p JOIN p.category c JOIN p.author a WHERE ..."</span>;
 $query = $m-&gt;createQuery($dql);
-$query-&gt;setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'DoctrineExtensions\Query\MysqlWalker');
-$query-&gt;setHint(&quot;mysqlWalker.sqlNoCache&quot;, true);
-$results = $query-&gt;getResult();
-</code></pre>
+$query-&gt;setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, <span class="hljs-string">'DoctrineExtensions\Query\MysqlWalker'</span>);
+$query-&gt;setHint(<span class="hljs-string">"mysqlWalker.sqlNoCache"</span>, <span class="hljs-keyword">true</span>);
+$results = $query-&gt;getResult();</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-61bde0bef2bd3fdba5420d0864def4fd697b3206-2" class="line-number-anchor" /><a href="#line-number-61bde0bef2bd3fdba5420d0864def4fd697b3206-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-61bde0bef2bd3fdba5420d0864def4fd697b3206-3" class="line-number-anchor" /><a href="#line-number-61bde0bef2bd3fdba5420d0864def4fd697b3206-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-61bde0bef2bd3fdba5420d0864def4fd697b3206-4" class="line-number-anchor" /><a href="#line-number-61bde0bef2bd3fdba5420d0864def4fd697b3206-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-61bde0bef2bd3fdba5420d0864def4fd697b3206-5" class="line-number-anchor" /><a href="#line-number-61bde0bef2bd3fdba5420d0864def4fd697b3206-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-61bde0bef2bd3fdba5420d0864def4fd697b3206-6" class="line-number-anchor" /><a href="#line-number-61bde0bef2bd3fdba5420d0864def4fd697b3206-6">6</a></td></tr></table></div></code></pre>
 <p>Our <code>MysqlWalker</code> will extend the default <code>SqlWalker</code>. We will
 modify the generation of the SELECT clause, adding the
 SQL\_NO\_CACHE on those queries that need it:</p>
-<pre><code class="php">&lt;?php
-class MysqlWalker extends SqlWalker
-{
-     /**
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="b61f3703a61b34acf881f9dcd4c765db93215325"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="b61f3703a61b34acf881f9dcd4c765db93215325"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-1" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-1">1</a></td><td class="code-line" rowspan="24"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MysqlWalker</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SqlWalker</span>
+</span>{
+     <span class="hljs-comment">/**
      * Walks down a SelectClause AST node, thereby generating the appropriate SQL.
      *
-     * @param $selectClause
-     * @return string The SQL.
-     */
-    public function walkSelectClause($selectClause)
-    {
-        $sql = parent::walkSelectClause($selectClause);
+     * <span class="hljs-doctag">@param</span> $selectClause
+     * <span class="hljs-doctag">@return</span> string The SQL.
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">walkSelectClause</span><span class="hljs-params">($selectClause)</span>
+    </span>{
+        $sql = <span class="hljs-keyword">parent</span>::walkSelectClause($selectClause);
 
-        if ($this-&gt;getQuery()-&gt;getHint('mysqlWalker.sqlNoCache') === true) {
-            if ($selectClause-&gt;isDistinct) {
-                $sql = str_replace('SELECT DISTINCT', 'SELECT DISTINCT SQL_NO_CACHE', $sql);
-            } else {
-                $sql = str_replace('SELECT', 'SELECT SQL_NO_CACHE', $sql);
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;getQuery()-&gt;getHint(<span class="hljs-string">'mysqlWalker.sqlNoCache'</span>) === <span class="hljs-keyword">true</span>) {
+            <span class="hljs-keyword">if</span> ($selectClause-&gt;isDistinct) {
+                $sql = str_replace(<span class="hljs-string">'SELECT DISTINCT'</span>, <span class="hljs-string">'SELECT DISTINCT SQL_NO_CACHE'</span>, $sql);
+            } <span class="hljs-keyword">else</span> {
+                $sql = str_replace(<span class="hljs-string">'SELECT'</span>, <span class="hljs-string">'SELECT SQL_NO_CACHE'</span>, $sql);
             }
         }
 
-        return $sql;
+        <span class="hljs-keyword">return</span> $sql;
     }
-}
-</code></pre>
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-2" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-3" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-4" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-5" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-6" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-7" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-8" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-9" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-10" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-11" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-12" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-13" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-14" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-15" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-16" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-17" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-18" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-19" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-20" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-21" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-22" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-23" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b61f3703a61b34acf881f9dcd4c765db93215325-24" class="line-number-anchor" /><a href="#line-number-b61f3703a61b34acf881f9dcd4c765db93215325-24">24</a></td></tr></table></div></code></pre>
 <p>Writing extensions to the Output Walker requires a very deep
 understanding of the DQL Parser and Walkers, but may offer your
 huge benefits with using vendor specific features. This would still
@@ -466,8 +570,6 @@ vendor specific features.</p>
             src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
-
-        <script src="https://www.doctrine-project.org/components/highlightjs/highlight.pack.js?3970aa"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
 
@@ -513,7 +615,7 @@ vendor specific features.</p>
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?2a2af0"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
         <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
 
         <script type="text/javascript">
