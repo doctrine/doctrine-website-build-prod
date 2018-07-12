@@ -181,6 +181,126 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="https://www.doctrine-project.org/2011/12/15/symfony-bundles-move.html">Our Symfony Bundles move to Doctrine organization</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2011-12-15
+                            by
+                                    Benjamin Eberlei
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>The Symfony2 Doctrine related Bundles move to the Doctrine organization.
+The DoctrineBundle being in the core for the 2.0 release it is now
+maintained in a more decoupled way from Symfony for several reasons:</p>
+
+<ul>
+<li>No coupling of release cycles anymore.</li>
+<li>Move code to the organization that actually maintains it.</li>
+<li>Avoid Symfony suggesting Doctrine is the only way for persistence,
+Symfony wants to focus on providing View and Controller and not make
+suggestions about the model.</li>
+</ul>
+
+<p>The DoctrineFixturesBundle, DoctrineMigrationsBundle and
+DoctrineMongoDBBundle are now maintained in the Doctrine organization,
+however forks have been created in the Symfony repository to make all
+the 2.0 apps out there backwards compatible. You find the new
+repositories here:</p>
+
+<ul>
+<li><a href="https://github.com/doctrine/DoctrineBundle">https://github.com/doctrine/DoctrineBundle</a></li>
+<li><a href="https://github.com/doctrine/DoctrineMongoDBBundle">https://github.com/doctrine/DoctrineMongoDBBundle</a></li>
+<li><a href="https://github.com/doctrine/DoctrineFixturesBundle">https://github.com/doctrine/DoctrineFixturesBundle</a></li>
+<li><a href="https://github.com/doctrine/DoctrineMigrationsBundle">https://github.com/doctrine/DoctrineMigrationsBundle</a></li>
+</ul>
+
+<p>What do you need to change in your code? Not very much. For the
+DoctrineBundle for example the following:</p>
+
+<ul>
+<li><p>Update the deps file to include the DoctrineBundle</p>
+
+<blockquote>
+<pre><code>[empty]
+[DoctrineBundle]
+    git=http://github.com/doctrine/DoctrineBundle.git
+    target=/bundles/Doctrine/Bundle/DoctrineBundle
+</code></pre>
+</blockquote></li>
+<li><p>Change the Bundle class</p></li>
+<li><p>Change references to Registry</p></li>
+</ul>
+
+<p>The &#96;SymfonyBundleDoctrineBundleRegistry&#96; class may be type-hinted in
+your code. You have to change this code to point to
+&#96;DoctrineBundleDoctrineBundleRegistry&#96;.</p>
+
+<p>A full deps file for all Doctrine bundles now looks like:</p>
+
+<pre><code>[empty]
+[data-fixtures]
+    git=http://github.com/doctrine/data-fixtures.git
+
+[migrations]
+    git=http://github.com/doctrine/migrations.git
+
+[DoctrineBundle]
+    git=http://github.com/doctrine/DoctrineBundle.git
+    target=/bundles/Doctrine/Bundle/DoctrineBundle
+
+[DoctrineMigrationsBundle]
+    git=http://github.com/doctrine/DoctrineMigrationsBundle.git
+    target=/bundles/Doctrine/Bundle/MigrationsBundle
+
+[DoctrineFixturesBundle]
+    git=http://github.com/doctrine/DoctrineFixturesBundle.git
+    target=/bundles/Doctrine/Bundle/FixturesBundle
+</code></pre>
+
+<p>And the autoload.php:</p>
+
+<pre><code class="sourceCode php">$loader-&gt;registerNamespaces(array(
+    'Symfony'          =&gt; array(__DIR__.'/../vendor/symfony/src', __DIR__.'/../vendor/bundles'),
+    'Sensio'           =&gt; __DIR__.'/../vendor/bundles',
+    'JMS'              =&gt; __DIR__.'/../vendor/bundles',
+    'Doctrine\\Bundle' =&gt; __DIR__.'/../vendor/bundles',
+    'Doctrine\\DBAL\\Migrations' =&gt; __DIR__.'/../vendor/migrations/lib',
+    'Doctrine\\Common\\DataFixtures' =&gt; __DIR__.'/../vendor/data-fixtures/lib',
+    'Doctrine\\Common' =&gt; __DIR__.'/../vendor/doctrine-common/lib',
+    'Doctrine\\DBAL'   =&gt; __DIR__.'/../vendor/doctrine-dbal/lib',
+    'Doctrine'         =&gt; __DIR__.'/../vendor/doctrine/lib',
+    'Monolog'          =&gt; __DIR__.'/../vendor/monolog/src',
+    'Assetic'          =&gt; __DIR__.'/../vendor/assetic/src',
+    'Metadata'         =&gt; __DIR__.'/../vendor/metadata/src',
+));
+</code></pre>
+
+<p>And the Kernel:</p>
+
+<pre><code class="sourceCode php">$bundles = array(
+    new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+    new Symfony\Bundle\SecurityBundle\SecurityBundle(),
+    new Symfony\Bundle\TwigBundle\TwigBundle(),
+    new Symfony\Bundle\MonologBundle\MonologBundle(),
+    new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
+    new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+    new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+    new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+    new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+    new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+    new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+);
+</code></pre>
+
+        </div>
+
+            </article>
+    <article>
+        <header>
             <h2><a href="https://www.doctrine-project.org/2011/11/23/doctrine-orm-2-1-4-released.html">Doctrine ORM 2.1.4 released</a></h2>
         </header>
 
@@ -240,180 +360,6 @@ page</a> , via
 <a href="https://github.com/doctrine">Git</a></p>
 
 <p>Please update your installations.</p>
-
-        </div>
-
-            </article>
-    <article>
-        <header>
-            <h2><a href="https://www.doctrine-project.org/2011/11/21/a-doctrine-orm-odm-base-class.html">An ORM/ODM Base Class</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on 2011-11-21
-                            by
-                                    Benjamin Eberlei
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>One of most common complaints about Doctrine2 is the requirement to
-write getters/setters for all the fields and assocations of every
-entity. A concern that immediately follows is that Doctrine 2 is not
-suitable for Rapid-Application-Development.</p>
-
-<p>The problem is purely a usability concern and there are a bunch of very
-easy ways ouf of this problem:</p>
-
-<ul>
-<li>A base-object that has &#95;&#95;get/&#95;&#95;set.</li>
-<li>The EntityGenerator can generate getters/setters</li>
-<li>An IDE that generates getters/setters (Netbeans, PHPStorm)</li>
-</ul>
-
-<p>We have been very critical of ActiveRecord since we started the
-development of Doctrine 2 for various reasons. Mostly because we don't
-think coupling the database to your domain objects is a good choice for
-testability an maintainabilty reasons.</p>
-
-<p>However we do see the need for Doctrine 2 to be suitable for RAD
-projects. With the launch of Symfony2 and other frameworks with tight
-Doctrine 2 integration this requirement has become even more important.</p>
-
-<p>That is why we will introduce a very lightweight base-class into
-Doctrine. We managed to write this base-class on an abstract level
-against the Common Metadata interface, such that CouchDB-, MongoDB- and
-PHPCR-ODM implementations benefit from this as well.</p>
-
-<p>Using a new hook in Doctrine 2.2-DEV you can now inject the
-EntityManager (ObjectManager) and the metadata description into each
-entity during construction. This metadata is used to implement the magic
-&#95;&#95;call hook implementing getters/setters and association management
-methods.</p>
-
-<h1 id="example">Example</h1>
-
-<p>A simple example will demonstrate this:</p>
-
-<blockquote>
-  <p>\&lt;?php use DoctrineCommonPersistencePersistentObject; use
-  DoctrineORMEntityManager;</p>
-  
-  <dl>
-  <dt>/<em>&#42;</em> @Entity</dt>
-  <dd>&#42;&#42;/</dd>
-  </dl>
-  
-  <p>class User extends PersistentObject { /<em>&#42; @Id @Column(type="integer")
-  @GeneratedValue</em>&#42;/ protected \$id;</p>
-  
-  <blockquote>
-    <p>/<em>&#42; @Column(type="string")</em>&#42;/ protected \$name;</p>
-    
-    <p>/<em>&#42; @OneToMany(targetEntity="Phonenumber", mappedBy="user")</em>&#42;/
-    protected \$phonenumbers;</p>
-  </blockquote>
-  
-  <p>}</p>
-</blockquote>
-
-<p>Extending from &#96;PersistentObject&#96; will make getters/setters available
-for your entities. Bi-directional associations are handled
-automatically.</p>
-
-<pre><code class="sourceCode php">&lt;?php
-/**
- * @Entity
- **/
-class Phonenumber extends PersistentObject
-{
-    /** @Id @Column(type="string") **/
-    private $number;
-
-    /** @ManyToOne(targetEntity="User", inversedBy="phonenumbers") **/
-    private $user;
-}
-</code></pre>
-
-<p>The only configuration call for the &#96;PersistentObject&#96; is a
-registration of the responsible entity/document manager:</p>
-
-<pre><code class="sourceCode php">&lt;?php
-$entityManager = EntityManager::create(...);
-PersistentObject::setObjectManager($entityManager);
-</code></pre>
-
-<p>You can now start using the entities as simple as this:</p>
-
-<pre><code class="sourceCode php">&lt;?php
-$number = new Phonenumber();
-$number-&gt;setNumber(123454);
-$user = new User();
-$user-&gt;setName("Benjamin");
-$user-&gt;addPhonenumbers($number);
-
-echo $user-&gt;getName();
-foreach ($user-&gt;getPhonenumbers() AS $number) {
-    echo $number-&gt;getNumber();
-}
-</code></pre>
-
-<h1 id="future-developments">Future Developments</h1>
-
-<p>First important notice: We will not develop the &#96;PersistentObject&#96;
-into a full-fledged active record. Doctrine focuses on being a
-DataMapper. We do however provide a bunch of new hooks in version 2.2
-that will allow you to turn Doctrine 2 into an active record very
-easily:</p>
-
-<ul>
-<li>Inject EntityManager and ClassMetadata</li>
-</ul>
-
-<p>If your entity implements &#96;DoctrineCommonPersistentObjectManagerAware&#96;
-then the ObjectManager and ClassMetadata of the entity will be injected
-during construction.</p>
-
-<ul>
-<li>EntityManager&#35;flush() can now flush one entity only</li>
-</ul>
-
-<p>When you pass a single entity to EntityManager&#35;flush() this entity will
-be the only one flushed into the database. Cascade persist rules are
-applied to this object. With this feature and access to the
-EntityManager inside your entities you can now start implementing an
-efficient Active Record with "Record&#35;save()" and "Record&#35;delete()"
-methods.</p>
-
-<ul>
-<li>PHP 5.4 and Traits</li>
-</ul>
-
-<p>The next version of PHP is already in Beta 2 and will probably be
-released in the next months. One of the most powerful feature of this
-release will be Traits, something very suitable for Doctrine and ORMs in
-general.</p>
-
-<p>No worries: Doctrine 2 will always be supporting 5.3, however we will
-probably ship with optional features that are using the trait
-functionality. High on the list:</p>
-
-<ul>
-<li>Porting &#96;PersistentObject&#96; to a trait</li>
-<li>Serialization of entities from a trait (ToArray(), ToJson()).
-Available as a service to PHP 5.3</li>
-<li>ActiveEntity trait that extends the &#96;PersistentObject&#96; one.</li>
-</ul>
-
-<p>Based on this feature set it should even be possible to add behaviors to
-Doctrine 2, although we won't focus on implementing behaviors in the
-core team.</p>
-
-<h1 id="last-words">Last words</h1>
-
-<p>I would really appreciate people starting to test the
-&#96;PersistentObject&#96; if they like too and give us feedback.</p>
 
         </div>
 

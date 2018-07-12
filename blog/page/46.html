@@ -181,6 +181,463 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="https://www.doctrine-project.org/2010/07/19/your-own-orm-doctrine2.html">Write your own ORM on top of Doctrine2</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on 2010-07-19
+                            by
+                                    beberlei
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p><strong>NOTE</strong></p>
+
+<blockquote>
+  <p>The Doctrine ActiveEntity Extension is just an experiment, nothing
+  that will be developed much further from the Doctrine Dev Team. It is
+  only a show-case for what is possible with Doctrine2. Please feel free
+  to take the code and develop it further.</p>
+</blockquote>
+
+<p>Did you feel the urge to write your own Object-Relational Mapper after
+reading Martin Fowlers PoEAA? I am guilty to have tried implementing two
+different ORMs on my own, both now safely dumped into the trash.</p>
+
+<p>In isolation each ORM pattern is easy to describe, understand and even
+implement. However the combination of a large set of patterns into a
+single implementation introduces a lot of hard to solve complexity in
+your code. Even simple Object-Relational-Mappers require a lot of
+patterns to become useful: Metadata Mapping, Identity Map, Foreign Key
+Mapping, Association Table Mapping and Query Object. Implementations
+with more features at least need the UnitOfWork and probably many more,
+for example handling inheritance, locking, value objects and such.</p>
+
+<p>Doctrine2 already solves a lot of the head aching problems in a
+consistent approach. We have been working on this project for almost 2
+years now, with all the experience we gained implementing Doctrine 1.
+Additionally we make use of well-understood concepts from other ORM
+implementations across various languages.</p>
+
+<p>We as developers think that Doctrine2 responsibilities are very well
+separated such that you can exchange larger parts of the Doctrine2 core
+without having to re-implement everything. So if you ever feel inspired
+to implement your own ORM, we would be happy to offer you Doctrine2 as a
+foundation to build upon.</p>
+
+<p>There are examples of other ORMs that have taken the re-use instead of
+re-implement road. For example the <a href="http://www.grails.org/GORM">Groovy Grails
+ORM</a> is an ActiveRecord implementation on
+top of the popular Hibernate Java ORM. Since Groovy is a
+java-virtual-machine language it can safely use the Hibernate ORM as a
+dependent library.</p>
+
+<p>This article will describe some possible extensions and show where you
+can hook into the Doctrine2 core to implement your own ORM. The article
+will be very code focused and also comes with a <a href="http://github.com/beberlei/Doctrine-ActiveEntity">Github
+project</a> where all the
+code and some tests are hosted.</p>
+
+<h1 id="doctrine2-and-activerecord">Doctrine2 and ActiveRecord</h1>
+
+<p>Doctrine2 is implementing the DataMapper pattern, however many
+programmers think ActiveRecord is better for various reasons. For me
+data-mappers are superiour to ActiveRecord, however I do understand why
+ActiveRecord is so popular: Its very easy to get started and do cool
+stuff with it! If you want Doctrine2 to be ActiveRecord you can have it.
+Actually it is very easy to turn it into a powerful ActiveRecord
+implementation, keeping all the powerful features such as DQL.</p>
+
+<p>Some while ago Jonathan already released his approach, called the
+"ActiveEntity" extension. Its a single abstract php class that your
+entities have to implement, the code is still <a href="http://trac.doctrine-project.org/browser/extensions/ActiveEntity/branches/2.0-1.0/DoctrineExtensions/ActiveEntity.php">in our SVN
+repository</a>.
+However a more recent version of this code is available as <a href="http://github.com/beberlei/Doctrine-ActiveEntity">a project on
+Github</a>. I won't
+support this experiment any further, I hope somebody picks it up and
+starts maintaining it.</p>
+
+<p>With Jonathans old code, to allow active record entities, you have to
+bootstrap the ActiveEntity by passing a static EntityManager:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+\DoctrineExtensions\ActiveEntity::setEntityManager($em);
+</code></pre>
+
+<p>Now say we have a User Entity (using Jonathans old ActiveEntity):</p>
+
+<pre><code class="sourceCode php">&lt;?php
+namespace Entities;
+
+use DoctrineExtensions\ActiveEntity;
+
+/** @Entity */
+class User extends ActiveEntity
+{
+    /** @Id @GeneratedValue @column(type="integer") */
+    private $id;
+
+    /** @Column(type="string") */
+    private $name;
+}
+</code></pre>
+
+<p>With PHP 5.3 late-static binding functionality we can now access the
+<code>EntityRepository</code>, a finder object for entities using a Ruby on
+Rails'ish notation:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+$user = User::find($id);
+$users = User::findBy(array("name" =&gt; "beberlei"));
+$beberlei = User::findOneBy(array("name" =&gt; "beberlei"));
+</code></pre>
+
+<p>The code to allow this functionality is very simple:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+public static function __callStatic($method, $arguments)
+{
+    return call_user_func_array(array(self::$_em-&gt;getRepository(get_called_class()), $method), $arguments);
+}
+</code></pre>
+
+<p>There are also some additional methods on the <code>ActiveEntity</code> class that
+use magic <strong>get and</strong>set and &#95;&#95;call methods to access the private
+properties of an Entity (such as the User id and name shown above).
+Additionally you can call save() or remove() on any instance.</p>
+
+<p>For starters this offers a great ActiveRecord implementation with all
+the powerful features that Doctrine2 offers, such as DQL and UnitOfWork.
+However we can still go much further:</p>
+
+<ul>
+<li>Eliminate the need to define ActiveEntity properties by metadata
+mapping inference</li>
+<li>Adding your own powerful Metadata Mapping Layer</li>
+<li>Add a Doctrine 1.2 behaviour system using the PHP 5.3.99DEV Traits
+functionalitiy</li>
+<li>Add validation to properties of an ActiveEntity</li>
+</ul>
+
+<p>Lets begin with a simple introduction to the Doctrine Metadata Model to
+explain how this is all possible.</p>
+
+<h1 id="doctrine2-metadata-model">Doctrine2 Metadata Model</h1>
+
+<p>You probably already saw that Doctrine2 offers many different metadata
+configuration mechanisms: Annotations, YAML, XML and plain PHP. Any one
+of this implementations will transform into an instance of
+<code>Doctrine\ORM\ClassMetadata</code> which is then cached for subsequent web
+requests. The <code>ClassMetadataFactory</code> is responsible for creating and
+managing those metadata instances.</p>
+
+<p>Doctrine2 uses the <code>ClassMetadata</code> instance internally for all runtime
+access to your entities metadata, which means that you have to extend
+this class such that it works exactly the same from the outside.</p>
+
+<p>If you wanted to extend the inner workings of Doctrine2, this is indeed
+the way to go. First extend the EntityManager to replace the
+<code>ClassMetadataFactory</code> used. This piece of code is the only hackish
+workaround, everything else is rather nice :-)</p>
+
+<pre><code class="sourceCode php">&lt;?php
+namespace DoctrineExtensions\ActiveEntity;
+
+use DoctrineExtensions\ActiveEntity\Mapping\ClassMetadataFactory;
+
+class ActiveEntityManager extends \Doctrine\ORM\EntityManager
+{
+    protected function __construct(Connection $conn, Configuration $config, EventManager $eventManager)
+    {
+        parent::__construct($conn, $config, $eventManager);
+
+        $metadataFactory = new ActiveClassMetadataFactory($this);
+        $metadataFactory-&gt;setCacheDriver($this-&gt;getConfiguration()-&gt;getMetadataCacheImpl());
+
+        // now this is the only hack required to get it work:
+        $reflProperty = new \ReflectionProperty('Doctrine\ORM\EntityManager', 'metadataFactory');
+        $reflProperty-&gt;setAccessible(true);
+        $reflProperty-&gt;setValue($this, $metadataFactory);
+    }
+
+    public static function create($conn, Configuration $config, EventManager $eventManager = null)
+    {
+        // ... copy paste from EntityManager::create()
+
+        return new ActiveEntityManager($conn, $config, $conn-&gt;getEventManager());
+    }
+}
+</code></pre>
+
+<p>And both the <code>ClassMetadataFactory</code> and <code>ClassMetadata</code>:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+namespace DoctrineExtensions\ActiveEntity\Mapping;
+
+class ActiveClassMetadataFactory extends \Doctrine\ORM\Mapping\ClassMetadataFactory
+{
+    protected function _newClassMetadataInstance($className)
+    {
+        return new ActiveClassMetadata($className);
+    }
+}
+
+class ActiveClassMetadata extends \Doctrine\ORM\Mapping\ClassMetadata
+{
+}
+</code></pre>
+
+<p>This is the foundation of your own Doctrine2-based ORM. We will see in
+the next section how we can use this.</p>
+
+<h1 id="exchange-doctrine2-reflection-for-array-based-field-storage">Exchange Doctrine2 Reflection for Array-based Field Storage</h1>
+
+<p>Doctrine2 uses reflection to access the current values of an entity.
+This is necessary, because Doctrine2 is a Data Mapper that enforces
+clean separation between entities and persistence. If we extend it to be
+an ActiveRecord implementation this separation is not wanted anymore and
+we can opt for a new approach, using the get()/set() methods on our
+ActiveEntities.</p>
+
+<p>Defining the properties "id" and "name" will then not be necessary
+anymore, they will all be saved in an array hash-map called "&#95;data"
+inside the ActiveEntity. We cannot use annotations for metadata anymore,
+however the XML or YAML drivers would still work smoothly.</p>
+
+<p>To get started we have to modify our <code>ActiveClassMetadata</code> a bit to
+exchange the contents of reflClass and reflFields with our own classes.
+Looking at the <code>ClassMetadata</code> code and doing some project wide searches
+I found out about all the necessary changes. To replace the
+<code>ReflectionClass</code> we only need to exchange <code>getProperty</code> and keep the
+rest. To exchange <code>ReflectionProperty</code> we only have to overwrite
+<code>setAccessible()</code>, <code>getValue()</code> and <code>setValue()</code>.</p>
+
+<pre><code class="sourceCode php">&lt;?php
+namespace DoctrineExtensions\ActiveEntity\Reflection;
+
+class ActiveEntityReflectionClass extends \ReflectionClass
+{
+    public function getProperty($name)
+    {
+        return new ActiveEntityPropertyReflection($this-&gt;name, $name);
+    }
+}
+
+class ActiveEntityReflectionProperty
+{
+    public $name = null;
+    public $class = null;
+
+    public function __construct($class, $name)
+    {
+        $this-&gt;class = $class;
+        $this-&gt;name = $name;
+    }
+
+    public function setAccessible($flag) {}
+
+    public function setValue($entity = null, $value = null)
+    {
+        $entity-&gt;set($this-&gt;name, $value);
+    }
+
+    public function getValue($entity = null)
+    {
+        return $entity-&gt;get($this-&gt;name);
+    }
+}
+</code></pre>
+
+<p>This is about enough to exchange reflection transformation against a
+simple ActiveRecord get/set approach. Now we need to replace the all the
+instantiations of <code>ReflectionClass</code> relevant for runtime mapping with
+our implementation:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+namespace DoctrineExtensions\ActiveEntity\Mapping;
+
+use DoctrineExtensions\ActiveEntity\Reflection\ActiveEntityReflectionClass;
+use DoctrineExtensions\ActiveEntity\Reflection\ActiveEntityReflectionProperty;
+
+class ActiveClassMetadata extends \Doctrine\ORM\Mapping\ClassMetadata
+{
+    public function __construct($entityName)
+    {
+        parent::__construct($entityName);
+        $this-&gt;reflClass = new ActiveEntityReflectionClass($entityName);
+        $this-&gt;namespace = $this-&gt;reflClass-&gt;getNamespaceName();
+        $this-&gt;table['name'] = $this-&gt;reflClass-&gt;getShortName();
+    }
+
+    /**
+     * Restores some state that can not be serialized/unserialized.
+     *
+     * @return void
+     */
+    public function __wakeup()
+    {
+        // lots of code here, see the Github Repository
+    }
+}
+</code></pre>
+
+<p>Again, this is enough and our ActiveEntity Mapping now works. We can
+heavily modify the <code>ActiveEntity</code> now to loose the requirement to
+specify properties for the defined metadata. We can rewrite the User
+entity to be:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+namespace Entities;
+
+use DoctrineExtensions\ActiveEntity\ActiveEntity;
+
+class User extends ActiveEntity
+{
+}
+</code></pre>
+
+<p>Using an XML or YAML Mapping is already enough for this ActiveEntity to
+work out of the box.</p>
+
+<h1 id="implementing-your-own-metadata-mapping-driver">Implementing your own Metadata Mapping Driver</h1>
+
+<p>In the spirit of Doctrine 1.&#42; or GORM there should be a PHP based
+metadata mapping driver now and actually Doctrine2 ships with one
+already:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+$config = new \Doctrine\ORM\Configuration();
+$config-&gt;setMetadataDriverImpl(new \Doctrine\ORM\Mapping\Driver\StaticPHPDriver());
+// ...
+</code></pre>
+
+<p>This allows to specify the metadata within the User class:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+namespace Entities;
+
+use DoctrineExtensions\ActiveEntity\ActiveEntity;
+use DoctrineExtensions\ActiveEntity\Mapping\ActiveClassMetadata;
+
+class User extends ActiveEntity
+{
+    static public function loadMetadata(ActiveClassMetadata $cm)
+    {
+        // work with $cm here!
+    }
+}
+</code></pre>
+
+<p>You could extend that Static PHP Driver even more for the next section.
+We could add additional metadata information, such as names of
+behaviours to extend or validators or anything else.</p>
+
+<h1 id="using-traits-for-behaviours">Using Traits for Behaviours</h1>
+
+<p>We want to add a simple "Timestampable" behaviour now, hooking into the
+<code>loadClassMetadata</code> event <a href="http://www.doctrine-project.org/projects/orm/2.0/docs/reference/events/en#load-classmetadata-event">as described in the
+documentation</a>:</p>
+
+<p>Now this is untested code, as i don't have a PHP-5.3.99-DEV version
+compiled at this machine.</p>
+
+<p>The following trait can be used by our <code>User</code> entity:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+namespace DoctrineExtensions\ActiveEntity\Behaviour;
+
+trait Timestampable
+{
+    public function created()
+    {
+        return $this-&gt;get('created');
+    }
+
+    public function updated()
+    {
+        return $this-&gt;get('updated');
+    }
+
+    /** will be a prePersist lifecycle hook */
+    public function setCreated()
+    {
+        return $this-&gt;set('created', new \DateTime("now"));
+    }
+
+    /** will be a preUpdate lifecycle hook */
+    public function setUpdated()
+    {
+        return $this-&gt;set('updated', new \DateTime("now"));
+    }
+}
+
+class User extends ActiveEntity use Timestampable
+{
+
+}
+</code></pre>
+
+<p>We now need an Event that modifies the <code>ActiveClassMetadata</code> as
+required:</p>
+
+<pre><code class="sourceCode php">&lt;?php
+namespace DoctrineExtensions\ActiveEntity\Behaviour;
+
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+
+class TimestampableEvent
+{
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    {
+        $classMetadata = $eventArgs-&gt;getClassMetadata();
+        $traits = $classMetadata-&gt;reflClass-&gt;getTraitNames();
+        if (!in_array("DoctrineExtensions\ActiveEntity\Behaviour\Timestampable", $traits)) {
+            return;
+        }
+
+        $classMetadata-&gt;mapField(array(
+            'type' =&gt; 'datetime',
+            'fieldName' =&gt; 'created',
+        ));
+        $classMetadata-&gt;mapField(array(
+            'type' =&gt; 'datetime',
+            'fieldName' =&gt; 'updated',
+        ));
+        $classMetadata-&gt;addLifecycleCallback("prePersist", "setCreated");
+        $classMetadata-&gt;addLifecycleCallback("prePersist", "setUpdated");
+        $classMetadata-&gt;addLifecycleCallback("preUpdate", "setUpdated");
+    }
+}
+</code></pre>
+
+<p>You can now register this behaviour with your Entity Manager and just
+the usage of the trait <code>Timestampable</code> adds two additional fields and
+updates them accordingly.</p>
+
+<blockquote>
+  <p><strong>NOTE</strong></p>
+  
+  <p>Again, the trait code is untested. It should work, but I cannot
+  guarantee! :)</p>
+</blockquote>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>What are you waiting for? This article showed a very deep modification
+of the Doctrine2 core to turn it into Active Record. The changes
+required some understanding of the inner workings of Doctrine2, however
+not many changes were required in the end.</p>
+
+<p><a href="http://github.com/beberlei/Doctrine-ActiveEntity">See the code on
+GitHub!</a></p>
+
+        </div>
+
+            </article>
+    <article>
+        <header>
             <h2><a href="https://www.doctrine-project.org/2010/07/12/doctrine2-large-collections.html">Working with Large Collections in Doctrine2</a></h2>
         </header>
 
@@ -639,82 +1096,6 @@ offers serious performance benefits over iterating all the related
 objects that make up an aggregate value. Finally I showed how you can
 ensure that your aggregate fields do not get out of sync due to
 race-conditions and concurrent access.</p>
-
-        </div>
-
-            </article>
-    <article>
-        <header>
-            <h2><a href="https://www.doctrine-project.org/2010/06/15/doctrine2-beta2-released.html">Doctrine2 BETA2 Released</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on 2010-06-15
-                            by
-                                    beberlei
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>Today we are happy to announce the immediate availability of the second
-beta version of Doctrine2. This is the first release after the
-<a href="http://www.doctrine-project.org/blog/bringing-it-all-together">split</a>
-of Doctrine2 into three independent projects, Common, DBAL and ORM. This
-change took longer than we expected but we are back to our SVN
-productivity now and strive to surpass it utilizing Git.</p>
-
-<p>Beta 2 is a completely backwards compatible release and over 60 issues
-and bugs have been closed in total. The following larger changes have
-been introduced from Doctrine2 Beta 1:</p>
-
-<h1 id="common">Common</h1>
-
-<ul>
-<li>Added ClassLoader&#35;classExists as well as
-ClassLoader&#35;getClassLoader methods
-<a href="http://www.doctrine-project.org/jira/browse/DCOM-7">DCOM-7</a></li>
-<li>Changes to Annotation Parser with regards to Autoloading Annotation
-Classes</li>
-</ul>
-
-<h1 id="dbal">DBAL</h1>
-
-<ul>
-<li>New Driver support for Microsoft PDO Sqlsrv Extension
-<a href="http://www.doctrine-project.org/jira/browse/DBAL-10">DBAL-10</a></li>
-<li>Fixed Mssql/Sqlsrv Platforms and SchemaManager
-<a href="http://www.doctrine-project.org/jira/browse/DBAL-8">DBAL-8</a></li>
-<li>New Driver and Platform Support for DB2 (PDO&#95;DB2 and IBM&#95;DB2
-Extensions)
-<a href="http://www.doctrine-project.org/jira/browse/DDC-494">DDC-494</a></li>
-</ul>
-
-<h1 id="orm">ORM</h1>
-
-<ul>
-<li>Basic Pessimistic Locking support using FOR UPDATE or vendor
-specific shared locks
-<a href="http://www.doctrine-project.org/jira/browse/DDC-178">DDC-178</a></li>
-<li>Added a Validate Mapping CLI Task
-<a href="http://www.doctrine-project.org/jira/browse/DDC-515">DDC-515</a></li>
-</ul>
-
-<h2 id="download">Download</h2>
-
-<p>You can get the code a few different ways which are described in detail
-<a href="http://www.doctrine-project.org/projects/orm/2.0/download/2.0.0BETA2">here</a>.
-If you have any issues with Doctrine you can report them on
-<a href="http://www.doctrine-project.org/jira">Jira</a>.</p>
-
-<h2 id="contributions">Contributions</h2>
-
-<p>We thank all the contributors and early adopters for their extensive
-feedback and reports. If you are interesting in contributing to the
-Doctrine project too, check out our new <a href="http://www.doctrine-project.org/contribute">contributors
-guide</a> and
-<a href="http://www.doctrine-project.org/community">community</a> page for
-information about how you can get involved!</p>
 
         </div>
 
