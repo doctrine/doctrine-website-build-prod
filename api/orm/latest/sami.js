@@ -147,7 +147,7 @@ window.projectVersion = 'master';
                     
             {"type": "Interface", "fromName": "Doctrine\\ORM\\Exception", "fromLink": "Doctrine/ORM/Exception.html", "link": "Doctrine/ORM/Exception/ManagerException.html", "name": "Doctrine\\ORM\\Exception\\ManagerException", "doc": "&quot;&quot;"},
                     
-            {"type": "Interface", "fromName": "Doctrine\\ORM\\Exception", "fromLink": "Doctrine/ORM/Exception.html", "link": "Doctrine/ORM/Exception/ORMException.html", "name": "Doctrine\\ORM\\Exception\\ORMException", "doc": "&quot;Base exception class for all ORM exceptions.&quot;"},
+            {"type": "Interface", "fromName": "Doctrine\\ORM\\Exception", "fromLink": "Doctrine/ORM/Exception.html", "link": "Doctrine/ORM/Exception/ORMException.html", "name": "Doctrine\\ORM\\Exception\\ORMException", "doc": "&quot;Marker interface for all ORM exceptions.&quot;"},
                     
             {"type": "Interface", "fromName": "Doctrine\\ORM\\Exception", "fromLink": "Doctrine/ORM/Exception.html", "link": "Doctrine/ORM/Exception/PersisterException.html", "name": "Doctrine\\ORM\\Exception\\PersisterException", "doc": "&quot;&quot;"},
                     
@@ -1107,7 +1107,7 @@ window.projectVersion = 'master';
             {"type": "Class", "fromName": "Doctrine\\ORM\\Exception", "fromLink": "Doctrine/ORM/Exception.html", "link": "Doctrine/ORM/Exception/NotSupported.html", "name": "Doctrine\\ORM\\Exception\\NotSupported", "doc": "&quot;&quot;"},
                                                         {"type": "Method", "fromName": "Doctrine\\ORM\\Exception\\NotSupported", "fromLink": "Doctrine/ORM/Exception/NotSupported.html", "link": "Doctrine/ORM/Exception/NotSupported.html#method_create", "name": "Doctrine\\ORM\\Exception\\NotSupported::create", "doc": "&quot;&quot;"},
             
-            {"type": "Class", "fromName": "Doctrine\\ORM\\Exception", "fromLink": "Doctrine/ORM/Exception.html", "link": "Doctrine/ORM/Exception/ORMException.html", "name": "Doctrine\\ORM\\Exception\\ORMException", "doc": "&quot;Base exception class for all ORM exceptions.&quot;"},
+            {"type": "Class", "fromName": "Doctrine\\ORM\\Exception", "fromLink": "Doctrine/ORM/Exception.html", "link": "Doctrine/ORM/Exception/ORMException.html", "name": "Doctrine\\ORM\\Exception\\ORMException", "doc": "&quot;Marker interface for all ORM exceptions.&quot;"},
                     
             {"type": "Class", "fromName": "Doctrine\\ORM\\Exception", "fromLink": "Doctrine/ORM/Exception.html", "link": "Doctrine/ORM/Exception/PersisterException.html", "name": "Doctrine\\ORM\\Exception\\PersisterException", "doc": "&quot;&quot;"},
                     
