@@ -33,7 +33,7 @@
             "@type": "Person",
             "name": "jwage"
         },
-         "publisher": {
+        "publisher": {
             "@type": "Organization",
             "name": "Doctrine",
             "logo": {
@@ -50,12 +50,12 @@ Doctrine. This is very easy and I&#039;v"
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?aabb96" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?c8b404" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+        <link rel="stylesheet" href="https://www.doctrine-project.org/css/railscasts.css?62eb49" />
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -134,7 +134,7 @@ Doctrine. This is very easy and I&#039;v"
             </head>
     <body>
                     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
-                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?6c0dab" />Doctrine</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -211,7 +211,7 @@ Doctrine. This is very easy and I&#039;v"
             <main role="main" class="container-wrapper container">
             <article>
         <header>
-            <h2>Using Views with Doctrine <small>post</small></h2>
+            <h2>Using Views with Doctrine</h2>
         </header>
 
         <p class="lead">
@@ -223,17 +223,14 @@ Doctrine. This is very easy and I&#039;v"
         <hr />
 
         <div>
-            <p>I've seen a few requests recently on how you can use a view with
+                <p>I've seen a few requests recently on how you can use a view with
 Doctrine. This is very easy and I've also learned a few neat tricks that
 you can do to accomplish abnormal things while writing this article.</p>
-
-<h1 id="creating-the-view">Creating the View</h1>
-
+<h1>Creating the View</h1>
 <p>First I will demonstrate how you can turn a normal <code>Doctrine_Query</code>
 instance in to a view. This is just as easy as creating an instance of
 <code>Doctrine_View</code> and setting a reference between the query and the view.</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $q = Doctrine::getTable('BlogPost')
   -&gt;createQuery('p')
   -&gt;select('p.*, COUNT(c.id) as num_comments')
@@ -241,115 +238,71 @@ $q = Doctrine::getTable('BlogPost')
   -&gt;orderBy('p.id DESC')
   -&gt;groupBy('p.id');
 
-$view = new Doctrine_View($q, 'test_view');
-</code></pre>
-
+$view = new Doctrine_View($q, 'test_view');</code></pre>
 <p>To create the view in the database you can call the
 <code>Doctrine_View::create()</code> method.</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $view-&gt;create();
 
 **TIP** You can drop the view just the same by calling the
-``Doctrine_View::drop()`` method.
-</code></pre>
-
-<pre><code class="sourceCode php">&lt;?php
-    $view-&gt;drop();
-</code></pre>
-
-<h1 id="executing-the-view">Executing the View</h1>
-
+``Doctrine_View::drop()`` method.</code></pre>
+<pre><code class="language-{.sourceCode .php}">&lt;?php
+    $view-&gt;drop();</code></pre>
+<h1>Executing the View</h1>
 <p>Now when the <code>Doctrine_Query</code> instance above is executed, it will
 execute the SQL for the view instead of parsing the DQL, generating the
 SQL and executing it.</p>
-
-<pre><code class="sourceCode php">&lt;?php
-$blogPosts = $q-&gt;execute();
-</code></pre>
-
+<pre><code class="language-{.sourceCode .php}">&lt;?php
+$blogPosts = $q-&gt;execute();</code></pre>
 <p>Executing the above would execute the following SQL query.</p>
-
 <pre><code>[sql]
-SELECT * FROM test_view
-</code></pre>
-
-<h1 id="tweaking-the-view">Tweaking the View</h1>
-
+SELECT * FROM test_view</code></pre>
+<h1>Tweaking the View</h1>
 <p>Now here is where things get interesting. Say we wanted to take the SQL
 that the above <code>Doctrine_Query</code> generates, and modify it slightly with
 some custom SQL that otherwise could not make it through the DQL parser.</p>
-
 <p>We can get the SQL from the query, modify it, then manually create the
 view in our database.</p>
-
-<pre><code class="sourceCode php">&lt;?php
-echo $q-&gt;getSql();
-</code></pre>
-
+<pre><code class="language-{.sourceCode .php}">&lt;?php
+echo $q-&gt;getSql();</code></pre>
 <p>The above would output the following SQL.</p>
-
 <pre><code>[sql]
-SELECT b.id AS b__id, b.title AS b__title, b.excerpt AS b__excerpt, b.body AS b__body, COUNT(c.id) AS c__0 FROM blog_post b LEFT JOIN comment c ON b.id = c.blog_post_id GROUP BY b.id ORDER BY b.id DESC
-</code></pre>
-
+SELECT b.id AS b__id, b.title AS b__title, b.excerpt AS b__excerpt, b.body AS b__body, COUNT(c.id) AS c__0 FROM blog_post b LEFT JOIN comment c ON b.id = c.blog_post_id GROUP BY b.id ORDER BY b.id DESC</code></pre>
 <p>Now lets say we wanted to add something to the SQL that is proprietary
 to your DBMS, or is some complex SQL that won't make it through the DQL
 parser. We can modify the above SQL then re-create the view with that
 SQL manually. Let's make a simple change and add the <code>USE INDEX</code> keyword
 to force MySQL to use a certain index for the query.</p>
-
 <blockquote>
-  <p><strong>NOTE</strong> The example I have chosen is a very simple one only to
-  demonstrate the capabilities. This example may not be a real world
-  scenario for you. The only purpose of me showing this is to open a
-  door for you to solve potential problems for you in the future.</p>
+<p><strong>NOTE</strong> The example I have chosen is a very simple one only to
+demonstrate the capabilities. This example may not be a real world
+scenario for you. The only purpose of me showing this is to open a
+door for you to solve potential problems for you in the future.</p>
 </blockquote>
-
 <pre><code>[sql]
-SELECT b.id AS b__id, b.title AS b__title, b.excerpt AS b__excerpt, b.body AS b__body, COUNT(c.id) AS c__0 FROM blog_post b LEFT JOIN comment c USE INDEX (blog_post_id_idx) ON b.id = c.blog_post_id GROUP BY b.id ORDER BY b.id DESC;
-</code></pre>
-
+SELECT b.id AS b__id, b.title AS b__title, b.excerpt AS b__excerpt, b.body AS b__body, COUNT(c.id) AS c__0 FROM blog_post b LEFT JOIN comment c USE INDEX (blog_post_id_idx) ON b.id = c.blog_post_id GROUP BY b.id ORDER BY b.id DESC;</code></pre>
 <p>Now lets take this query and manually create the view with it.</p>
-
 <blockquote>
-  <p><strong>NOTE</strong> We must first drop the view as we already created it once in
-  a previous step. This is just as easy as issuing the DROP VIEW command
-  to MySQL. Afterward, re-create the view again with the modified SQL.</p>
+<p><strong>NOTE</strong> We must first drop the view as we already created it once in
+a previous step. This is just as easy as issuing the DROP VIEW command
+to MySQL. Afterward, re-create the view again with the modified SQL.</p>
 </blockquote>
-
 <pre><code>[sql]
 DROP VIEW test_view;
-CREATE VIEW test_view AS SELECT b.id AS b__id, b.title AS b__title, b.excerpt AS b__excerpt, b.body AS b__body, COUNT(c.id) AS c__0 FROM blog_post b LEFT JOIN comment c USE INDEX (blog_post_id_idx) ON b.id = c.blog_post_id GROUP BY b.id ORDER BY b.id DESC;
-</code></pre>
-
+CREATE VIEW test_view AS SELECT b.id AS b__id, b.title AS b__title, b.excerpt AS b__excerpt, b.body AS b__body, COUNT(c.id) AS c__0 FROM blog_post b LEFT JOIN comment c USE INDEX (blog_post_id_idx) ON b.id = c.blog_post_id GROUP BY b.id ORDER BY b.id DESC;</code></pre>
 <p>Now when we execute the code in the first part of this article it will
 execute the view which contains the customized SQL.</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $blogPosts = $q-&gt;execute();
 
 **CAUTION** If you customize the SQL, it must maintain the same
 structure, aliases, etc. in order for Doctrine to be able to
-hydrate the data in to the object graph.
-</code></pre>
-
+hydrate the data in to the object graph.</code></pre>
 <p>That is it! Now you can easily use some custom SQL in your queries as
 views. The benefit of using a view is that it is easily reusable and it
 is much faster than executing a normal query in most cases.</p>
-
         </div>
-
-                    <nav class="article">
-                <ul class="pagination">
-                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2009/06/19/cross-database-joins.html" title="Cross Database Joins"><span class="title">Previous: Cross Database Joins</span></a></li>
-                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2009/06/21/doctrine-future-roadmap.html" title="Doctrine Future Roadmap"><span class="title">Next: Doctrine Future Roadmap</span></a></li>
-                                    </ul>
-            </nav>
-            </article>
-
-
-
+    </article>
     </main>
 
         
@@ -414,8 +367,8 @@ is much faster than executing a normal query in most cases.</p>
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
-        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?4138a7"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?2e9165"></script>
 
         <script type="text/javascript">
             var projectSlug = '';
@@ -426,7 +379,7 @@ is much faster than executing a normal query in most cases.</p>
             new Search(projectSlug, versionSlug);
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
-                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                                console.log(eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
                             }
 
             function googleTranslateElementInit() {
@@ -446,16 +399,6 @@ is much faster than executing a normal query in most cases.</p>
 
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 
-        
-                    <script type="text/javascript">
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                ga('create', 'UA-288343-7', 'auto');
-                ga('send', 'pageview');
-            </script>
         
         
             </body>

@@ -33,7 +33,7 @@
             "@type": "Person",
             "name": "jwage"
         },
-         "publisher": {
+        "publisher": {
             "@type": "Organization",
             "name": "Doctrine",
             "logo": {
@@ -42,9 +42,8 @@
             }
         },
         "description": "Define The Schema
-
 In this article we will demonstrate some more ways to add functionality
-to Doctri"
+to Doctrin"
     }
     </script>
 
@@ -52,12 +51,12 @@ to Doctri"
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?aabb96" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?c8b404" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+        <link rel="stylesheet" href="https://www.doctrine-project.org/css/railscasts.css?62eb49" />
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -136,7 +135,7 @@ to Doctri"
             </head>
     <body>
                     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
-                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?6c0dab" />Doctrine</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -213,7 +212,7 @@ to Doctri"
             <main role="main" class="container-wrapper container">
             <article>
         <header>
-            <h2>Using Behaviors to Share Relationship Properties <small>post</small></h2>
+            <h2>Using Behaviors to Share Relationship Properties</h2>
         </header>
 
         <p class="lead">
@@ -225,14 +224,12 @@ to Doctri"
         <hr />
 
         <div>
-            <h1 id="define-the-schema">Define The Schema</h1>
-
+                <h1>Define The Schema</h1>
 <p>In this article we will demonstrate some more ways to add functionality
 to Doctrine by using the behavior system. We will call this behavior
 <code>SharedProperties</code> and it allows you to share properties between your
 models and one-to-one relationships. Here is an example schema that will
 make use of the behavior we will write.</p>
-
 <pre><code>[yml]
 Entity:
   actAs:
@@ -250,7 +247,7 @@ BlogPost:
     SharedProperties:
       relations: [Entity]
   columns:
-    title: string(255)
+    title: "string(255)"
     body: clob
 
 User:
@@ -266,21 +263,16 @@ Administrator:
     SharedProperties:
       relations: [User]
   columns:
-    responsibilities: string(255)
-</code></pre>
-
+    responsibilities: string(255)</code></pre>
 <p>The schema should be somewhat self-explanatory. Each model that acts as
 <code>SharedProperties</code> you must specify an array of model names or existing
 relationship aliases. Our behavior will automatically add foreign keys
 for the list of models and instantiate a one-to-one relationship between
 the models automatically.</p>
-
-<h1 id="write-the-template">Write the Template</h1>
-
+<h1>Write the Template</h1>
 <p>Lets write the first part of our template that simply adds a column for
 each of the listed <code>relations</code>:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class SharedProperties extends Doctrine_Template
 {
     protected $_options = array();
@@ -305,16 +297,12 @@ class SharedProperties extends Doctrine_Template
 ``relations`` specified if the column does not already exist. We
 will use these columns to automatically create the
 relationships/foreign keys between the models if they don't already
-exist in the next step.
-</code></pre>
-
-<h1 id="enhance-the-template">Enhance the Template</h1>
-
+exist in the next step.</code></pre>
+<h1>Enhance the Template</h1>
 <p>Now lets enhance our template and add a <code>setUp()</code> method to instantiate
 our relationships between the list of <code>relations</code> and the columns we
 added in the previous step:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class SharedProperties extends Doctrine_Template
 {
     // ...
@@ -346,17 +334,13 @@ class SharedProperties extends Doctrine_Template
             $table-&gt;bind(array($model, $options), Doctrine_Relation::ONE);
         }
     }
-}
-</code></pre>
-
-<h1 id="generated-sql">Generated SQL</h1>
-
+}</code></pre>
+<h1>Generated SQL</h1>
 <p>This code we've added now makes a one-to-one relationship between the
 models that act as <code>SharedProperties</code> and the list of models specified.
 So for example, <code>Entity</code> has one <code>BlogPost</code> and <code>BlogPost</code> has one
 <code>Entity</code>. The above models at this point would generate the following
 SQL:</p>
-
 <pre><code>[sql]
 CREATE TABLE administrator (id BIGINT AUTO_INCREMENT, responsibilities VARCHAR(255), user_id BIGINT, INDEX user_id_idx (user_id), PRIMARY KEY(id)) ENGINE = INNODB;
 
@@ -370,24 +354,19 @@ ALTER TABLE administrator ADD FOREIGN KEY (user_id) REFERENCES user(id) ON DELET
 
 ALTER TABLE blog_post ADD FOREIGN KEY (entity_id) REFERENCES entity(id) ON DELETE CASCADE;
 
-ALTER TABLE user ADD FOREIGN KEY (entity_id) REFERENCES entity(id) ON DELETE CASCADE;
-</code></pre>
-
-<h1 id="sharing-properties%2Fmethods">Sharing Properties/Methods</h1>
-
+ALTER TABLE user ADD FOREIGN KEY (entity_id) REFERENCES entity(id) ON DELETE CASCADE;</code></pre>
+<h1>Sharing Properties/Methods</h1>
 <p>Now to get to the fun, the main purpose of doing all this is to share
 the properties of these relationships. We can accomplish this by using
 the <code>Doctrine_Record_Filter</code> feature and some magic PHP <code>__call()</code>
 functionality. First lets modify our template to attach a new record
 filter.</p>
-
 <blockquote>
-  <p><strong>TIP</strong> Records filters in Doctrine allow you to handle all unknown
-  properties access on a Doctrine object. This allows us to forward the
-  calls on to the relationships so you can access properties from them.</p>
+<p><strong>TIP</strong> Records filters in Doctrine allow you to handle all unknown
+properties access on a Doctrine object. This allows us to forward the
+calls on to the relationships so you can access properties from them.</p>
 </blockquote>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class SharedProperties extends Doctrine_Template
 {
     // ...
@@ -400,12 +379,9 @@ class SharedProperties extends Doctrine_Template
     }
 
     // ...
-}
-</code></pre>
-
+}</code></pre>
 <p>Now that we have attached our filter we need to write that class:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class SharedPropertiesFilter extends Doctrine_Record_Filter
 {
     protected $_options = array();
@@ -442,18 +418,14 @@ class SharedPropertiesFilter extends Doctrine_Record_Filter
         }
         throw new Doctrine_Record_UnknownPropertyException(sprintf('Unknown record property / related component "%s" on "%s"', $name, get_class($record)));
     }
-}
-</code></pre>
-
+}</code></pre>
 <p>Now you can see this filter checks to see if the property exists on any
 of the <code>relations</code> specified otherwise throws the normal
 <code>Doctrine_Record_UnknownPropertyException</code>.</p>
-
 <p>The last thing we need to do is add a magic <code>__call()</code> function to our
 template to handle the forwarding of any unknown methods to the
 <code>relations</code>:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class SharedProperties extends Doctrine_Template
 {
     // ...
@@ -469,27 +441,21 @@ class SharedProperties extends Doctrine_Template
             }
         }
     }
-}
-</code></pre>
-
+}</code></pre>
 <p>This is required if we have functions defined on the models and want to
 be able to access these methods. So for example if we were to add a
 <code>setPassword()</code> method to the generated <code>User</code> class like the following:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class User extends BaseUser
 {
     public function setPassword($password)
     {
         $this-&gt;_set('password', md5($password));
     }
-}
-</code></pre>
-
+}</code></pre>
 <p>Without the above <code>__call()</code> function we would not be able to do the
 following:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $administrator = new Administrator();
 $administrator-&gt;setPassword('new_password');
 
@@ -499,44 +465,32 @@ If you want Doctrine to automatically override accessors with
 matching ``set*()`` and ``get*()`` functions then you need to
 enable the ``auto_accessor_override`` attribute in your
 configuration where you create your connections and set Doctrine
-attributes:
-</code></pre>
-
-<pre><code class="sourceCode php">&lt;?php
+attributes:</code></pre>
+<pre><code class="language-{.sourceCode .php}">&lt;?php
     $manager = Doctrine_Manager::getInstance();
     $manager-&gt;setAttribute('auto_accessor_override', true);
 
 Now with that attribute the following is possible. Instead of
 having to call the method ``setPassword()``, Doctrine sees you are
 setting the ``password`` and a method named ``setPassword()``
-exists so it uses it to do the mutating.
-</code></pre>
-
-<pre><code class="sourceCode php">&lt;?php
-    $administrator-&gt;password = 'new_password';
-</code></pre>
-
-<h1 id="example-usage">Example Usage</h1>
-
+exists so it uses it to do the mutating.</code></pre>
+<pre><code class="language-{.sourceCode .php}">&lt;?php
+    $administrator-&gt;password = 'new_password';</code></pre>
+<h1>Example Usage</h1>
 <p>That is it! Our behavior is implemented and we are ready to write some
 code that use our new models.</p>
-
-<h2 id="creating-new-records">Creating New Records</h2>
-
-<pre><code class="sourceCode php">&lt;?php
+<h2>Creating New Records</h2>
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $admin = new Administrator();
 $admin-&gt;name = 'Jonathan H. Wage';
 $admin-&gt;username = 'jwage';
 $admin-&gt;password = 'changeme';
 $admin-&gt;is_active = 1;
 $admin-&gt;responsibilities = 'Train all the PHP developers!';
-$admin-&gt;save();
-</code></pre>
-
+$admin-&gt;save();</code></pre>
 <p>Now that code results in the following structure being persisted to the
 database:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 print_r($admin-&gt;toArray(true));
 /*
 Array
@@ -563,18 +517,14 @@ Array
         )
 
 )
-*/
-</code></pre>
-
-<h2 id="data-fixtures">Data Fixtures</h2>
-
+*/</code></pre>
+<h2>Data Fixtures</h2>
 <p>Similarly, the following data fixtures would be possible:</p>
-
 <pre><code>[yml]
 BlogPost:
   BlogPost_1:
     name: Test Blog Post
-    title: This is a test blog post
+    title: "This is a test blog post"
     body: This is a test blog post
 
 Administrator:
@@ -582,14 +532,10 @@ Administrator:
     name: Test Manager
     username: jwage
     password: changeme
-    responsibilities: Overseeing development department
-</code></pre>
-
-<h2 id="querying-for-and-accessing-data">Querying For and Accessing Data</h2>
-
+    responsibilities: Overseeing development department</code></pre>
+<h2>Querying For and Accessing Data</h2>
 <p>You can query for these relationships as well:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $q = Doctrine_Query::create()
     -&gt;from('Administrator a')
     -&gt;leftJoin('a.User u')
@@ -597,25 +543,12 @@ $q = Doctrine_Query::create()
     -&gt;where('u.username = ?', 'jwage');
 
 $user = $q-&gt;fetchOne();
-echo $user['created_at'];
-</code></pre>
-
+echo $user['created_at'];</code></pre>
 <p>The above code would output the value of the <code>created_at</code> column that
 actually exists in the <code>Entity</code> model that is available through the
 <code>Administrator-&gt;User-&gt;Entity</code> relations.</p>
-
         </div>
-
-                    <nav class="article">
-                <ul class="pagination">
-                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2009/02/03/doctrine-1-0-7-is-available.html" title="Doctrine 1.0.7 is Available!"><span class="title">Previous: Doctrine 1.0.7 is Available!</span></a></li>
-                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2009/03/02/doctrine-1-0-8-and-1-1-0-rc2-released.html" title="Doctrine 1.0.8 and 1.1.0-RC2 Released"><span class="title">Next: Doctrine 1.0.8 and 1.1.0-RC2 Released</span></a></li>
-                                    </ul>
-            </nav>
-            </article>
-
-
-
+    </article>
     </main>
 
         
@@ -680,8 +613,8 @@ actually exists in the <code>Entity</code> model that is available through the
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
-        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?4138a7"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?2e9165"></script>
 
         <script type="text/javascript">
             var projectSlug = '';
@@ -692,7 +625,7 @@ actually exists in the <code>Entity</code> model that is available through the
             new Search(projectSlug, versionSlug);
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
-                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                                console.log(eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
                             }
 
             function googleTranslateElementInit() {
@@ -712,16 +645,6 @@ actually exists in the <code>Entity</code> model that is available through the
 
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 
-        
-                    <script type="text/javascript">
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                ga('create', 'UA-288343-7', 'auto');
-                ga('send', 'pageview');
-            </script>
         
         
             </body>

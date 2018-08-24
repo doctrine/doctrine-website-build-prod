@@ -33,7 +33,7 @@
             "@type": "Person",
             "name": "avalanche123"
         },
-         "publisher": {
+        "publisher": {
             "@type": "Organization",
             "name": "Doctrine",
             "logo": {
@@ -41,12 +41,8 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "
-    
-    
-
-Hi, my name is Bulat S. (my last name won&#039;t make it any easier, but in
-case you were won"
+        "description": "Hi, my name is Bulat S. (my last name won&#039;t make it any easier, but in
+case you were wondering it&#039;s "
     }
     </script>
 
@@ -54,12 +50,12 @@ case you were won"
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?aabb96" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?c8b404" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+        <link rel="stylesheet" href="https://www.doctrine-project.org/css/railscasts.css?62eb49" />
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -138,7 +134,7 @@ case you were won"
             </head>
     <body>
                     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
-                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?6c0dab" />Doctrine</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -215,7 +211,7 @@ case you were won"
             <main role="main" class="container-wrapper container">
             <article>
         <header>
-            <h2>MongoDB ODM: MongoDB for eCommerce <small>post</small></h2>
+            <h2>MongoDB ODM: MongoDB for eCommerce</h2>
         </header>
 
         <p class="lead">
@@ -227,7 +223,7 @@ case you were won"
         <hr />
 
         <div>
-            <div style="float: left; width: 300px;">
+                <div style="float: left; width: 300px;">
     <div style="padding: 15px; border: 1px solid #ccc; margin: 0 15px; background: #eee; color: #888">
     <p style="margin: 0;">
 
@@ -247,13 +243,11 @@ But let's go over everything step by step.
 </p>
     </div>
 </div>
-
 <p>Building an eCommerce system is not easy, and building a platform is
 even harder. When it comes to data in eCommerce, there is nothing
 definite, no real structure you could stick to, and no final
-requirements. Something as obvious as the "item you add to cart" could
+requirements. Something as obvious as the &quot;item you add to cart&quot; could
 be overly complicated when it comes to data.</p>
-
 <p>There is a good example of how to model the database for handling
 variable product attributes; <a href="http://www.magentocommerce.com">Magento</a>
 is one of the most advanced open source eCommerce solutions available
@@ -263,28 +257,23 @@ which solves the problem of variable attributes by sacrificing database
 level integrity and application performance. The amount of queries you
 need to perform to select one entity will grow with every attribute data
 type you introduce; however, it still is a viable solution.</p>
-
 <p>A document store on the other hand lets you save two absolutely
 different documents in the same collection. Because of its schema-less
 structure it is also possible to add or remove a document's properties
 after saving - it's a database that adapts to your data structure on the
 fly.</p>
-
 <p>At <a href="http://www.theopenskyproject.com/">OpenSky</a> , we decided to use
 <a href="http://www.mongodb.org/">MongoDB</a> for storage of products and use
 relational databases for order-related data since
 <a href="http://www.mongodb.org/">MongoDB</a> doesn't support transactions.</p>
-
 <p>So what is the benefit of using <a href="http://www.mongodb.org/">MongoDB</a> over
 MySQL, or any other RDBMS, for storing variable attribute data.
 Performance. This is the pseudo-query we would have to write to select
 one product, with id 1, and all of its attributes in a typical <a href="http://en.wikipedia.org/wiki/Entity-attribute-value_model">EAV
 model</a>:</p>
-
 <div class="right">
 
 </div>
-
 <pre><code>[txt]
 SELECT * FROM `product` WHERE id = 1;
 SELECT * FROM `product_attributes` = WHERE product_id = 1;
@@ -292,24 +281,18 @@ SELECT * FROM `product_values_int` WHERE product_id = 1;
 SELECT * FROM `product_values_varchar` WHERE product_id = 1;
 SELECT * FROM `product_values_datetime` WHERE product_id = 1;
 SELECT * FROM `product_values_text` WHERE product_id = 1;
-SELECT * FROM `product_values_float` WHERE product_id = 1;
-</code></pre>
-
+SELECT * FROM `product_values_float` WHERE product_id = 1;</code></pre>
 <p>After the above queries are run, there would be a huge step of data
 hydration into the product object, which
 <a href="http://www.magentocommerce.com">Magento</a> handles quite well, albeit
 slowly. Contrast this with what we would do in
 <a href="http://www.mongodb.org/">MongoDB</a>:</p>
-
 <pre><code>[javascript]
-db.products.find({'_id': '1'});
-</code></pre>
-
+db.products.find({'_id': '1'});</code></pre>
 <p>Not only is the selection simpler, but it also returns a JSON object,
 which can easily be hydrated into a native PHP object. And here is how a
 configurable product could be represented in
 <a href="http://www.mongodb.org/">MongoDB</a>:</p>
-
 <pre><code>[javascript]
 {
     "_id": ObjectId("4bffd798fdc2120019040000")
@@ -336,9 +319,7 @@ relationships in RDBMSs) are also possible, but they are generally
 only necessary if you need to access the object independently. For
 instance, if I needed a page to list all product options across all
 products, I would probably put options into their own collection
-and reference them from the product document.
-</code></pre>
-
+and reference them from the product document.</code></pre>
 <p>Of course, there are <a href="http://www.mongodb.org/display/DOCS/PHP+Language+Center#PHPLanguageCenter-LibraryandFrameworkTools">plenty of ORM
 libraries</a>
 for <a href="http://www.mongodb.org/">MongoDB</a> , which were either
@@ -357,17 +338,14 @@ can <a href="http://github.com/doctrine/mongodb-odm">find on github</a>. After
 contacting Jon and giving his library a couple of tries and
 <a href="http://www.phpunit.de/">tests</a> , I decided to use it for
 <a href="http://www.theopenskyproject.com/">OpenSky</a>'s products domain layer.</p>
-
 <p>I started to submit patches and <a href="http://www.phpunit.de/">unit tests</a> to
 the project and soon joined the core team for <a href="http://www.doctrine-project.org/projects/mongodb_odm">MongoDB
 ODM</a>. Today, we
 are past first alpha release of the project, and this is my first post
 on the Doctrine blog (yay!).</p>
-
 <p>Getting back to our example, this is how the product and embedded option
 classes for the aforementioned data structure could look:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 // Product.php
 /**
  * @Document(collection="products")
@@ -411,12 +389,9 @@ class Product
     }
 
     //...
-}
-</code></pre>
-
+}</code></pre>
 <p>And the Product class:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 // Product/Option.php
 namespace Product;
 /**
@@ -456,13 +431,10 @@ class Option
     }
 
     //...
-}
-</code></pre>
-
+}</code></pre>
 <p>Using the DocumentManager instance, we could easily persist the product
 with:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $product = new Product();
 $product-&gt;setName('Configurable T-Shirt');
 
@@ -493,29 +465,15 @@ patterns for ORMs. Check out the official Mongo ODM
 `project documentation &lt;http://www.doctrine-project.org/projects/mongodb_odm/1.0/docs/en&gt;`_
 for more information and examples. Complete instructions on how to
 setup your DocumentManager instance
-`can be found here &lt;http://www.doctrine-project.org/projects/mongodb_odm/1.0/docs/reference/introduction/en&gt;`_.
-</code></pre>
-
+`can be found here &lt;http://www.doctrine-project.org/projects/mongodb_odm/1.0/docs/reference/introduction/en&gt;`_.</code></pre>
 <p>The above code would store the product object as a document in
 <a href="http://www.mongodb.org/">MongoDB</a>.</p>
-
 <p>There is much more to talk about in terms or technologies, techniques
 and practices we adopt and use at
 <a href="http://www.theopenskyproject.com/">OpenSky</a> , so this post is
 definitely not the last one.</p>
-
         </div>
-
-                    <nav class="article">
-                <ul class="pagination">
-                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2010/07/21/mongodb-odm-query-builder-api.html" title="MongoDB ODM: Query Builder API"><span class="title">Previous: MongoDB ODM: Query Builder API</span></a></li>
-                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2010/07/27/document-oriented-databases-vs-relational-databases.html" title="MongoDB ODM: Document-Oriented Databases vs. Relational Databases."><span class="title">Next: MongoDB ODM: Document-Oriented Databases vs. Relational Databases.</span></a></li>
-                                    </ul>
-            </nav>
-            </article>
-
-
-
+    </article>
     </main>
 
         
@@ -580,8 +538,8 @@ definitely not the last one.</p>
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
-        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?4138a7"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?2e9165"></script>
 
         <script type="text/javascript">
             var projectSlug = '';
@@ -592,7 +550,7 @@ definitely not the last one.</p>
             new Search(projectSlug, versionSlug);
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
-                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                                console.log(eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
                             }
 
             function googleTranslateElementInit() {
@@ -612,16 +570,6 @@ definitely not the last one.</p>
 
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 
-        
-                    <script type="text/javascript">
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                ga('create', 'UA-288343-7', 'auto');
-                ga('send', 'pageview');
-            </script>
         
         
             </body>

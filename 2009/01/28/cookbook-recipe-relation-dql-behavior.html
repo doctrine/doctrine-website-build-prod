@@ -33,7 +33,7 @@
             "@type": "Person",
             "name": "jwage"
         },
-         "publisher": {
+        "publisher": {
             "@type": "Organization",
             "name": "Doctrine",
             "logo": {
@@ -50,12 +50,12 @@ learn some of the basics of"
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?aabb96" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?c8b404" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+        <link rel="stylesheet" href="https://www.doctrine-project.org/css/railscasts.css?62eb49" />
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -134,7 +134,7 @@ learn some of the basics of"
             </head>
     <body>
                     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
-                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?6c0dab" />Doctrine</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -211,7 +211,7 @@ learn some of the basics of"
             <main role="main" class="container-wrapper container">
             <article>
         <header>
-            <h2>Cookbook Recipe: Relation DQL Behavior <small>post</small></h2>
+            <h2>Cookbook Recipe: Relation DQL Behavior</h2>
         </header>
 
         <p class="lead">
@@ -223,18 +223,15 @@ learn some of the basics of"
         <hr />
 
         <div>
-            <p>Today I will teach you how to write a simple Doctrine behavior. You will
+                <p>Today I will teach you how to write a simple Doctrine behavior. You will
 learn some of the basics of creating a behavior and you will gain some
 pretty cool functionality for your relationships.</p>
-
 <p>We will write a behavior called <code>RelationDql</code> which allows you to add
 default query parts that are automatically added to your queries when
 you reference the specified relationships. So first we will get started
 by looking at an example schema we can apply this to.</p>
-
 <p>Here is an example schema where we have a <code>Site</code>, <code>BlogPost</code> and <code>Tag</code>
 model:</p>
-
 <pre><code>[yml]
 Site:
   columns:
@@ -243,7 +240,7 @@ Site:
 BlogPost:
   actAs: [Timestampable]
   columns:
-    title: string(255)
+    title: "string(255)"
     body: clob
     site_id: integer
   relations:
@@ -270,18 +267,14 @@ BlogPostTag:
     BlogPost:
       foreignAlias: BlogPostTags
     Tag:
-      foreignAlias: BlogPostTags
-</code></pre>
-
+      foreignAlias: BlogPostTags</code></pre>
 <p>This is a fairly simple schema as you can see, but what if we want to
 have a relationship on the <code>Site</code> model to retrieve the latest five
 <code>BlogPost</code> records or order the <code>Tags</code> relationship alphabetically by
 default?</p>
-
 <p>Lets modify our schema to take into account a new behavior that we will
 write in the next step. First modify the <code>Site</code> model and a relationship
 named <code>LatestBlogPosts</code>:</p>
-
 <pre><code>[yml]
 Site:
   actAs:
@@ -301,12 +294,9 @@ Site:
 
 **TIP** The ``autoComplete`` option is set to ``false`` so that the
 relationship is not reflected and added to the opposite end,
-``BlogPost`` automatically.
-</code></pre>
-
+``BlogPost`` automatically.</code></pre>
 <p>Now lets modify the <code>BlogPost</code> model to change the <code>Tags</code> relationship
 so that it is ordered alphabetically by name by default:</p>
-
 <pre><code>[yml]
 BlogPost:
   actAs:
@@ -316,7 +306,7 @@ BlogPost:
         Tags:
           orderBy: %s.name ASC
   columns:
-    title: string(255)
+    title: "string(255)"
     body: clob
     site_id: integer
   relations:
@@ -330,13 +320,10 @@ BlogPost:
 **TIP** The ``relations`` array is an array of changes to make to
 the DQL query. The key can be any valid function on the
 ``Doctrine_Query`` API and the value is of course the parameter to
-pass to the function.
-</code></pre>
-
+pass to the function.</code></pre>
 <p>Now that we have our schemas modified to take into account the new
 <code>RelationDql</code> behavior we need to actually write the code:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class RelationDql extends Doctrine_Template
 {
   protected $_options = array();
@@ -350,14 +337,11 @@ class RelationDql extends Doctrine_Template
   {
     $this-&gt;_table-&gt;addRecordListener(new RelationDqlListener($this-&gt;_options));
   }
-}
-</code></pre>
-
+}</code></pre>
 <p>The template is very simple. It only attaches a record listener to the
 invoking table. Their is where most of the magic happens. So now lets
 define the <code>RelationDqlListener</code> class:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class RelationDqlListener extends Doctrine_Record_Listener
 {
   protected $_options = array('relations' =&gt; array());
@@ -414,73 +398,44 @@ class RelationDqlListener extends Doctrine_Record_Listener
           return $componentsAfter;
       }
   }
-}
-</code></pre>
-
+}</code></pre>
 <p>So now we have the behavior defined so lets look at some example DQL
 queries and the SQL that is outputted:</p>
-
 <blockquote>
-  <p><strong>TIP</strong> Remember, in order for the dql callbacks to be executed we
-  must enable an attribute first.</p>
+<p><strong>TIP</strong> Remember, in order for the dql callbacks to be executed we
+must enable an attribute first.</p>
 </blockquote>
-
-<pre><code class="sourceCode php">&lt;?php
-    $manager-&gt;setAttribute('use_dql_callbacks', true);
-</code></pre>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
+    $manager-&gt;setAttribute('use_dql_callbacks', true);</code></pre>
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $q = Doctrine_Query::create()
   -&gt;select('s.name, p.title, p.created_at')
   -&gt;from('Site s')
   -&gt;leftJoin('s.LatestBlogPosts p');
 
-echo $q-&gt;getSql();
-</code></pre>
-
+echo $q-&gt;getSql();</code></pre>
 <p>The above would output the following SQL:</p>
-
 <pre><code>[sql]
 SELECT s.id AS s__id, s.name AS s__name, b.id AS b__id, b.title AS b__title, b.created_at AS b__created_at FROM site s LEFT JOIN blog_post b ON s.id = b.site_id ORDER BY b.created_at DESC LIMIT 5
 
 **NOTE** Notice how the ``ORDER BY`` and ``LIMIT`` were added to
-the query.
-</code></pre>
-
+the query.</code></pre>
 <p>Now lets look at an example that involves the <code>BlogPost</code> tags:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $q = Doctrine_Query::create()
   -&gt;from('BlogPost p')
   -&gt;leftJoin('p.Tags t');
 
-echo $q-&gt;getSql();
-</code></pre>
-
+echo $q-&gt;getSql();</code></pre>
 <p>The above would output the following SQL query:</p>
-
 <pre><code>[sql]
-SELECT b.id AS b__id, b.title AS b__title, b.body AS b__body, b.site_id AS b__site_id, b.created_at AS b__created_at, b.updated_at AS b__updated_at, t.id AS t__id, t.name AS t__name FROM blog_post b LEFT JOIN blog_post_tag b2 ON b.id = b2.blog_post_id LEFT JOIN tag t ON t.id = b2.tag_id ORDER BY t.name ASC
-</code></pre>
-
+SELECT b.id AS b__id, b.title AS b__title, b.body AS b__body, b.site_id AS b__site_id, b.created_at AS b__created_at, b.updated_at AS b__updated_at, t.id AS t__id, t.name AS t__name FROM blog_post b LEFT JOIN blog_post_tag b2 ON b.id = b2.blog_post_id LEFT JOIN tag t ON t.id = b2.tag_id ORDER BY t.name ASC</code></pre>
 <p>As you can see the <code>ORDER BY</code> clause to order the related tags by <code>name</code>
 was added for us.</p>
-
 <p>Pretty cool huh? You can use this in your projects to make your
 relationships a little nicer.</p>
-
         </div>
-
-                    <nav class="article">
-                <ul class="pagination">
-                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2009/01/26/php-5-3-and-doctrine-2-0-teaser.html" title="PHP 5.3 and Doctrine 2.0 Teaser"><span class="title">Previous: PHP 5.3 and Doctrine 2.0 Teaser</span></a></li>
-                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2009/01/30/new-documentation-pdf-downloads.html" title="New Documentation PDF Downloads"><span class="title">Next: New Documentation PDF Downloads</span></a></li>
-                                    </ul>
-            </nav>
-            </article>
-
-
-
+    </article>
     </main>
 
         
@@ -545,8 +500,8 @@ relationships a little nicer.</p>
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
-        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?4138a7"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?2e9165"></script>
 
         <script type="text/javascript">
             var projectSlug = '';
@@ -557,7 +512,7 @@ relationships a little nicer.</p>
             new Search(projectSlug, versionSlug);
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
-                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                                console.log(eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
                             }
 
             function googleTranslateElementInit() {
@@ -577,16 +532,6 @@ relationships a little nicer.</p>
 
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 
-        
-                    <script type="text/javascript">
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                ga('create', 'UA-288343-7', 'auto');
-                ga('send', 'pageview');
-            </script>
         
         
             </body>

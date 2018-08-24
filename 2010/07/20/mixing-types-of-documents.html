@@ -33,7 +33,7 @@
             "@type": "Person",
             "name": "jwage"
         },
-         "publisher": {
+        "publisher": {
             "@type": "Organization",
             "name": "Doctrine",
             "logo": {
@@ -50,12 +50,12 @@ is schema-less. We can store"
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?aabb96" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?c8b404" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+        <link rel="stylesheet" href="https://www.doctrine-project.org/css/railscasts.css?62eb49" />
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -134,7 +134,7 @@ is schema-less. We can store"
             </head>
     <body>
                     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
-                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?6c0dab" />Doctrine</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -211,7 +211,7 @@ is schema-less. We can store"
             <main role="main" class="container-wrapper container">
             <article>
         <header>
-            <h2>MongoDB ODM: Mixing Types of Documents <small>post</small></h2>
+            <h2>MongoDB ODM: Mixing Types of Documents</h2>
         </header>
 
         <p class="lead">
@@ -223,21 +223,18 @@ is schema-less. We can store"
         <hr />
 
         <div>
-            <p>One major advantage to using something like MongoDB is the fact that it
+                <p>One major advantage to using something like MongoDB is the fact that it
 is schema-less. We can store multiple types of documents in a single
 collection and we are not limited to a single type of document in
 embedded and referenced documents. This article shows how you can easily
 mix types of documents in collections, embedded and referenced
 documents.</p>
-
-<h1 id="mixing-types-in-collections">Mixing Types in Collections</h1>
-
+<h1>Mixing Types in Collections</h1>
 <p>If you don't want to use <code>SINGLE_COLLECTION</code> inheritance you can easily
 store different documents in the same collection by using a
 discriminator field. First define an <code>Article</code> document that maps to
 <code>my_documents</code>:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 /**
  * @Document(collection="my_documents")
  * @DiscriminatorField(fieldName="type")
@@ -246,13 +243,10 @@ discriminator field. First define an <code>Article</code> document that maps to
 class Article
 {
     // ...
-}
-</code></pre>
-
+}</code></pre>
 <p>Next create another document named <code>Album</code> and also map it to
 <code>my_documents</code>:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 /**
  * @Document(collection="my_documents")
  * @DiscriminatorField(fieldName="type")
@@ -261,15 +255,12 @@ class Article
 class Album
 {
     // ...
-}
-</code></pre>
-
+}</code></pre>
 <p>Now if you create some instances and persist them they will all be
 stored in the <code>my_documents</code> collection and will have a discriminator
 field named <code>type</code> automatically set with the value specified in the
 mapping:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $article = new Article();
 $article-&gt;setTitle('Sample Article');
 // ...
@@ -278,36 +269,25 @@ $album = new Album();
 $album-&gt;setName('My Album');
 
 $dm-&gt;persist($article);
-$dm-&gt;persist($album);
-</code></pre>
-
+$dm-&gt;persist($album);</code></pre>
 <p>Finally, if you retrieve the documents they'll all be retrieved from
 <code>my_documents</code> but you will get back the proper PHP classes that created
 them:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $articles = $dm-&gt;find('Article');
-$albums = $dm-&gt;find('Album');
-</code></pre>
-
+$albums = $dm-&gt;find('Album');</code></pre>
 <p>You can retrieve more then just one document type by specifying an
 array:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $documents = $dm
     -&gt;createQuery(array('Article', 'Album'))
-    -&gt;execute();
-</code></pre>
-
+    -&gt;execute();</code></pre>
 <p>The returned documents will contain instances of articles and albums!</p>
-
-<h1 id="mixing-types-in-embedded-documents">Mixing Types in Embedded Documents</h1>
-
+<h1>Mixing Types in Embedded Documents</h1>
 <p>You can store multiple types of documents in embedded documents by
 simply omitting the <code>targetDocument</code> option. First create a <code>User</code>
 document and embed multiple task documents:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 /** @Document(collection="users") */
 class User
 {
@@ -321,12 +301,9 @@ class User
 
 **NOTE** Notice how on the ``$tasks`` annotation we don't specify
 whether it is ``one`` or ``many``. This is because we know it is
-``many`` due to the default value being an array.
-</code></pre>
-
+``many`` due to the default value being an array.</code></pre>
 <p>Now create the different types of tasks we can add to the user:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 /** @EmbeddedDocument */
 class DownloadTask
 {
@@ -337,12 +314,9 @@ class DownloadTask
 class UploadTask
 {
     // ...
-}
-</code></pre>
-
+}</code></pre>
 <p>Now you can embed any type of class in the <code>$tasks</code> property:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $user = $dm-&gt;findOne('User', array(...));
 
 $task = new DownloadTask();
@@ -355,18 +329,14 @@ $task = new UploadTask();
 
 $user-&gt;addTask($task);
 
-$dm-&gt;flush();
-</code></pre>
-
-<h1 id="mixing-types-in-referenced-documents">Mixing Types in Referenced Documents</h1>
-
+$dm-&gt;flush();</code></pre>
+<h1>Mixing Types in Referenced Documents</h1>
 <p>Mixing types in referenced documents works just the same as embedded by
 omitting the <code>targetDocument</code> option. In this example a user can add
 references to all his favorite albums, songs and books. First define a
 <code>User</code> document with a many references property for storing the users
 favorites:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 /** @Document(collection="users") */
 class User
 {
@@ -376,12 +346,9 @@ class User
     private $favorites = array();
 
     // ...
-}
-</code></pre>
-
+}</code></pre>
 <p>Now here is what the referenced documents would look like:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 /** @Document(collection="albums") */
 class Album
 {
@@ -398,23 +365,17 @@ class Song
 class Book
 {
     // ...
-}
-</code></pre>
-
+}</code></pre>
 <p>Now it is easy to add the references to his favorites:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $user-&gt;addFavorite($album);
 $user-&gt;addFavorite($song);
 $user-&gt;addFavorite($book);
 
-$dm-&gt;flush();
-</code></pre>
-
+$dm-&gt;flush();</code></pre>
 <p>When you retrieve the user and access the <code>$favorites</code> the documents
 will be grouped by type and loaded with one or more <code>$in</code> queries:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $user = $dm-&gt;findOne('User', array(...));
 $favorites = $user-&gt;getFavorites();
 
@@ -422,24 +383,11 @@ $favorites = $user-&gt;getFavorites();
 // Contains Album, Song and Book instances
 foreach ($favorites as $favorite) {
     // ...
-}
-</code></pre>
-
+}</code></pre>
 <p>That is it! It is easy to take advantage of the schema-less features of
 MongoDB with the Doctrine Object Document Mapper (ODM)!</p>
-
         </div>
-
-                    <nav class="article">
-                <ul class="pagination">
-                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2010/07/19/your-own-orm-doctrine2.html" title="Write your own ORM on top of Doctrine2"><span class="title">Previous: Write your own ORM on top of Doctrine2</span></a></li>
-                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2010/07/21/mongodb-odm-query-builder-api.html" title="MongoDB ODM: Query Builder API"><span class="title">Next: MongoDB ODM: Query Builder API</span></a></li>
-                                    </ul>
-            </nav>
-            </article>
-
-
-
+    </article>
     </main>
 
         
@@ -504,8 +452,8 @@ MongoDB with the Doctrine Object Document Mapper (ODM)!</p>
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
-        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?4138a7"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?2e9165"></script>
 
         <script type="text/javascript">
             var projectSlug = '';
@@ -516,7 +464,7 @@ MongoDB with the Doctrine Object Document Mapper (ODM)!</p>
             new Search(projectSlug, versionSlug);
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
-                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                                console.log(eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
                             }
 
             function googleTranslateElementInit() {
@@ -536,16 +484,6 @@ MongoDB with the Doctrine Object Document Mapper (ODM)!</p>
 
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 
-        
-                    <script type="text/javascript">
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                ga('create', 'UA-288343-7', 'auto');
-                ga('send', 'pageview');
-            </script>
         
         
             </body>

@@ -33,7 +33,7 @@
             "@type": "Person",
             "name": "gmorkevicius"
         },
-         "publisher": {
+        "publisher": {
             "@type": "Organization",
             "name": "Doctrine",
             "logo": {
@@ -50,12 +50,12 @@ capabilities handling behaviors "
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?aabb96" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?c8b404" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+        <link rel="stylesheet" href="https://www.doctrine-project.org/css/railscasts.css?62eb49" />
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -134,7 +134,7 @@ capabilities handling behaviors "
             </head>
     <body>
                     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
-                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?6c0dab" />Doctrine</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -211,7 +211,7 @@ capabilities handling behaviors "
             <main role="main" class="container-wrapper container">
             <article>
         <header>
-            <h2>Doctrine2 Behavioral Extensions <small>post</small></h2>
+            <h2>Doctrine2 Behavioral Extensions</h2>
         </header>
 
         <p class="lead">
@@ -223,12 +223,11 @@ capabilities handling behaviors "
         <hr />
 
         <div>
-            <p>These behavioral extensions will give you another view on Doctrine2
+                <p>These behavioral extensions will give you another view on Doctrine2
 capabilities handling behaviors through the EventListeners. These
 extensions operate like some of the most commonly used behaviors,
 leaving the domain objects as clean as possible. Annotations makes it
 easy to understand an intended behavior of properties on your Entities.</p>
-
 <div style="float: left; width: 450px;">
     <div style="padding: 15px; border: 1px solid #ccc; margin: 0 15px; background: #eee; color: #888">
     <p style="margin: 0;">
@@ -247,18 +246,14 @@ projects. They have great potential.
 </p>
     </div>
 </div>
-
 <p><strong>NOTE</strong> This blog entry relates to Doctrine2 Beta4 ORM version and
- could possibly be outdated depending on what the current version of
- Doctrine2 is at the time of you reading this post. Then integrating
- these extensions on your project it is recommended to use latest
- Doctrine2 library packages, because where are most recent updates
- used on extensions for metadata caching and annotations.</p>
-
+could possibly be outdated depending on what the current version of
+Doctrine2 is at the time of you reading this post. Then integrating
+these extensions on your project it is recommended to use latest
+Doctrine2 library packages, because where are most recent updates
+used on extensions for metadata caching and annotations.</p>
 <div style="clear:both"></div>
-
 <p>Content:</p>
-
 <ul>
 <li>Introduction on behavioral extensions</li>
 <li>Setup and autoloading</li>
@@ -268,37 +263,28 @@ projects. They have great potential.
 <li>Timestampable extension</li>
 <li>All nested together</li>
 </ul>
-
-<p>First of all, this post intends to give an example on how "behaviors"
+<p>First of all, this post intends to give an example on how &quot;behaviors&quot;
 can be implemented through the Doctrine2 EventListeners. All these
 behavioral extensions can be nested and support flush operation which
 can include lots of update, insert and remove actions. This is the most
 common issue when behavior development process is started.</p>
-
 <p>Furthermore, all extensions are mapped by annotations consequently
 leaving domain objects clean from interfaces and their methods. Plus,
 the performance speed is even greater if cache driver is used, because
 metadata for single Entity is mapped and validated only once.</p>
-
-<p>Before we begin exploring the extensions, I&#96;m glad to mention that
+<p>Before we begin exploring the extensions, I`m glad to mention that
 these extensions are already available on Symfony2 Bundle ported by
 Christophe Coevoet.</p>
-
-<p>&#35;&#35; Setting up the autoloader and listeners</p>
-
+<p>## Setting up the autoloader and listeners</p>
 <p>First of all, download this library from public github repository and
 setup the autoloading for extensions:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $classLoader = new \Doctrine\Common\ClassLoader('Gedmo', "/path/to/library/DoctrineExtensions/lib");
-$classLoader-&gt;register();
-</code></pre>
-
+$classLoader-&gt;register();</code></pre>
 <p>Translatable behavior will need additional annotation driver for
 Translation Entity metadata. The example below illustrates the chain
 driver implementation:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $chainDriverImpl = new \Doctrine\ORM\Mapping\Driver\DriverChain();
 $yourDefaultDriverImpl = new \Doctrine\ORM\Mapping\Driver\YamlDriver('/yml/mapping/files'); // only an example
 $translatableDriverImpl = $doctrineOrmConfig-&gt;newDefaultAnnotationDriver(
@@ -306,12 +292,9 @@ $translatableDriverImpl = $doctrineOrmConfig-&gt;newDefaultAnnotationDriver(
 );
 $chainDriverImpl-&gt;addDriver($yourDefaultDriverImpl, 'Entity');
 $chainDriverImpl-&gt;addDriver($translatableDriverImpl, 'Gedmo\Translatable');
-$doctrineOrmConfig-&gt;setMetadataDriverImpl($chainDriverImpl);
-</code></pre>
-
-<h1 id="attaching-the-event-listeners-on-the-event-manager">Attaching the Event Listeners on the event manager</h1>
-
-<pre><code class="sourceCode php">&lt;?php
+$doctrineOrmConfig-&gt;setMetadataDriverImpl($chainDriverImpl);</code></pre>
+<h1>Attaching the Event Listeners on the event manager</h1>
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $evm = new \Doctrine\Common\EventManager();
 // timestampable
 $evm-&gt;addEventSubscriber(new \Gedmo\Timestampable\TimestampableListener());
@@ -329,41 +312,32 @@ $evm-&gt;addEventSubscriber($translationListener);
 
 **NOTE** It is recommended to attach TranslationListener as the
 last whereas sluggable extension must create a slug before
-translating it.
-</code></pre>
-
-<p>&#35;&#35; Translatable</p>
-
+translating it.</code></pre>
+<p>## Translatable</p>
 <p>Translatable behavior offers a very handy solution for translating
 specific record fields into different languages. Furthermore, it loads
 the translations automatically for the currently used locale. Locale can
 be set by TranslationListener during it's initialization or later. It
 also leaves the possibility to force a specific locale directly on the
 Entity itself.</p>
-
 <p>Feature list:</p>
-
 <ul>
 <li>Translates all records automatically when object hydration is used</li>
 <li>Supports a separate translation table for each Entity</li>
 <li>There can be a default locale specified, which would force entity to
 leave its original translation in default locale.</li>
 </ul>
-
-<h1 id="translatable-annotations%3A">Translatable annotations:</h1>
-
+<h1>Translatable annotations:</h1>
 <ul>
 <li>@gedmo:Translatable indicates that the column is translatable</li>
-<li>@gedmo:TranslationEntity(class="my") this class annotation tells to
+<li>@gedmo:TranslationEntity(class=&quot;my&quot;) this class annotation tells to
 use specified Entity to store translations</li>
 <li>@gedmo:Locale or @gedmo:Language indicates that the column must not
-be mapped and that it may be used to override TranslationListener&#96;s
+be mapped and that it may be used to override TranslationListener`s
 locale</li>
 </ul>
-
 <p>Translatable Entity example:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 namespace Entity;
 
 /**
@@ -424,44 +398,34 @@ class Article
     {
         $this-&gt;locale = $locale;
     }
-}
-</code></pre>
-
+}</code></pre>
 <p>There is no need for any additional operations while working with
 Translatable Entities. All processing is done by event listener, just
 like in good old behaviors. Except that in Doctrine2 the code is simpler
 and easy to understand and you may inspect it and customize if you see
 any point in doing that.</p>
-
-<p>Here are standard usage examples, the locale was set to "en&#95;us" on
+<p>Here are standard usage examples, the locale was set to &quot;en_us&quot; on
 listener:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $article = new \Entity\Article;
 $article-&gt;setTitle('my title in en');
 $article-&gt;setContent('my content in en');
 $em-&gt;persist($article);
-$em-&gt;flush();
-</code></pre>
-
+$em-&gt;flush();</code></pre>
 <p>This inserted an article and populated the translations for it in
-"en&#95;us" locale. Now lets translate it into another language:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+&quot;en_us&quot; locale. Now lets translate it into another language:</p>
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 // first load the article
 $article = $em-&gt;find('Entity\Article', 1 /*article id*/);
 $article-&gt;setTitle('my title in de');
 $article-&gt;setContent('my content in de');
 $article-&gt;setTranslatableLocale('de_de'); // change locale
 $em-&gt;persist($article);
-$em-&gt;flush();
-</code></pre>
-
-<p>This updated an article and inserted the translations for it in "de&#95;de"
+$em-&gt;flush();</code></pre>
+<p>This updated an article and inserted the translations for it in &quot;de_de&quot;
 locale. The TranslationRepository gives some handy methods on retrieving
 all translations:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $em-&gt;clear(); // ensure the cache is clean
 $article = $em-&gt;find('Entity\Article', 1 /*article id*/);
 $repository = $em-&gt;getRepository('Gedmo\Translatable\Entity\Translation');
@@ -482,33 +446,25 @@ Array (
 )*/
 // the locale now is "en_us" and current article::title in db is "my title in de"
 echo $article-&gt;getTitle();
-// prints: "my title in en" because it loads the translation automatically
-</code></pre>
-
-<h1 id="using-the-%22default-locale%22%3A">Using the "default locale":</h1>
-
+// prints: "my title in en" because it loads the translation automatically</code></pre>
+<h1>Using the &quot;default locale&quot;:</h1>
 <p>In some cases we need the default translation as a fallback if record
 does not have a translation on globally used locale. In that case
 TranslationListener uses the current value of Entity. But there is a way
 to specify a default locale which would force Entity to keep
 it<code>s field value on default locale. And if record has already been translated in this locale, the record will not update it</code>s
 value, only insert a new translation into translation table. You can
-specify the default locale on TranslationListener&#96;s initialization:</p>
-
-<pre><code class="sourceCode php">&lt;?php
-$translationListener-&gt;setDefaultLocale('en_us');
-</code></pre>
-
-<h1 id="using-a-diferent-translation-entity-for-translation-storage%3A">Using a diferent Translation Entity for translation storage:</h1>
-
+specify the default locale on TranslationListener`s initialization:</p>
+<pre><code class="language-{.sourceCode .php}">&lt;?php
+$translationListener-&gt;setDefaultLocale('en_us');</code></pre>
+<h1>Using a diferent Translation Entity for translation storage:</h1>
 <p>In some cases when there are thousands of records we would like to have
 a single table for translations of this Entity in order to increase the
 performance on translation loading speed. The example below will show
 how to specify a diferent Entity for your translations by extending the
 translation mapped superclass. Thanks to Christophe Coevoet for the idea
 on translation abstraction.</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 namespace Entity\Translation;
 
 use Gedmo\Translatable\Entity\AbstractTranslation;
@@ -524,14 +480,11 @@ class ArticleTranslation extends AbstractTranslation
     /**
      * All required columns are mapped through inherited superclass
      */
-}
-</code></pre>
-
+}</code></pre>
 <p>This Entity will be used instead of default Translation Entity only if
-we specify a class annotation @gedmo:TranslationEntity(class="Entity").
+we specify a class annotation @gedmo:TranslationEntity(class=&quot;Entity&quot;).
 Now lets slightly modify our Article Entity:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 /**
  * @Entity
  * @gedmo:TranslationEntity(class="Entity\Translation\ArticleTranslation")
@@ -539,14 +492,10 @@ Now lets slightly modify our Article Entity:</p>
 class Article
 {
     // ...
-}
-</code></pre>
-
+}</code></pre>
 <p>Now all translations of Article will be stored and queried from a
 specific table.</p>
-
-<p>&#35;&#35; Tree</p>
-
+<p>## Tree</p>
 <p>Tree behavior is not a Nested Set which it was in the first version of
 Doctrine. This one does not require any TreeManager nor NodeWrapper and
 it does not support multiple roots on tree because it is meant to be
@@ -556,9 +505,7 @@ to be used for Tree structured Entities. This Tree allows all traverse
 operations to be done on your nodes. When performance or advanced
 customizations becomes an issue, a more advanced implementation like
 nested-set by Brandon Turner might be needed.</p>
-
 <p>Tree annotations:</p>
-
 <ul>
 <li>@gedmo:TreeLeft identifies the column as storage of Tree left value</li>
 <li>@gedmo:TreeRight identifies the column as storage of Tree right
@@ -566,11 +513,9 @@ value</li>
 <li>@gedmo:TreeParent this will identify this column as a ManyToOne
 relation of parent node</li>
 </ul>
-
 <p>All these annotations are required for the Tree to be functional. And
 here is an example of a simple Tree Entity:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 namespace Entity;
 
 /**
@@ -639,12 +584,9 @@ class Category
     {
         return $this-&gt;parent;
     }
-}
-</code></pre>
-
+}</code></pre>
 <p>Basic usage example:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $food = new Entity\Category();
 $food-&gt;setTitle('Food');
 
@@ -664,20 +606,14 @@ $em-&gt;persist($food);
 $em-&gt;persist($fruits);
 $em-&gt;persist($vegetables);
 $em-&gt;persist($carrots);
-$em-&gt;flush();
-</code></pre>
-
+$em-&gt;flush();</code></pre>
 <p>The result after flush will generate the tree of food chain :)</p>
-
 <pre><code>/food (1-8)
     /fruits (2-3)
     /vegetables (4-7)
-        /carrots (5-6)
-</code></pre>
-
-<h1 id="using-treenoderepository-functions%3A">Using TreeNodeRepository functions:</h1>
-
-<pre><code class="sourceCode php">&lt;?php
+        /carrots (5-6)</code></pre>
+<h1>Using TreeNodeRepository functions:</h1>
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $repo = $em-&gt;getRepository('Entity\Category');
 
 $food = $repo-&gt;findOneByTitle('Food');
@@ -721,34 +657,27 @@ $carrots = $repo-&gt;findOneByTitle('Carrots');
 $repo-&gt;moveUp($carrots, 1/*by one position*/);
 // carrots now should be at the top in it`s level
 $repo-&gt;moveDown($carrots, true/*to bottom*/);
-// carrots now should be at the bottom in it`s level
-</code></pre>
-
+// carrots now should be at the bottom in it`s level</code></pre>
 <p>After using such Tree operations like: reorder, recover, verify it is
 recommended to clear the EntityManager cache since it may have cached
 nodes with old left and right values. This would be an issue if you plan
 on using nodes during the same request after mentioned operations. And
 if you need some custom functions on your Node repository - simply
 extend the TreeNodeRepository.</p>
-
-<p>&#35;&#35; Sluggable</p>
-
+<p>## Sluggable</p>
 <p>Sluggable behavior will build the slug from annotated fields on a chosen
 slug field which should store the generated slug. Slugs can be unique
 and styled. Currently this extension does not support unique constraint
 on slug field in cases when there are many inserts on a single flush
 operation, because it cannot issue a query to ensure uniqueness. Use a
 simple index instead.</p>
-
-<h1 id="sluggable-annotations%3A">Sluggable annotations:</h1>
-
+<h1>Sluggable annotations:</h1>
 <ul>
 <li>@gedmo:Sluggable all columns identified by this annotation will be
 included in a slug</li>
 <li>@gedmo:Slug this column will be used to store the generated slug</li>
 </ul>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 namespace Entity;
 
 /**
@@ -806,12 +735,9 @@ class Article
     {
         return $this-&gt;slug;
     }
-}
-</code></pre>
-
+}</code></pre>
 <p>Basic usage example:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $article = new Entity\Article();
 $article-&gt;setTitle('the title');
 $article-&gt;setCode('my code');
@@ -819,23 +745,19 @@ $em-&gt;persist($article);
 $em-&gt;flush();
 
 echo $article-&gt;getSlug();
-// prints: the-title-my-code
-</code></pre>
-
-<p>&#35;&#35;&#35; Some other configuration options:</p>
-
+// prints: the-title-my-code</code></pre>
+<p>### Some other configuration options:</p>
 <ul>
 <li>updatable (optional, default=true) - true to update the slug on
 sluggable field changes, false - otherwise</li>
 <li>unique (optional, default=true) - true if slug should be unique and
 if identical it will be prefixed, false - otherwise</li>
-<li>separator (optional, default="-") - separator which will separate
+<li>separator (optional, default=&quot;-&quot;) - separator which will separate
 words in slug</li>
-<li>style (optional, default="default") - "default" all letters will be
-lowercase, "camel" - first letter will be uppercase</li>
+<li>style (optional, default=&quot;default&quot;) - &quot;default&quot; all letters will be
+lowercase, &quot;camel&quot; - first letter will be uppercase</li>
 </ul>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 // diferent slug configuration example
 class Article
 {
@@ -848,37 +770,29 @@ class Article
     // ...
 }
 
-// result would be: The_Title_My_Code
-</code></pre>
-
-<p>&#35;&#35; Timestampable</p>
-
+// result would be: The_Title_My_Code</code></pre>
+<p>## Timestampable</p>
 <p>Timestampable behavior will automate the update of date fields on your
 Entities. It works through annotations and can update fields on
 creation, update or even on specific internal or related Entity property
 change.</p>
-
-<h1 id="timestampable-annotations%3A">Timestampable annotations:</h1>
-
+<h1>Timestampable annotations:</h1>
 <ul>
 <li>@gedmo:Timestampable this annotation specifies that this column is
 timestampable, by default it updates this column on general update.
 If column is not (date, datetime or time) it will trigger an
 exception. Bellow are listed available configuration options:</li>
 </ul>
-
 <p>Available configuration options:</p>
-
 <ul>
 <li>on - is the main option and can be: create, update or change. This
 option indicates when an update should be triggered</li>
-<li>field - only valid if on="change" is specified, tracks property for
+<li>field - only valid if on=&quot;change&quot; is specified, tracks property for
 changes</li>
-<li>value - only valid if on="change" is specified, if tracked field has
+<li>value - only valid if on=&quot;change&quot; is specified, if tracked field has
 the specified value when it triggers an update</li>
 </ul>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 namespace Entity;
 
 /**
@@ -934,12 +848,9 @@ class Article
     {
         return $this-&gt;updated;
     }
-}
-</code></pre>
-
-<p>&#35;&#35; All nested together</p>
-
-<pre><code class="sourceCode php">&lt;?php
+}</code></pre>
+<p>## All nested together</p>
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 namespace Entity;
 
 /**
@@ -1043,41 +954,25 @@ class Category
     {
         return $this-&gt;slug;
     }
-}
-</code></pre>
-
-<p>After running some inserts you will get the expected result. Don&#96;t be
+}</code></pre>
+<p>After running some inserts you will get the expected result. Don`t be
 afraid to use concurrent flush with many inserts and updates or even
 remove operations, everything is meant to work fine.</p>
-
 <p>Some of you may think that using no interface takes longer to check
 Entities on events. In fact, it takes only a single 'if' statement and a
 cache check on first request. This way the process is much cleaner.</p>
-
 <p>Maybe these extensions will help some of you realize how clean domain
 objects can be and how well the model represents itself. It's much more
 convenient than Active Record - browsing several extended classes, going
 through magic methods of those classes. While here you see everything in
 one grasp.</p>
-
 <p>There will be updates on my blog page and new articles which may
 interest some of you. You can give some love back by forking a
 repository and creating an ODM Document support on extensions or
 suggesting me an idea of improvements or maybe an issue which you have
 detected.</p>
-
         </div>
-
-                    <nav class="article">
-                <ul class="pagination">
-                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2010/11/18/common-rc2-dbal-rc2-release.html" title="Common RC2 and DBAL RC3 released"><span class="title">Previous: Common RC2 and DBAL RC3 released</span></a></li>
-                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2010/12/04/doctrine2-rc1.html" title="Doctrine ORM RC1 released"><span class="title">Next: Doctrine ORM RC1 released</span></a></li>
-                                    </ul>
-            </nav>
-            </article>
-
-
-
+    </article>
     </main>
 
         
@@ -1142,8 +1037,8 @@ detected.</p>
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
-        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?4138a7"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?2e9165"></script>
 
         <script type="text/javascript">
             var projectSlug = '';
@@ -1154,7 +1049,7 @@ detected.</p>
             new Search(projectSlug, versionSlug);
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
-                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                                console.log(eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
                             }
 
             function googleTranslateElementInit() {
@@ -1174,16 +1069,6 @@ detected.</p>
 
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 
-        
-                    <script type="text/javascript">
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                ga('create', 'UA-288343-7', 'auto');
-                ga('send', 'pageview');
-            </script>
         
         
             </body>

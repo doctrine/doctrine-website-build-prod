@@ -33,7 +33,7 @@
             "@type": "Person",
             "name": "default"
         },
-         "publisher": {
+        "publisher": {
             "@type": "Organization",
             "name": "Doctrine",
             "logo": {
@@ -50,12 +50,12 @@ component because it talks directl"
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?aabb96" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?c8b404" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+        <link rel="stylesheet" href="https://www.doctrine-project.org/css/railscasts.css?62eb49" />
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -134,7 +134,7 @@ component because it talks directl"
             </head>
     <body>
                     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
-                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?6c0dab" />Doctrine</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -211,7 +211,7 @@ component because it talks directl"
             <main role="main" class="container-wrapper container">
             <article>
         <header>
-            <h2>Security in Doctrine <small>post</small></h2>
+            <h2>Security in Doctrine</h2>
         </header>
 
         <p class="lead">
@@ -223,105 +223,89 @@ component because it talks directl"
         <hr />
 
         <div>
-            <p>When using Doctrine in a project it is always a security critical
+                <p>When using Doctrine in a project it is always a security critical
 component because it talks directly to your database. As such security
 is very important to us. In security however, context is important and
 providing you with query capabilities we have to expose you to the risk
 of SQL injections.</p>
-
 <p>Doctrine cannot prevent you from building SQL injections into your
 applications and so can no other DBAL, because it would require hiding
 SQL completely. But hiding SQL completely is not wanted, because it is
 such a powerful language.</p>
-
 <p>Therefore it is still your responsibility to make sure that you are
 using Doctrine correctly when working with SQL.</p>
-
 <p>But how would you know how to do so? Until now we had some small bits
 about security here and there in the documentation, mostly in the
 chapters about Query objects. We came to the conclusion that this is not
 enough.</p>
-
 <p>That conclusion sinked in with a security issue we became aware of last
 month, where one Doctrine user reported that one of the core
 <code>Doctrine\DBAL\Connection</code> APIs is supposedly vulnerable to SQL
 injection. When you use <code>$connection-&gt;insert($tableName, $values)</code>, then
 both the table name and the keys (columns) of the <code>$values</code> array are
 not escaped, because we assume they are never user input.</p>
-
 <p>We evaluated this issue together with <a href="http://blog.astrumfutura.com/">Padraic
 Brady</a> (a known PHP security researcher)
 and came to the conclusion that this is not a security issue for us.
 Why? Because we don't think this part of the API can be secured and
 trying will make our users feel safe, when they are not. Using the DBAL
 APIs directly always posed a much higher risk than using just the ORM.</p>
-
 <p>You might think we are nuts by just claiming a non issue, but consider
 the assumptions we make about tables and columns and our reasoning:</p>
-
 <ul>
-<li><p>Quoting identifiers is bad, because it changes them from
+<li>
+<p>Quoting identifiers is bad, because it changes them from
 case-insensitive to case-sensitive. Even more weird, Oracle unquoted
 identifiers are uppercased, PostgreSQL unquoted identifiers are
-lowercased. MySQL casing is based on a config option. Doctrine 1.&#42;
+lowercased. MySQL casing is based on a config option. Doctrine 1.*
 had various unfixable bugs because of identifier quoting, which is
 why we decided that Doctrine will not use automatic identifier
-quoting.</p></li>
-<li><p>The APIs of <code>Connection#insert()</code>, <code>Connection#update()</code> and
+quoting.</p>
+</li>
+<li>
+<p>The APIs of <code>Connection#insert()</code>, <code>Connection#update()</code> and
 <code>Connection#delete()</code> therefore accept both quoted and unquoted
-table/column identifiers, because quoting is the users choice.</p></li>
-<li><p>A mechanism to detect SQL injection in strings that can be either
+table/column identifiers, because quoting is the users choice.</p>
+</li>
+<li>
+<p>A mechanism to detect SQL injection in strings that can be either
 quoted or unquoted is impossible to write completely secure. There
 are too many edge cases to consider and there is a realistic chance
-to miss one of them.</p></li>
-<li><p>If you provide an API that is just secure in 99.999% of all cases,
-then you should not claim it is secure at all.</p></li>
+to miss one of them.</p>
+</li>
+<li>
+<p>If you provide an API that is just secure in 99.999% of all cases,
+then you should not claim it is secure at all.</p>
+</li>
 </ul>
-
 <p>At this point you can still think we are wrong releasing insecure
 software, however let me ask back: Isn't PHP shipping insecure software
 by providing PDO? SQL injection is possible by using PDO wrong. I can
 enumerate lots of libraries where security is the developers
 responsibility: Template engines, authentication libraries and so on.</p>
-
 <p>A proper secured system requires knowledge about the context. That is
 why any kind of database abstraction layers can never fully protect you
 from SQL injection, because it does not know the context you are using
 it in.</p>
-
 <p>To avoid secret knowledge about our security assumptions we are now
 starting to be completely explicit about these issues. Both DBAL and ORM
-now contain a &#96;SECURITY.md&#96; file, which contains basic information
+now contain a `SECURITY.md` file, which contains basic information
 about security and links to much more detailed documentation chapters on
 Doctrine security.</p>
-
 <p>We have made an effort to list all the functions and operations that are
 safe from SQL injection. There are not very many of them in the DBAL,
 because it is such a low level library. The ORM however is pretty
 secure, except when concatenating user input into DQL and SQL queries.</p>
-
 <p>Read all the information about Security in Doctrine in the
 documentation.</p>
-
 <ul>
 <li><a href="http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/security.html">DBAL
 Security</a></li>
 <li><a href="http://docs.doctrine-project.org/en/latest/reference/security.html">ORM
 Security</a></li>
 </ul>
-
         </div>
-
-                    <nav class="article">
-                <ul class="pagination">
-                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2014/02/21/doctrine_2_5_beta3.html" title="Doctrine DBAL 2.5 BETA3"><span class="title">Previous: Doctrine DBAL 2.5 BETA3</span></a></li>
-                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2014/09/11/instantiator-1-0-0.html" title="Doctrine Instantiator 1.0.0 released"><span class="title">Next: Doctrine Instantiator 1.0.0 released</span></a></li>
-                                    </ul>
-            </nav>
-            </article>
-
-
-
+    </article>
     </main>
 
         
@@ -386,8 +370,8 @@ Security</a></li>
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
-        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?4138a7"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?2e9165"></script>
 
         <script type="text/javascript">
             var projectSlug = '';
@@ -398,7 +382,7 @@ Security</a></li>
             new Search(projectSlug, versionSlug);
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
-                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                                console.log(eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
                             }
 
             function googleTranslateElementInit() {
@@ -418,16 +402,6 @@ Security</a></li>
 
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 
-        
-                    <script type="text/javascript">
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                ga('create', 'UA-288343-7', 'auto');
-                ga('send', 'pageview');
-            </script>
         
         
             </body>

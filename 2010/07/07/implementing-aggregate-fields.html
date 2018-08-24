@@ -33,7 +33,7 @@
             "@type": "Person",
             "name": "beberlei"
         },
-         "publisher": {
+        "publisher": {
             "@type": "Organization",
             "name": "Doctrine",
             "logo": {
@@ -50,12 +50,12 @@ of data that can be computed "
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?aabb96" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?c8b404" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+        <link rel="stylesheet" href="https://www.doctrine-project.org/css/railscasts.css?62eb49" />
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -134,7 +134,7 @@ of data that can be computed "
             </head>
     <body>
                     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
-                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?6c0dab" />Doctrine</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -211,7 +211,7 @@ of data that can be computed "
             <main role="main" class="container-wrapper container">
             <article>
         <header>
-            <h2>Implementing Aggregate Fields with Doctrine 2 <small>post</small></h2>
+            <h2>Implementing Aggregate Fields with Doctrine 2</h2>
         </header>
 
         <p class="lead">
@@ -223,31 +223,25 @@ of data that can be computed "
         <hr />
 
         <div>
-            <p>You will often come across the requirement to display aggregate values
+                <p>You will often come across the requirement to display aggregate values
 of data that can be computed by using the MIN, MAX, COUNT or SUM SQL
 functions. For any ORM this is a tricky issue traditionally. Doctrine 2
 offers several ways to get access to these values and this article will
 describe all of them from different perspectives.</p>
-
 <p>You will see that aggregate fields can become very explicit features in
 your domain model and how this potentially complex business rules can be
 easily tested.</p>
-
-<h1 id="an-example-model">An example model</h1>
-
+<h1>An example model</h1>
 <p>Say you want to model a bank account and all their entries. Entries into
 the account can either be of positive or negative money values. Each
 account has a credit limit and the account is never allowed to have a
 balance below that value.</p>
-
 <p>For simplicity we live in a world were money is composed of integers
 only. Also we omit the receiver/sender name, stated reason for transfer
 and the execution date. These all would have to be added on the <code>Entry</code>
 object.</p>
-
 <p>Our entities look like:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 namespace Bank\Entities;
 
 /**
@@ -308,49 +302,36 @@ class Entry
     {
         return $this-&gt;amount;
     }
-}
-</code></pre>
-
-<h1 id="using-dql">Using DQL</h1>
-
+}</code></pre>
+<h1>Using DQL</h1>
 <p>The Doctrine Query Language allows you to select for aggregate values
 computed from fields of your Domain Model. You can select the current
 balance of your account by calling:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $dql = "SELECT SUM(e.amount) AS balance FROM Bank\Entities\Entry e " .
        "WHERE e.account = ?1";
 $balance = $em-&gt;createQuery($dql)
               -&gt;setParameter(1, $myAccountId)
-              -&gt;getSingleScalarResult();
-</code></pre>
-
+              -&gt;getSingleScalarResult();</code></pre>
 <p>The <code>$em</code> variable in this (and forthcoming) example holds the Doctrine
 <code>EntityManager</code>. We create a query for the SUM of all amounts (negative
 amounts are withdraws) and retrieve them as a single scalar result,
 essentially return only the first column of the first row.</p>
-
 <p>This approach is simple and powerful, however it has a serious drawback.
 We have to execute a specific query for the balance whenever we need it.</p>
-
 <p>To implement a powerful domain model we would rather have access to the
 balance from our <code>Account</code> entity during all times (even if the Account
 was not persisted in the database before!).</p>
-
 <p>Also an additional requirement is the max credit per <code>Account</code> rule.</p>
-
 <p>We cannot reliably enforce this rule in our <code>Account</code> entity with the
 DQL retrieval of the balance. There are many different ways to retrieve
 accounts. We cannot guarantee that we can execute the aggregation query
 for all these use-cases, let alone that a userland programmer checks
 this balance against newly added entries.</p>
-
-<h1 id="using-your-domain-model">Using your Domain Model</h1>
-
+<h1>Using your Domain Model</h1>
 <p><code>Account</code> and all the <code>Entry</code> instances are connected through a
 collection, which means we can compute this value at runtime:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class Account
 {
     // .. previous code
@@ -362,23 +343,18 @@ class Account
         }
         return $balance;
     }
-}
-</code></pre>
-
+}</code></pre>
 <p>Now we can always call <code>Account::getBalance()</code> to access the current
 account balance.</p>
-
-<p>To enforce the max credit rule we have to implement the "Aggregate Root"
+<p>To enforce the max credit rule we have to implement the &quot;Aggregate Root&quot;
 pattern as described in Eric Evans book on Domain Driven Design.
 Described with one sentence, an aggregate root controls the instance
 creation, access and manipulation of its children.</p>
-
 <p>In our case we want to enforce that new entries can only added to the
 <code>Account</code> by using a designated method. The <code>Account</code> is the aggregate
 root of this relation. We can also enforce the correctness of the
-bi-directional <code>Account</code> \&lt;-&#62; <code>Entry</code> relation with this method:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+bi-directional <code>Account</code> \&lt;-> <code>Entry</code> relation with this method:</p>
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class Account
 {
     public function addEntry($amount)
@@ -389,12 +365,9 @@ class Account
         $this-&gt;entries[] = $e;
         return $e;
     }
-}
-</code></pre>
-
+}</code></pre>
 <p>Now look at the following test-code for our entities:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class AccountTest extends \PHPUnit_Framework_TestCase
 {
     public function testAddEntry()
@@ -416,13 +389,10 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $this-&gt;setExpectedException("Exception");
         $account-&gt;addEntry(-1000);
     }
-}
-</code></pre>
-
+}</code></pre>
 <p>To enforce our rule we can now implement the assertion in
 <code>Account::addEntry</code>:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class Account
 {
     private function assertAcceptEntryAllowed($amount)
@@ -433,36 +403,28 @@ class Account
             throw new Exception("Credit Limit exceeded, entry is not allowed!");
         }
     }
-}
-</code></pre>
-
+}</code></pre>
 <p>We haven't talked to the entity manager for persistence of our account
 example before. You can call <code>EntityManager::persist($account)</code> and then
 <code>EntityManager::flush()</code> at any point to save the account to the
 database. All the nested <code>Entry</code> objects are automatically flushed to
 the database also.</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $account = new Account("123456", 200);
 $account-&gt;addEntry(500);
 $account-&gt;addEntry(-200);
 $em-&gt;persist($account);
-$em-&gt;flush();
-</code></pre>
-
+$em-&gt;flush();</code></pre>
 <p>The current implementation has a considerable drawback. To get the
 balance, we have to initialize the complete <code>Account::$entries</code>
 collection, possibly a very large one. This can considerably hurt the
 performance of your application.</p>
-
-<h1 id="using-an-aggregate-field">Using an Aggregate Field</h1>
-
+<h1>Using an Aggregate Field</h1>
 <p>To overcome the previously mentioned issue (initializing the whole
-entries collection) we want to add an aggregate field called "balance"
+entries collection) we want to add an aggregate field called &quot;balance&quot;
 on the Account and adjust the code in <code>Account::getBalance()</code> and
 <code>Account:addEntry()</code>:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class Account
 {
     /**
@@ -484,25 +446,19 @@ class Account
         $this-&gt;balance += $amount;
         return $e;
     }
-}
-</code></pre>
-
+}</code></pre>
 <p>This is a very simple change, but all the tests still pass. Our account
 entities return the correct balance. Now calling the
 <code>Account::getBalance()</code> method will not occour the overhead of loading
 all entries anymore. Adding a new Entry to the <code>Account::$entities</code> will
 also not initialize the collection internally.</p>
-
 <p>Adding a new entry is therefore very performant and explictly hooked
 into the domain model. It will only update the account with the current
 balance and insert the new entry into the database.</p>
-
-<h1 id="tackling-race-conditions-with-aggregate-fields">Tackling Race Conditions with Aggregate Fields</h1>
-
+<h1>Tackling Race Conditions with Aggregate Fields</h1>
 <p>Whenever you denormalize your database schema race-conditions can
 potentially lead to inconsistent state. See this example:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 // The Account $accId has a balance of 0 and a max credit limit of 200:
 // request 1 account
 $account1 = $em-&gt;find('Bank\Entities\Account', $accId);
@@ -513,72 +469,47 @@ $account2 = $em-&gt;find('Bank\Entities\Account', $accId);
 $account1-&gt;addEntry(-200);
 $account2-&gt;addEntry(-200);
 
-// now request 1 and 2 both flush the changes.
-</code></pre>
-
+// now request 1 and 2 both flush the changes.</code></pre>
 <p>The aggregate field <code>Account::$balance</code> is now -200, however the SUM
 over all entries amounts yields -400. A violation of our max credit
 rule.</p>
-
 <p>You can use both optimistic or pessimistic locking to save-guard your
 aggregate fields against this kind of race-conditions. Reading Eric
-Evans DDD carefully he mentions that the "Aggregate Root" (Account in
+Evans DDD carefully he mentions that the &quot;Aggregate Root&quot; (Account in
 our example) needs a locking mechanism.</p>
-
 <p>Optimistic locking is as easy as adding a version column:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 class Amount
 {
     /** @Column(type="integer") @Version */
     private $version;
-}
-</code></pre>
-
+}</code></pre>
 <p>The previous example would then throw an exception in the face of
 whatever request saves the entity last (and would create the
 inconsistent state).</p>
-
 <p>Pessimmistic locking requires an additional flag set on the
 <code>EntityManager::find()</code> call, enabling write locking directly in the
 database using a FOR UPDATE.</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 use Doctrine\DBAL\LockMode;
 
-$account = $em-&gt;find('Bank\Entities\Account', $accId, LockMode::PESSIMISTIC_READ); 
-</code></pre>
-
-<h1 id="keeping-updates-and-deletes-in-sync">Keeping Updates and Deletes in Sync</h1>
-
+$account = $em-&gt;find('Bank\Entities\Account', $accId, LockMode::PESSIMISTIC_READ);</code></pre>
+<h1>Keeping Updates and Deletes in Sync</h1>
 <p>The example shown in this article does not allow changes to the value in
 <code>Entry</code>, which considerably simplifies the effort to keep
 <code>Account::$balance</code> in sync. If your use-case allows fields to be
 updated or related entities to be removed you have to encapsulate this
-logic in your "Aggregate Root" entity and adjust the aggregate field
+logic in your &quot;Aggregate Root&quot; entity and adjust the aggregate field
 accordingly.</p>
-
-<h1 id="conclusion">Conclusion</h1>
-
+<h1>Conclusion</h1>
 <p>This article described how to obtain aggregate values using DQL or your
 domain model. It showed how you can easily add an aggregate field that
 offers serious performance benefits over iterating all the related
 objects that make up an aggregate value. Finally I showed how you can
 ensure that your aggregate fields do not get out of sync due to
 race-conditions and concurrent access.</p>
-
         </div>
-
-                    <nav class="article">
-                <ul class="pagination">
-                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2010/06/15/doctrine2-beta2-released.html" title="Doctrine2 BETA2 Released"><span class="title">Previous: Doctrine2 BETA2 Released</span></a></li>
-                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2010/07/12/doctrine2-large-collections.html" title="Working with Large Collections in Doctrine2"><span class="title">Next: Working with Large Collections in Doctrine2</span></a></li>
-                                    </ul>
-            </nav>
-            </article>
-
-
-
+    </article>
     </main>
 
         
@@ -643,8 +574,8 @@ race-conditions and concurrent access.</p>
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
-        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?4138a7"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?2e9165"></script>
 
         <script type="text/javascript">
             var projectSlug = '';
@@ -655,7 +586,7 @@ race-conditions and concurrent access.</p>
             new Search(projectSlug, versionSlug);
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
-                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                                console.log(eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
                             }
 
             function googleTranslateElementInit() {
@@ -675,16 +606,6 @@ race-conditions and concurrent access.</p>
 
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 
-        
-                    <script type="text/javascript">
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                ga('create', 'UA-288343-7', 'auto');
-                ga('send', 'pageview');
-            </script>
         
         
             </body>

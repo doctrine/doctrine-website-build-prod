@@ -33,7 +33,7 @@
             "@type": "Person",
             "name": "romanb"
         },
-         "publisher": {
+        "publisher": {
             "@type": "Organization",
             "name": "Doctrine",
             "logo": {
@@ -41,10 +41,8 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "
-TIP Disclaimer: In general, an ORM is surely not the best tool
-
-for the job for mass data movements"
+        "description": "TIP Disclaimer: In general, an ORM is surely not the best tool
+:   for the job for mass data movemen"
     }
     </script>
 
@@ -52,12 +50,12 @@ for the job for mass data movements"
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?aabb96" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?c8b404" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+        <link rel="stylesheet" href="https://www.doctrine-project.org/css/railscasts.css?62eb49" />
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -136,7 +134,7 @@ for the job for mass data movements"
             </head>
     <body>
                     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
-                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?6c0dab" />Doctrine</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -213,7 +211,7 @@ for the job for mass data movements"
             <main role="main" class="container-wrapper container">
             <article>
         <header>
-            <h2>Doctrine 2 Batch Processing <small>post</small></h2>
+            <h2>Doctrine 2 Batch Processing</h2>
         </header>
 
         <p class="lead">
@@ -225,50 +223,39 @@ for the job for mass data movements"
         <hr />
 
         <div>
-            <dl>
-<dt><strong>TIP</strong> Disclaimer: In general, an ORM is surely not the best tool</dt>
-<dd>
-<p>for the job for mass data movements, however, it can be a convenient
+                <p><strong>TIP</strong> Disclaimer: In general, an ORM is surely not the best tool
+:   for the job for mass data movements, however, it can be a convenient
 alternative if the performance is sufficient. Every RDBMS has its
 own highly efficient commands for such operations. For maximum
 efficiency you should consult the manual of your RDBMS.</p>
-
-<p><strong>NOTE</strong> The hardware used for the following tests: MBP, Intel Core
-2 Duo 2.53 Ghz, 4GB DDR3 RAM, 7200rpm HDD.</p>
-</dd>
-</dl>
-
-<p>A lot of people have encountered the infamous "memory exhausted" errors
+<pre><code>**NOTE** The hardware used for the following tests: MBP, Intel Core
+2 Duo 2.53 Ghz, 4GB DDR3 RAM, 7200rpm HDD.</code></pre>
+<p>A lot of people have encountered the infamous &quot;memory exhausted&quot; errors
 when using Doctrine for bulk operations or in long-running scripts. This
 is a problem that is the result of 2 things:</p>
-
 <ul>
 <li>The often unnecessarily intertwined architecture of Doctrine 1.x.</li>
-<li><p>The simple garbage collector of PHP \&lt; 5.3.</p>
-
+<li>
+<p>The simple garbage collector of PHP \&lt; 5.3.</p>
 <blockquote>
-  <p><strong>NOTE</strong> If you did not know it yet, basically every circular
-  reference between objects (and that is every bidirectional
-  relationship!) is a potential memory leak in PHP \&lt; 5.3.</p>
-</blockquote></li>
+<p><strong>NOTE</strong> If you did not know it yet, basically every circular
+reference between objects (and that is every bidirectional
+relationship!) is a potential memory leak in PHP \&lt; 5.3.</p>
+</blockquote>
+</li>
 </ul>
-
 <p>Now, the PHP team did their homework and introduced a new garbage
 collector in PHP 5.3 (that is enabled by default, thank god!) that is
 capable of properly detecting cyclic references that are not referenced
 any longer from the outside.</p>
-
 <p>In Doctrine 2 we did our part of the homework to address this issue and
 redesigned the Doctrine core from scratch. The result is a much better
 user experience, as I will demonstrate with some examples.</p>
-
-<h1 id="mass-inserts">Mass inserts</h1>
-
+<h1>Mass inserts</h1>
 <p>The first thing we will look at is mass inserts. In Doctrine 2 there is
 a special pattern that can be used for mass inserts that looks as
 follows:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 // $em instanceof EntityManager
 $batchSize = 20;
 for ($i=1; $i&lt;=10000; ++$i) {
@@ -280,13 +267,10 @@ for ($i=1; $i&lt;=10000; ++$i) {
          $em-&gt;flush();
          $em-&gt;clear();
     }
-}
-</code></pre>
-
+}</code></pre>
 <p>I used this pattern to create a little demonstration that looks like
 this in a PHPUnit test:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 // $this-&gt;_em created in setUp()
 echo "Memory usage before: " . (memory_get_usage() / 1024) . " KB" . PHP_EOL;
 $s = microtime(true);
@@ -307,92 +291,69 @@ for ($i=1; $i&lt;=10000; ++$i) {
 echo "Memory usage after: " . (memory_get_usage() / 1024) . " KB" . PHP_EOL;
 
 $e = microtime(true);
-echo ' Inserted 10000 objects in ' . ($e - $s) . ' seconds' . PHP_EOL;
-</code></pre>
-
+echo ' Inserted 10000 objects in ' . ($e - $s) . ' seconds' . PHP_EOL;</code></pre>
 <p>As you can see, we insert a total of 10000 objects. On running this code
 through PHPUnit, using an SQLite in-memory database, I got the following
 output:</p>
-
 <pre><code>Memory usage before: 5034.03515625 KB
 Memory usage after: 6726.3515625 KB
-Inserted 10000 objects in 3.165983915329 seconds
-</code></pre>
-
+Inserted 10000 objects in 3.165983915329 seconds</code></pre>
 <p>We can see the following:</p>
-
 <ul>
 <li>The insertion of 10000 objects through Doctrine into an SQLite
 in-memory database took roughly 3 seconds, not too bad.</li>
 <li>Memory usage increased by roughly 1.7MB, not too bad either.</li>
 </ul>
-
 <p>If you are now still not satisfied and wonder where the 1.7MB are going,
 here is the answer: A small part of that is occupied by objects that
 were created on-demand internally by Doctrine, these will stay pretty
 constant, however. But the majority of this 1.7MB has simply not yet
 been reclaimed (but is eliglible for garbage collection for the new
 garbage collector!). To prove that, I can just uncomment the
-gc&#95;collect&#95;cycles() function call. Here's the result:</p>
-
+gc_collect_cycles() function call. Here's the result:</p>
 <pre><code>Memory usage before: 5034.3828125 KB
 Memory usage after: 5502.21484375 KB
-Inserted 10000 objects in 3.1807188987732 seconds
-</code></pre>
-
+Inserted 10000 objects in 3.1807188987732 seconds</code></pre>
 <p>Much better! And to prove that the \~500KB occupied by Doctrine are
 constant, I simply made it 20000 objects. Here is the result:</p>
-
 <pre><code>Memory usage before: 5034.3828125 KB
 Memory usage after: 5502.21484375 KB
-Inserted 20000 objects in 6.6149919033051 seconds
-</code></pre>
-
+Inserted 20000 objects in 6.6149919033051 seconds</code></pre>
 <p>We can see the following things:</p>
-
 <ul>
 <li>Memory usage is constant, the second batch of 10000 objects did not
 result in additional memory usage.</li>
 <li>The mass insertion strategy scales almost linearly. 10k objects took
 \~3.2 seconds and 20k objects took \~6.6 seconds.</li>
 </ul>
-
-<p>Note: You do not really need to call gc&#95;collect&#95;cycles(). This should
+<p>Note: You do not really need to call gc_collect_cycles(). This should
 just demonstrate that the memory can be reclaimed. PHP would reclaim
 that memory anyway when it needs to.</p>
-
 <p>Even better, when testing the peak memory usage
-(memory&#95;get&#95;peak&#95;usage()) it turned out that the memory usage never
+(memory_get_peak_usage()) it turned out that the memory usage never
 grew beyond \~10MB in between. If you choose a larger batch size the
 peak memory usage will be higher and vice versa.</p>
-
-<h1 id="mass-object-processing">Mass object processing</h1>
-
+<h1>Mass object processing</h1>
 <p>Now we take a look at mass-processing objects, which means loading 10000
 objects from the database and doing something with each of them. The
 clue here is the new support for iterative (step-by-step) hydration in
 Doctrine 2. The pattern for these kinds of tasks looks as follows:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $q = $this-&gt;_em-&gt;createQuery("&lt;DQL to select the objects I want&gt;");
 $iterableResult = $q-&gt;iterate();
 while (($row = $iterableResult-&gt;next()) !== false) {
         // do stuff with the data in the row, $row[0] is always the object
         $this-&gt;_em-&gt;detach($row[0]); // detach from Doctrine, so that it can be GC'd immediately
- }
-</code></pre>
-
+ }</code></pre>
 <p>So instead of using <code>$q-&gt;execute()</code> or <code>$q-&gt;getResult()</code> or similar, we
 use <code>$q-&gt;iterate()</code> which returns an instance of <code>IterableResult</code> that
 allows us to iterate over the result step by step. The important part
 for not running out of memory is the line where the created object is
 detached from Doctrine, which results in Doctrine removing any internal
-references to that object, Doctrine no longer "knows" about that object.</p>
-
+references to that object, Doctrine no longer &quot;knows&quot; about that object.</p>
 <p>I used this pattern to iterate through the just inserted 10000 objects
 as follows:</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $q = $this-&gt;_em-&gt;createQuery("select u from Doctrine\Tests\Models\CMS\CmsUser u");
 $iterableResult = $q-&gt;iterate();
 
@@ -403,69 +364,42 @@ while (($row = $iterableResult-&gt;next()) !== false) {
     $this-&gt;_em-&gt;detach($row[0]);
 }
 
-echo "Memory usage after: " . (memory_get_usage() / 1024) . " KB" . PHP_EOL;
-</code></pre>
-
+echo "Memory usage after: " . (memory_get_usage() / 1024) . " KB" . PHP_EOL;</code></pre>
 <p>The following is the result:</p>
-
 <pre><code>Memory usage before: 6578.58984375 KB
-Memory usage after: 6581.71875 KB
-</code></pre>
-
+Memory usage after: 6581.71875 KB</code></pre>
 <p>The result is pretty acceptable. Here is the same again, this time for
 20000 objects, again to prove that the small memory increase is
 constant:</p>
-
-<pre><code>Memory usage before: 6578.23828125 KB 
-Memory usage after: 6581.359375 KB
-</code></pre>
-
+<pre><code>Memory usage before: 6578.23828125 KB
+Memory usage after: 6581.359375 KB</code></pre>
 <p>Good stuff!</p>
-
 <blockquote>
-  <p><strong>NOTE</strong> If you're thinking that I waited ages until the 10k or 20k
-  objects were hydrated, that was not the case. 10k or 20k objects
-  (without associations) are hydrated in seconds.</p>
+<p><strong>NOTE</strong> If you're thinking that I waited ages until the 10k or 20k
+objects were hydrated, that was not the case. 10k or 20k objects
+(without associations) are hydrated in seconds.</p>
 </blockquote>
-
 <p>More information on bulk operations with Doctrine 2 can be found in the
 (very new) online manual that is still a work in progress:</p>
-
-<p>http://www.doctrine-project.org/documentation/manual/2&#95;0/en/batch-processing</p>
-
-<h1 id="update">UPDATE</h1>
-
+<p><a href="http://www.doctrine-project.org/documentation/manual/2\_0/en/batch-processing">http://www.doctrine-project.org/documentation/manual/2\_0/en/batch-processing</a></p>
+<h1>UPDATE</h1>
 <p>Some people seem to be wondering why Doctrine does not use multi-inserts
 (insert into (...) values (...), (...), (...), ...</p>
-
 <p>First of all, this syntax is only supported on mysql and newer
 postgresql versions. Secondly, there is no easy way to get hold of all
 the generated identifiers in such a multi-insert when using
-AUTO&#95;INCREMENT or SERIAL and an ORM needs the identifiers for identity
+AUTO_INCREMENT or SERIAL and an ORM needs the identifiers for identity
 management of the objects. Lastly, insert performance is rarely the
 bottleneck of an ORM. Normal inserts are more than fast enough for most
 situations and if you really want to do fast bulk inserts, then a
 multi-insert is not the best way anyway, i.e. Postgres COPY or Mysql
 LOAD DATA INFILE are several orders of magnitude faster.</p>
-
 <p>These are the reasons why it is not worth the effort to implement an
 abstraction that performs multi-inserts on mysql and postgresql in an
 ORM.</p>
-
 <p>I hope that clears up some questionmarks.</p>
-
         </div>
-
-                    <nav class="article">
-                <ul class="pagination">
-                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2009/08/04/help-write-tests-for-new-dql-parser.html" title="Help write tests for new DQL Parser"><span class="title">Previous: Help write tests for new DQL Parser</span></a></li>
-                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2009/08/15/doctrine2-native-queries.html" title="Doctrine 2 Native Queries"><span class="title">Next: Doctrine 2 Native Queries</span></a></li>
-                                    </ul>
-            </nav>
-            </article>
-
-
-
+    </article>
     </main>
 
         
@@ -530,8 +464,8 @@ ORM.</p>
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
-        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?4138a7"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?2e9165"></script>
 
         <script type="text/javascript">
             var projectSlug = '';
@@ -542,7 +476,7 @@ ORM.</p>
             new Search(projectSlug, versionSlug);
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
-                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                                console.log(eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
                             }
 
             function googleTranslateElementInit() {
@@ -562,16 +496,6 @@ ORM.</p>
 
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 
-        
-                    <script type="text/javascript">
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                ga('create', 'UA-288343-7', 'auto');
-                ga('send', 'pageview');
-            </script>
         
         
             </body>

@@ -33,7 +33,7 @@
             "@type": "Person",
             "name": "guilhermeblanco"
         },
-         "publisher": {
+        "publisher": {
             "@type": "Organization",
             "name": "Doctrine",
             "logo": {
@@ -42,9 +42,8 @@
             }
         },
         "description": "Greetings folks!
-
 Today I&#039;d like to talk about Quality Assurance in PHP projects.
-Currently, PHP lac"
+Currently, PHP lack"
     }
     </script>
 
@@ -52,12 +51,12 @@ Currently, PHP lac"
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?aabb96" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?c8b404" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+        <link rel="stylesheet" href="https://www.doctrine-project.org/css/railscasts.css?62eb49" />
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -136,7 +135,7 @@ Currently, PHP lac"
             </head>
     <body>
                     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
-                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?6c0dab" />Doctrine</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -213,7 +212,7 @@ Currently, PHP lac"
             <main role="main" class="container-wrapper container">
             <article>
         <header>
-            <h2>Doctrine 2.0 Quality Assurance <small>post</small></h2>
+            <h2>Doctrine 2.0 Quality Assurance</h2>
         </header>
 
         <p class="lead">
@@ -225,30 +224,25 @@ Currently, PHP lac"
         <hr />
 
         <div>
-            <p>Greetings folks!</p>
-
+                <p>Greetings folks!</p>
 <p>Today I'd like to talk about Quality Assurance in PHP projects.
 Currently, PHP lacks good tools for QA, but thanks to a special PHP
 user, <a href="http://sebastian-bergmann.de">Sebastian Bergmann</a> , this is
 changing gradually. If you don't know him, you can visit his blog and
 check about projects he's on. For lazy people, he's the author of
 <a href="http://www.phpunit.de">PHPUnit</a> , a de-facto Unit Test suite in PHP.</p>
-
 <p>Doctrine 2.0 uses PHPUnit as our Unit Test suite. It relies on PEAR to
 be installed, but you can also install it via SVN.</p>
-
 <p>The main initiative of QA in PHP projects is the website
 <a href="http://qualityassuranceinphpprojects.com">[http://qualityassuranceinphpprojects.com](http://qualityassuranceinphpprojects.com)</a>.
 There you can find available tools to measure, for example, how complex
 is your project and possible semantical issues.</p>
-
 <p>I have applied some of these tests against <a href="http://trac.doctrine-project.org/browser/trunk">Doctrine
 2.0</a> to see how complex
 it is and if it can be optimized more. The first test I run is a trace
 about how complex our code base is. The tool I used is
 <a href="http://github.com/sebastianbergmann/phploc/tree/master">phploc</a>. Check
 out the results:</p>
-
 <pre><code>[bash]
 MacBlanco:bin guilhermeblanco$ ./phploc /Users/guilhermeblanco/www/doctrine/trunk/lib
 phploc 1.1.1 by Sebastian Bergmann.
@@ -264,16 +258,13 @@ Interfaces:                                11
 Classes:                                  229
 Non-Static Methods:                      1699
 Static Methods:                           106
-Functions:                                 95
-</code></pre>
-
+Functions:                                 95</code></pre>
 <p>Of course it still misses a couple of code to implement (CLI Tasks,
 Locking strategies, ID Generators), but now we know how big Doctrine 2.0
 is. Then, I decided to check duplicated code (possible optimization
 locations). The tool
 <a href="http://github.com/sebastianbergmann/phpcpd/tree/master">phpcpd</a> gave me
 this feedback:</p>
-
 <pre><code>[bash]
 MacBlanco:bin guilhermeblanco$ ./phpcpd /Users/guilhermeblanco/www/doctrine/trunk/lib
 phpcpd 1.1.1 by Sebastian Bergmann.
@@ -283,19 +274,15 @@ Found 1 exact clones with 15 duplicated lines in 2 files:
   - ./Doctrine/DBAL/Platforms/MsSqlPlatform.php:126-141
     ./Doctrine/DBAL/Platforms/MySqlPlatform.php:633-648
 
-0.04% duplicated lines out of 38826 total lines of code.
-</code></pre>
-
+0.04% duplicated lines out of 38826 total lines of code.</code></pre>
 <p>I asked myself: It must be a method that could be moved to
 <code>AbstractPlatform.php</code>! So I opened both files and... no! It's a piece
 of code that cannot be optimized. So, consider Doctrine 2.0 extremely
 optimized, because there is no duplicated code internally!</p>
-
 <p>Now Unit Test suite. Doctrine 2.0 has a steadily growing set of Unit
 Tests, and we are regularly analyzing the code coverage analysis to find
 parts that need more tests. Here is how such a coverage report is
 generated:</p>
-
 <pre><code>[bash]
 MacBlanco:tests guilhermeblanco$ phpunit --coverage-html=./_coverage Doctrine_Tests_AllTests
 PHPUnit 3.3.17 by Sebastian Bergmann.
@@ -316,42 +303,22 @@ Time: 18 seconds
 OK, but incomplete or skipped tests!
 Tests: 562, Assertions: 1420, Skipped: 27.
 
-Generating code coverage report, this may take a moment.
-</code></pre>
-
+Generating code coverage report, this may take a moment.</code></pre>
 <p>The generated coverage can be seen in the following picture.</p>
-
 <p>Finally, some metrics are good to inspect how stable is our code. I
 applied <a href="http://pdepend.org">pdepend</a> , and it gave me these results:</p>
-
 <p><img src="http://www.doctrine-project.org/blog-images/doctrine-2-0-qa/picture2.png" alt="jdepend chart
 " /></p>
-
 <p><img src="http://www.doctrine-project.org/blog-images/doctrine-2-0-qa/picture3.png" alt="pyramid overview
 " /></p>
-
 <p>The command I ran was:</p>
-
 <pre><code>[bash]
-MacBlanco:bin guilhermeblanco$ ./pdepend --summary-xml=/Users/guilhermeblanco/summary.xml --jdepend-chart=/Users/guilhermeblanco/jdepend.svg --overview-pyramid=/Users/guilhermeblanco/pyramid.svg /Users/guilhermeblanco/www/doctrine/trunk/lib
-</code></pre>
-
+MacBlanco:bin guilhermeblanco$ ./pdepend --summary-xml=/Users/guilhermeblanco/summary.xml --jdepend-chart=/Users/guilhermeblanco/jdepend.svg --overview-pyramid=/Users/guilhermeblanco/pyramid.svg /Users/guilhermeblanco/www/doctrine/trunk/lib</code></pre>
 <p>Here is the generated summary. If you have any other ideas/tools that we
 should apply in our codebase to generate other metrics, please drop us a
 message!</p>
-
         </div>
-
-                    <nav class="article">
-                <ul class="pagination">
-                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2009/08/22/transactions-and-performance.html" title="Transactions and Performance"><span class="title">Previous: Transactions and Performance</span></a></li>
-                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2009/09/01/doctrine2-preview-release.html" title="Doctrine 2 Preview Release"><span class="title">Next: Doctrine 2 Preview Release</span></a></li>
-                                    </ul>
-            </nav>
-            </article>
-
-
-
+    </article>
     </main>
 
         
@@ -416,8 +383,8 @@ message!</p>
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
-        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?4138a7"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?2e9165"></script>
 
         <script type="text/javascript">
             var projectSlug = '';
@@ -428,7 +395,7 @@ message!</p>
             new Search(projectSlug, versionSlug);
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
-                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                                console.log(eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
                             }
 
             function googleTranslateElementInit() {
@@ -448,16 +415,6 @@ message!</p>
 
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 
-        
-                    <script type="text/javascript">
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                ga('create', 'UA-288343-7', 'auto');
-                ga('send', 'pageview');
-            </script>
         
         
             </body>

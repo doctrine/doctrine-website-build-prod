@@ -33,7 +33,7 @@
             "@type": "Person",
             "name": "jwage"
         },
-         "publisher": {
+        "publisher": {
             "@type": "Organization",
             "name": "Doctrine",
             "logo": {
@@ -42,9 +42,8 @@
             }
         },
         "description": "Cross Database Joins
-
 In Doctrine, joining data across databases is not technically
-&quot;supported&quot; by a"
+&amp;quot;supported&amp;q"
     }
     </script>
 
@@ -52,12 +51,12 @@ In Doctrine, joining data across databases is not technically
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
 
-        <link href="https://www.doctrine-project.org/css/style.css?aabb96" rel="stylesheet" type="text/css" />
+        <link href="https://www.doctrine-project.org/css/style.css?c8b404" rel="stylesheet" type="text/css" />
 
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
 
-        <link rel="stylesheet" href="https://www.doctrine-project.org/components/highlightjs/styles/railscasts.css?b4f8ae" />
+        <link rel="stylesheet" href="https://www.doctrine-project.org/css/railscasts.css?62eb49" />
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -136,7 +135,7 @@ In Doctrine, joining data across databases is not technically
             </head>
     <body>
                     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
-                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?335f0f" />Doctrine</a>
+                <a class="navbar-brand text-hide" href="https://www.doctrine-project.org/"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?6c0dab" />Doctrine</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -213,7 +212,7 @@ In Doctrine, joining data across databases is not technically
             <main role="main" class="container-wrapper container">
             <article>
         <header>
-            <h2>Cross Database Joins <small>post</small></h2>
+            <h2>Cross Database Joins</h2>
         </header>
 
         <p class="lead">
@@ -225,36 +224,26 @@ In Doctrine, joining data across databases is not technically
         <hr />
 
         <div>
-            <h1 id="cross-database-joins">Cross Database Joins</h1>
-
+                <h1>Cross Database Joins</h1>
 <p>In Doctrine, joining data across databases is not technically
-"supported" by a designed feature, but you can make it work by tricking
+&quot;supported&quot; by a designed feature, but you can make it work by tricking
 Doctrine a little bit.</p>
-
 <p>In this article I'll show you how you can setup a database schema that
 specifies relationships across two databases and then issue a query
 which joins data from these two databases.</p>
-
 <p>I used the Doctrine sandbox to prepare this test so if you want to try
 it, you can use it too.</p>
-
-<h1 id="database-connections">Database Connections</h1>
-
+<h1>Database Connections</h1>
 <p>First lets setup our two database connections we'll use to query from.
 Modify the <code>config.php</code> file included with the sandbox and replace the
 default single connection with the following code.</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 Doctrine_Manager::connection('mysql://root@localhost/doctrine_test1', 'doctrine_test1');
-Doctrine_Manager::connection('mysql://root@localhost/doctrine_test2', 'doctrine_test2');
-</code></pre>
-
-<h1 id="schema">Schema</h1>
-
+Doctrine_Manager::connection('mysql://root@localhost/doctrine_test2', 'doctrine_test2');</code></pre>
+<h1>Schema</h1>
 <p>Now lets define our YAML schema file that we'll use to run our tests
 against. You can modify the <code>config/doctrine/schema.yml</code> file and
 include the following YAML.</p>
-
 <pre><code>[yml]
 User:
   tableName: doctrine_test1.user
@@ -279,15 +268,11 @@ Profile:
 name of the database. Currently, Doctrine does not generate the SQL
 that includes the database name. It only includes the table name,
 but we can trick Doctrine by simply specifying the
-``database_name.table_name`` as the table name.
-</code></pre>
-
-<h1 id="test-data-fixtures">Test Data Fixtures</h1>
-
+``database_name.table_name`` as the table name.</code></pre>
+<h1>Test Data Fixtures</h1>
 <p>In the <code>data/fixtures</code> directory create a <code>data.yml</code> file and paste the
 following fixtures inside so we can have some data in each database to
 run our tests against.</p>
-
 <pre><code>[yml]
 User:
   jwage:
@@ -295,59 +280,41 @@ User:
     password: changeme
     Profile:
       first_name: string(255)
-      last_name: string(255)
-</code></pre>
-
-<h1 id="build-the-database">Build the Database</h1>
-
+      last_name: string(255)</code></pre>
+<h1>Build the Database</h1>
 <p>Now lets build our database and import the data fixtures from above.
 This can be easily done by running the following from the Doctrine
 command line interface.</p>
-
-<pre><code>$ php doctrine build-all-reload
-</code></pre>
-
-<h1 id="run-the-test">Run the Test</h1>
-
+<pre><code>$ php doctrine build-all-reload</code></pre>
+<h1>Run the Test</h1>
 <p>Now we have our models created, we have our database created and we have
 our test fixtures loaded in to the database. Now it is time to run some
 sample code and see what we get!</p>
-
 <p>First lets write our <code>Doctrine_Query</code> and look at the generated SQL.
 Paste the following code in to index.php and lets execute it!</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $q = Doctrine::getTable('User')
   -&gt;createQuery('u')
   -&gt;leftJoin('u.Profile p');
 
-echo $q-&gt;getSql();
-</code></pre>
-
+echo $q-&gt;getSql();</code></pre>
 <p>The above code would output the following SQL query.</p>
-
 <pre><code>[sql]
 SELECT d.id AS d__id, d.username AS d__username, d.password AS d__password, d2.id AS d2__id, d2.user_id AS d2__user_id, d2.first_name AS d2__first_name, d2.last_name AS d2__last_name FROM doctrine_test1.user d LEFT JOIN doctrine_test2.profile d2 ON d.id = d2.user_id
 
 **NOTE** Notice how in the above SQL that is generated it include
 the database name and the table name. So now the query is able to
-join across databases if your RDBMS supports it.
-</code></pre>
-
+join across databases if your RDBMS supports it.</code></pre>
 <p>Now lets execute the above query and look at the results.</p>
-
-<pre><code class="sourceCode php">&lt;?php
+<pre><code class="language-{.sourceCode .php}">&lt;?php
 $q = Doctrine::getTable('User')
   -&gt;createQuery('u')
   -&gt;leftJoin('u.Profile p');
 
 $users = $q-&gt;fetchArray();
 
-print_r($users);
-</code></pre>
-
+print_r($users);</code></pre>
 <p>The above would output just exactly what you'd expect.</p>
-
 <pre><code>Array
 (
     [0] =&gt; Array
@@ -365,41 +332,25 @@ print_r($users);
 
         )
 
-)
-</code></pre>
-
+)</code></pre>
 <p>The data from the <code>User</code> model came from one database, and the data from
 the <code>Profile</code> model came from the other database.</p>
-
 <blockquote>
-  <p><strong>NOTE</strong> This will only work if your database supports foreign keys
-  and joins across databases. I know MySQL does support this but I am
-  unsure about others. This same method can be used to query for data
-  across PostgreSQL schemas too.</p>
+<p><strong>NOTE</strong> This will only work if your database supports foreign keys
+and joins across databases. I know MySQL does support this but I am
+unsure about others. This same method can be used to query for data
+across PostgreSQL schemas too.</p>
 </blockquote>
-
 <p>That is it! Joining data from across different databases is no problem
 in Doctrine.</p>
-
 <blockquote>
-  <p><strong>CAUTION</strong> This is not a designed feature of Doctrine and you may
-  experience edge cases that may not work as you'd expect. This is just
-  useful if you need to join data across databases and if you experience
-  edge cases you can work around them in your project.</p>
+<p><strong>CAUTION</strong> This is not a designed feature of Doctrine and you may
+experience edge cases that may not work as you'd expect. This is just
+useful if you need to join data across databases and if you experience
+edge cases you can work around them in your project.</p>
 </blockquote>
-
         </div>
-
-                    <nav class="article">
-                <ul class="pagination">
-                                            <li class="page-item"><a class="page-link previous" href="https://www.doctrine-project.org/2009/06/17/special-price-offer-symfony-1-2-doctrine-training-workshop.html" title="Special Price Offer: Symfony 1.2 + Doctrine Training Workshop"><span class="title">Previous: Special Price Offer: Symfony 1.2 + Doctrine Training Workshop</span></a></li>
-                                                                <li class="page-item"><a class="page-link next" href="https://www.doctrine-project.org/2009/06/19/using-views-with-doctrine.html" title="Using Views with Doctrine"><span class="title">Next: Using Views with Doctrine</span></a></li>
-                                    </ul>
-            </nav>
-            </article>
-
-
-
+    </article>
     </main>
 
         
@@ -464,8 +415,8 @@ in Doctrine.</p>
             Raven.config('https://09ce137590054cfd8f0b7e9324d6ec14@sentry.io/1197701').install()
         </script>
 
-        <script src="https://www.doctrine-project.org/js/main.js?850a2b"></script>
-        <script src="https://www.doctrine-project.org/js/search.js?21d569"></script>
+        <script src="https://www.doctrine-project.org/js/main.js?4138a7"></script>
+        <script src="https://www.doctrine-project.org/js/search.js?2e9165"></script>
 
         <script type="text/javascript">
             var projectSlug = '';
@@ -476,7 +427,7 @@ in Doctrine.</p>
             new Search(projectSlug, versionSlug);
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
-                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                                console.log(eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
                             }
 
             function googleTranslateElementInit() {
@@ -496,16 +447,6 @@ in Doctrine.</p>
 
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 
-        
-                    <script type="text/javascript">
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                ga('create', 'UA-288343-7', 'auto');
-                ga('send', 'pageview');
-            </script>
         
         
             </body>
