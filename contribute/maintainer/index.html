@@ -179,89 +179,90 @@
             </div>
         
             <main role="main" class="container-wrapper container">
-                    <h1>Maintainer Workflow</h1>
-<p>Who is a maintainer? Maintainers are those who have been granted write access to the main
-repository of a project. In the example of the ORM, it would be this
-<a href="http://github.com/doctrine/doctrine2">repository</a>. This repository will
-be referred to as <strong>doctrine</strong> in this document.</p>
+                    <a id="maintainer-workflow"></a><h1>Maintainer Workflow</h1>
+<p>Who is a maintainer? Maintainers are those who have been granted write
+access to the main repository of a project. In the example of the ORM,
+it would be this <a href="http://github.com/doctrine/doctrine2">repository</a>.
+This repository will be referred to as <strong>doctrine</strong> in this document.</p>
 <p>You might want want to know how a maintainer is different from a
 contributor. The <strong>Maintainer Workflow</strong> is used primarily for the
 following:</p>
-<ul>
-<li>Merging <strong>contributor</strong> branches into <strong>doctrine/master</strong> and/or
-<strong>doctrine/*</strong> release branches.</li>
-<li>Creating release branches.</li>
-<li>Tagging released versions within <strong>master</strong> and release branches.</li>
+<ul><li class="dash"> Merging <strong>contributor</strong> branches into <strong>doctrine/master</strong> and/or
+   <strong>doctrine/\</strong>* release branches.</li>
+<li class="dash"> Creating release branches.</li>
+<li class="dash"> Tagging released versions within <strong>master</strong> and release branches.</li>
 </ul>
-<h2>Setup</h2>
+
+<a id="setup"></a><h2>Setup</h2>
 <p>First you must Fork the
 <a href="http://github.com/doctrine/doctrine2">repository</a> and clone your fork
 locally:</p>
-<pre><code class="language-console">$ git clone git@github.com:username/doctrine2.git doctrine2-orm
-$ cd doctrine2-orm</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>git clone git@github.com:username/doctrine2.git doctrine2-orm
+<span class="noselect">$ </span>cd doctrine2-orm</code></pre></div>
 <p>Fetch dependencies using <a href="https://getcomposer.org/">composer</a>:</p>
-<pre><code class="language-console">$ composer install</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>composer install</code></pre></div>
 <p>Now add the <strong>doctrine</strong> remote for maintainers:</p>
-<pre><code class="language-console">$ git remote add doctrine git@github.com:doctrine/doctrine2.git</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>git remote add doctrine git@github.com:doctrine/doctrine2.git</code></pre></div>
 <p>Adjust your branch to track the doctrine master remote branch, by
 default it'll track your origin remote's master:</p>
-<pre><code class="language-console">$ git config branch.master.remote doctrine</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>git config branch.master.remote doctrine</code></pre></div>
 <p>Optionally, add any additional contributor/maintainer forks, e.g.:</p>
-<pre><code class="language-console">$ git remote add romanb git://github.com/romanb/doctrine2.git</code></pre>
-<h2>Branching Model</h2>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>git remote add romanb git://github.com/romanb/doctrine2.git</code></pre></div>
+<a id="branching-model"></a><h2>Branching Model</h2>
 <p>Merging topic branches:</p>
-<ul>
-<li>Topic branches <strong>must</strong> merge into <strong>master</strong> and/or any affected
-release branches.</li>
-<li>Merging a topic branch puts it into the <em>next</em> release, that is the
-next release created from <strong>master</strong> and/or the next patch release
-created from a specific release branch.</li>
+<ul><li class="dash"> Topic branches <strong>must</strong> merge into <strong>master</strong> and/or any affected
+   release branches.</li>
+<li class="dash"> Merging a topic branch puts it into the <em>next</em> release, that is the
+   next release created from <strong>master</strong> and/or the next patch release
+   created from a specific release branch.</li>
 </ul>
-<h2>Configuring Remotes</h2>
-<p>Add remote repo for contributor/maintainer, if necessary (only needs
-to be done once per maintainer):</p>
-<pre><code class="language-console">$ git remote add hobodave git://github.com/hobodave/doctrine2.git</code></pre>
+
+<a id="configuring-remotes"></a><h2>Configuring Remotes</h2>
+<p>Add remote repo for contributor/maintainer, if necessary (only needs to
+be done once per maintainer):</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>git remote add hobodave git://github.com/hobodave/doctrine2.git</code></pre></div>
 <p>Fetch remote:</p>
-<pre><code class="language-console">$ git fetch hobodave</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>git fetch hobodave</code></pre></div>
 <p>Merge topic branch into master:</p>
-<pre><code class="language-console">$ git checkout master
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>git checkout master
 Switched to branch 'master'
-$ git merge --no-ff hobodave/DDC-588
+<span class="noselect">$ </span>git merge --no-ff hobodave/DDC-588
 Updating ea1b82a..05e9557
 (Summary of changes)
-$ git push doctrine master</code></pre>
+<span class="noselect">$ </span>git push doctrine master</code></pre></div>
 <p>The <strong>--no-ff</strong> flag causes the merge to always create a new commit
 object, even if the merge could be performed with a fast-forward. This
 avoids losing information about the historical existence of a topic
 branch and groups together all commits that together added the topic.</p>
-<h2>Release Branches</h2>
-<ul>
-<li>May branch off from: <strong>master</strong></li>
-<li>Must merge back into: <strong>master</strong></li>
-<li>Branch naming convention: 1.0, 2.0, 2.1</li>
+<a id="release-branches"></a><h2>Release Branches</h2>
+<ul><li class="dash"> May branch off from: <strong>master</strong></li>
+<li class="dash"> Must merge back into: <strong>master</strong></li>
+<li class="dash"> Branch naming convention: 1.0, 2.0, 2.1</li>
 </ul>
+
 <p>Release branches are created when <strong>master</strong> has reached the state of
 the next major or minor release. They allow for continuous bug fixes and
 patch releases of that particular release until the release is no longer
 supported.</p>
 <p>The key moment to branch off a new release branch from <strong>master</strong> is
 when <strong>master</strong> reflects the desired state of the new release.</p>
-<h4>Creating a release branch</h4>
+<a id="creating-a-release-branch"></a><h3>Creating a release branch</h3>
 <p>Release branches are created from the <strong>master</strong> branch. When the state
 of <strong>master</strong> is ready for the upcoming target version we branch off and
 give the release branch a name reflecting the target version number. In
 addition the &quot;.0&quot; release is tagged on the new release branch:</p>
-<pre><code class="language-console">$ git checkout -b 2.0 doctrine/master
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>git checkout -b 2.0 doctrine/master
 Switched to a new branch "2.0"
-$ git push doctrine 2.0
-$ git tag -a 2.0.0
-$ git push doctrine 2.0</code></pre>
+<span class="noselect">$ </span>git push doctrine 2.0
+<span class="noselect">$ </span>git tag -a 2.0.0
+<span class="noselect">$ </span>git push doctrine 2.0</code></pre></div>
 <p>This new branch may exist for a while, at least until the release is no
 longer supported. During that time, bug fixes are applied in this branch
 (in addition to the <strong>master</strong> branch), if it is affected by the same
 bug. Adding large new features here is prohibited. They must be merged
 into <strong>master</strong>, and therefore, wait for the next major or minor
-release.</p>            </main>
+release.</p>
+            </main>
 
         
         <button id="back-to-top" title="Go to top">Top</button>
