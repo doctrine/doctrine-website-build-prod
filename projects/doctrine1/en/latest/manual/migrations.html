@@ -260,9 +260,7 @@ how we can run migrations so that we can implement them in our Doctrine
 test environment in the next section.</p>
 <p>First lets create a new instance of Doctrine_Migration and pass it
 the path to our migration classes:</p>
-
-<pre><code class="">$migration = new Doctrine_Migration( '/path/to/migration_classes', $conn );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>migration = new Doctrine_Migration( '/path/to/migration_classes', $conn );</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Notice the second argument to the Doctrine_Migration
 constructor. You can pass an optional Doctrine_Connection
 instance. If you do not pass the connection for the migration class
@@ -270,23 +268,16 @@ to use, it will simply grab the current connection.</p>
 </div>
 <p>Now we can migrate to the latest version by calling the <code>migrate()</code>
 method:</p>
-
-<pre><code class="">$migration-&gt;migrate();
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>migration->migrate();</code></pre></div>
 <p>If you want to migrate to a specific version you can pass an argument to
 <code>migrate()</code>. For example we can migrate to version 3 from 0:</p>
-
-<pre><code class="">$migration-&gt;migrate( 3 );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>migration->migrate( 3 );</code></pre></div>
 <p>Now you can migrate back to version 0 from 3:</p>
-
-<pre><code class="">$migration-&gt;migrate( 0 );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>migration->migrate( 0 );</code></pre></div>
 <p>If you want to get the current version of the database you can use the
 <code>getCurrentVersion()</code> method:</p>
-
-<pre><code class="">echo $migration-&gt;getCurrentVersion();
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>echo $migration->getCurrentVersion();
+</code></pre></div>
 <div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i><p>Omitting the version number argument for the <code>migrate()</code>
 method means that internally Doctrine will try and migrate to the
 latest class version number that it could find in the directory you
@@ -309,13 +300,11 @@ so lets create a directory named <code>migrations</code>:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>mkdir migrations</code></pre></div>
 <p>Now create the <code>migrate.php</code> script in your favorite editor and place
 the following code inside:</p>
-
-<pre><code class="">// migrate.php
+<div class="console"><pre><code class="console">// migrate.php
 require_once('bootstrap.php');
 
-$migration = new Doctrine_Migration( 'migrations' );
-$migration-&gt;migrate();
-</code></pre>
+<span class="noselect">$ </span>migration = new Doctrine_Migration( 'migrations' );
+<span class="noselect">$ </span>migration->migrate();</code></pre></div>
 <hr />
 <a class="section-anchor" id="writing-migration-classes" name="writing-migration-classes"></a><h2 class="section-header"><a href="#writing-migration-classes">Writing Migration Classes<i class="fas fa-link"></i></a></h2>
 <p>Migration classes consist of a simple class that extends from
@@ -330,55 +319,49 @@ correct order.</p>
 <p>Below are a few examples of some migration classes you can use to build
 your database starting from version 1.</p>
 <p>For the first version lets create a new table named <code>migration_test</code>:</p>
-
-<pre><code class="">// migrations/1_add_table.php
+<div class="console"><pre><code class="console">// migrations/1_add_table.php
 class AddTable extends Doctrine_Migration_Base
 {
     public function up()
     {
-        $this-&gt;createTable( 'migration_test', array( 'field1' =&gt; array( 'type' =&gt; 'string' ) ) );
+        $this->createTable( 'migration_test', array( 'field1' => array( 'type' => 'string' ) ) );
     }
 
     public function down()
     {
-        $this-&gt;dropTable( 'migration_test' );
+        $this->dropTable( 'migration_test' );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Now lets create a second version where we add a new column to the table
 we added in the previous version:</p>
-
-<pre><code class="">// migrations/2_add_column.php
+<div class="console"><pre><code class="console">// migrations/2_add_column.php
 class AddColumn extends Doctrine_Migration_Base
 {
     public function up()
     {
-        $this-&gt;addColumn( 'migration_test', 'field2', 'string' );
+        $this->addColumn( 'migration_test', 'field2', 'string' );
     }
 
     public function down()
     {
-        $this-&gt;removeColumn( 'migration_test', 'field2' );
+        $this->removeColumn( 'migration_test', 'field2' );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Finally, lets change the type of the <code>field1</code> column in the table we
 created previously:</p>
-
-<pre><code class="">// migrations/3_change_column.php
+<div class="console"><pre><code class="console">// migrations/3_change_column.php
 class ChangeColumn extends Doctrine_Migration_Base
 {
     public function up()
     {
-        $this-&gt;changeColumn( 'migration_test', 'field2', 'integer' );
+        $this->changeColumn( 'migration_test', 'field2', 'integer' );
     }
 
     public function down()
     {
-        $this-&gt;changeColumn( 'migration_test', 'field2', 'string' );
+        $this->changeColumn( 'migration_test', 'field2', 'string' );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Now that we have created the three migration classes above we can run
 our <code>migrate.php</code> script we implemented earlier:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php migrate.php</code></pre></div>
@@ -387,13 +370,11 @@ our <code>migrate.php</code> script we implemented earlier:</p>
 <code>migration_version</code> is set to three.</p>
 <p>If you want to migrate back to where we started you can pass a version
 number to the <code>migrate()</code> method in the <code>migrate.php</code> script:</p>
-
-<pre><code class="">// migrate.php
+<div class="console"><pre><code class="console">// migrate.php
 
 // ...
-$migration = new Doctrine_Migration( 'migrations' );
-$migration-&gt;migrate( 0 );
-</code></pre>
+<span class="noselect">$ </span>migration = new Doctrine_Migration( 'migrations' );
+<span class="noselect">$ </span>migration->migrate( 0 );</code></pre></div>
 <p>Now run the <code>migrate.php</code> script:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php migrate.php</code></pre></div>
 <p>If you look in the database now, everything we did in the <code>up()</code>
@@ -406,36 +387,34 @@ methods has been reversed by the contents of the <code>down()</code> method.</p>
 database in your migration classes.</p>
 <hr />
 <a class="section-anchor" id="create-table" name="create-table"></a><h4 class="section-header"><a href="#create-table">Create Table<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function up()
 {
     $columns = array(
-        'id' =&gt; array(
-            'type'     =&gt; 'integer',
-            'unsigned' =&gt; 1,
-            'notnull'  =&gt; 1,
-            'default'  =&gt; 0
+        'id' => array(
+            'type'     => 'integer',
+            'unsigned' => 1,
+            'notnull'  => 1,
+            'default'  => 0
         ),
-        'name' =&gt; array(
-            'type'   =&gt; 'string',
-            'length' =&gt; 12
+        'name' => array(
+            'type'   => 'string',
+            'length' => 12
         ),
-        'password' =&gt; array(
-            'type'   =&gt; 'string',
-            'length' =&gt; 12
+        'password' => array(
+            'type'   => 'string',
+            'length' => 12
         )
     );
 
     $options = array(
-        'type'    =&gt; 'INNODB',
-        'charset' =&gt; 'utf8'
+        'type'    => 'INNODB',
+        'charset' => 'utf8'
     );
 
-    $this-&gt;createTable( 'table_name', $columns, $options );
+    $this->createTable( 'table_name', $columns, $options );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>You might notice already that the data structures used to
 manipulate the your schema are the same as the data structures used
 with the database abstraction layer. This is because internally the
@@ -444,127 +423,107 @@ operations specified in the migration classes.</p>
 </div>
 <hr />
 <a class="section-anchor" id="drop-table" name="drop-table"></a><h4 class="section-header"><a href="#drop-table">Drop Table<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function down()
 {
-    $this-&gt;dropTable( 'table_name' );
+    $this->dropTable( 'table_name' );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="rename-table" name="rename-table"></a><h4 class="section-header"><a href="#rename-table">Rename Table<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function up()
 {
-    $this-&gt;renameTable( 'old_table_name', 'new_table_name' );
+    $this->renameTable( 'old_table_name', 'new_table_name' );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="create-constraint" name="create-constraint"></a><h4 class="section-header"><a href="#create-constraint">Create Constraint<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function up()
 {
     $definition = array(
-        'fields' =&gt; array(
-            'username' =&gt; array()
+        'fields' => array(
+            'username' => array()
         ),
-        'unique' =&gt; true
+        'unique' => true
     );
 
-    $this-&gt;createConstraint( 'table_name', 'constraint_name', $definition );
+    $this->createConstraint( 'table_name', 'constraint_name', $definition );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="drop-constraint" name="drop-constraint"></a><h4 class="section-header"><a href="#drop-constraint">Drop Constraint<i class="fas fa-link"></i></a></h4>
 <p><strong>Now the opposite</strong> <code>down()</code> <strong>would look like the following:</strong></p>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function down()
 {
-    $this-&gt;dropConstraint( 'table_name', 'constraint_name' );
+    $this->dropConstraint( 'table_name', 'constraint_name' );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="create-foreign-key" name="create-foreign-key"></a><h4 class="section-header"><a href="#create-foreign-key">Create Foreign Key<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function up()
 {
     $definition = array(
-        'local'        =&gt; 'email_id',
-        'foreign'      =&gt; 'id',
-        'foreignTable' =&gt; 'email',
-        'onDelete'     =&gt; 'CASCADE',
+        'local'        => 'email_id',
+        'foreign'      => 'id',
+        'foreignTable' => 'email',
+        'onDelete'     => 'CASCADE',
     );
 
-    $this-&gt;createForeignKey( 'table_name', 'email_foreign_key', $definition );
+    $this->createForeignKey( 'table_name', 'email_foreign_key', $definition );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <p>The valid options for the <code>$definition</code> are:</p>
 <table class="table table-bordered"><tr><td>Name</td><td>Description</td></tr><tr><td>name local foreign foreignTable onDelete onUpdate deferred</td><td>Optional constraint name The local field(s) The foreign reference field(s) The name of the foreign table Referential delete action Referential update action Deferred constraint checking</td></tr></table>
 <hr />
 <a class="section-anchor" id="drop-foreign-key" name="drop-foreign-key"></a><h4 class="section-header"><a href="#drop-foreign-key">Drop Foreign Key<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function down()
 {
-    $this-&gt;dropForeignKey( 'table_name', 'email_foreign_key' );
+    $this->dropForeignKey( 'table_name', 'email_foreign_key' );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="add-column" name="add-column"></a><h4 class="section-header"><a href="#add-column">Add Column<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function up()
 {
-    $this-&gt;addColumn( 'table_name', 'column_name', 'string', $length, $options );
+    $this->addColumn( 'table_name', 'column_name', 'string', $length, $options );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="rename-column" name="rename-column"></a><h4 class="section-header"><a href="#rename-column">Rename Column<i class="fas fa-link"></i></a></h4>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Some DBMS like sqlite do not implement the rename column
 operation. An exception is thrown if you try and rename a column
 when using a sqlite connection.</p>
 </div>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function up()
 {
-    $this-&gt;renameColumn( 'table_name', 'old_column_name', 'new_column_name' );
+    $this->renameColumn( 'table_name', 'old_column_name', 'new_column_name' );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="change-column" name="change-column"></a><h4 class="section-header"><a href="#change-column">Change Column<i class="fas fa-link"></i></a></h4>
 <p><strong>Change any aspect of an existing column:</strong></p>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function up()
 {
-    $options = array( 'length' =&gt; 1 );
-    $this-&gt;changeColumn( 'table_name', 'column_name', 'tinyint', $options );
+    $options = array( 'length' => 1 );
+    $this->changeColumn( 'table_name', 'column_name', 'tinyint', $options );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="remove-column" name="remove-column"></a><h4 class="section-header"><a href="#remove-column">Remove Column<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function up()
 {
-    $this-&gt;removeColumn( 'table_name', 'column_name' );
+    $this->removeColumn( 'table_name', 'column_name' );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="irreversible-migration" name="irreversible-migration"></a><h4 class="section-header"><a href="#irreversible-migration">Irreversible Migration<i class="fas fa-link"></i></a></h4>
 <div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i><p>Sometimes you may perform some operations in the <code>up()</code>
@@ -572,43 +531,37 @@ method that cannot be reversed. For example if you remove a column
 from a table. In this case you need to throw a new
 Doctrine_Migration_IrreversibleMigrationException exception.</p>
 </div>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function down()
 {
     throw new Doctrine_Migration_IrreversibleMigrationException( 'The remove column operation cannot be undone!' );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="add-index" name="add-index"></a><h4 class="section-header"><a href="#add-index">Add Index<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function up()
 {
     $options = array(
-        'fields' =&gt; array(
-            'username' =&gt; array(
-                'sorting' =&gt; 'ascending'
+        'fields' => array(
+            'username' => array(
+                'sorting' => 'ascending'
             ),
-            'last_login' =&gt; array()
+            'last_login' => array()
         )
     );
 
-    $this-&gt;addIndex( 'table_name', 'index_name', $options );
+    $this->addIndex( 'table_name', 'index_name', $options );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="remove-index" name="remove-index"></a><h4 class="section-header"><a href="#remove-index">Remove Index<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function down()
 {
-    $this-&gt;removeIndex( 'table_name', 'index_name' );
+    $this->removeIndex( 'table_name', 'index_name' );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <blockquote><p>Pre and Post Hooks</p>
 </blockquote>
@@ -619,15 +572,14 @@ the data altering after the <code>up()</code> or <code>down()</code> method is p
 We have hooks in place for this named <code>preUp()</code>, <code>postUp()</code>,
 <code>preDown()</code>, and <code>postDown()</code>. Define these methods and they will be
 triggered:</p>
-
-<pre><code class="">// migrations/1_add_table.php
+<div class="console"><pre><code class="console">// migrations/1_add_table.php
 class AddTable extends Doctrine_Migration_Base
 {
     public function up()
     {
-        $this-&gt;createTable( 'migration_test', array(
-            'field1' =&gt; array(
-                'type' =&gt; 'string'
+        $this->createTable( 'migration_test', array(
+            'field1' => array(
+                'type' => 'string'
             )
         );
     }
@@ -635,32 +587,29 @@ class AddTable extends Doctrine_Migration_Base
     public function postUp()
     {
         $migrationTest         = new MigrationTest();
-        $migrationTest-&gt;field1 = 'Initial record created by migrations';
-        $migrationTest-&gt;save();
+        $migrationTest->field1 = 'Initial record created by migrations';
+        $migrationTest->save();
     }
 
     public function down()
     {
-        $this-&gt;dropTable( 'migration_test' );
+        $this->dropTable( 'migration_test' );
     }
-}
-</code></pre>
+}</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The above example assumes you have created and made
 available the <code>MigrationTest</code> model. Once the <code>up()</code> method is
 executed the <code>migration_test</code> table is created so the
 <code>MigrationTest</code> model can be used. We have provided the definition
 of this model below.</p>
 </div>
-
-<pre><code class="">// models/MigrationTest.php
+<div class="console"><pre><code class="console">// models/MigrationTest.php
 class MigrationTest extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn( 'field1', 'string' );
+        $this->hasColumn( 'field1', 'string' );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -693,15 +642,13 @@ possible by using the <code>migrate()</code> function for both the <code>up</cod
 either have a value of <code>up</code> or <code>down</code>. This value is passed to the
 first argument of functions like <code>column</code>, <code>table</code>, etc.</p>
 <p>Here is an example where we automate the adding and removing of a column</p>
-
-<pre><code class="">class MigrationTest extends Doctrine_Migration_Base
+<div class="console"><pre><code class="console">class MigrationTest extends Doctrine_Migration_Base
 {
     public function migrate( $direction )
     {
-        $this-&gt;column( $direction, 'table_name', 'column_name', 'string', '255' );
+        $this->column( $direction, 'table_name', 'column_name', 'string', '255' );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Now when we run up with the above migration, the column will be added
 and when we run down the column will be removed.</p>
 <p>Here is a list of the following migration methods that can be automated:</p>
@@ -719,17 +666,15 @@ differences between two sets of schema information.</p>
 <a class="section-anchor" id="from-database" name="from-database"></a><h4 class="section-header"><a href="#from-database">From Database<i class="fas fa-link"></i></a></h4>
 <p>To generate a set of migrations from the existing database connections
 it is simple, just use <code>Doctrine_Core::generateMigrationsFromDb()</code>.</p>
-
-<pre><code class="">Doctrine_Core::generateMigrationsFromDb( '/path/to/migration/classes' );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>Doctrine_Core::generateMigrationsFromDb( '/path/to/migration/classes' );
+</code></pre></div>
 <hr />
 <a class="section-anchor" id="from-existing-models" name="from-existing-models"></a><h4 class="section-header"><a href="#from-existing-models">From Existing Models<i class="fas fa-link"></i></a></h4>
 <p>To generate a set of migrations from an existing set of models it is
 just as simple as from a database, just use
 <code>Doctrine_Core::generateMigrationsFromModels()</code>.</p>
-
-<pre><code class="">Doctrine_Core::generateMigrationsFromModels( '/path/to/migration/classes', '/path/to/models' );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>Doctrine_Core::generateMigrationsFromModels( '/path/to/migration/classes', '/path/to/models' );
+</code></pre></div>
 <hr />
 <a class="section-anchor" id="diff-tool" name="diff-tool"></a><h4 class="section-header"><a href="#diff-tool">Diff Tool<i class="fas fa-link"></i></a></h4>
 <p>Sometimes you may want to alter your models and be able to automate the
@@ -789,24 +734,21 @@ can be one of the following:</p>
 <tr><td class="line-number noselect"><a name="line-number-fe3793947ad80eeb238c0ee1c96d83e3c0f6cf59-8" class="line-number-anchor" /><a href="#line-number-fe3793947ad80eeb238c0ee1c96d83e3c0f6cf59-8">8</a></td></tr></table></div></code></pre>
 <p>Now we can easily generate a migration class which will add the new
 column to our database:</p>
-
-<pre><code class="">Doctrine_Core::generateMigrationsFromDiff( '/path/to/migration/classes', '/path/to/schema1.yml', '/path/to/schema2.yml' );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>Doctrine_Core::generateMigrationsFromDiff( '/path/to/migration/classes', '/path/to/schema1.yml', '/path/to/schema2.yml' );
+</code></pre></div>
 <p>This will produce a file at the path <code>/path/to/migration/classes/1236199329_version1.php</code></p>
-
-<pre><code class="">class Version1 extends Doctrine_Migration_Base
+<div class="console"><pre><code class="console">class Version1 extends Doctrine_Migration_Base
 {
     public function up()
     {
-        $this-&gt;addColumn( 'user', 'email_address', 'string', '255', array() );
+        $this->addColumn( 'user', 'email_address', 'string', '255', array() );
     }
 
     public function down()
     {
-        $this-&gt;removeColumn( 'user', 'email_address' );
+        $this->removeColumn( 'user', 'email_address' );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Now you can easily migrate your database and add the new column!</p>
 <hr />
 <a class="section-anchor" id="conclusion" name="conclusion"></a><h2 class="section-header"><a href="#conclusion">Conclusion<i class="fas fa-link"></i></a></h2>

@@ -269,21 +269,19 @@ a powerful page links displayer of Doctrine.</p>
 <p>Paginating queries is as simple as effectively do the queries itself.
 Doctrine_Pager is the responsible to process queries and paginate
 them. Check out this small piece of code:</p>
-
-<pre><code class="">// Defining initial variables
-$currentPage    = 1;
-$resultsPerPage = 50;
+<div class="console"><pre><code class="console">// Defining initial variables
+<span class="noselect">$ </span>currentPage    = 1;
+<span class="noselect">$ </span>resultsPerPage = 50;
 
 // Creating pager object
-$pager = new Doctrine_Pager(
+<span class="noselect">$ </span>pager = new Doctrine_Pager(
     Doctrine_Query::create()
-        -&gt;from( 'User u' )
-        -&gt;leftJoin( 'u.Group g' )
-        -&gt;orderby( 'u.username ASC' ),
+        ->from( 'User u' )
+        ->leftJoin( 'u.Group g' )
+        ->orderby( 'u.username ASC' ),
     $currentPage, // Current page of request
     $resultsPerPage, // (Optional) Number of results per page. Default is 25
-);
-</code></pre>
+);</code></pre></div>
 <p>Until this place, the source you have is the same as the old
 Doctrine_Query object. The only difference is that now you have 2
 new arguments. Your old query object plus these 2 arguments are now
@@ -291,9 +289,7 @@ encapsulated by the Doctrine_Pager object. At this stage,
 Doctrine_Pager defines the basic data needed to control pagination.
 If you want to know that actual status of the pager, all you have to do
 is to check if it's already executed:</p>
-
-<pre><code class="">$pager-&gt;getExecuted();
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>pager->getExecuted();</code></pre></div>
 <p>If you try to access any of the methods provided by Doctrine_Pager
 now, you'll experience Doctrine_Pager_Exception thrown, reporting
 you that Pager was not yet executed. When executed, Doctrine_Pager
@@ -303,32 +299,26 @@ listed at the end of this topic.</p>
 Doctrine_Query execute call. It even allow arguments the way you
 usually do it. Here is the PHP complete syntax, including the syntax of
 optional parameters:</p>
-
-<pre><code class="">$items = $pager-&gt;execute( [$args = array() [, $fetchType = null]] );
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>items = $pager->execute( [$args = array() [, $fetchType = null]] );
 
 foreach ( $items as $item )
 {
     // ...
-}
-</code></pre>
+}</code></pre></div>
 <p>There are some special cases where the return records query differ of
 the counter query. To allow this situation, Doctrine_Pager has some
 methods that enable you to count and then to execute. The first thing
 you have to do is to define the count query:</p>
-
-<pre><code class="">$pager-&gt;setCountQuery( $query [, $params = null] );
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>pager->setCountQuery( $query [, $params = null] );
 
 // ...
-$rs = $pager-&gt;execute();
-</code></pre>
+<span class="noselect">$ </span>rs = $pager->execute();</code></pre></div>
 <p>The first param of <code>setCountQuery</code> can be either a valid
 Doctrine_Query object or a DQL string. The second argument you can
 define the optional parameters that may be sent in the counter query. If
 you do not define the params now, you're still able to define it later
 by calling the <code>setCountQueryParams</code>:</p>
-
-<pre><code class="">$pager-&gt;setCountQueryParams( [$params = array() [, $append = false]] );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>pager->setCountQueryParams( [$params = array() [, $append = false]] );</code></pre></div>
 <p>This method accepts 2 parameters. The first one is the params to be sent
 in count query and the second parameter is if the
 <code>$params</code> should be appended to the list or if it should override the list of count query parameters.
@@ -340,67 +330,65 @@ and call <code>$pager-&gt;getCountQuery()</code>, it will return the &quot;fetch
 to you.</p>
 <p>If you need access the other functionalities that Doctrine_Pager
 provides, you can access them through the API:</p>
-
-<pre><code class="">// Returns the check if Pager was already executed
-$pager-&gt;getExecuted();
+<div class="console"><pre><code class="console">// Returns the check if Pager was already executed
+<span class="noselect">$ </span>pager->getExecuted();
 
 // Return the total number of itens found on query search
-$pager-&gt;getNumResults();
+<span class="noselect">$ </span>pager->getNumResults();
 
 // Return the first page (always 1)
-$pager-&gt;getFirstPage();
+<span class="noselect">$ </span>pager->getFirstPage();
 
 // Return the total number of pages
-$pager-&gt;getLastPage();
+<span class="noselect">$ </span>pager->getLastPage();
 
 // Return the current page
-$pager-&gt;getPage();
+<span class="noselect">$ </span>pager->getPage();
 
 // Defines a new current page (need to call execute again to adjust offsets and values)
-$pager-&gt;setPage( $page );
+<span class="noselect">$ </span>pager->setPage( $page );
 
 // Return the next page
-$pager-&gt;getNextPage();
+<span class="noselect">$ </span>pager->getNextPage();
 
 // Return the previous page
-$pager-&gt;getPreviousPage();
+<span class="noselect">$ </span>pager->getPreviousPage();
 
 // Return the first indice of current page
-$pager-&gt;getFirstIndice();
+<span class="noselect">$ </span>pager->getFirstIndice();
 
 // Return the last indice of current page
-$pager-&gt;getLastIndice();
+<span class="noselect">$ </span>pager->getLastIndice();
 
 // Return true if it's necessary to paginate or false if not
-$pager-&gt;haveToPaginate();
+<span class="noselect">$ </span>pager->haveToPaginate();
 
 // Return the maximum number of records per page
-$pager-&gt;getMaxPerPage();
+<span class="noselect">$ </span>pager->getMaxPerPage();
 
 // Defined a new maximum number of records per page (need to call execute again to adjust offset and values)
-$pager-&gt;setMaxPerPage( $maxPerPage );
+<span class="noselect">$ </span>pager->setMaxPerPage( $maxPerPage );
 
 // Returns the number of itens in current page
-$pager-&gt;getResultsInPage();
+<span class="noselect">$ </span>pager->getResultsInPage();
 
 // Returns the Doctrine_Query object that is used to make the count results to pager
-$pager-&gt;getCountQuery();
+<span class="noselect">$ </span>pager->getCountQuery();
 
 // Defines the counter query to be used by pager
-$pager-&gt;setCountQuery( $query, $params = null );
+<span class="noselect">$ </span>pager->setCountQuery( $query, $params = null );
 
 // Returns the params to be used by counter Doctrine_Query (return $defaultParams if no param is defined)
-$pager-&gt;getCountQueryParams( $defaultParams = array() );
+<span class="noselect">$ </span>pager->getCountQueryParams( $defaultParams = array() );
 
 // Defines the params to be used by counter Doctrine_Query
-$pager-&gt;setCountQueryParams( $params = array(), $append = false );
+<span class="noselect">$ </span>pager->setCountQueryParams( $params = array(), $append = false );
 
 // Return the Doctrine_Query object
-$pager-&gt;getQuery();
+<span class="noselect">$ </span>pager->getQuery();
 
 // Return an associated Doctrine_Pager_Range_* instance
-$pager-&gt;getRange( $rangeStyle, $options = array() );
-</code></pre>
+<span class="noselect">$ </span>pager->getRange( $rangeStyle, $options = array() );</code></pre></div>
 <hr />
 <a class="section-anchor" id="controlling-range-styles" name="controlling-range-styles"></a><h3 class="section-header"><a href="#controlling-range-styles">Controlling Range Styles<i class="fas fa-link"></i></a></h3>
 <p>There are some cases where simple paginations are not enough. One
@@ -416,8 +404,7 @@ pager package that allows you to create ranges.</p>
 page. The current page is always in the middle, except in the first and
 last pages of the range. Check out how does it work with a chunk length
 of 5 items:</p>
-
-<pre><code class="">Listing 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+<div class="console"><pre><code class="console">Listing 1 2 3 4 5 6 7 8 9 10 11 12 13 14
 Page 1: o-------|
 Page 2: |-o-----|
 Page 3: |---o---|
@@ -425,14 +412,12 @@ Page 4:   |---o---|
 Page 5:     |---o---|
 Page 6:       |---o---|
 Page 7:         |---o---|
-Page 8:           |---o---|
-</code></pre>
+Page 8:           |---o---|</code></pre></div>
 <hr />
 <a class="section-anchor" id="jumping" name="jumping"></a><h4 class="section-header"><a href="#jumping">Jumping<i class="fas fa-link"></i></a></h4>
 <p>In Jumping page range style, the range of page links is always one of a
 fixed set of &quot;frames&quot;: 1-5, 6-10, 11-15, and so on.</p>
-
-<pre><code class="">Listing 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+<div class="console"><pre><code class="console">Listing 1 2 3 4 5 6 7 8 9 10 11 12 13 14
 Page 1: o-------|
 Page 2: |-o-----|
 Page 3: |---o---|
@@ -440,62 +425,53 @@ Page 4: |-----o-|
 Page 5: |-------o
 Page 6:           o---------|
 Page 7:           |-o-------|
-Page 8:           |---o-----|
-</code></pre>
+Page 8:           |---o-----|</code></pre></div>
 <p>Now that we know how the different of styles of pager range works, it's
 time to learn how to use them:</p>
-
-<pre><code class="">$pagerRange = new Doctrine_Pager_Range_Sliding(
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>pagerRange = new Doctrine_Pager_Range_Sliding(
     array(
-        'chunk' =&gt; 5 // Chunk length
+        'chunk' => 5 // Chunk length
     ),
     $pager // Doctrine_Pager object we learned how to create in previous topic
-);
-</code></pre>
+);</code></pre></div>
 <p>Alternatively, you can use:</p>
-
-<pre><code class="">$pagerRange = $pager-&gt;getRange(
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>pagerRange = $pager->getRange(
     'Sliding',
     array(
-        'chunk' =&gt; 5
+        'chunk' => 5
     )
-);
-</code></pre>
+);</code></pre></div>
 <p>What is the advantage to use this object, instead of the
 Doctrine_Pager? Just one; it allows you to retrieve ranges around
 the current page.</p>
 <p>Look at the example:</p>
-
-<pre><code class="">// Retrieves the range around the current page
+<div class="console"><pre><code class="console">// Retrieves the range around the current page
 // In our example, we are using sliding style and we are at page 1
-$pages = $pager_range-&gt;rangeAroundPage();
+<span class="noselect">$ </span>pages = $pager_range->rangeAroundPage();
 
 // Outputs: [1][2][3][4][5]
-echo '['. implode( '][', $pages ) .']';
-</code></pre>
+echo '['. implode( '][', $pages ) .']';</code></pre></div>
 <p>If you build your Doctrine_Pager inside the range object, the API
 gives you enough power to retrieve information related to
 Doctrine_Pager_Range subclass instance:</p>
-
-<pre><code class="">// Return the Pager associated to this Pager_Range
-$pager_range-&gt;getPager();
+<div class="console"><pre><code class="console">// Return the Pager associated to this Pager_Range
+<span class="noselect">$ </span>pager_range->getPager();
 
 // Defines a new Doctrine_Pager (automatically call _initialize protected method)
-$pager_range-&gt;setPager( $pager );
+<span class="noselect">$ </span>pager_range->setPager( $pager );
 
 // Return the options assigned to the current Pager_Range
-$pager_range-&gt;getOptions();
+<span class="noselect">$ </span>pager_range->getOptions();
 
 // Returns the custom Doctrine_Pager_Range implementation offset option
-$pager_range-&gt;getOption( $option );
+<span class="noselect">$ </span>pager_range->getOption( $option );
 
 // Check if a given page is in the range
-$pager_range-&gt;isInRange( $page );
+<span class="noselect">$ </span>pager_range->isInRange( $page );
 
 // Return the range around the current page (obtained from Doctrine_Pager
 // associated to the $pager_range instance)
-$pager_range-&gt;rangeAroundPage();
-</code></pre>
+<span class="noselect">$ </span>pager_range->rangeAroundPage();</code></pre></div>
 <hr />
 <a class="section-anchor" id="advanced-layouts-with-pager" name="advanced-layouts-with-pager"></a><h3 class="section-header"><a href="#advanced-layouts-with-pager">Advanced layouts with pager<i class="fas fa-link"></i></a></h3>
 <p>Until now, we learned how to create paginations and how to retrieve
@@ -547,40 +523,36 @@ distinct templates that can be defined:</p>
 <p>Now we know how to create the Doctrine_Pager_Layout and the types
 that are around this component, it is time to view the basic usage:</p>
 <p>Creating the pager layout is simple:</p>
-
-<pre><code class="">$pagerLayout = new Doctrine_Pager_Layout(
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>pagerLayout = new Doctrine_Pager_Layout(
     new Doctrine_Pager(
         Doctrine_Query::create()
-            -&gt;from( 'User u' )
-            -&gt;leftJoin( 'u.Group g' )
-            -&gt;orderby( 'u.username ASC' ),
+            ->from( 'User u' )
+            ->leftJoin( 'u.Group g' )
+            ->orderby( 'u.username ASC' ),
         $currentPage,
         $resultsPerPage
     ),
     new Doctrine_Pager_Range_Sliding(
         array(
-            'chunk' =&gt; 5
+            'chunk' => 5
         )
     ),
     'http://wwww.domain.com/app/User/list/page,{%page_number}'
-);
-</code></pre>
+);</code></pre></div>
 <p>Assigning templates for page links creation:</p>
-
-<pre><code class="">$pagerLayout-&gt;setTemplate( '[{%page}]' );
-$pagerLayout-&gt;setSelectedTemplate( '[{%page}]' );
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>pagerLayout->setTemplate( '[{%page}]' );
+<span class="noselect">$ </span>pagerLayout->setSelectedTemplate( '[{%page}]' );
 
 // Retrieving Doctrine_Pager instance
-$pager = $pagerLayout-&gt;getPager();
+<span class="noselect">$ </span>pager = $pagerLayout->getPager();
 
 // Fetching users
-$users = $pager-&gt;execute(); // This is possible too!
+<span class="noselect">$ </span>users = $pager->execute(); // This is possible too!
 
 // Displaying page links
 // Displays: [1][2][3][4][5]
 // With links in all pages, except the $currentPage (our example, page 1)
-$pagerLayout-&gt;display();
-</code></pre>
+<span class="noselect">$ </span>pagerLayout->display();</code></pre></div>
 <p>Explaining this source, the first part creates the pager layout
 instance. Second, it defines the templates for all pages and for the
 current page. The last part, it retrieves the Doctrine_Pager object
@@ -596,42 +568,38 @@ pager layout too. To simplify our case, the search parameter is named
 change we need to do is tho adjust the Doctrine_Query object and
 also the URL, to allow it to be sent to other pages.</p>
 <p>Creating the pager layout:</p>
-
-<pre><code class="">$pagerLayout = new Doctrine_Pager_Layout(
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>pagerLayout = new Doctrine_Pager_Layout(
     new Doctrine_Pager(
         Doctrine_Query::create()
-            -&gt;from( 'User u' )
-            -&gt;leftJoin( 'u.Group g' )
-            -&gt;where( 'LOWER(u.username) LIKE LOWER(?)', array( '%' . $_GET['search'] . '%' ) )
-            -&gt;orderby( 'u.username ASC' ),
+            ->from( 'User u' )
+            ->leftJoin( 'u.Group g' )
+            ->where( 'LOWER(u.username) LIKE LOWER(?)', array( '%' . $_GET['search'] . '%' ) )
+            ->orderby( 'u.username ASC' ),
         $currentPage,
         $resultsPerPage
     ),
     new Doctrine_Pager_Range_Sliding(
         array(
-            'chunk' =&gt; 5
+            'chunk' => 5
         )
     ),
     'http://wwww.domain.com/app/User/list/page,{%page_number}?search={%search}'
-);
-</code></pre>
+);</code></pre></div>
 <p>Check out the code and notice we added a new mask, called <code>{%search}</code>.
 We'll need to send it to the template processing at a later stage. We
 then assign the templates, just as defined before, without any change.
 And also, we do not need to change execution of query.</p>
 <p>Assigning templates for page links creation:</p>
-
-<pre><code class="">$pagerLayout-&gt;setTemplate( '[{%page}]' );
-$pagerLayout-&gt;setSelectedTemplate( '[{%page}]' );
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>pagerLayout->setTemplate( '[{%page}]' );
+<span class="noselect">$ </span>pagerLayout->setSelectedTemplate( '[{%page}]' );
 
 // Fetching users
-$users = $pagerLayout-&gt;execute();
+<span class="noselect">$ </span>users = $pagerLayout->execute();
 
 foreach ( $users as $user )
 {
     // ...
-}
-</code></pre>
+}</code></pre></div>
 <p>The method <code>display()</code> is the place where we define the custom mask we
 created. This method accepts 2 optional arguments: one array of optional
 masks and if the output should be returned instead of printed on screen.
@@ -640,43 +608,39 @@ the search offset of <code>$_GET</code> superglobal array. Also, remember that
 since it'll be sent as URL, it needs to be encoded. Custom masks are
 defined in key =&gt; value pairs. So all needed code is to define an array
 with the offset we desire and the value to be replaced:</p>
-
-<pre><code class="">// Displaying page links
-$pagerLayout-&gt;display(
+<div class="console"><pre><code class="console">// Displaying page links
+<span class="noselect">$ </span>pagerLayout->display(
     array(
-        'search' =&gt; urlencode( $_GET['search'] )
+        'search' => urlencode( $_GET['search'] )
     )
-);
-</code></pre>
+);</code></pre></div>
 <p>Doctrine_Pager_Layout component offers accessors to defined
 resources. There is not need to define pager and pager range as
 variables and send to the pager layout. These instances can be retrieved
 by these accessors:</p>
-
-<pre><code class="">// Return the Pager associated to the Pager_Layout
-$pagerLayout-&gt;getPager();
+<div class="console"><pre><code class="console">// Return the Pager associated to the Pager_Layout
+<span class="noselect">$ </span>pagerLayout->getPager();
 
 // Return the Pager_Range associated to the Pager_Layout
-$pagerLayout-&gt;getPagerRange();
+<span class="noselect">$ </span>pagerLayout->getPagerRange();
 
 // Return the URL mask associated to the Pager_Layout
-$pagerLayout-&gt;getUrlMask();
+<span class="noselect">$ </span>pagerLayout->getUrlMask();
 
 // Return the template associated to the Pager_Layout
-$pagerLayout-&gt;getTemplate();
+<span class="noselect">$ </span>pagerLayout->getTemplate();
 
 // Return the current page template associated to the Pager_Layout
-$pagerLayout-&gt;getSelectedTemplate();
+<span class="noselect">$ </span>pagerLayout->getSelectedTemplate();
 
 // Defines the Separator template, applied between each page
-$pagerLayout-&gt;setSeparatorTemplate( $separatorTemplate );
+<span class="noselect">$ </span>pagerLayout->setSeparatorTemplate( $separatorTemplate );
 
 // Return the current page template associated to the Pager_Layout
-$pagerLayout-&gt;getSeparatorTemplate();
+<span class="noselect">$ </span>pagerLayout->getSeparatorTemplate();
 
 // Handy method to execute the query without need to retrieve the Pager instance
-$pagerLayout-&gt;execute( $params = array(), $hydrationMode = null );
-</code></pre>
+<span class="noselect">$ </span>pagerLayout->execute( $params = array(), $hydrationMode = null );</code></pre></div>
 <p>There are a couple of other methods that are available if you want to
 extend the Doctrine_Pager_Layout to create you custom layouter. We
 will see these methods in the next section.</p>
@@ -690,74 +654,71 @@ of pagination like this one:</p>
 you extend it and use the available methods, you can achieve it. The
 base Layout class provides you some methods that can be used to create
 your own implementation. They are:</p>
-
-<pre><code class="">// $this refers to an instance of Doctrine_Pager_Layout
+<div class="console"><pre><code class="console">// $this refers to an instance of Doctrine_Pager_Layout
 
 // Defines a mask replacement. When parsing template, it converts replacement
 // masks into new ones (or values), allowing to change masks behavior on the fly
-$this-&gt;addMaskReplacement( $oldMask, $newMask, $asValue = false );
+<span class="noselect">$ </span>this->addMaskReplacement( $oldMask, $newMask, $asValue = false );
 
 // Remove a mask replacement
-$this-&gt;removeMaskReplacement( $oldMask );
+<span class="noselect">$ </span>this->removeMaskReplacement( $oldMask );
 
 // Remove all mask replacements
-$this-&gt;cleanMaskReplacements();
+<span class="noselect">$ </span>this->cleanMaskReplacements();
 
 // Parses the template and returns the string of a processed page
-$this-&gt;processPage( $options = array() ); // Needs at least page_number offset in $options array
+<span class="noselect">$ </span>this->processPage( $options = array() ); // Needs at least page_number offset in $options array
 
 // Protected methods, although very useful
 
 // Parse the template of a given page and return the processed template
-$this-&gt;_parseTemplate( $options = array() );
+<span class="noselect">$ </span>this->_parseTemplate( $options = array() );
 
 // Parse the url mask to return the correct template depending of the options sent
 // Already process the mask replacements assigned
-$this-&gt;_parseUrlTemplate( $options = array() );
+<span class="noselect">$ </span>this->_parseUrlTemplate( $options = array() );
 
 // Parse the mask replacements of a given page
-$this-&gt;_parseReplacementsTemplate( $options = array() );
+<span class="noselect">$ </span>this->_parseReplacementsTemplate( $options = array() );
 
 // Parse the url mask of a given page and return the processed url
-$this-&gt;_parseUrl( $options = array() );
+<span class="noselect">$ </span>this->_parseUrl( $options = array() );
 
 // Parse the mask replacements, changing from to-be replaced mask with new masks/values
-$this-&gt;_parseMaskReplacements( $str );
-</code></pre>
+<span class="noselect">$ </span>this->_parseMaskReplacements( $str );</code></pre></div>
 <p>Now that you have a small tip of useful methods to be used when
 extending Doctrine_Pager_Layout, it's time to see our implemented
 class:</p>
-
-<pre><code class="">class PagerLayoutWithArrows extends Doctrine_Pager_Layout
+<div class="console"><pre><code class="console">class PagerLayoutWithArrows extends Doctrine_Pager_Layout
 {
     public function display( $options = array(), $return = false )
     {
-        $pager = $this-&gt;getPager();
+        $pager = $this->getPager();
         $str   = '';
 
         // First page
-        $this-&gt;addMaskReplacement( 'page', '&amp;laquo;', true );
-        $options['page_number'] = $pager-&gt;getFirstPage();
-        $str                   .= $this-&gt;processPage( $options );
+        $this->addMaskReplacement( 'page', '&laquo;', true );
+        $options['page_number'] = $pager->getFirstPage();
+        $str                   .= $this->processPage( $options );
 
         // Previous page
-        $this-&gt;addMaskReplacement( 'page', '&amp;lsaquo;', true );
-        $options['page_number'] = $pager-&gt;getPreviousPage();
-        $str                   .= $this-&gt;processPage( $options );
+        $this->addMaskReplacement( 'page', '&lsaquo;', true );
+        $options['page_number'] = $pager->getPreviousPage();
+        $str                   .= $this->processPage( $options );
 
         // Pages listing
-        $this-&gt;removeMaskReplacement( 'page' );
+        $this->removeMaskReplacement( 'page' );
         $str .= parent::display( $options, true );
 
         // Next page
-        $this-&gt;addMaskReplacement( 'page', '&amp;rsaquo;', true );
-        $options['page_number'] = $pager-&gt;getNextPage();
-        $str                   .= $this-&gt;processPage( $options );
+        $this->addMaskReplacement( 'page', '&rsaquo;', true );
+        $options['page_number'] = $pager->getNextPage();
+        $str                   .= $this->processPage( $options );
 
         // Last page
-        $this-&gt;addMaskReplacement( 'page', '&amp;raquo;', true );
-        $options['page_number'] = $pager-&gt;getLastPage();
-        $str                   .= $this-&gt;processPage( $options );
+        $this->addMaskReplacement( 'page', '&raquo;', true );
+        $options['page_number'] = $pager->getLastPage();
+        $str                   .= $this->processPage( $options );
 
         // Possible wish to return value instead of print it on screen
         if ( $return )
@@ -767,8 +728,7 @@ class:</p>
 
         echo $str;
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>As you may see, I have to manual process the items &lt;&lt;, &lt;, &gt; and &gt;&gt;. I
 override the <strong>{%page}</strong> mask by setting a raw value to it (raw value is
 achieved by setting the third parameter as true). Then I define the only
@@ -783,8 +743,7 @@ Doctrine_Pager_Layout, you have to extend it and add your custom
 processor over it. For example purpose (it works in Symfony), I used
 <strong>{link_to}...{/link_to}</strong> as a template processor to do this job.
 Here is the extended class and usage in Symfony:</p>
-
-<pre><code class="">class sfDoctrinePagerLayout extends Doctrine_Pager_Layout
+<div class="console"><pre><code class="console">class sfDoctrinePagerLayout extends Doctrine_Pager_Layout
 {
     public function __construct( $pager, $pagerRange, $urlMask )
     {
@@ -797,25 +756,22 @@ Here is the extended class and usage in Symfony:</p>
         $str = parent::_parseTemplate( $options );
 
         return preg_replace(
-            '/\{link_to\}(.*?)\{\/link_to\}/', link_to( '$1', $this-&gt;_parseUrl( $options ) ), $str
+            '/\{link_to\}(.*?)\{\/link_to\}/', link_to( '$1', $this->_parseUrl( $options ) ), $str
         );
-}
-</code></pre>
+}</code></pre></div>
 <p>}</p>
 <p>Usage:</p>
-
-<pre><code class="">$pagerLayout = new sfDoctrinePagerLayout(
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>pagerLayout = new sfDoctrinePagerLayout(
     $pager,
     new Doctrine_Pager_Range_Sliding(
         array(
-            'chunk' =&gt; 5
+            'chunk' => 5
         )
     ),
     '@hostHistoryList?page={%page_number}'
 );
 
-$pagerLayout-&gt;setTemplate( '[{link_to}{%page}{/link_to}]' );
-</code></pre>
+<span class="noselect">$ </span>pagerLayout->setTemplate( '[{link_to}{%page}{/link_to}]' );</code></pre></div>
 <hr />
 <a class="section-anchor" id="facade" name="facade"></a><h2 class="section-header"><a href="#facade">Facade<i class="fas fa-link"></i></a></h2>
 <hr />
@@ -834,8 +790,7 @@ Doctrine class. These methods perform some of the most used
 functionality of Doctrine with one method. Most of these methods are
 using in the Doctrine_Task system. These tasks are also what are
 executed from the Doctrine_Cli.</p>
-
-<pre><code class="">// Turn debug on/off and check for whether it is on/off
+<div class="console"><pre><code class="console">// Turn debug on/off and check for whether it is on/off
 Doctrine_Core::debug( true );
 
 if ( Doctrine_Core::debug() )
@@ -848,26 +803,26 @@ else
 }
 
 // Get the path to your Doctrine libraries
-$path = Doctrine_Core::getPath();
+<span class="noselect">$ </span>path = Doctrine_Core::getPath();
 
 // Set the path to your Doctrine libraries if it is some non-default location
 Doctrine_Core::setPath( '/path/to/doctrine/libs' );
 
 // Load your models so that they are present and loaded for Doctrine to work with
 // Returns an array of the Doctrine_Records that were found and loaded
-$models = Doctrine_Core::loadModels( '/path/to/models', Doctrine_Core::MODEL_LOADING_CONSERVATIVE );
+<span class="noselect">$ </span>models = Doctrine_Core::loadModels( '/path/to/models', Doctrine_Core::MODEL_LOADING_CONSERVATIVE );
 // or Doctrine_Core::MODEL_LOADING_AGGRESSIVE
 print_r( $models );
 
 // Get array of all the models loaded and present to Doctrine
-$models = Doctrine_Core::getLoadedModels();
+<span class="noselect">$ </span>models = Doctrine_Core::getLoadedModels();
 
 // Pass an array of classes to the above method and it will filter out the ones that are not Doctrine_Records
-$models = Doctrine_Core::filterInvalidModels( array( 'User', 'Formatter', 'Doctrine_Record' ) );
+<span class="noselect">$ </span>models = Doctrine_Core::filterInvalidModels( array( 'User', 'Formatter', 'Doctrine_Record' ) );
 print_r( $models ); // would return array( 'User' ) because Formatter and Doctrine_Record are not valid
 
 // Get Doctrine_Connection object for an actual table name
-$conn = Doctrine_Core::getConnectionByTableName( 'user' ); // returns the connection object that the table name is associated with.
+<span class="noselect">$ </span>conn = Doctrine_Core::getConnectionByTableName( 'user' ); // returns the connection object that the table name is associated with.
 
 // Generate YAML schema from an existing database
 Doctrine_Core::generateYamlFromDb( '/path/to/dump/schema.yml', array( 'connection_name' ), $options );
@@ -876,15 +831,15 @@ Doctrine_Core::generateYamlFromDb( '/path/to/dump/schema.yml', array( 'connectio
 Doctrine_Core::generateModelsFromDb( '/path/to/generate/models', array( 'connection_name' ), $options );
 
 // Array of options and the default values
-$options = array(
-    'packagesPrefix'       =&gt; 'Package',
-    'packagesPath'         =&gt; '',
-    'packagesFolderName'   =&gt; 'packages',
-    'suffix'               =&gt; '.php',
-    'generateBaseClasses'  =&gt; true,
-    'baseClassesPrefix'    =&gt; 'Base',
-    'baseClassesDirectory' =&gt; 'generated',
-    'baseClassName'        =&gt; 'Doctrine_Record'
+<span class="noselect">$ </span>options = array(
+    'packagesPrefix'       => 'Package',
+    'packagesPath'         => '',
+    'packagesFolderName'   => 'packages',
+    'suffix'               => '.php',
+    'generateBaseClasses'  => true,
+    'baseClassesPrefix'    => 'Base',
+    'baseClassesDirectory' => 'generated',
+    'baseClassName'        => 'Doctrine_Record'
 );
 
 // Generate your models from YAML schema
@@ -925,7 +880,7 @@ Doctrine_Core::dumpData( '/path/to/dump/data.yml', true );
 Doctrine_Core::loadData( '/path/to/fixture/files', true );
 
 // Run a migration process for a set of migration classes
-$num = 5; // migrate to version #5
+<span class="noselect">$ </span>num = 5; // migrate to version #5
 Doctrine_Core::migration( '/path/to/migrations', $num );
 
 // Generate a blank migration class template
@@ -939,23 +894,21 @@ Doctrine_Core::generateMigrationsFromDb( '/path/to/migrations' );
 Doctrine_Core::generateMigrationsFromModels( '/path/to/migrations', '/path/to/models' );
 
 // Get Doctrine_Table instance for a model
-$userTable = Doctrine_Core::getTable( 'User' );
+<span class="noselect">$ </span>userTable = Doctrine_Core::getTable( 'User' );
 
 // Compile doctrine in to a single php file
-$drivers = array( 'mysql' ); // specify the array of drivers you want to include in this compiled version
+<span class="noselect">$ </span>drivers = array( 'mysql' ); // specify the array of drivers you want to include in this compiled version
 Doctrine_Core::compile( '/path/to/write/compiled/doctrine', $drivers );
 
 // Dump doctrine objects for debugging
-$conn = Doctrine_Manager::connection();
-Doctrine_Core::dump( $conn );
-</code></pre>
+<span class="noselect">$ </span>conn = Doctrine_Manager::connection();
+Doctrine_Core::dump( $conn );</code></pre></div>
 <hr />
 <a class="section-anchor" id="tasks" name="tasks"></a><h3 class="section-header"><a href="#tasks">Tasks<i class="fas fa-link"></i></a></h3>
 <p>Tasks are classes which bundle some of the core convenience methods in
 to tasks that can be easily executed by setting the required arguments.
 These tasks are directly used in the Doctrine command line interface.</p>
-
-<pre><code class="">BuildAll
+<div class="console"><pre><code class="console">BuildAll
 BuildAllLoad
 BuildAllReload
 Compile
@@ -975,8 +928,7 @@ GenerateYamlDb
 GenerateYamlModels
 LoadData
 Migrate
-RebuildDb
-</code></pre>
+RebuildDb</code></pre></div>
 <p>You can read below about how to execute Doctrine Tasks standalone in
 your own scripts.</p>
 <hr />
@@ -1015,60 +967,52 @@ Doctrine Command Line Interface
 ./doctrine rebuild-db</code></pre></div>
 <p>The tasks for the CLI are separate from the CLI and can be used
 standalone. Below is an example.</p>
-
-<pre><code class="">$task = new Doctrine_Task_GenerateModelsFromYaml();
-$args = array(
-    'yaml_schema_path' =&gt; '/path/to/schema',
-    'models_path'      =&gt; '/path/to/models'
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>task = new Doctrine_Task_GenerateModelsFromYaml();
+<span class="noselect">$ </span>args = array(
+    'yaml_schema_path' => '/path/to/schema',
+    'models_path'      => '/path/to/models'
 );
 
-$task-&gt;setArguments( $args );
+<span class="noselect">$ </span>task->setArguments( $args );
 
 try
 {
-    if ( $task-&gt;validate() )
+    if ( $task->validate() )
     {
-        $task-&gt;execute();
+        $task->execute();
     }
 }
 catch ( Exception $e )
 {
-    throw new Doctrine_Exception( $e-&gt;getMessage() );
-}
-</code></pre>
+    throw new Doctrine_Exception( $e->getMessage() );
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="usage" name="usage"></a><h3 class="section-header"><a href="#usage">Usage<i class="fas fa-link"></i></a></h3>
 <p>File named &quot;doctrine&quot; that is set to executable</p>
-
-<pre><code class="">#!/usr/bin/env php
+<div class="console"><pre><code class="console">#!/usr/bin/env php
 [php]
 
 chdir( dirname( __FILE__ ) );
-include( 'doctrine.php' );
-</code></pre>
+include( 'doctrine.php' );</code></pre></div>
 <p>Actual php file named &quot;doctrine.php&quot; that implements the Doctrine_Cli.</p>
-
-<pre><code class="">// Include your Doctrine configuration/setup here, your connections, models, etc.
+<div class="console"><pre><code class="console">// Include your Doctrine configuration/setup here, your connections, models, etc.
 
 // Configure Doctrine Cli
 // Normally these are arguments to the cli tasks but if they are set here the arguments will be auto-filled and are not required for you to enter them.
 
-$config = array(
-    'data_fixtures_path' =&gt; '/path/to/data/fixtures',
-    'models_path'        =&gt; '/path/to/models',
-    'migrations_path'    =&gt; '/path/to/migrations',
-    'sql_path'           =&gt; '/path/to/data/sql',
-    'yaml_schema_path'   =&gt; '/path/to/schema'
+<span class="noselect">$ </span>config = array(
+    'data_fixtures_path' => '/path/to/data/fixtures',
+    'models_path'        => '/path/to/models',
+    'migrations_path'    => '/path/to/migrations',
+    'sql_path'           => '/path/to/data/sql',
+    'yaml_schema_path'   => '/path/to/schema'
 );
 
-$cli = new Doctrine_Cli( $config );
-$cli-&gt;run( $_SERVER['argv'] );
-</code></pre>
+<span class="noselect">$ </span>cli = new Doctrine_Cli( $config );
+<span class="noselect">$ </span>cli->run( $_SERVER['argv'] );</code></pre></div>
 <p>Now you can begin executing commands.</p>
-
-<pre><code class="">./doctrine generate-models-yaml
-./doctrine create-tables
-</code></pre>
+<div class="console"><pre><code class="console">./doctrine generate-models-yaml
+./doctrine create-tables</code></pre></div>
 <hr />
 <a class="section-anchor" id="sandbox" name="sandbox"></a><h2 class="section-header"><a href="#sandbox">Sandbox<i class="fas fa-link"></i></a></h2>
 <hr />
@@ -1076,13 +1020,11 @@ $cli-&gt;run( $_SERVER['argv'] );
 <p>You can install the sandbox by downloading the special sandbox package
 from <a href="http://www.doctrine-project.org/download">http://www.doctrine-project.org/download</a> or you can install it via
 svn below.</p>
-
-<pre><code class="">svn co http://www.doctrine-project.org/svn/branches/0.11 doctrine
+<div class="console"><pre><code class="console">svn co http://www.doctrine-project.org/svn/branches/0.11 doctrine
 cd doctrine/tools/sandbox
 chmod 0777 doctrine
 
-./doctrine
-</code></pre>
+./doctrine</code></pre></div>
 <p>The above steps should give you a functioning sandbox. Execute the
 ./doctrine command without specifying a task will show you an index of
 all the available cli tasks in Doctrine.</p>

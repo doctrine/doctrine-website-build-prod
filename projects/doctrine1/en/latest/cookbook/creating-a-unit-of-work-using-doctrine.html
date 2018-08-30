@@ -283,13 +283,11 @@ isn't added twice.</p>
 <blockquote><p>protected function</p>
 </blockquote>
 <p><em>existsInCollections(`model) { // does the model already belong to the createOrUpdate collection? foreach (`\ this-&gt;</em>createOrUpdateCollectionas `m) { if (`\ model-&gt;getOid() == $m-&gt;getOid()) { return true; }}</p>
-
-<pre><code class="">// does the model already belong to the delete collection?
-foreach ($this-&gt;_deleteCollection as $m) {
-    if ($model-&gt;getOid() == $m-&gt;getOid()) {
+<div class="console"><pre><code class="console">// does the model already belong to the delete collection?
+foreach ($this->_deleteCollection as $m) {
+    if ($model->getOid() == $m->getOid()) {
         return true;
-    }
-</code></pre>
+    }</code></pre></div>
 <p>}</p>
 <p>return false; }</p>
 <p>Now we can add our public methods that will be used by code outside of
@@ -298,18 +296,14 @@ the UnitOfWork:</p>
 </blockquote>
 <p>registerModelForCreateOrUpdate(`model) { // code to check to see if the model exists already if (`\ this-&gt;\_existsInCollections($model)){ throw new Exception('model already in another collection for this
 transaction'); }</p>
-
-<pre><code class="">// no? add it
-$this-&gt;_createOrUpdateCollection[] = $model;
-</code></pre>
+<div class="console"><pre><code class="console">// no? add it
+<span class="noselect">$ </span>this->_createOrUpdateCollection[] = $model;</code></pre></div>
 <p>}</p>
 <p>public function
 registerModelForDelete(`model) { // code to check to see if the model exists already if (`\ this-&gt;\_existsInCollections($model)){ throw new Exception('model already in another collection for this
 transaction'); }</p>
-
-<pre><code class="">// no? add it
-$this-&gt;_deleteCollection[] = $model;
-</code></pre>
+<div class="console"><pre><code class="console">// no? add it
+<span class="noselect">$ </span>this->_deleteCollection[] = $model;</code></pre></div>
 <p>}</p>
 <p>Before we write the transaction code, we should also be able to let
 other code clear the Unit Of Work. We'll use this method internally as
@@ -322,20 +316,18 @@ succesful.</p>
 Doctrine transaction:</p>
 <blockquote><p>public function commitAll() { $conn = Doctrine\_Manager::connection();</p>
 </blockquote>
+<div class="console"><pre><code class="console">try {
+      $conn->beginTransaction();
 
-<pre><code class="">try {
-      $conn-&gt;beginTransaction();
+      $this->_performCreatesOrUpdates($conn);
+      $this->_performDeletes($conn);
 
-      $this-&gt;_performCreatesOrUpdates($conn);
-      $this-&gt;_performDeletes($conn);
-
-      $conn-&gt;commit();
+      $conn->commit();
 } catch(Doctrine_Exception $e) {
-    $conn-&gt;rollback();
+    $conn->rollback();
 }
 
-$this-&gt;clearAll();
-</code></pre>
+<span class="noselect">$ </span>this->clearAll();</code></pre></div>
 <p>}</p>
 <p>Now we're assuming that we've already started a Doctrine connection. In
 order for this object to work, we need to initialize Doctrine. It's
@@ -372,8 +364,7 @@ project name';</p>
 </blockquote>
 <p>@var array Doctrine\_Record \*/ protected $\_createOrUpdateCollection =
 array();</p>
-
-<pre><code class="">/**
+<div class="console"><pre><code class="console">/**
  * Collection of models to be persisted
  *
  * @var array Doctrine_Record
@@ -388,12 +379,12 @@ protected $_deleteCollection = array();
 public function registerModelForCreateOrUpdate($model)
 {
     // code to check to see if the model exists already
-    if ($this-&gt;_existsInCollections($model)) {
+    if ($this->_existsInCollections($model)) {
         throw new Exception('model already in another collection for this transaction');
     }
 
     // no? add it
-    $this-&gt;_createOrUpdateCollection[] = $model;
+    $this->_createOrUpdateCollection[] = $model;
 }
 
 /**
@@ -404,12 +395,12 @@ public function registerModelForCreateOrUpdate($model)
 public function registerModelForDelete($model)
 {
       // code to check to see if the model exists already
-      if ($this-&gt;_existsInCollections($model)) {
+      if ($this->_existsInCollections($model)) {
           throw new Exception('model already in another collection for this transaction');
       }
 
       // no? add it
-      $this-&gt;_deleteCollection[] = $model;
+      $this->_deleteCollection[] = $model;
 }
 
 /**
@@ -417,8 +408,8 @@ public function registerModelForDelete($model)
  */
 public function ClearAll()
 {
-    $this-&gt;_deleteCollection = array();
-    $this-&gt;_createOrUpdateCollection = array();
+    $this->_deleteCollection = array();
+    $this->_createOrUpdateCollection = array();
 }
 
 /**
@@ -429,50 +420,49 @@ public function commitAll()
     $conn = Doctrine_Manager::connection();
 
     try {
-        $conn-&gt;beginTransaction();
+        $conn->beginTransaction();
 
-        $this-&gt;performCreatesOrUpdates($conn);
-        $this-&gt;performDeletes($conn);
+        $this->performCreatesOrUpdates($conn);
+        $this->performDeletes($conn);
 
-        $conn-&gt;commit();
+        $conn->commit();
     } catch(Doctrine_Exception $e) {
-        $conn-&gt;rollback();
+        $conn->rollback();
     }
 
-    $this-&gt;clearAll();
+    $this->clearAll();
 }
 
 protected function _performCreatesOrUpdates($conn)
 {
-    foreach ($this-&gt;_createOrUpdateCollection as $model) {
-        $model-&gt;save($conn);
+    foreach ($this->_createOrUpdateCollection as $model) {
+        $model->save($conn);
     }
 }
 
 protected function _performDeletes($conn)
 {
-    foreach ($this-&gt;_deleteCollection as $model) {
-        $model-&gt;delete($conn);
+    foreach ($this->_deleteCollection as $model) {
+        $model->delete($conn);
     }
 }
 
 protected function _existsInCollections($model)
 {
-   foreach ($this-&gt;_createOrUpdateCollection as $m) {
-        if ($model-&gt;getOid() == $m-&gt;getOid()) {
+   foreach ($this->_createOrUpdateCollection as $m) {
+        if ($model->getOid() == $m->getOid()) {
             return true;
         }
    }
 
-   foreach ($this-&gt;_deleteCollection as $m) {
-        if ($model-&gt;getOid() == $m-&gt;getOid()) {
+   foreach ($this->_deleteCollection as $m) {
+        if ($model->getOid() == $m->getOid()) {
             return true;
         }
    }
 
    return false;
-}
-</code></pre>
+}</code></pre></div>
 <p>}</p>
 <p>Thanks for reading, feel free to check out http://jon.lebensold.ca or
 mail me at jon@lebensold.ca if you have any questions.</p>

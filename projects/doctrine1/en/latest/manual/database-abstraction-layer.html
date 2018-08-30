@@ -289,16 +289,13 @@ finally dropped, in a database named <code>events_db</code>:</p>
 <p>It is simple to create new databases with Doctrine. It is only a matter
 of calling the <code>createDatabase()</code> function with an argument that is
 the name of the database to create.</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$conn-&gt;export-&gt;createDatabase('events_db');
-</code></pre>
+<span class="noselect">$ </span>conn->export->createDatabase('events_db');</code></pre></div>
 <p>Now lets change the connection in our <code>bootstrap.php</code> file to connect
 to the new <code>events_db</code>:</p>
-
-<pre><code class="">// bootstrap.php
+<div class="console"><pre><code class="console">// bootstrap.php
 
 /**
  * Bootstrap Doctrine.php, register autoloader and specify
@@ -308,8 +305,7 @@ to the new <code>events_db</code>:</p>
  // ...
  $conn = Doctrine_Manager::connection('mysql://root:@localhost/events_db', 'doctrine');
 
- // ...
-</code></pre>
+ // ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="creating-tables" name="creating-tables"></a><h3 class="section-header"><a href="#creating-tables">Creating Tables<i class="fas fa-link"></i></a></h3>
 <p>Now that the database is created and we've re-configured our connection,
@@ -317,27 +313,25 @@ we can proceed with adding some tables. The method <code>createTable()</code>
 takes three parameters: the table name, an array of field definition and
 some extra options (optional and RDBMS-specific).</p>
 <p>Now lets create the <code>events</code> table:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 //
-$definition = array(
-    'id' =&gt; array(
-        'type' =&gt; 'integer',
-        'primary' =&gt; true,
-        'autoincrement' =&gt; true
+<span class="noselect">$ </span>definition = array(
+    'id' => array(
+        'type' => 'integer',
+        'primary' => true,
+        'autoincrement' => true
     ),
-    'name' =&gt; array(
-        'type' =&gt; 'string',
-        'length' =&gt; 255
+    'name' => array(
+        'type' => 'string',
+        'length' => 255
     ),
-    'datetime' =&gt; array(
-        'type' =&gt; 'timestamp'
+    'datetime' => array(
+        'type' => 'timestamp'
     )
 );
 
-$conn-&gt;export-&gt;createTable('events', $definition);
-</code></pre>
+<span class="noselect">$ </span>conn->export->createTable('events', $definition);</code></pre></div>
 <p>The keys of the definition array are the names of the fields in the
 table. The values are arrays containing the required key <code>type</code> as
 well as other keys, depending on the value of <code>type</code>. The values for
@@ -345,73 +339,67 @@ the <code>type</code> key are the same as the possible Doctrine datatypes.
 Depending on the datatype, the other options may vary.</p>
 <table class="table table-bordered"><tr><td>Datatype</td><td>length</td><td>default</td><td>not null</td><td>unsigned</td><td>autoincrement</td></tr><tr><td><code>string</code> <code>boolean</code> <code>integer</code> <code>decimal</code> <code>float</code> <code>timestamp</code> <code>time</code> <code>date</code> <code>clob</code> <code>blob</code></td><td>x  x      x x</td><td>x x x x x x x x  </td><td>x x x x x x x x x x</td><td>  x       </td><td>  x       </td></tr></table>
 <p>And now we can go ahead and create the <code>people</code> table:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$definition = array(
-    'id' =&gt; array(
-        'type' =&gt; 'integer',
-        'primary' =&gt; true,
-        'autoincrement' =&gt; true
+<span class="noselect">$ </span>definition = array(
+    'id' => array(
+        'type' => 'integer',
+        'primary' => true,
+        'autoincrement' => true
     ),
-    'name' =&gt; array(
-        'type' =&gt; 'string',
-        'length' =&gt; 255
+    'name' => array(
+        'type' => 'string',
+        'length' => 255
     )
 );
 
-$conn-&gt;export-&gt;createTable('people', $definition);
-</code></pre>
+<span class="noselect">$ </span>conn->export->createTable('people', $definition);</code></pre></div>
 <p>You can also specify an array of options as the third argument to the
 <code>createTable()</code> method:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$options = array(
-    'comment'       =&gt; 'Repository of people',
-    'character_set' =&gt; 'utf8',
-    'collate'       =&gt; 'utf8_unicode_ci',
-    'type'          =&gt; 'innodb',
+<span class="noselect">$ </span>options = array(
+    'comment'       => 'Repository of people',
+    'character_set' => 'utf8',
+    'collate'       => 'utf8_unicode_ci',
+    'type'          => 'innodb',
 );
 
 // ...
 
-$conn-&gt;export-&gt;createTable('people', $definition, $options);
-</code></pre>
+<span class="noselect">$ </span>conn->export->createTable('people', $definition, $options);</code></pre></div>
 <hr />
 <a class="section-anchor" id="creating-foreign-keys" name="creating-foreign-keys"></a><h3 class="section-header"><a href="#creating-foreign-keys">Creating Foreign Keys<i class="fas fa-link"></i></a></h3>
 <p>Creating the <code>event_participants</code> table with a foreign key:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$options = array(
-    'foreignKeys' =&gt; array(
-        'events_id_fk' =&gt; array(
-            'local' =&gt; 'event_id',
-            'foreign' =&gt; 'id',
-            'foreignTable' =&gt; 'events',
-            'onDelete' =&gt; 'CASCADE',
+<span class="noselect">$ </span>options = array(
+    'foreignKeys' => array(
+        'events_id_fk' => array(
+            'local' => 'event_id',
+            'foreign' => 'id',
+            'foreignTable' => 'events',
+            'onDelete' => 'CASCADE',
         )
     ),
-    'primary' =&gt; array( 'event_id', 'person_id'),
+    'primary' => array( 'event_id', 'person_id'),
 );
 
-$definition = array(
-    'event_id' =&gt; array(
-        'type' =&gt; 'integer',
-        'primary' =&gt; true
+<span class="noselect">$ </span>definition = array(
+    'event_id' => array(
+        'type' => 'integer',
+        'primary' => true
     ),
-    'person_id' =&gt; array(
-        'type' =&gt; 'integer',
-        'primary' =&gt; true
+    'person_id' => array(
+        'type' => 'integer',
+        'primary' => true
     ),
 );
 
-$conn-&gt;export-&gt;createTable('event_participants', $definition, $options);
-</code></pre>
+<span class="noselect">$ </span>conn->export->createTable('event_participants', $definition, $options);</code></pre></div>
 <div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i><p>In the above example notice how we omit a foreign key for
 the <code>person_id</code>. In that example we omit it so we can show you
 how to add an individual foreign key to a table in the next example.
@@ -420,55 +408,47 @@ in the <code>foreignKeys</code>.</p>
 </div>
 <p>Now lets add the missing foreign key in the <code>event_participants</code>
 table the on <code>person_id</code> column:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$definition = array('local' =&gt; 'person_id',
-                    'foreign' =&gt; 'id',
-                    'foreignTable' =&gt; 'people',
-                    'onDelete' =&gt; 'CASCADE');
+<span class="noselect">$ </span>definition = array('local' => 'person_id',
+                    'foreign' => 'id',
+                    'foreignTable' => 'people',
+                    'onDelete' => 'CASCADE');
 
-$conn-&gt;export-&gt;createForeignKey('event_participants', $definition);
-</code></pre>
+<span class="noselect">$ </span>conn->export->createForeignKey('event_participants', $definition);</code></pre></div>
 <hr />
 <a class="section-anchor" id="altering-table" name="altering-table"></a><h3 class="section-header"><a href="#altering-table">Altering table<i class="fas fa-link"></i></a></h3>
 <p>Doctrine_Export drivers provide an easy database portable way of
 altering existing database tables.</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$alter = array(
-    'add' =&gt; array(
-        'new_column' =&gt; array(
-            'type' =&gt; 'string',
-            'length' =&gt; 255
+<span class="noselect">$ </span>alter = array(
+    'add' => array(
+        'new_column' => array(
+            'type' => 'string',
+            'length' => 255
         ),
-        'new_column2' =&gt; array(
-            'type' =&gt; 'string',
-            'length' =&gt; 255
+        'new_column2' => array(
+            'type' => 'string',
+            'length' => 255
         )
     )
 );
 
-echo $conn-&gt;export-&gt;alterTableSql('events', $alter);
-</code></pre>
+echo $conn->export->alterTableSql('events', $alter);</code></pre></div>
 <p>The above call to <code>alterTableSql()</code> would output the following SQL
 query:</p>
-
-<pre><code class="">ALTER TABLE events ADD new_column VARCHAR(255),
-ADD new_column2 VARCHAR(255)
-</code></pre>
+<div class="console"><pre><code class="console">ALTER TABLE events ADD new_column VARCHAR(255),
+ADD new_column2 VARCHAR(255)</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>If you only want execute generated sql and not return it,
 use the <code>alterTable()</code> method.</p>
 </div>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$conn-&gt;export-&gt;alterTable('events', $alter);
-</code></pre>
+<span class="noselect">$ </span>conn->export->alterTable('events', $alter);</code></pre></div>
 <p>The <code>alterTable()</code> method requires two parameters and has an optional
 third:</p>
 <table class="table table-bordered"><tr><td>Name</td><td>Type</td><td>Description</td></tr><tr><td><strong>$name</strong> <strong>$changes</strong></td><td><code>string</code> <code>array</code></td><td>Name of the table that is intended to be changed. Associative array that contains the details of each type of change that is intended to be performed.</td></tr></table>
@@ -482,58 +462,54 @@ associative array with the properties of the fields to that are meant to
 be changed as array entries. These entries should be assigned to the new
 values of the respective properties. The properties of the fields should
 be the same as defined by the Doctrine parser.</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$alter = array('name' =&gt; 'event',
-               'add' =&gt; array(
-                   'quota' =&gt; array(
-                       'type' =&gt; 'integer',
-                       'unsigned' =&gt; 1
+<span class="noselect">$ </span>alter = array('name' => 'event',
+               'add' => array(
+                   'quota' => array(
+                       'type' => 'integer',
+                       'unsigned' => 1
                    )
                ),
-               'remove' =&gt; array(
-                   'new_column2' =&gt; array()
+               'remove' => array(
+                   'new_column2' => array()
                ),
-               'change' =&gt; array(
-                   'name' =&gt; array(
-                       'length' =&gt; '20',
-                       'definition' =&gt; array(
-                           'type' =&gt; 'string',
-                           'length' =&gt; 20
+               'change' => array(
+                   'name' => array(
+                       'length' => '20',
+                       'definition' => array(
+                           'type' => 'string',
+                           'length' => 20
                        )
                    )
                ),
-               'rename' =&gt; array(
-                   'new_column' =&gt; array(
-                       'name' =&gt; 'gender',
-                       'definition' =&gt; array(
-                           'type' =&gt; 'string',
-                           'length' =&gt; 1,
-                           'default' =&gt; 'M'
+               'rename' => array(
+                   'new_column' => array(
+                       'name' => 'gender',
+                       'definition' => array(
+                           'type' => 'string',
+                           'length' => 1,
+                           'default' => 'M'
                        )
                    )
                )
            );
 
-$conn-&gt;export-&gt;alterTable('events', $alter);
-</code></pre>
+<span class="noselect">$ </span>conn->export->alterTable('events', $alter);</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Notice how we renamed the table to <code>event</code>, lets rename
 it back to <code>events</code>. We only renamed it to demonstrate the
 functionality and we will need the table to be named <code>events</code> for
 the next examples.</p>
 </div>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$alter = array(
-    'name' =&gt; 'events'
+<span class="noselect">$ </span>alter = array(
+    'name' => 'events'
 );
 
-$conn-&gt;export-&gt;alterTable('event', $alter);
-</code></pre>
+<span class="noselect">$ </span>conn->export->alterTable('event', $alter);</code></pre></div>
 <hr />
 <a class="section-anchor" id="creating-indexes" name="creating-indexes"></a><h3 class="section-header"><a href="#creating-indexes">Creating Indexes<i class="fas fa-link"></i></a></h3>
 <p>To create an index, the method <code>createIndex()</code> is used, which has
@@ -548,18 +524,16 @@ drivers will ignore them. In the test events database, we can assume
 that our application will show events occuring in a specific timeframe,
 so the selects will use the datetime field in <code>WHERE</code> conditions. It
 will help if there is an index on this field.</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$definition = array(
-    'fields' =&gt; array(
-        'datetime' =&gt; array()
+<span class="noselect">$ </span>definition = array(
+    'fields' => array(
+        'datetime' => array()
     )
 );
 
-$conn-&gt;export-&gt;createIndex('events', 'datetime', $definition);
-</code></pre>
+<span class="noselect">$ </span>conn->export->createIndex('events', 'datetime', $definition);</code></pre></div>
 <hr />
 <a class="section-anchor" id="deleting-database-elements" name="deleting-database-elements"></a><h3 class="section-header"><a href="#deleting-database-elements">Deleting database elements<i class="fas fa-link"></i></a></h3>
 <p>For every <code>create*()</code> method as shown above, there is a corresponding
@@ -567,53 +541,41 @@ $conn-&gt;export-&gt;createIndex('events', 'datetime', $definition);
 constraint. The <code>drop*()</code> methods do not check if the item to be
 deleted exists, so it's developer's responsibility to check for
 exceptions using a try catch block:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
 try {
-    $conn-&gt;export-&gt;dropSequence('nonexisting');
+    $conn->export->dropSequence('nonexisting');
 } catch(Doctrine_Exception $e) {
 
-}
-</code></pre>
+}</code></pre></div>
 <p>You can easily drop a constraint with the following code:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$conn-&gt;export-&gt;dropConstraint('events', 'PRIMARY', true);
-</code></pre>
+<span class="noselect">$ </span>conn->export->dropConstraint('events', 'PRIMARY', true);</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The third parameter gives a hint that this is a primary key
 constraint.</p>
 </div>
+<div class="console"><pre><code class="console">// test.php
 
-<pre><code class="">// test.php
-
-// ... $conn-&gt;export-&gt;dropConstraint('event_participants', 'event_id');
-</code></pre>
+// ... $conn->export->dropConstraint('event_participants', 'event_id');</code></pre></div>
 <p>You can easily drop an index with the following code:</p>
-
-<pre><code class="">$conn-&gt;export-&gt;dropIndex('events', 'event_timestamp');
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>conn->export->dropIndex('events', 'event_timestamp');</code></pre></div>
 <div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i><p>It is recommended to not actually execute the next two
 examples. In the next section we will need the <code>events_db</code> to be
 intact for our examples to work.</p>
 </div>
 <p>Drop a table from the database with the following code:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$conn-&gt;export-&gt;dropTable('events');
-</code></pre>
+<span class="noselect">$ </span>conn->export->dropTable('events');</code></pre></div>
 <p>We can drop the database with the following code:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$conn-&gt;export-&gt;dropDatabase('events_db');
-</code></pre>
+<span class="noselect">$ </span>conn->export->dropDatabase('events_db');</code></pre></div>
 <a id="database-abstraction-layer-import"></a>
 <hr />
 <a class="section-anchor" id="import" name="import"></a><h2 class="section-header"><a href="#import">Import<i class="fas fa-link"></i></a></h2>
@@ -627,68 +589,52 @@ functions in the Import module.</p>
 <p>Below you will find examples on how to use the above listed functions:</p>
 <hr />
 <a class="section-anchor" id="listing-databases" name="listing-databases"></a><h3 class="section-header"><a href="#listing-databases">Listing Databases<i class="fas fa-link"></i></a></h3>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$databases = $conn-&gt;import-&gt;listDatabases();
-print_r($databases);
-</code></pre>
+<span class="noselect">$ </span>databases = $conn->import->listDatabases();
+print_r($databases);</code></pre></div>
 <hr />
 <a class="section-anchor" id="listing-sequences" name="listing-sequences"></a><h3 class="section-header"><a href="#listing-sequences">Listing Sequences<i class="fas fa-link"></i></a></h3>
+<div class="console"><pre><code class="console">// test.php
 
-<pre><code class="">// test.php
-
-// ... $sequences = $conn-&gt;import-&gt;listSequences('events_db');
-print_r($sequences);
-</code></pre>
+// ... $sequences = $conn->import->listSequences('events_db');
+print_r($sequences);</code></pre></div>
 <hr />
 <a class="section-anchor" id="listing-constraints" name="listing-constraints"></a><h3 class="section-header"><a href="#listing-constraints">Listing Constraints<i class="fas fa-link"></i></a></h3>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$constraints = $conn-&gt;import-&gt;listTableConstraints('event_participants');
-print_r($constraints);
-</code></pre>
+<span class="noselect">$ </span>constraints = $conn->import->listTableConstraints('event_participants');
+print_r($constraints);</code></pre></div>
 <hr />
 <a class="section-anchor" id="listing-table-columns" name="listing-table-columns"></a><h3 class="section-header"><a href="#listing-table-columns">Listing Table Columns<i class="fas fa-link"></i></a></h3>
+<div class="console"><pre><code class="console">// test.php
 
-<pre><code class="">// test.php
-
-// ... $columns = $conn-&gt;import-&gt;listTableColumns('events');
-print_r($columns);
-</code></pre>
+// ... $columns = $conn->import->listTableColumns('events');
+print_r($columns);</code></pre></div>
 <hr />
 <a class="section-anchor" id="listing-table-indexes" name="listing-table-indexes"></a><h3 class="section-header"><a href="#listing-table-indexes">Listing Table Indexes<i class="fas fa-link"></i></a></h3>
+<div class="console"><pre><code class="console">// test.php
 
-<pre><code class="">// test.php
-
-// ... $indexes = $conn-&gt;import-&gt;listTableIndexes('events');
-print_r($indexes);
-</code></pre>
+// ... $indexes = $conn->import->listTableIndexes('events');
+print_r($indexes);</code></pre></div>
 <hr />
 <a class="section-anchor" id="listing-tables" name="listing-tables"></a><h3 class="section-header"><a href="#listing-tables">Listing Tables<i class="fas fa-link"></i></a></h3>
-
-<pre><code class="">$tables = $conn-&gt;import-&gt;listTables();
-print_r($tables);
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>tables = $conn->import->listTables();
+print_r($tables);</code></pre></div>
 <hr />
 <a class="section-anchor" id="listing-views" name="listing-views"></a><h3 class="section-header"><a href="#listing-views">Listing Views<i class="fas fa-link"></i></a></h3>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Currently there is no method to create views, so let's do it manually.</p>
 </div>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>sql = "CREATE VIEW names_only AS SELECT name FROM people";
+<span class="noselect">$ </span>conn->exec($sql);
 
-<pre><code class="">$sql = &quot;CREATE VIEW names_only AS SELECT name FROM people&quot;;
-$conn-&gt;exec($sql);
-
-$sql = &quot;CREATE VIEW last_ten_events AS SELECT * FROM events ORDER BY id DESC LIMIT 0,10&quot;;
-$conn-&gt;exec($sql);
-</code></pre>
+<span class="noselect">$ </span>sql = "CREATE VIEW last_ten_events AS SELECT * FROM events ORDER BY id DESC LIMIT 0,10";
+<span class="noselect">$ </span>conn->exec($sql);</code></pre></div>
 <p>Now we can list the views we just created:</p>
-
-<pre><code class="">$views = $conn-&gt;import-&gt;listViews();
-print_r($views);
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>views = $conn->import->listViews();
+print_r($views);</code></pre></div>
 <a id="database-abstraction-layer-datadict"></a>
 <hr />
 <a class="section-anchor" id="datadict" name="datadict"></a><h2 class="section-header"><a href="#datadict">DataDict<i class="fas fa-link"></i></a></h2>
@@ -705,14 +651,12 @@ methods for the conversions:</p>
 
 <hr />
 <a class="section-anchor" id="getting-portable-declaration" name="getting-portable-declaration"></a><h3 class="section-header"><a href="#getting-portable-declaration">Getting portable declaration<i class="fas fa-link"></i></a></h3>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$declaration = $conn-&gt;dataDict-&gt;getPortableDeclaration('VARCHAR(255)');
+<span class="noselect">$ </span>declaration = $conn->dataDict->getPortableDeclaration('VARCHAR(255)');
 
-print_r($declaration);
-</code></pre>
+print_r($declaration);</code></pre></div>
 <p>The above example would output the following:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
 Array
@@ -727,20 +671,18 @@ Array
 )</code></pre></div>
 <hr />
 <a class="section-anchor" id="getting-native-declaration" name="getting-native-declaration"></a><h3 class="section-header"><a href="#getting-native-declaration">Getting Native Declaration<i class="fas fa-link"></i></a></h3>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$portableDeclaration = array(
-    'type' =&gt; 'string',
-    'length' =&gt; 20,
-    'fixed' =&gt; true
+<span class="noselect">$ </span>portableDeclaration = array(
+    'type' => 'string',
+    'length' => 20,
+    'fixed' => true
 );
 
-$nativeDeclaration = $conn-&gt;dataDict-&gt;getNativeDeclaration($portableDeclaration);
+<span class="noselect">$ </span>nativeDeclaration = $conn->dataDict->getNativeDeclaration($portableDeclaration);
 
-echo $nativeDeclaration;
-</code></pre>
+echo $nativeDeclaration;</code></pre></div>
 <p>The above example would output the following:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
 CHAR(20)</code></pre></div>
@@ -750,36 +692,30 @@ CHAR(20)</code></pre></div>
 <a class="section-anchor" id="mysql" name="mysql"></a><h3 class="section-header"><a href="#mysql">Mysql<i class="fas fa-link"></i></a></h3>
 <hr />
 <a class="section-anchor" id="setting-table-type" name="setting-table-type"></a><h4 class="section-header"><a href="#setting-table-type">Setting table type<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$fields = array(
-    'id' =&gt; array(
-        'type' =&gt; 'integer',
-        'autoincrement' =&gt; true
+<span class="noselect">$ </span>fields = array(
+    'id' => array(
+        'type' => 'integer',
+        'autoincrement' => true
     ),
-    'name' =&gt; array(
-        'type' =&gt; 'string',
-        'fixed' =&gt; true,
-        'length' =&gt; 8
+    'name' => array(
+        'type' => 'string',
+        'fixed' => true,
+        'length' => 8
     )
-);
-</code></pre>
+);</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The following option is mysql specific and skipped by other
 drivers.</p>
 </div>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>options = array('type' => 'INNODB');
 
-<pre><code class="">$options = array('type' =&gt; 'INNODB');
-
-$sql = $conn-&gt;export-&gt;createTableSql('test_table', $fields);
-echo $sql[0];
-</code></pre>
+<span class="noselect">$ </span>sql = $conn->export->createTableSql('test_table', $fields);
+echo $sql[0];</code></pre></div>
 <p>The above will output the following SQL query:</p>
-
-<pre><code class="">CREATE TABLE test_table (id INT AUTO_INCREMENT,
-name CHAR(8)) ENGINE = INNODB
-</code></pre>
+<div class="console"><pre><code class="console">CREATE TABLE test_table (id INT AUTO_INCREMENT,
+name CHAR(8)) ENGINE = INNODB</code></pre></div>
 <hr />
 <a class="section-anchor" id="conclusion" name="conclusion"></a><h2 class="section-header"><a href="#conclusion">Conclusion<i class="fas fa-link"></i></a></h2>
 <p>This chapter is indeed a nice one. The Doctrine DBAL is a great tool all

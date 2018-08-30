@@ -271,13 +271,10 @@ $this-&gt;hasColumn('address3', 'string', 255); $this-&gt;hasColumn('city',
 'string', 255); $this-&gt;hasColumn('state', 'string', 2);
 $this-&gt;hasColumn('zipcode', 'string', 15); $this-&gt;hasColumn('type',
 'string', 255); $this-&gt;hasColumn('record\_id', 'integer');</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>this->option('export', 'tables');
 
-<pre><code class="">$this-&gt;option('export', 'tables');
-
-$this-&gt;setSubClasses(array('UserAddress'    =&gt; array('type' =&gt; 'UserAddress'),
-                           'CompanyAddress' =&gt; array('type' =&gt; 'CompanyAddress')));
-
-</code></pre>
+<span class="noselect">$ </span>this->setSubClasses(array('UserAddress'    => array('type' => 'UserAddress'),
+                           'CompanyAddress' => array('type' => 'CompanyAddress')));</code></pre></div>
 <p>}</p>
 <p>Note the option set above to only export tables because we do not want
 to export any foreign key constraints since record\_id is going to
@@ -292,13 +289,11 @@ will need to setup a UserAddress child class that User can relate to.</p>
 have multiple addresses. class User extends Doctrine\_Record { public
 function setTableDefinition() { $this-&gt;hasColumn('username', 'string',
 255); $this-&gt;hasColumn('password', 'string', 255); }</p>
-
-<pre><code class="">public function setUp()
+<div class="console"><pre><code class="console">public function setUp()
 {
-    $this-&gt;hasMany('UserAddress as Addresses', array('local'    =&gt; 'id',
-                                                     'foreign'  =&gt; 'record_id'));
-}
-</code></pre>
+    $this->hasMany('UserAddress as Addresses', array('local'    => 'id',
+                                                     'foreign'  => 'record_id'));
+}</code></pre></div>
 <p>}</p>
 <p>Now say we have a Company record which also needs ot have many
 addresses. First we need to setup the CompanyAddress child class</p>
@@ -310,13 +305,11 @@ addresses. First we need to setup the CompanyAddress child class</p>
 it can have multiple addresses. class Company extends Doctrine\_Record {
 public function setTableDefinition() { $this-&gt;hasColumn('name',
 'string', 255); }</p>
-
-<pre><code class="">public function setUp()
+<div class="console"><pre><code class="console">public function setUp()
 {
-    $this-&gt;hasMany('CompanyAddress as Addresses', array('local'    =&gt; 'id',
-                                                        'foreign'  =&gt; 'record_id'));
-}
-</code></pre>
+    $this->hasMany('CompanyAddress as Addresses', array('local'    => 'id',
+                                                        'foreign'  => 'record_id'));
+}</code></pre></div>
 <p>}</p>
 <p>Now both Users and Companies can have multiple addresses and the data is
 all stored in one address table.</p>

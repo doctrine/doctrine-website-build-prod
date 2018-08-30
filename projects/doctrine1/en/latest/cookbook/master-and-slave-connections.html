@@ -275,17 +275,16 @@ hook.</p>
 <p>late static binding in 5.2 we need to override // this method to
 instantiate a new MyQuery instead of Doctrine\_Query public static
 function create(`conn = null) { return new MyQuery(`\ conn); }</p>
-<pre><code class="">public function preQuery()
+<div class="console"><pre><code class="console">public function preQuery()
 {
     // If this is a select query then set connection to one of the slaves
-    if ($this-&gt;getType() == Doctrine_Query::SELECT) {
-        $this-&gt;_conn = Doctrine_Manager::getInstance()-&gt;getConnection('slave_' . rand(1, 4));
+    if ($this->getType() == Doctrine_Query::SELECT) {
+        $this->_conn = Doctrine_Manager::getInstance()->getConnection('slave_' . rand(1, 4));
     // All other queries are writes so they need to go to the master
     } else {
-        $this-&gt;_conn = Doctrine_Manager::getInstance()-&gt;getConnection('master');
+        $this->_conn = Doctrine_Manager::getInstance()->getConnection('master');
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>}</p>
 <p>Now we have queries taken care of, but what about when saving records?
 We can force the connection for writes to the master by overriding

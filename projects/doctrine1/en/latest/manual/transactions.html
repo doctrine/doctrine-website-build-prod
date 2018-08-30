@@ -305,55 +305,45 @@ internally:</p>
 </ul>
 
 <p>First we need to begin a new transation:</p>
-
-<pre><code class="">$conn-&gt;beginTransaction();
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>conn->beginTransaction();</code></pre></div>
 <p>Next perform some operations which result in queries being executed:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>user       = new User();
+<span class="noselect">$ </span>user->name = 'New user';
+<span class="noselect">$ </span>user->save();
 
-<pre><code class="">$user       = new User();
-$user-&gt;name = 'New user';
-$user-&gt;save();
-
-$user       = Doctrine_Core::getTable('User')-&gt;find(5);
-$user-&gt;name = 'Modified user';
-$user-&gt;save();
-</code></pre>
+<span class="noselect">$ </span>user       = Doctrine_Core::getTable('User')->find(5);
+<span class="noselect">$ </span>user->name = 'Modified user';
+<span class="noselect">$ </span>user->save();</code></pre></div>
 <p>Now we can commit all the queries by using the <code>commit()</code> method:</p>
-
-<pre><code class="">$conn-&gt;commit();
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>conn->commit();</code></pre></div>
 <hr />
 <a class="section-anchor" id="nesting" name="nesting"></a><h2 class="section-header"><a href="#nesting">Nesting<i class="fas fa-link"></i></a></h2>
 <p>You can easily nest transactions with the Doctrine DBAL. Check the code
 below for a simple example demonstrating nested transactions.</p>
 <p>First lets create a standard PHP function named <code>saveUserAndGroup()</code>:</p>
-
-<pre><code class="">function saveUserAndGroup(Doctrin_Connection $conn, User $user, Group $group)
+<div class="console"><pre><code class="console">function saveUserAndGroup(Doctrin_Connection $conn, User $user, Group $group)
 {
-    $conn-&gt;beginTransaction();
+    $conn->beginTransaction();
 
-    $user-&gt;save();
+    $user->save();
 
-    $group-&gt;save();
+    $group->save();
 
-    $conn-&gt;commit();
-}
-</code></pre>
+    $conn->commit();
+}</code></pre></div>
 <p>Now we make use of the function inside another transaction:</p>
-
-<pre><code class="">try {
-    $conn-&gt;beginTransaction();
+<div class="console"><pre><code class="console">try {
+    $conn->beginTransaction();
 
     saveUserAndGroup($conn,$user,$group);
     saveUserAndGroup($conn,$user2,$group2);
     saveUserAndGroup($conn,$user3,$group3);
 
-    $conn-&gt;commit();
+    $conn->commit();
 
 } catch(Doctrine_Exception $e) {
-    $conn-&gt;rollback();
-}
-</code></pre>
+    $conn->rollback();
+}</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Notice how the three calls to <code>saveUserAndGroup()</code> are
 wrapped in a transaction, and each call to the function starts its
 own nested transaction.</p>
@@ -366,25 +356,23 @@ transactions and have them nested.</p>
 <code>Doctrine_Transaction::beginTransaction($savepoint)</code> sets a named transaction savepoint with a name of <code>$savepoint</code>.
 If the current transaction has a savepoint with the same name, the old
 savepoint is deleted and a new one is set.</p>
-
-<pre><code class="">try {
-    $conn-&gt;beginTransaction();
+<div class="console"><pre><code class="console">try {
+    $conn->beginTransaction();
     // do some operations here
 
     // creates a new savepoint called mysavepoint
-    $conn-&gt;beginTransaction('mysavepoint');
+    $conn->beginTransaction('mysavepoint');
     try {
         // do some operations here
 
-        $conn-&gt;commit('mysavepoint');
+        $conn->commit('mysavepoint');
     } catch(Exception $e) {
-        $conn-&gt;rollback('mysavepoint');
+        $conn->rollback('mysavepoint');
     }
-    $conn-&gt;commit();
+    $conn->commit();
 } catch(Exception $e) {
-    $conn-&gt;rollback();
-}
-</code></pre>
+    $conn->rollback();
+}</code></pre></div>
 <p>The <code>Doctrine_Transaction::rollback($savepoint)</code> rolls back a
 transaction to the named savepoint. Modifications that the current
 transaction made to rows after the savepoint was set are undone in the
@@ -399,21 +387,19 @@ savepoint from the set of savepoints of the current transaction.</p>
 <p>All savepoints of the current transaction are deleted if you execute a
 commit or if a rollback is being called without savepoint name
 parameter.</p>
-
-<pre><code class="">try {
-    $conn-&gt;beginTransaction();
+<div class="console"><pre><code class="console">try {
+    $conn->beginTransaction();
     // do some operations here
 
     // creates a new savepoint called mysavepoint
-    $conn-&gt;beginTransaction('mysavepoint');
+    $conn->beginTransaction('mysavepoint');
 
     // do some operations here
 
-    $conn-&gt;commit();   // deletes all savepoints
+    $conn->commit();   // deletes all savepoints
 } catch(Exception $e) {
-    $conn-&gt;rollback(); // deletes all savepoints
-}
-</code></pre>
+    $conn->rollback(); // deletes all savepoints
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="isolation-levels" name="isolation-levels"></a><h2 class="section-header"><a href="#isolation-levels">Isolation Levels<i class="fas fa-link"></i></a></h2>
 <p>A transaction isolation level sets the default transactional behavior.
@@ -430,23 +416,15 @@ ascending order of strictness):</p>
 <p><code>SERIALIZABLE</code>
  Updates are not permitted in other transactions if a transaction has run an ordinary <code>SELECT</code> query.</p>
 <p>To get the transaction module use the following code:</p>
-
-<pre><code class="">$tx = $conn-&gt;transaction;
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>tx = $conn->transaction;</code></pre></div>
 <p>Set the isolation level to READ COMMITTED:</p>
-
-<pre><code class="">$tx-&gt;setIsolation('READ COMMITTED');
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>tx->setIsolation('READ COMMITTED');</code></pre></div>
 <p>Set the isolation level to SERIALIZABLE:</p>
-
-<pre><code class="">$tx-&gt;setIsolation('SERIALIZABLE');
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>tx->setIsolation('SERIALIZABLE');</code></pre></div>
 <div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i><p>Some drivers (like Mysql) support the fetching of current
 transaction isolation level. It can be done as follows:</p>
 </div>
-
-<pre><code class="">$level = $tx-&gt;getIsolation();
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>level = $tx->getIsolation();</code></pre></div>
 <hr />
 <a class="section-anchor" id="conclusion" name="conclusion"></a><h2 class="section-header"><a href="#conclusion">Conclusion<i class="fas fa-link"></i></a></h2>
 <p>Transactions are a great feature for ensuring the quality and

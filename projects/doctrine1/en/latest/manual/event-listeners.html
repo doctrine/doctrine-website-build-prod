@@ -259,8 +259,7 @@ components. Listeners are separate classes whereas hooks are empty
 template methods within the listened class.</p>
 <p>Hooks are simpler than event listeners but they lack the separation of
 different aspects. An example of using Doctrine_Record hooks:</p>
-
-<pre><code class="">// models/BlogPost.php
+<div class="console"><pre><code class="console">// models/BlogPost.php
 
 class BlogPost extends Doctrine_Record
 {
@@ -268,29 +267,26 @@ class BlogPost extends Doctrine_Record
 
     public function preInsert($event)
     {
-        $invoker = $event-&gt;getInvoker();
+        $invoker = $event->getInvoker();
 
-        $invoker-&gt;created = date('Y-m-d', time());
+        $invoker->created = date('Y-m-d', time());
     }
-}
-</code></pre>
+}</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>By now we have defined lots of models so you should be able
 to define your own <code>setTableDefinition()</code> for the <code>BlogPost</code>
 model or even create your own custom model!</p>
 </div>
 <p>Now you can use the above model with the following code assuming we
 added a <code>title</code>, <code>body</code> and <code>created</code> column to the model:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$blog        = new BlogPost();
-$blog-&gt;title = 'New title';
-$blog-&gt;body  = 'Some content';
-$blog-&gt;save();
+<span class="noselect">$ </span>blog        = new BlogPost();
+<span class="noselect">$ </span>blog->title = 'New title';
+<span class="noselect">$ </span>blog->body  = 'Some content';
+<span class="noselect">$ </span>blog->save();
 
-echo $blog-&gt;created;
-</code></pre>
+echo $blog->created;</code></pre></div>
 <p>The above example will output the current date as PHP knows it.</p>
 <p>Each listener and hook method takes one parameter Doctrine_Event
 object. Doctrine_Event object holds information about the event in
@@ -311,15 +307,13 @@ Doctrine_Event which holds information about the listened event.</p>
 <a class="section-anchor" id="creating-a-new-listener" name="creating-a-new-listener"></a><h3 class="section-header"><a href="#creating-a-new-listener">Creating a New Listener<i class="fas fa-link"></i></a></h3>
 <p>There are three different ways of defining a listener. First you can
 create a listener by making a class that inherits Doctrine_EventListener:</p>
-
-<pre><code class="">class MyListener extends Doctrine_EventListener
+<div class="console"><pre><code class="console">class MyListener extends Doctrine_EventListener
 {
     public function preExec( Doctrine_Event $event )
     {
 
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Note that by declaring a class that extends Doctrine_EventListener
 you don't have to define all the methods within the
 Doctrine_EventListener_Interface. This is due to a fact that
@@ -329,8 +323,7 @@ methods.</p>
 Doctrine_EventListener (you might have a listener that inherits
 some other base class). In this case you can make it implement
 Doctrine_EventListener_Interface.</p>
-
-<pre><code class="">class MyListener implements Doctrine_EventListener_Interface
+<div class="console"><pre><code class="console">class MyListener implements Doctrine_EventListener_Interface
 {
     public function preTransactionCommit( Doctrine_Event $event ) {}
     public function postTransactionCommit( Doctrine_Event $event ) {}
@@ -364,34 +357,27 @@ Doctrine_EventListener_Interface.</p>
 
     public function preStmtExecute( Doctrine_Event $event ) {}
     public function postStmtExecute( Doctrine_Event $event ) {}
-}
-</code></pre>
+}</code></pre></div>
 <div class="alert caution bg-light-yellow text-dark border"><i class="fas fa-exclamation-triangle text-danger mr-2"></i><p>All listener methods must be defined here otherwise PHP throws fatal error.</p>
 </div>
 <p>The third way of creating a listener is a very elegant one. You can make
 a class that implements Doctrine_Overloadable. This interface has
 only one method: <code>__call()</code>, which can be used for catching <em>all</em>
 the events.</p>
-
-<pre><code class="">class MyDebugger implements Doctrine_Overloadable
+<div class="console"><pre><code class="console">class MyDebugger implements Doctrine_Overloadable
 {
     public function __call( $methodName, $args )
     {
         echo $methodName . ' called !';
     }
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="attaching-listeners" name="attaching-listeners"></a><h3 class="section-header"><a href="#attaching-listeners">Attaching listeners<i class="fas fa-link"></i></a></h3>
 <p>You can attach the listeners to a connection with <code>setListener()</code>.</p>
-
-<pre><code class="">$conn-&gt;setListener( new MyDebugger() );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>conn->setListener( new MyDebugger() );</code></pre></div>
 <p>If you need to use multiple listeners you can use <code>addListener()</code>.</p>
-
-<pre><code class="">$conn-&gt;addListener( new MyDebugger() );
-$conn-&gt;addListener( new MyLogger() );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>conn->addListener( new MyDebugger() );
+<span class="noselect">$ </span>conn->addListener( new MyLogger() );</code></pre></div>
 <hr />
 <a class="section-anchor" id="pre-and-post-connect" name="pre-and-post-connect"></a><h3 class="section-header"><a href="#pre-and-post-connect">Pre and Post Connect<i class="fas fa-link"></i></a></h3>
 <p>All of the below listeners are invoked in the Doctrine_Connection
@@ -402,8 +388,7 @@ class. And they are all passed an instance of Doctrine_Event.</p>
 <p>All of the below listeners are invoked in the Doctrine_Transaction
 class. And they are all passed an instance of Doctrine_Event.</p>
 <table class="table table-bordered"><tr><td>Methods</td><td>Listens</td><td>Params</td></tr><tr><td><code>preTransactionBegin()</code> <code>postTransactionBegin()</code> <code>preTransactionRollback()</code> <code>postTransactionRollback()</code> <code>preTransactionCommit()</code> <code>postTransactionCommit()</code> <code>preCreateSavepoint()</code> <code>postCreateSavepoint()</code> <code>preRollbackSavepoint()</code> <code>postRollbackSavepoint()</code> <code>preReleaseSavepoint()</code> <code>postReleaseSavepoint()</code></td><td><code>beginTransaction()</code> <code>beginTransaction()</code> <code>rollback()</code> <code>rollback()</code> <code>commit()</code> <code>commit()</code> <code>createSavepoint()</code> <code>createSavepoint()</code> <code>rollbackSavepoint()</code> <code>rollbackSavepoint()</code> <code>releaseSavepoint()</code> <code>releaseSavepoint()</code></td><td>      <code>savepoint</code> <code>savepoint</code> <code>savepoint</code> <code>savepoint</code> <code>savepoint</code> <code>savepoint</code></td></tr></table>
-
-<pre><code class="">class MyTransactionListener extends Doctrine_EventListener
+<div class="console"><pre><code class="console">class MyTransactionListener extends Doctrine_EventListener
 {
     public function preTransactionBegin( Doctrine_Event $event )
     {
@@ -414,8 +399,7 @@ class. And they are all passed an instance of Doctrine_Event.</p>
     {
         echo 'rolling back transaction... ';
     }
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="query-execution-listeners" name="query-execution-listeners"></a><h3 class="section-header"><a href="#query-execution-listeners">Query Execution Listeners<i class="fas fa-link"></i></a></h3>
 <p>All of the below listeners are invoked in the Doctrine_Connection
@@ -442,39 +426,35 @@ that table is being hydrated.</p>
 <code>first_name</code>, <code>last_name</code> and <code>age</code>. In the following example we
 create a listener that always builds a generated field called
 <code>full_name</code> based on <code>first_name</code> and <code>last_name</code> fields.</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
 class HydrationListener extends Doctrine_Record_Listener
 {
     public function preHydrate( Doctrine_Event $event )
     {
-        $data              = $event-&gt;data;
+        $data              = $event->data;
         $data['full_name'] = $data['first_name'] . ' ' . $data['last_name'];
-        $event-&gt;data       = $data;
+        $event->data       = $data;
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Now all we need to do is attach this listener to the <code>User</code> record and
 fetch some users:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$userTable = Doctrine_Core::getTable('User');
-$userTable-&gt;addRecordListener( new HydrationListener() );
+<span class="noselect">$ </span>userTable = Doctrine_Core::getTable('User');
+<span class="noselect">$ </span>userTable->addRecordListener( new HydrationListener() );
 
-$q = Doctrine_Query::create()
-    -&gt;from('User');
+<span class="noselect">$ </span>q = Doctrine_Query::create()
+    ->from('User');
 
-$users = $q-&gt;execute();
+<span class="noselect">$ </span>users = $q->execute();
 
 foreach ( $users as $user )
 {
-    echo $user-&gt;full_name;
-}
-</code></pre>
+    echo $user->full_name;
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="record-listeners" name="record-listeners"></a><h2 class="section-header"><a href="#record-listeners">Record Listeners<i class="fas fa-link"></i></a></h2>
 <p>Doctrine_Record provides listeners very similar to
@@ -491,8 +471,7 @@ implementing Doctrine_Record_Listener_Interface or by
 implementing Doctrine_Overloadable.</p>
 <p>In the following we'll create a global level listener by implementing
 Doctrine_Overloadable:</p>
-
-<pre><code class="">class Logger implements Doctrine_Overloadable
+<div class="console"><pre><code class="console">class Logger implements Doctrine_Overloadable
 {
     public function __call( $m, $a )
     {
@@ -500,17 +479,13 @@ Doctrine_Overloadable:</p>
 
         // do some logging here...
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Attaching the listener to manager is easy:</p>
-
-<pre><code class="">$manager-&gt;addRecordListener( new Logger() );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>manager->addRecordListener( new Logger() );</code></pre></div>
 <p>Note that by adding a manager level listener it affects on all
 connections and all tables / records within these connections. In the
 following we create a connection level listener:</p>
-
-<pre><code class="">class Debugger extends Doctrine_Record_Listener
+<div class="console"><pre><code class="console">class Debugger extends Doctrine_Record_Listener
 {
     public function preInsert( Doctrine_Event $event )
     {
@@ -521,35 +496,28 @@ following we create a connection level listener:</p>
     {
         echo 'updating a record...';
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Attaching the listener to a connection is as easy as:</p>
-
-<pre><code class="">$conn-&gt;addRecordListener( new Debugger() );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>conn->addRecordListener( new Debugger() );</code></pre></div>
 <p>Many times you want the listeners to be table specific so that they only
 apply on the actions on that given table.</p>
 <p>Here is an example:</p>
-
-<pre><code class="">class Debugger extends Doctrine_Record_Listener
+<div class="console"><pre><code class="console">class Debugger extends Doctrine_Record_Listener
 {
     public function postDelete( Doctrine_Event $event )
     {
-        echo 'deleted ' . $event-&gt;getInvoker()-&gt;id;
+        echo 'deleted ' . $event->getInvoker()->id;
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Attaching this listener to given table can be done as follows:</p>
-
-<pre><code class="">class MyRecord extends Doctrine_Record
+<div class="console"><pre><code class="console">class MyRecord extends Doctrine_Record
 {
     // ...
     public function setUp()
     {
-        $this-&gt;addListener( new Debugger() );
+        $this->addListener( new Debugger() );
     }
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="record-hooks" name="record-hooks"></a><h2 class="section-header"><a href="#record-hooks">Record Hooks<i class="fas fa-link"></i></a></h2>
 <p>All of the below listeners are invoked in the Doctrine_Record and
@@ -558,28 +526,26 @@ Doctrine_Event.</p>
 <table class="table table-bordered"><tr><td>Methods</td><td>Listens</td></tr><tr><td><code>preSave()</code> <code>postSave()</code> <code>preUpdate()</code> <code>postUpdate()</code> <code>preInsert()</code> <code>postInsert()</code> <code>preDelete()</code> <code>postDelete()</code> <code>preValidate()</code> <code>postValidate()</code></td><td><code>save()</code> <code>save()</code> <code>save()</code> <strong>when the record state is</strong> <code>DIRTY</code> <code>save()</code> <strong>when the record state is</strong> <code>DIRTY</code> <code>save()</code> <strong>when the record state is</strong> <code>TDIRTY</code> <code>save()</code> <strong>when the record state is</strong> <code>TDIRTY</code> <code>delete()</code> <code>delete()</code> <code>validate()</code> <code>validate()</code></td></tr></table>
 <p>Here is a simple example where we make use of the <code>preInsert()</code> and
 <code>preUpdate()</code> methods:</p>
-
-<pre><code class="">class BlogPost extends Doctrine_Record
+<div class="console"><pre><code class="console">class BlogPost extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn( 'title', 'string', 200 );
-        $this-&gt;hasColumn( 'content', 'string' );
-        $this-&gt;hasColumn( 'created', 'date' );
-        $this-&gt;hasColumn( 'updated', 'date' );
+        $this->hasColumn( 'title', 'string', 200 );
+        $this->hasColumn( 'content', 'string' );
+        $this->hasColumn( 'created', 'date' );
+        $this->hasColumn( 'updated', 'date' );
     }
 
     public function preInsert( $event )
     {
-        $this-&gt;created = date( 'Y-m-d', time() );
+        $this->created = date( 'Y-m-d', time() );
     }
 
     public function preUpdate( $event )
     {
-        $this-&gt;updated = date( 'Y-m-d', time() );
+        $this->updated = date( 'Y-m-d', time() );
     }
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="dql-hooks" name="dql-hooks"></a><h2 class="section-header"><a href="#dql-hooks">DQL Hooks<i class="fas fa-link"></i></a></h2>
 <p>Doctrine allows you to attach record listeners globally, on each
@@ -600,8 +566,7 @@ use the SoftDelete behavior by specifying
 <code>$this-&gt;actAs('SoftDelete')</code> in your <code>Doctrine_Record::setUp()</code>
 definition.</p>
 </div>
-
-<pre><code class="">class UserListener extends Doctrine_EventListener
+<div class="console"><pre><code class="console">class UserListener extends Doctrine_EventListener
 {
     /**
      * Skip the normal delete options so we can override it with our own
@@ -611,7 +576,7 @@ definition.</p>
      */
     public function preDelete( Doctrine_Event $event )
     {
-        $event-&gt;skipOperation();
+        $event->skipOperation();
     }
 
     /**
@@ -622,9 +587,9 @@ definition.</p>
      */
     public function postDelete( Doctrine_Event $event )
     {
-        $name                       = $this-&gt;_options['name'];
-        $event-&gt;getInvoker()-&gt;$name = true;
-        $event-&gt;getInvoker()-&gt;save();
+        $name                       = $this->_options['name'];
+        $event->getInvoker()->$name = true;
+        $event->getInvoker()->save();
     }
 
     /**
@@ -636,15 +601,15 @@ definition.</p>
      */
     public function preDqlDelete( Doctrine_Event $event )
     {
-        $params = $event-&gt;getParams();
+        $params = $event->getParams();
         $field  = $params['alias'] . '.deleted';
-        $q      = $event-&gt;getQuery();
+        $q      = $event->getQuery();
 
-        if ( ! $q-&gt;contains( $field ) )
+        if ( ! $q->contains( $field ) )
         {
-            $q-&gt;from('')-&gt;update( $params['component'] . ' ' . $params['alias'] );
-            $q-&gt;set( $field, '?', array(false) );
-            $q-&gt;addWhere( $field . ' = ?', array(true) );
+            $q->from('')->update( $params['component'] . ' ' . $params['alias'] );
+            $q->set( $field, '?', array(false) );
+            $q->addWhere( $field . ' = ?', array(true) );
         }
     }
 
@@ -657,21 +622,19 @@ definition.</p>
      */
     public function preDqlSelect( Doctrine_Event $event )
     {
-        $params = $event-&gt;getParams();
+        $params = $event->getParams();
         $field  = $params['alias'] . '.deleted';
-        $q      = $event-&gt;getQuery();
+        $q      = $event->getQuery();
 
-        if ( ! $q-&gt;contains( $field ) )
+        if ( ! $q->contains( $field ) )
         {
-            $q-&gt;addWhere( $field . ' = ?', array(false) );
+            $q->addWhere( $field . ' = ?', array(false) );
         }
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>All of the above methods in the listener could optionally be placed in
 the user class below. Doctrine will check there for the hooks as well:</p>
-
-<pre><code class="">class User extends Doctrine_Record
+<div class="console"><pre><code class="console">class User extends Doctrine_Record
 {
     // ...
     public function preDqlSelect()
@@ -688,47 +651,38 @@ the user class below. Doctrine will check there for the hooks as well:</p>
     {
         // ...
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>In order for these dql callbacks to be checked, you must explicitly turn
 them on. Because this adds a small amount of overhead for each query, we
 have it off by default. We already enabled this attribute in an earlier
 chapter.</p>
 <p>Here it is again to refresh your memory:</p>
-
-<pre><code class="">// bootstrap.php
+<div class="console"><pre><code class="console">// bootstrap.php
 
 // ...
-$manager-&gt;setAttribute( Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true );
-</code></pre>
+<span class="noselect">$ </span>manager->setAttribute( Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true );</code></pre></div>
 <p>Now when you interact with the User model it will take in to account the
 deleted flag:</p>
 <p>Delete user through record instance:</p>
-
-<pre><code class="">$user           = new User();
-$user-&gt;username = 'jwage';
-$user-&gt;password = 'changeme';
-$user-&gt;save();
-$user-&gt;delete();
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>user           = new User();
+<span class="noselect">$ </span>user->username = 'jwage';
+<span class="noselect">$ </span>user->password = 'changeme';
+<span class="noselect">$ </span>user->save();
+<span class="noselect">$ </span>user->delete();</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The above call to <code>$user-&gt;delete()</code> does not actually
 delete the record instead it sets the deleted flag to true.</p>
 </div>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>q = Doctrine_Query::create()
+    ->from('User u');
 
-<pre><code class="">$q = Doctrine_Query::create()
-    -&gt;from('User u');
-
-echo $q-&gt;getSqlQuery();
-</code></pre>
-
-<pre><code class="">SELECT
+echo $q->getSqlQuery();</code></pre></div>
+<div class="console"><pre><code class="console">SELECT
 u.id AS u**id,
 u.username AS u**username,
 u.password AS u**password,
 u.deleted AS u**deleted
 FROM user u
-WHERE u.deleted = ?
-</code></pre>
+WHERE u.deleted = ?</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Notice how the <code>&quot;u.deleted = ?&quot;</code> was automatically added
 to the where condition with a parameter value of <strong>true</strong>.</p>
 </div>
@@ -739,25 +693,21 @@ more than one listener can be attached for listening the same events.
 The following example attaches two listeners for given connection:</p>
 <p>In this example <code>Debugger</code> and <code>Logger</code> both inherit
 Doctrine_EventListener:</p>
-
-<pre><code class="">$conn-&gt;addListener( new Debugger() );
-$conn-&gt;addListener( new Logger() );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>conn->addListener( new Debugger() );
+<span class="noselect">$ </span>conn->addListener( new Logger() );</code></pre></div>
 <hr />
 <a class="section-anchor" id="the-event-object" name="the-event-object"></a><h2 class="section-header"><a href="#the-event-object">The Event object<i class="fas fa-link"></i></a></h2>
 <hr />
 <a class="section-anchor" id="getting-the-invoker" name="getting-the-invoker"></a><h3 class="section-header"><a href="#getting-the-invoker">Getting the Invoker<i class="fas fa-link"></i></a></h3>
 <p>You can get the object that invoked the event by calling
 <code>getInvoker()</code>:</p>
-
-<pre><code class="">class MyListener extends Doctrine_EventListener
+<div class="console"><pre><code class="console">class MyListener extends Doctrine_EventListener
 {
     public function preExec( Doctrine_Event $event )
     {
-        $event-&gt;getInvoker(); // Doctrine_Connection
+        $event->getInvoker(); // Doctrine_Connection
     }
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="event-codes" name="event-codes"></a><h3 class="section-header"><a href="#event-codes">Event Codes<i class="fas fa-link"></i></a></h3>
 <p>Doctrine_Event uses constants as event codes. Below is the list of
@@ -788,12 +738,11 @@ all available event constants:</p>
 
 <p>Here are some examples of hooks being used and the code that is
 returned:</p>
-
-<pre><code class="">class MyListener extends Doctrine_EventListener
+<div class="console"><pre><code class="console">class MyListener extends Doctrine_EventListener
 {
     public function preExec( Doctrine_Event $event )
     {
-        $event-&gt;getCode(); // Doctrine_Event::CONN_EXEC
+        $event->getCode(); // Doctrine_Event::CONN_EXEC
     }
 }
 
@@ -801,10 +750,9 @@ class MyRecord extends Doctrine_Record
 {
     public function preUpdate( Doctrine_Event $event )
     {
-        $event-&gt;getCode(); // Doctrine_Event::RECORD_UPDATE
+        $event->getCode(); // Doctrine_Event::RECORD_UPDATE
     }
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="getting-the-invoker" name="getting-the-invoker"></a><h3 class="section-header"><a href="#getting-the-invoker">Getting the Invoker<i class="fas fa-link"></i></a></h3>
 <p>The method <code>getInvoker()</code> returns the object that invoked the given
@@ -813,15 +761,13 @@ invoker is a Doctrine_Connection object.</p>
 <p>Here is an example of using the record hook named <code>preUpdate()</code> that
 is invoked when a Doctrine_Record instance is saved and an update
 is issued to the database:</p>
-
-<pre><code class="">class MyRecord extends Doctrine_Record
+<div class="console"><pre><code class="console">class MyRecord extends Doctrine_Record
 {
     public function preUpdate( Doctrine_Event $event )
     {
-        $event-&gt;getInvoker(); // Object(MyRecord)
+        $event->getInvoker(); // Object(MyRecord)
     }
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="skip-next-operation" name="skip-next-operation"></a><h3 class="section-header"><a href="#skip-next-operation">Skip Next Operation<i class="fas fa-link"></i></a></h3>
 <p>Doctrine_Event provides many methods for altering the execution of
@@ -830,30 +776,26 @@ chain.</p>
 <p>For some reason you may want to skip the execution of the listened
 method. It can be done as follows (note that <code>preExec()</code> could be any
 listener method):</p>
-
-<pre><code class="">class MyListener extends Doctrine_EventListener
+<div class="console"><pre><code class="console">class MyListener extends Doctrine_EventListener
 {
     public function preExec( Doctrine_Event $event )
     {
         // some business logic, then:
-        $event-&gt;skipOperation();
+        $event->skipOperation();
     }
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="skip-next-listener" name="skip-next-listener"></a><h3 class="section-header"><a href="#skip-next-listener">Skip Next Listener<i class="fas fa-link"></i></a></h3>
 <p>When using a chain of listeners you might want to skip the execution of
 the next listener. It can be achieved as follows:</p>
-
-<pre><code class="">class MyListener extends Doctrine_EventListener
+<div class="console"><pre><code class="console">class MyListener extends Doctrine_EventListener
 {
     public function preExec( Doctrine_Event $event )
     {
         // some business logic, then:
-        $event-&gt;skipNextListener();
+        $event->skipNextListener();
     }
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="conclusion" name="conclusion"></a><h2 class="section-header"><a href="#conclusion">Conclusion<i class="fas fa-link"></i></a></h2>
 <p>Event listeners are a great feature in Doctrine and combined with <a href="behaviors.html">Behaviors</a> they can provide some very complex functionality with a

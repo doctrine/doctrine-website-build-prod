@@ -260,16 +260,14 @@ the entire project, not just the lib folder.</p>
 <p>Now change directory to the checked out copy of doctrine.</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>cd /path/to/co/doctrine</code></pre></div>
 <p>You should see the following files and directories listed.</p>
-
-<pre><code class="">CHANGELOG
+<div class="console"><pre><code class="console">CHANGELOG
 COPYRIGHT
 lib/
 LICENSE
 package.xml
 tests/
 tools/
-vendor/
-</code></pre>
+vendor/</code></pre></div>
 <div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i><p>It is not uncommon for the test suite to have fails that we
 are aware of. Often Doctrine will have test cases for bugs or
 enhancement requests that cannot be committed until later versions.
@@ -310,21 +308,20 @@ to 0 then some additional tests may fail.</p>
 <a class="section-anchor" id="writing-tests" name="writing-tests"></a><h2 class="section-header"><a href="#writing-tests">Writing Tests<i class="fas fa-link"></i></a></h2>
 <p>When writing your test case, you can copy <code>TemplateTestCase.php</code> to
 start off. Here is a sample test case:</p>
-
-<pre><code class="">class Doctrine_Sample_TestCase extends Doctrine_UnitTestCase
+<div class="console"><pre><code class="console">class Doctrine_Sample_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
-        $this-&gt;tables[] = &quot;MyModel1&quot;;
-        $this-&gt;tables[] = &quot;MyModel2&quot;;
+        $this->tables[] = "MyModel1";
+        $this->tables[] = "MyModel2";
 
         parent::prepareTables();
     }
 
     public function prepareData()
     {
-        $this-&gt;myModel = new MyModel1();
-        //$this-&gt;myModel-&gt;save();
+        $this->myModel = new MyModel1();
+        //$this->myModel->save();
     }
 
     public function testInit()
@@ -335,12 +332,12 @@ start off. Here is a sample test case:</p>
     // This produces a failing test
     public function testTest()
     {
-        $this-&gt;assertTrue( $this-&gt;myModel-&gt;exists() );
-        $this-&gt;assertEqual( 0, 1 );
-        $this-&gt;assertIdentical( 0, '0' );
-        $this-&gt;assertNotEqual( 1, 2 );
-        $this-&gt;assertTrue( ( 5 &lt; 1 ) );
-        $this-&gt;assertFalse( (1 &gt; 2 ) );
+        $this->assertTrue( $this->myModel->exists() );
+        $this->assertEqual( 0, 1 );
+        $this->assertIdentical( 0, '0' );
+        $this->assertNotEqual( 1, 2 );
+        $this->assertTrue( ( 5 < 1 ) );
+        $this->assertFalse( (1 > 2 ) );
     }
 }
 
@@ -350,8 +347,7 @@ class Model1 extends Doctrine_Record
 
 class Model2 extends Doctrine_Record
 {
-}
-</code></pre>
+}</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The model definitions can be included directly in the test
 case file or they can be put in
 <code>/path/to/co/doctrine/tests/models</code> and they will be autoloaded
@@ -359,9 +355,7 @@ for you.</p>
 </div>
 <p>Once you are finished writing your test be sure to add it to <code>run.php</code>
 like the following.</p>
-
-<pre><code class="">$test-&gt;addTestCase( new Doctrine_Sample_TestCase() );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>test->addTestCase( new Doctrine_Sample_TestCase() );</code></pre></div>
 <p>Now when you execute run.php you will see the new failure reported to
 you.</p>
 <hr />
@@ -374,108 +368,92 @@ the <code>/path/to/co/doctrine/tests/Ticket/</code> folder.</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php run.php --ticket 9999</code></pre></div>
 <p>If the ticket number 9999 doesn't already exist then the blank test case
 class will be generated for you at <code>/path/to/co/doctrine/tests/Ticket/9999TestCase.php</code>.</p>
-
-<pre><code class="">class Doctrine_Ticket_9999_TestCase extends Doctrine_UnitTestCase
+<div class="console"><pre><code class="console">class Doctrine_Ticket_9999_TestCase extends Doctrine_UnitTestCase
 {
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="methods-for-testing" name="methods-for-testing"></a><h3 class="section-header"><a href="#methods-for-testing">Methods for testing<i class="fas fa-link"></i></a></h3>
 <hr />
 <a class="section-anchor" id="assert-equal" name="assert-equal"></a><h4 class="section-header"><a href="#assert-equal">Assert Equal<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function test1Equals1()
 {
-    $this-&gt;assertEqual( 1, 1 );
+    $this->assertEqual( 1, 1 );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="assert-not-equal" name="assert-not-equal"></a><h4 class="section-header"><a href="#assert-not-equal">Assert Not Equal<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function test1DoesNotEqual2()
 {
-    $this-&gt;assertNotEqual( 1, 2 );
+    $this->assertNotEqual( 1, 2 );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="assert-identical" name="assert-identical"></a><h4 class="section-header"><a href="#assert-identical">Assert Identical<i class="fas fa-link"></i></a></h4>
 <p>The <code>assertIdentical()</code> method is the same as the <code>assertEqual()</code>
 except that its logic is stricter and uses the <code>===</code> for comparing the
 two values.</p>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function testAssertIdentical()
 {
-    $this-&gt;assertIdentical( 1, '1' );
+    $this->assertIdentical( 1, '1' );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The above test would fail obviously because the first
 argument is the number 1 casted as PHP type integer and the second
 argument is the number 1 casted as PHP type string.</p>
 </div>
 <hr />
 <a class="section-anchor" id="assert-true" name="assert-true"></a><h4 class="section-header"><a href="#assert-true">Assert True<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function testAssertTrue()
 {
-    $this-&gt;assertTrue( 5 &gt; 2 );
+    $this->assertTrue( 5 > 2 );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="assert-false" name="assert-false"></a><h4 class="section-header"><a href="#assert-false">Assert False<i class="fas fa-link"></i></a></h4>
-
-<pre><code class="">// ...
+<div class="console"><pre><code class="console">// ...
 public function testAssertFalse()
 {
-    $this-&gt;assertFalse( 5 &lt; 2 );
+    $this->assertFalse( 5 < 2 );
 }
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="mock-drivers" name="mock-drivers"></a><h3 class="section-header"><a href="#mock-drivers">Mock Drivers<i class="fas fa-link"></i></a></h3>
 <p>Doctrine uses mock drivers for all drivers other than sqlite. The
 following code snippet shows you how to use mock drivers:</p>
-
-<pre><code class="">class Doctrine_Sample_TestCase extends Doctrine_UnitTestCase
+<div class="console"><pre><code class="console">class Doctrine_Sample_TestCase extends Doctrine_UnitTestCase
 {
     public function testInit()
     {
-        $this-&gt;dbh  = new Doctrine_Adapter_Mock( 'oracle' );
-        $this-&gt;conn = Doctrine_Manager::getInstance()-&gt;openConnection( $this-&gt;dbh );
+        $this->dbh  = new Doctrine_Adapter_Mock( 'oracle' );
+        $this->conn = Doctrine_Manager::getInstance()->openConnection( $this->dbh );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Now when you execute queries they won't actually be executed against a
 real database. Instead they will be collected in an array and you will
 be able to analyze the queries that were executed and make test
 assertions against them.</p>
-
-<pre><code class="">class Doctrine_Sample_TestCase extends Doctrine_UnitTestCase
+<div class="console"><pre><code class="console">class Doctrine_Sample_TestCase extends Doctrine_UnitTestCase
 {
     // ...
     public function testMockDriver()
     {
         $user           = new User();
-        $user-&gt;username = 'jwage';
-        $user-&gt;password = 'changeme';
-        $user-&gt;save();
+        $user->username = 'jwage';
+        $user->password = 'changeme';
+        $user->save();
 
-        $sql = $this-&gt;dbh-&gt;getAll();
+        $sql = $this->dbh->getAll();
 
         // print the sql array to find the query you're looking for
         // print_r( $sql );
 
-        $this-&gt;assertEqual( $sql[0], 'INSERT INTO user (username, password) VALUES (?, ?)' );
+        $this->assertEqual( $sql[0], 'INSERT INTO user (username, password) VALUES (?, ?)' );
     }
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="test-class-guidelines" name="test-class-guidelines"></a><h3 class="section-header"><a href="#test-class-guidelines">Test Class Guidelines<i class="fas fa-link"></i></a></h3>
 <p>Every class should have at least one TestCase equivalent and they should

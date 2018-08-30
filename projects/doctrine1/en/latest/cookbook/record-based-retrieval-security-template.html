@@ -272,8 +272,7 @@ for all situations I'm asking of it, I thought I would post it as is.</p>
 <blockquote><p>class gsSecurityTemplate extends Doctrine\_Template { protected</p>
 </blockquote>
 <p>$\_options = array();</p>
-
-<pre><code class="">/**
+<div class="console"><pre><code class="console">/**
  * __construct
  *
  * @param string $options
@@ -285,19 +284,17 @@ public function __construct(array $options)
         throw new Doctrine_Exception('Unable to create security template without conditions');
     }
 
-    $this-&gt;_options = $options;
+    $this->_options = $options;
 }
 
 public function setUp()
 {
-    $this-&gt;addListener(new gsSecurityListener($this-&gt;_options));
-}
-</code></pre>
+    $this->addListener(new gsSecurityListener($this->_options));
+}</code></pre></div>
 <p>}</p>
 <p>class gsSecurityListener extends Doctrine\_Record\_Listener { private
 static $<em>user\_id = 0, $</em>credentials = array(), $\_alias\_count = 30;</p>
-
-<pre><code class="">protected $_options = array();
+<div class="console"><pre><code class="console">protected $_options = array();
 
 /**
  * __construct
@@ -307,32 +304,32 @@ static $<em>user\_id = 0, $</em>credentials = array(), $\_alias\_count = 30;</p>
  */
 public function __construct(array $options)
 {
-    $this-&gt;_options = $options;
+    $this->_options = $options;
 }
 
 public function preDqlSelect(Doctrine_Event $event)
 {
-    $invoker = $event-&gt;getInvoker();
+    $invoker = $event->getInvoker();
     $class   = get_class($invoker);
-    $params  = $event-&gt;getParams();
+    $params  = $event->getParams();
 
     if($class == $params['alias']) {
         return;
     }
 
-    $q       = $event-&gt;getQuery();
+    $q       = $event->getQuery();
 
     // only apply to the main protected table not chained tables... may break some situations
-    if(!$q-&gt;contains('FROM '.$class)) {
+    if(!$q->contains('FROM '.$class)) {
         return;
     }
 
     $wheres = array();
     $pars   = array();
 
-    $from = $q-&gt;getDqlPart('from');
+    $from = $q->getDqlPart('from');
 
-    foreach ($this-&gt;_options['conditions'] as $rel_name =&gt; $conditions) {
+    foreach ($this->_options['conditions'] as $rel_name => $conditions) {
         $apply = false;
         foreach ($conditions['apply_to'] as $val) {
             if (in_array($val,self::$_credentials)) {
@@ -346,10 +343,10 @@ public function preDqlSelect(Doctrine_Event $event)
             $aliases = array();
             $aliases[] = $alias;
 
-            foreach ($conditions['through'] as $key =&gt; $table) {
+            foreach ($conditions['through'] as $key => $table) {
                 $index = 0;
                 $found = false;
-                foreach ($from as $index =&gt; $val) {
+                foreach ($from as $index => $val) {
                     if (strpos($val,$table) !== false) {
                         $found = true;
                         break;
@@ -363,7 +360,7 @@ public function preDqlSelect(Doctrine_Event $event)
                     $aliases[] = $alias;
                 } else {
                     $newalias = strtolower(substr($table,0,3)).self::$_alias_count++;
-                    $q-&gt;leftJoin(end($aliases).'.'.$table.' '.$newalias);
+                    $q->leftJoin(end($aliases).'.'.$table.' '.$newalias);
                     $aliases[] = $newalias;
                 }
             }
@@ -374,7 +371,7 @@ public function preDqlSelect(Doctrine_Event $event)
     }
 
     if(!empty($wheres)) {
-        $q-&gt;addWhere( '('.implode(' OR ',$wheres).')',$pars);
+        $q->addWhere( '('.implode(' OR ',$wheres).')',$pars);
     }
 }
 
@@ -386,8 +383,7 @@ static public function setUserId($id)
 static public function setCredentials($vals)
 {
     self::$_credentials = $vals;
-}
-</code></pre>
+}</code></pre></div>
 <p>}</p>
 <hr />
 <a class="section-anchor" id="yaml-schema-syntax" name="yaml-schema-syntax"></a><h2 class="section-header"><a href="#yaml-schema-syntax">YAML schema syntax<i class="fas fa-link"></i></a></h2>

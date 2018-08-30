@@ -597,70 +597,128 @@ For this we create the type in PostgreSQL as:</p>
             title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><div id="5ee9ff0d4c4d29552bb2ee1fb492c6b706d3bfb8"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-5ee9ff0d4c4d29552bb2ee1fb492c6b706d3bfb8-1" class="line-number-anchor" /><a href="#line-number-5ee9ff0d4c4d29552bb2ee1fb492c6b706d3bfb8-1">1</a></td><td class="code-line" rowspan="1"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">DOMAIN</span> MyMoney <span class="hljs-keyword">AS</span> <span class="hljs-built_in">DECIMAL</span>(<span class="hljs-number">18</span>,<span class="hljs-number">3</span>);</td></tr></table></div></code></pre>
 <p>Now we implement our <code>Doctrine\DBAL\Types\Type</code> instance:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="68f66d799679bb52d384754f44ccb9c9964d5171"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="68f66d799679bb52d384754f44ccb9c9964d5171"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-1" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-1">1</a></td><td class="code-line" rowspan="33"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">My</span>\<span class="hljs-title">Project</span>\<span class="hljs-title">Types</span>;
 
-<pre><code class="">&lt;?php
-namespace My\Project\Types;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Platforms</span>\<span class="hljs-title">AbstractPlatform</span>;
 
-use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
-
-/**
+<span class="hljs-comment">/**
  * My custom datatype.
- */
-class MoneyType extends Type
-{
-    const MONEY = 'money'; // modify to match your type name
+ */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MoneyType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span>
+</span>{
+    <span class="hljs-keyword">const</span> MONEY = <span class="hljs-string">'money'</span>; <span class="hljs-comment">// modify to match your type name</span>
 
-    public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
-    {
-        return 'MyMoney';
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSqlDeclaration</span><span class="hljs-params">(array $fieldDeclaration, AbstractPlatform $platform)</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-string">'MyMoney'</span>;
     }
 
-    public function convertToPHPValue($value, AbstractPlatform $platform)
-    {
-        return new Money($value);
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValue</span><span class="hljs-params">($value, AbstractPlatform $platform)</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Money($value);
     }
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
-    {
-        return $value-&gt;toDecimal();
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">($value, AbstractPlatform $platform)</span>
+    </span>{
+        <span class="hljs-keyword">return</span> $value-&gt;toDecimal();
     }
 
-    public function getName()
-    {
-        return self::MONEY;
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getName</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>::MONEY;
     }
-}
-</code></pre>
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-2" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-3" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-4" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-5" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-6" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-7" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-8" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-9" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-10" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-11" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-12" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-13" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-14" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-15" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-16" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-17" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-18" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-19" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-20" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-21" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-22" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-23" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-24" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-25" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-26" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-27" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-28" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-29" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-30" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-31" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-32" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-68f66d799679bb52d384754f44ccb9c9964d5171-33" class="line-number-anchor" /><a href="#line-number-68f66d799679bb52d384754f44ccb9c9964d5171-33">33</a></td></tr></table></div></code></pre>
 <p>The job of Doctrine-DBAL is to transform your type into SQL declaration. You can modify the SQL declaration Doctrine will produce. At first, you must to enable this feature by overriding the canRequireSQLConversion method:</p>
-
-<pre><code class="">&lt;?php
-public function canRequireSQLConversion()
-{
-    return true;
-}
-</code></pre>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="4e87f72faacfd035fda395fd46c2515eb1be7262"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="4e87f72faacfd035fda395fd46c2515eb1be7262"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-4e87f72faacfd035fda395fd46c2515eb1be7262-1" class="line-number-anchor" /><a href="#line-number-4e87f72faacfd035fda395fd46c2515eb1be7262-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">canRequireSQLConversion</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e87f72faacfd035fda395fd46c2515eb1be7262-2" class="line-number-anchor" /><a href="#line-number-4e87f72faacfd035fda395fd46c2515eb1be7262-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e87f72faacfd035fda395fd46c2515eb1be7262-3" class="line-number-anchor" /><a href="#line-number-4e87f72faacfd035fda395fd46c2515eb1be7262-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e87f72faacfd035fda395fd46c2515eb1be7262-4" class="line-number-anchor" /><a href="#line-number-4e87f72faacfd035fda395fd46c2515eb1be7262-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e87f72faacfd035fda395fd46c2515eb1be7262-5" class="line-number-anchor" /><a href="#line-number-4e87f72faacfd035fda395fd46c2515eb1be7262-5">5</a></td></tr></table></div></code></pre>
 <p>Then you override the methods convertToPhpValueSQL and convertToDatabaseValueSQL :</p>
-
-<pre><code class="">&lt;?php
-public function convertToPHPValueSQL($sqlExpr, $platform)
-{
-    return 'MyMoneyFunction(\''.$sqlExpr.'\') ';
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="51680daea438030acf80d43aca9fad055e3ae0db"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="51680daea438030acf80d43aca9fad055e3ae0db"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-51680daea438030acf80d43aca9fad055e3ae0db-1" class="line-number-anchor" /><a href="#line-number-51680daea438030acf80d43aca9fad055e3ae0db-1">1</a></td><td class="code-line" rowspan="10"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValueSQL</span><span class="hljs-params">($sqlExpr, $platform)</span>
+</span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'MyMoneyFunction(\''</span>.$sqlExpr.<span class="hljs-string">'\') '</span>;
 }
 
-public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
-{
-    return 'MyFunction('.$sqlExpr.')';
-}
-
-</code></pre>
+<span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValueSQL</span><span class="hljs-params">($sqlExpr, AbstractPlatform $platform)</span>
+</span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'MyFunction('</span>.$sqlExpr.<span class="hljs-string">')'</span>;
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-51680daea438030acf80d43aca9fad055e3ae0db-2" class="line-number-anchor" /><a href="#line-number-51680daea438030acf80d43aca9fad055e3ae0db-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-51680daea438030acf80d43aca9fad055e3ae0db-3" class="line-number-anchor" /><a href="#line-number-51680daea438030acf80d43aca9fad055e3ae0db-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-51680daea438030acf80d43aca9fad055e3ae0db-4" class="line-number-anchor" /><a href="#line-number-51680daea438030acf80d43aca9fad055e3ae0db-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-51680daea438030acf80d43aca9fad055e3ae0db-5" class="line-number-anchor" /><a href="#line-number-51680daea438030acf80d43aca9fad055e3ae0db-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-51680daea438030acf80d43aca9fad055e3ae0db-6" class="line-number-anchor" /><a href="#line-number-51680daea438030acf80d43aca9fad055e3ae0db-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-51680daea438030acf80d43aca9fad055e3ae0db-7" class="line-number-anchor" /><a href="#line-number-51680daea438030acf80d43aca9fad055e3ae0db-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-51680daea438030acf80d43aca9fad055e3ae0db-8" class="line-number-anchor" /><a href="#line-number-51680daea438030acf80d43aca9fad055e3ae0db-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-51680daea438030acf80d43aca9fad055e3ae0db-9" class="line-number-anchor" /><a href="#line-number-51680daea438030acf80d43aca9fad055e3ae0db-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-51680daea438030acf80d43aca9fad055e3ae0db-10" class="line-number-anchor" /><a href="#line-number-51680daea438030acf80d43aca9fad055e3ae0db-10">10</a></td></tr></table></div></code></pre>
 <p>Now we have to register this type with the Doctrine Type system and
 hook it into the database platform:</p>
-
-<pre><code class="">&lt;?php
-Type::addType('money', 'My\Project\Types\MoneyType');
-$conn-&gt;getDatabasePlatform()-&gt;registerDoctrineTypeMapping('MyMoney', 'money');
-</code></pre>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="bcf293efb2e3765fd776b731fecd151885ea947a"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="bcf293efb2e3765fd776b731fecd151885ea947a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-bcf293efb2e3765fd776b731fecd151885ea947a-1" class="line-number-anchor" /><a href="#line-number-bcf293efb2e3765fd776b731fecd151885ea947a-1">1</a></td><td class="code-line" rowspan="3"><span class="hljs-meta">&lt;?php</span>
+Type::addType(<span class="hljs-string">'money'</span>, <span class="hljs-string">'My\Project\Types\MoneyType'</span>);
+$conn-&gt;getDatabasePlatform()-&gt;registerDoctrineTypeMapping(<span class="hljs-string">'MyMoney'</span>, <span class="hljs-string">'money'</span>);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf293efb2e3765fd776b731fecd151885ea947a-2" class="line-number-anchor" /><a href="#line-number-bcf293efb2e3765fd776b731fecd151885ea947a-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf293efb2e3765fd776b731fecd151885ea947a-3" class="line-number-anchor" /><a href="#line-number-bcf293efb2e3765fd776b731fecd151885ea947a-3">3</a></td></tr></table></div></code></pre>
 <p>This would allow to use a money type in the ORM for example and
 have Doctrine automatically convert it back and forth to the
 database.</p>

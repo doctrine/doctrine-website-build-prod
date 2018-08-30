@@ -292,95 +292,87 @@ class User extends Doctrine_Record
 }
 
 </code></pre>
-
-<pre><code class="">// models/Email.php
+<div class="console"><pre><code class="console">// models/Email.php
 class Email extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('user_id', 'integer', null, array(
-            'type' =&gt; 'integer'
+        $this->hasColumn('user_id', 'integer', null, array(
+            'type' => 'integer'
         ));
-        $this-&gt;hasColumn('address', 'string', 255, array(
-            'type' =&gt; 'string',
-            'length' =&gt; '255'
+        $this->hasColumn('address', 'string', 255, array(
+            'type' => 'string',
+            'length' => '255'
         ));
     }
 
     public function setUp()
     {
-        $this-&gt;hasOne('User', array(
-            'local' =&gt; 'user_id',
-            'foreign' =&gt; 'id'
+        $this->hasOne('User', array(
+            'local' => 'user_id',
+            'foreign' => 'id'
         ));
     }
-}
-</code></pre>
-
-<pre><code class="">// models/Phonenumber.php
+}</code></pre></div>
+<div class="console"><pre><code class="console">// models/Phonenumber.php
 class Phonenumber extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('user_id', 'integer', null, array(
-            'type' =&gt; 'integer'
+        $this->hasColumn('user_id', 'integer', null, array(
+            'type' => 'integer'
         ));
-        $this-&gt;hasColumn('phonenumber', 'string', 255, array(
-            'type' =&gt; 'string',
-            'length' =&gt; '255'
+        $this->hasColumn('phonenumber', 'string', 255, array(
+            'type' => 'string',
+            'length' => '255'
         ));
-        $this-&gt;hasColumn('primary_num', 'boolean');
+        $this->hasColumn('primary_num', 'boolean');
     }
 
     public function setUp()
     {
-        $this-&gt;hasOne('User', array(
-            'local' =&gt; 'user_id',
-            'foreign' =&gt; 'id'
+        $this->hasOne('User', array(
+            'local' => 'user_id',
+            'foreign' => 'id'
         ));
     }
-}
-</code></pre>
-
-<pre><code class="">// models/Group.php
+}</code></pre></div>
+<div class="console"><pre><code class="console">// models/Group.php
 class Group extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;setTableName('groups');
-        $this-&gt;hasColumn('name', 'string', 255, array(
-            'type' =&gt; 'string',
-            'length' =&gt; '255'
+        $this->setTableName('groups');
+        $this->hasColumn('name', 'string', 255, array(
+            'type' => 'string',
+            'length' => '255'
         ));
     }
 
     public function setUp()
     {
-        $this-&gt;hasMany('User as Users', array(
-            'refClass' =&gt; 'UserGroup',
-            'local' =&gt; 'group_id',
-            'foreign' =&gt; 'user_id'
+        $this->hasMany('User as Users', array(
+            'refClass' => 'UserGroup',
+            'local' => 'group_id',
+            'foreign' => 'user_id'
         ));
     }
-}
-</code></pre>
-
-<pre><code class="">// models/UserGroup.php
+}</code></pre></div>
+<div class="console"><pre><code class="console">// models/UserGroup.php
 class UserGroup extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('user_id', 'integer', null, array(
-            'type' =&gt; 'integer',
-            'primary' =&gt; true
+        $this->hasColumn('user_id', 'integer', null, array(
+            'type' => 'integer',
+            'primary' => true
         ));
-        $this-&gt;hasColumn('group_id', 'integer', null, array(
-            'type' =&gt; 'integer',
-            'primary' =&gt; true
+        $this->hasColumn('group_id', 'integer', null, array(
+            'type' => 'integer',
+            'primary' => true
         ));
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -488,25 +480,21 @@ in the previous chapter.</p>
 same getters and setters as for the record properties.</p>
 <p>You can use any of the three ways above, however the last one is the
 recommended one for array portability purposes.</p>
+<div class="console"><pre><code class="console">// test.php
+<span class="noselect">$ </span>user = new User();
+<span class="noselect">$ </span>user['username'] = 'jwage';
+<span class="noselect">$ </span>user['password'] = 'changeme';
 
-<pre><code class="">// test.php
-$user = new User();
-$user['username'] = 'jwage';
-$user['password'] = 'changeme';
+<span class="noselect">$ </span>email = $user->Email;
 
-$email = $user-&gt;Email;
+<span class="noselect">$ </span>email = $user->get('Email');
 
-$email = $user-&gt;get('Email');
-
-$email = $user['Email'];
-</code></pre>
+<span class="noselect">$ </span>email = $user['Email'];</code></pre></div>
 <p>When accessing a one-to-one related record that doesn't exist, Doctrine
 automatically creates the object. That is why the above code is
 possible.</p>
-
-<pre><code class="">$user-&gt;Email-&gt;address = 'jonwage@gmail.com';
-$user-&gt;save();
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>user->Email->address = 'jonwage@gmail.com';
+<span class="noselect">$ </span>user->save();</code></pre></div>
 <p>When accessing one-to-many related records, Doctrine creates a
 Doctrine_Collection for the related component. Lets say we have
 <code>users</code> and <code>phonenumbers</code> and their relation is one-to-many. You
@@ -579,44 +567,38 @@ access a related component that isn't already loaded Doctrine uses one
 <code>SQL SELECT</code> statement for the fetching, hence the following example
 executes three <code>SQL SELECTs</code>.</p>
 <p>dakmdaklsd alksdlkamsd kldlksmdklm</p>
+<div class="console"><pre><code class="console">// test.php
+<span class="noselect">$ </span>user = Doctrine_Core::getTable('User')->find(1);
 
-<pre><code class="">// test.php
-$user = Doctrine_Core::getTable('User')-&gt;find(1);
+echo $user->Email['address'];
 
-echo $user-&gt;Email['address'];
-
-echo $user-&gt;Phonenumbers[0]-&gt;phonenumber;
-</code></pre>
+echo $user->Phonenumbers[0]->phonenumber;</code></pre></div>
 <p>Much more efficient way of doing this is using DQL. The following
 example uses only one SQL query for the retrieval of related components.</p>
+<div class="console"><pre><code class="console">// test.php
+<span class="noselect">$ </span>q = Doctrine_Query::create()
+        ->from('User u')
+        ->leftJoin('u.Email e')
+        ->leftJoin('u.Phonenumbers p')
+        ->where('u.id = ?', 1);
 
-<pre><code class="">// test.php
-$q = Doctrine_Query::create()
-        -&gt;from('User u')
-        -&gt;leftJoin('u.Email e')
-        -&gt;leftJoin('u.Phonenumbers p')
-        -&gt;where('u.id = ?', 1);
+<span class="noselect">$ </span>user = $q->fetchOne();
 
-$user = $q-&gt;fetchOne();
+echo $user->Email['address'];
 
-echo $user-&gt;Email['address'];
-
-echo $user-&gt;Phonenumbers[0]['phonenumber'];
-</code></pre>
+echo $user->Phonenumbers[0]['phonenumber'];</code></pre></div>
 <hr />
 <a class="section-anchor" id="updating-related-records" name="updating-related-records"></a><h3 class="section-header"><a href="#updating-related-records">Updating Related Records<i class="fas fa-link"></i></a></h3>
 <p>You can update the related records by calling save for each related
 object / collection individually or by calling save on the object that
 owns the other objects. You can also call
 <code>Doctrine_Connection::flush</code> which saves all pending objects.</p>
+<div class="console"><pre><code class="console">// test.php
+<span class="noselect">$ </span>user->Email['address'] = 'koskenkorva@drinkmore.info';
 
-<pre><code class="">// test.php
-$user-&gt;Email['address'] = 'koskenkorva@drinkmore.info';
+<span class="noselect">$ </span>user->Phonenumbers[0]['phonenumber'] = '123123';
 
-$user-&gt;Phonenumbers[0]['phonenumber'] = '123123';
-
-$user-&gt;save();
-</code></pre>
+<span class="noselect">$ </span>user->save();</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>In the above example calling $user-&gt;save saves the
 <code>email</code> and <code>phonenumber</code>.</p>
 </div>
@@ -650,13 +632,11 @@ for the </code>User``.</p>
 relatedExists method. This is so that you can do the above check
 with less code and not have to worry about clearing the unnecessary
 reference afterwards.</p>
-
-<pre><code class="">if ($user-&gt;relatedExists('Email')) {
+<div class="console"><pre><code class="console">if ($user->relatedExists('Email')) {
     // User has e-mail
 } else {
     //  User does not have a e-mail
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="deleting-related-records" name="deleting-related-records"></a><h3 class="section-header"><a href="#deleting-related-records">Deleting Related Records<i class="fas fa-link"></i></a></h3>
 <p>You can delete related records individually be calling delete on a
@@ -755,24 +735,20 @@ $groupUser-&gt;save();
 <p>The right way to delete links between many-to-many associated records is
 by using the DQL DELETE statement. Convenient and recommended way of
 using DQL DELETE is through the Query API.</p>
+<div class="console"><pre><code class="console">// test.php
+<span class="noselect">$ </span>q = Doctrine_Query::create()
+        ->delete('UserGroup')
+        ->addWhere('user_id = ?', 5)
+        ->whereIn('group_id', array(1, 2));
 
-<pre><code class="">// test.php
-$q = Doctrine_Query::create()
-        -&gt;delete('UserGroup')
-        -&gt;addWhere('user_id = ?', 5)
-        -&gt;whereIn('group_id', array(1, 2));
-
-$deleted = $q-&gt;execute();
-</code></pre>
+<span class="noselect">$ </span>deleted = $q->execute();</code></pre></div>
 <p>Another way to <code>unlink</code> the relationships between related objects is
 through the <code>Doctrine_Record::unlink</code> method. However, you should
 avoid using this method unless you already have the parent model, since
 it involves querying the database first.</p>
-
-<pre><code class="">$user = Doctrine_Core::getTable('User')-&gt;find(5);
-$user-&gt;unlink('Group', array(1, 2));
-$user-&gt;save();
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>user = Doctrine_Core::getTable('User')->find(5);
+<span class="noselect">$ </span>user->unlink('Group', array(1, 2));
+<span class="noselect">$ </span>user->save();</code></pre></div>
 <p>You can also unlink ALL relationships to <code>Group</code> by omitting the
 second argument:</p>
 <pre><code class="">$user-&gt;unlink('Group');
@@ -1141,9 +1117,8 @@ synchronizeWithArray.</p>
 or collections. It also accesses the relationships the objects may have.
 If you need to print a record for debugging purposes you can get an
 array representation of the object and print that.</p>
-
-<pre><code class="">print_r($user-&gt;toArray());
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>print_r($user->toArray());
+</code></pre></div>
 <p>If you do not want to include the relationships in the array then you
 need to pass the <code>$deep</code> argument with a value of <code>false</code>:</p>
 <pre><code class="">print_r($user-&gt;toArray(false));
@@ -1152,35 +1127,31 @@ need to pass the <code>$deep</code> argument with a value of <code>false</code>:
 <a class="section-anchor" id="from-array" name="from-array"></a><h3 class="section-header"><a href="#from-array">From Array<i class="fas fa-link"></i></a></h3>
 <p>If you have an array of values you want to use to fill a record or even
 a collection, the fromArray method simplifies this common task.</p>
-
-<pre><code class="">$data = array(
-    'name'   =&gt; 'John',
-    'age'    =&gt; '25',
-    'Emails' =&gt; array(
-        array('address' =&gt; 'john@mail.com'),
-        array('address' =&gt; 'john@work.com')
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>data = array(
+    'name'   => 'John',
+    'age'    => '25',
+    'Emails' => array(
+        array('address' => 'john@mail.com'),
+        array('address' => 'john@work.com')
     )
 );
 
-$user = new User();
-$user-&gt;fromArray($data);
-$user-&gt;save();
-</code></pre>
+<span class="noselect">$ </span>user = new User();
+<span class="noselect">$ </span>user->fromArray($data);
+<span class="noselect">$ </span>user->save();</code></pre></div>
 <hr />
 <a class="section-anchor" id="synchronize-with-array" name="synchronize-with-array"></a><h3 class="section-header"><a href="#synchronize-with-array">Synchronize With Array<i class="fas fa-link"></i></a></h3>
 <p>synchronizeWithArray allows you to... well, synchronize a record
 with an array. So if have an array representation of your model and modify a
 field, modify a relationship field or even delete or create a relationship,
 this changes will be applied to the record.</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>q = Doctrine_Query::create()
+        ->select('u.*, g.*')
+        ->from('User u')
+        ->leftJoin('u.Groups g')
+        ->where('id = ?', 1);
 
-<pre><code class="">$q = Doctrine_Query::create()
-        -&gt;select('u.*, g.*')
-        -&gt;from('User u')
-        -&gt;leftJoin('u.Groups g')
-        -&gt;where('id = ?', 1);
-
-$user = $q-&gt;fetchOne();
-</code></pre>
+<span class="noselect">$ </span>user = $q->fetchOne();</code></pre></div>
 <p>Now convert it to an array and modify some of the properties:</p>
 <pre><code class="">$arrayUser = $user-&gt;toArray(true);
 

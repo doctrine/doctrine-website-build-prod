@@ -266,16 +266,14 @@ common hydration needs.</p>
 <p>The first type is <code>HYDRATE_RECORD</code> and is the default hydration type.
 It will take the data from your queries and hydrate it into your object
 graph. With this type this type of thing is possible.</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>q = Doctrine_Core::getTable('User')
+    ->createQuery('u')
+    ->leftJoin('u.Email e')
+    ->where('u.username = ?', 'jwage');
 
-<pre><code class="">$q = Doctrine_Core::getTable('User')
-    -&gt;createQuery('u')
-    -&gt;leftJoin('u.Email e')
-    -&gt;where('u.username = ?', 'jwage');
+<span class="noselect">$ </span>user = $q->fetchOne(array(), Doctrine_Core::HYDRATE_RECORD);
 
-$user = $q-&gt;fetchOne(array(), Doctrine_Core::HYDRATE_RECORD);
-
-echo $user-&gt;Email-&gt;email;
-</code></pre>
+echo $user->Email->email;</code></pre></div>
 <p>The data for the above query was retrieved with one query and was
 hydrated into the object graph by the record hydrator. This makes it
 much easier to work with data since you are dealing with records and not
@@ -289,16 +287,14 @@ uses PHP arrays. The benefit of using arrays instead of objects is that
 they are much faster and the hydration does not take as long.</p>
 <p>So if you were to run the same example you would have access to the same
 data but it would be via a PHP array.</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>q = Doctrine_Core::getTable('User')
+    ->createQuery('u')
+    ->leftJoin('u.Email e')
+    ->where('u.username = ?', 'jwage');
 
-<pre><code class="">$q = Doctrine_Core::getTable('User')
-    -&gt;createQuery('u')
-    -&gt;leftJoin('u.Email e')
-    -&gt;where('u.username = ?', 'jwage');
+<span class="noselect">$ </span>user = $q->fetchOne(array(), Doctrine_Core::HYDRATE_ARRAY);
 
-$user = $q-&gt;fetchOne(array(), Doctrine_Core::HYDRATE_ARRAY);
-
-echo $user['Email']['email'];
-</code></pre>
+echo $user['Email']['email'];</code></pre></div>
 <hr />
 <a class="section-anchor" id="scalar" name="scalar"></a><h3 class="section-header"><a href="#scalar">Scalar<i class="fas fa-link"></i></a></h3>
 <p>The scalar hydration type is represented by the <code>HYDRATE_SCALAR</code>
@@ -306,24 +302,20 @@ constant and is a very fast and efficient way to hydrate your data. The
 downside to this method is that it does not hydrate your data into the
 object graph, it returns a flat rectangular result set which can be
 difficult to work with when dealing with lots of records.</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>q = Doctrine_Core::getTable('User')
+    ->createQuery('u')
+    ->where('u.username = ?', 'jwage');
 
-<pre><code class="">$q = Doctrine_Core::getTable('User')
-    -&gt;createQuery('u')
-    -&gt;where('u.username = ?', 'jwage');
+<span class="noselect">$ </span>user = $q->fetchOne(array(), Doctrine_Core::HYDRATE_SCALAR);
 
-$user = $q-&gt;fetchOne(array(), Doctrine_Core::HYDRATE_SCALAR);
-
-echo $user['u_username'];
-</code></pre>
+echo $user['u_username'];</code></pre></div>
 <p>The above query would produce a data structure that looks something like
 the following:</p>
-
-<pre><code class="">$user = array(
-    'u_username' =&gt; 'jwage',
-    'u_password' =&gt; 'changeme',
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>user = array(
+    'u_username' => 'jwage',
+    'u_password' => 'changeme',
     // ...
-);
-</code></pre>
+);</code></pre></div>
 <p>If the query had a many relationship joined than the data for the user
 would be duplicated for every record that exists for that user. This is
 the downside as it is difficult to work with when dealing with lots of
@@ -335,17 +327,15 @@ possible with the single scalar hydration method and is represented by
 the <code>HYDRATE_SINGLE_SCALAR</code> attribute.</p>
 <p>With this hydration type we could easily count the number of
 phonenumbers a user has with the following:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>q = Doctrine_Core::getTable('User')
+    ->createQuery('u')
+    ->select('COUNT(p.id)')
+    ->leftJoin('u.Phonenumber p')
+    ->where('u.username = ?', 'jwage');
 
-<pre><code class="">$q = Doctrine_Core::getTable('User')
-    -&gt;createQuery('u')
-    -&gt;select('COUNT(p.id)')
-    -&gt;leftJoin('u.Phonenumber p')
-    -&gt;where('u.username = ?', 'jwage');
+<span class="noselect">$ </span>numPhonenumbers = $q->fetchOne(array(), Doctrine_Core::HYDRATE_SINGLE_SCALAR);
 
-$numPhonenumbers = $q-&gt;fetchOne(array(), Doctrine_Core::HYDRATE_SINGLE_SCALAR);
-
-echo $numPhonenumbers;
-</code></pre>
+echo $numPhonenumbers;</code></pre></div>
 <p>This is much better than hydrating the data with a more complex method
 and grabbing the value from those results. With this it is very fast and
 efficient to get the data you really want.</p>
@@ -355,14 +345,12 @@ efficient to get the data you really want.</p>
 the on demand hydration which is represented by the
 <code>HYDRATE_ON_DEMAND</code> constant. It will only hydrate one records graph
 at a time so that means less memory footprint overall used.</p>
-
-<pre><code class="">// Returns instance of Doctrine_Collection_OnDemand
-$result = $q-&gt;execute(array(), Doctrine_Core::HYDRATE_ON_DEMAND);
+<div class="console"><pre><code class="console">// Returns instance of Doctrine_Collection_OnDemand
+<span class="noselect">$ </span>result = $q->execute(array(), Doctrine_Core::HYDRATE_ON_DEMAND);
 foreach ($result as $obj)
 {
     // ...
-}
-</code></pre>
+}</code></pre></div>
 <p>Doctrine_Collection_OnDemand hydrates each object one at a time as
 you iterate over it so this results in less memory being used because we
 don't have to first load all the data from the database to PHP then
@@ -372,38 +360,30 @@ convert it to the entire data structure to return.</p>
 <p>For your models which use the nested set behavior you can use the record
 hierarchy hydration method to hydrate your nested set tree into an
 actual hierarchy of nested objects.</p>
-
-<pre><code class="">$categories = Doctrine_Core::getTable('Category')
-    -&gt;createQuery('c')
-    -&gt;execute(array(), Doctrine_Core::HYDRATE_RECORD_HIERARCHY);
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>categories = Doctrine_Core::getTable('Category')
+    ->createQuery('c')
+    ->execute(array(), Doctrine_Core::HYDRATE_RECORD_HIERARCHY);</code></pre></div>
 <p>Now you can access the children of a record by accessing the mapped
 value property named <code>__children</code>. It is named with the underscores
 prefixed to avoid any naming conflicts.</p>
-
-<pre><code class="">foreach ($categories-&gt;getFirst()-&gt;get('__children') as $child)
+<div class="console"><pre><code class="console">foreach ($categories->getFirst()->get('__children') as $child)
 {
     // ...
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="nested-set-array-hierarchy" name="nested-set-array-hierarchy"></a><h3 class="section-header"><a href="#nested-set-array-hierarchy">Nested Set Array Hierarchy<i class="fas fa-link"></i></a></h3>
 <p>If you wish to hydrate the nested set hierarchy into arrays instead of
 objects you can do so using the <code>HYDRATE_ARRAY_HIERARCHY</code> constant.
 It is identical to the <code>HYDRATE_RECORD_HIERARCHY</code> except that it
 uses PHP arrays instead of objects.</p>
-
-<pre><code class="">$categories = Doctrine_Core::getTable('Category')
-    -&gt;createQuery('c')
-    -&gt;execute(array(), Doctrine_Core::HYDRATE_ARRAY_HIERARCHY);
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>categories = Doctrine_Core::getTable('Category')
+    ->createQuery('c')
+    ->execute(array(), Doctrine_Core::HYDRATE_ARRAY_HIERARCHY);</code></pre></div>
 <p>Now you can do the following:</p>
-
-<pre><code class="">foreach ($categories[0]['__children'] as $child)
+<div class="console"><pre><code class="console">foreach ($categories[0]['__children'] as $child)
 {
     // ...
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="writing-hydration-method" name="writing-hydration-method"></a><h2 class="section-header"><a href="#writing-hydration-method">Writing Hydration Method<i class="fas fa-link"></i></a></h2>
 <p>Doctrine offers the ability to write your own hydration methods and
@@ -411,29 +391,23 @@ register them with Doctrine for use. All you need to do is write a class
 that extends Doctrine_Hydrator_Abstract and register it with
 Doctrine_Manager.</p>
 <p>First lets write a sample hydrator class:</p>
-
-<pre><code class="">class Doctrine_Hydrator_MyHydrator extends Doctrine_Hydrator_Abstract
+<div class="console"><pre><code class="console">class Doctrine_Hydrator_MyHydrator extends Doctrine_Hydrator_Abstract
 {
     public function hydrateResultSet($stmt)
     {
-        $data = $stmt-&gt;fetchAll(PDO::FETCH_ASSOC);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // do something to with $data
         return $data;
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>To use it make sure we register it with Doctrine_Manager:</p>
-
-<pre><code class="">// bootstrap.php
+<div class="console"><pre><code class="console">// bootstrap.php
 
 // ...
-$manager-&gt;registerHydrator('my_hydrator', 'Doctrine_Hydrator_MyHydrator');
-</code></pre>
+<span class="noselect">$ </span>manager->registerHydrator('my_hydrator', 'Doctrine_Hydrator_MyHydrator');</code></pre></div>
 <p>Now when you execute your queries you can pass <code>my_hydrator</code> and it
 will use your class to hydrate the data.</p>
-
-<pre><code class="">$q-&gt;execute(array(), 'my_hydrator');
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>q->execute(array(), 'my_hydrator');</code></pre></div>
 <p></p>
                                             </div>
                 </div>

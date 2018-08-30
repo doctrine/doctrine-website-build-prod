@@ -595,39 +595,38 @@ $dm-&gt;flush();</td></tr>
 <tr><td class="line-number noselect"><a name="line-number-a57e82017ee45a8ebd58fb5383351fa401a23db4-31" class="line-number-anchor" /><a href="#line-number-a57e82017ee45a8ebd58fb5383351fa401a23db4-31">31</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-a57e82017ee45a8ebd58fb5383351fa401a23db4-32" class="line-number-anchor" /><a href="#line-number-a57e82017ee45a8ebd58fb5383351fa401a23db4-32">32</a></td></tr></table></div></code></pre>
 <p>The above would insert the following:</p>
-
-<pre><code class="">Array
+<div class="console"><pre><code class="console">Array
 (
-    [000000004b0a33690000000001c304c6] =&gt; Array
+    [000000004b0a33690000000001c304c6] => Array
         (
-            [name] =&gt; New Project
+            [name] => New Project
         )
 
 )
 Array
 (
-    [000000004b0a33660000000001c304c6] =&gt; Array
+    [000000004b0a33660000000001c304c6] => Array
         (
-            [changes] =&gt; 0
-            [notes] =&gt; Array
+            [changes] => 0
+            [notes] => Array
                 (
                 )
 
-            [name] =&gt; Manager
-            [salary] =&gt; 100000
-            [started] =&gt; MongoDate Object
+            [name] => Manager
+            [salary] => 100000
+            [started] => MongoDate Object
                 (
-                    [sec] =&gt; 1275265048
-                    [usec] =&gt; 0
+                    [sec] => 1275265048
+                    [usec] => 0
                 )
 
-            [projects] =&gt; Array
+            [projects] => Array
                 (
-                    [0] =&gt; Array
+                    [0] => Array
                         (
-                            [$ref] =&gt; projects
-                            [$id] =&gt; 4c0300188ead0e947a000000
-                            [$db] =&gt; my_db
+                            [$ref] => projects
+                            [$id] => 4c0300188ead0e947a000000
+                            [$db] => my_db
                         )
 
                 )
@@ -637,33 +636,32 @@ Array
 )
 Array
 (
-    [000000004b0a336a0000000001c304c6] =&gt; Array
+    [000000004b0a336a0000000001c304c6] => Array
         (
-            [changes] =&gt; 0
-            [notes] =&gt; Array
+            [changes] => 0
+            [notes] => Array
                 (
                 )
 
-            [name] =&gt; Employee
-            [salary] =&gt; 50000
-            [started] =&gt; MongoDate Object
+            [name] => Employee
+            [salary] => 50000
+            [started] => MongoDate Object
                 (
-                    [sec] =&gt; 1275265048
-                    [usec] =&gt; 0
+                    [sec] => 1275265048
+                    [usec] => 0
                 )
 
-            [address] =&gt; Array
+            [address] => Array
                 (
-                    [address] =&gt; 555 Doctrine Rd.
-                    [city] =&gt; Nashville
-                    [state] =&gt; TN
-                    [zipcode] =&gt; 37209
+                    [address] => 555 Doctrine Rd.
+                    [city] => Nashville
+                    [state] => TN
+                    [zipcode] => 37209
                 )
 
         )
 
-)
-</code></pre>
+)</code></pre></div>
 <p>If we update a property and call <code>-&gt;flush()</code> again we'll get an
 efficient update query using the atomic operators:</p>
 <pre class="code-block-table"><code class="php"><button
@@ -690,34 +688,33 @@ $dm-&gt;flush();</td></tr>
 <tr><td class="line-number noselect"><a name="line-number-45af96417ca8e1792f1240e116182b664cac6809-9" class="line-number-anchor" /><a href="#line-number-45af96417ca8e1792f1240e116182b664cac6809-9">9</a></td></tr></table></div></code></pre>
 <p>The above could would produce an update that looks something like
 this:</p>
-
-<pre><code class="">Array
+<div class="console"><pre><code class="console">Array
 (
-    [$inc] =&gt; Array
+    [$inc] => Array
         (
-            [changes] =&gt; 2
+            [changes] => 2
         )
 
-    [$push] =&gt; Array
+    [$push] => Array
         (
-            [notes] =&gt; Array
+            [notes] => Array
                 (
-                    [$each] =&gt; Array
+                    [$each] => Array
                         (
-                            [0] =&gt; Gave user 100k a year raise
+                            [0] => Gave user 100k a year raise
                         )
 
                 )
 
-            [projects] =&gt; Array
+            [projects] => Array
                 (
-                    [$each] =&gt; Array
+                    [$each] => Array
                         (
-                            [0] =&gt; Array
+                            [0] => Array
                                 (
-                                    [$ref] =&gt; projects
-                                    [$id] =&gt; 4c0310718ead0e767e030000
-                                    [$db] =&gt; my_db
+                                    [$ref] => projects
+                                    [$id] => 4c0310718ead0e767e030000
+                                    [$db] => my_db
                                 )
 
                         )
@@ -726,13 +723,12 @@ this:</p>
 
         )
 
-    [$set] =&gt; Array
+    [$set] => Array
         (
-            [salary] =&gt; 200000
+            [salary] => 200000
         )
 
-)
-</code></pre>
+)</code></pre></div>
 <p>This is a simple example, but it demonstrates well that you can
 transparently persist PHP objects while still utilizing the
 atomic operators for updating documents! Continue reading to learn
@@ -741,9 +737,7 @@ running!</p>
 <a class="section-anchor" id="setup" name="setup"></a><h2 class="section-header"><a href="#setup">Setup<i class="fas fa-link"></i></a></h2>
 <p>Before we can begin, we'll need to install the Doctrine MongoDB ODM library and
 its dependencies. The easiest way to do this is with <a href="http://getcomposer.org/">Composer</a>:</p>
-
-<pre><code class="">$ composer require &quot;doctrine/mongodb-odm&quot;
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>composer require "doctrine/mongodb-odm"</code></pre></div>
 <p>Once ODM and its dependencies have been downloaded, we can begin by creating a
 <code>bootstrap.php</code> file in our project's root directory, where Composer's
 <code>vendor/</code> directory also resides. Let's start by importing some of the classes
@@ -955,9 +949,7 @@ available on PHP 7, you will need the new driver (<code>ext-mongodb</code>) inst
 use a polyfill to provide the API of the legacy driver.</p>
 <p>To do this, you have to require <code>alcaeus/mongo-php-adapter</code> before adding a composer
 dependency to ODM. To do this, run the following command:</p>
-
-<pre><code class="">$ composer config &quot;platform.ext-mongo&quot; &quot;1.6.16&quot; &amp;&amp; composer require &quot;alcaeus/mongo-php-adapter&quot;
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>composer config "platform.ext-mongo" "1.6.16" && composer require "alcaeus/mongo-php-adapter"</code></pre></div>
 <p></p>
                                             </div>
                 </div>

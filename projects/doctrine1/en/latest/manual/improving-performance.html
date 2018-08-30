@@ -277,14 +277,12 @@ cases where this might fail, a Doctrine_Exception is throw detailing the
 error.</p>
 <p>Lets create a compile script named compile.php to handle the
 compiling of DoctrineL:</p>
-
-<pre><code class="">// compile.php
+<div class="console"><pre><code class="console">// compile.php
 
 require_once( '/path/to/doctrine/lib/Doctrine.php' );
 spl_autoload_register( array( 'Doctrine', 'autoload' ) );
 
-Doctrine_Core::compile( 'Doctrine.compiled.php' );
-</code></pre>
+Doctrine_Core::compile( 'Doctrine.compiled.php' );</code></pre></div>
 <p>Now we can execute compile.php and a file named
 Doctrine.compiled.php will be generated in the root of your
 <code>doctrine_test</code> folder:</p>
@@ -293,21 +291,17 @@ Doctrine.compiled.php will be generated in the root of your
 can pass an array of drivers as the second argument to compile.
 For this example we are only using MySQL so lets tell Doctrine to only
 compile the <code>mysql</code> driver:</p>
-
-<pre><code class="">// compile.php
+<div class="console"><pre><code class="console">// compile.php
 
 // ...
-Doctrine_Core::compile( 'Doctrine.compiled.php', array( 'mysql' ) );
-</code></pre>
+Doctrine_Core::compile( 'Doctrine.compiled.php', array( 'mysql' ) );</code></pre></div>
 <p>Now you can change your bootstrap.php script to include the compiled
 Doctrine:</p>
-
-<pre><code class="">// bootstrap.php
+<div class="console"><pre><code class="console">// bootstrap.php
 
 // ...
 require_once( 'Doctrine.compiled.php' );
-// ...
-</code></pre>
+// ...</code></pre></div>
 <hr />
 <a class="section-anchor" id="conservative-fetching" name="conservative-fetching"></a><h2 class="section-header"><a href="#conservative-fetching">Conservative Fetching<i class="fas fa-link"></i></a></h2>
 <p>Maybe the most important rule is to be conservative and only fetch the data you
@@ -315,9 +309,7 @@ actually need. This may sound trivial but laziness or lack of knowledge about
 the possibilities that are available often lead to a lot of unnecessary
 overhead.</p>
 <p>Take a look at this example:</p>
-
-<pre><code class="">$record = $table-&gt;find( $id );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>record = $table->find( $id );</code></pre></div>
 <p>How often do you find yourself writing code like that? It's convenient but it's
 very often not what you need. The example above will pull all columns of the
 record out of the database and populate the newly created object with that
@@ -348,17 +340,15 @@ to accomplish complex business logic. It's a waste of resources when data gets
 wrapped in costly object structures when you have no benefit of that. Take a
 look at the following code that fetches all comments with some related data for
 an article, passing them to the view for display afterwards:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>q = Doctrine_Query::create()
+    ->select( 'b.title, b.author, b.created_at' )
+    ->addSelect( 'COUNT(t.id) as num_comments' )
+    ->from( 'BlogPost b' )
+    ->leftJoin( 'b.Comments c' )
+    ->where( 'b.id = ?' )
+    ->orderBy( 'b.created_at DESC' );
 
-<pre><code class="">$q = Doctrine_Query::create()
-    -&gt;select( 'b.title, b.author, b.created_at' )
-    -&gt;addSelect( 'COUNT(t.id) as num_comments' )
-    -&gt;from( 'BlogPost b' )
-    -&gt;leftJoin( 'b.Comments c' )
-    -&gt;where( 'b.id = ?' )
-    -&gt;orderBy( 'b.created_at DESC' );
-
-$blogPosts = $q-&gt;execute( array( 1 ) );
-</code></pre>
+<span class="noselect">$ </span>blogPosts = $q->execute( array( 1 ) );</code></pre></div>
 <p>Now imagine you have a view or template that renders the most recent
 blog posts:</p>
 <pre class="code-block-table"><code class="php"><button
@@ -396,14 +386,10 @@ blog posts:</p>
 <p>Can you think of any benefit of having objects in the view instead of
 arrays? You're not going to execute business logic in the view, are you?
 One parameter can save you a lot of unnecessary processing:</p>
-
-<pre><code class="">$blogPosts = $q-&gt;execute( array( 1 ), Doctrine_Core::HYDRATE_ARRAY );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>blogPosts = $q->execute( array( 1 ), Doctrine_Core::HYDRATE_ARRAY );</code></pre></div>
 <p>If you prefer you can also use the setHydrationMethod method:</p>
-
-<pre><code class="">$q-&gt;setHydrationMode( Doctrine_Core::HYDRATE_ARRAY );
-$blogPosts = $q-&gt;execute( array( 1 ) );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>q->setHydrationMode( Doctrine_Core::HYDRATE_ARRAY );
+<span class="noselect">$ </span>blogPosts = $q->execute( array( 1 ) );</code></pre></div>
 <p>The above code will hydrate the data into arrays instead of objects
 which is much less expensive.</p>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>One great thing about array hydration is that if you use the
@@ -415,22 +401,17 @@ work when we switch the query behind it to array hydration.</p>
 <p>Sometimes, you may want the direct output from PDO instead of an object or an
 array. To do this, set the hydration mode to
 Doctrine_Core::HYDRATE_NONE. Here's an example:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>q = Doctrine_Query::create()
+    ->select( 'SUM(d.amount)' )
+    ->from( 'Donation d' );
 
-<pre><code class="">$q = Doctrine_Query::create()
-    -&gt;select( 'SUM(d.amount)' )
-    -&gt;from( 'Donation d' );
-
-$results = $q-&gt;execute( array(), Doctrine_Core::HYDRATE_NONE );
-</code></pre>
+<span class="noselect">$ </span>results = $q->execute( array(), Doctrine_Core::HYDRATE_NONE );</code></pre></div>
 <p>You will need to print the results and find the value in the array
 depending on your DQL query:</p>
-
-<pre><code class="">print_r( $results );
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>print_r( $results );
+</code></pre></div>
 <p>In this example the result would be accessible with the following code:</p>
-
-<pre><code class="">$total = $results[0][1];
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>total = $results[0][1];</code></pre></div>
 <div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i><p>There are two important differences between <code>HYDRATE_ARRAY</code> and
 <code>HYDRATE_NONE</code> which you should consider before choosing which to use.
 <code>HYDRATE_NONE</code> is the fastest but the result is an array with numeric
@@ -477,37 +458,31 @@ Doctrine_Collection, and
 Doctrine_Query which eliminates the circular references on those
 objects, freeing them up for garbage collection. Usage might look like:</p>
 <p>Free objects when mass inserting records:</p>
-
-<pre><code class="">for ( $i = 0; $i &lt; 1000; $i++ )
+<div class="console"><pre><code class="console">for ( $i = 0; $i < 1000; $i++ )
 {
     $object = createBigObject();
-    $object-&gt;save();
-    $object-&gt;free( true );
-}
-</code></pre>
+    $object->save();
+    $object->free( true );
+}</code></pre></div>
 <p>You can also free query objects in the same way:</p>
-
-<pre><code class="">for ( $i = 0; $i &lt; 1000; $i++ )
+<div class="console"><pre><code class="console">for ( $i = 0; $i < 1000; $i++ )
 {
     $q = Doctrine_Query::create()
-        -&gt;from( 'User u' );
+        ->from( 'User u' );
 
-    $results = $q-&gt;fetchArray();
-    $q-&gt;free();
-}
-</code></pre>
+    $results = $q->fetchArray();
+    $q->free();
+}</code></pre></div>
 <p>Or even better if you can reuse the same query object for each query in
 the loop that would be ideal:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>q = Doctrine_Query::create()
+    ->from('User u');
 
-<pre><code class="">$q = Doctrine_Query::create()
-    -&gt;from('User u');
-
-for ( $i = 0; $i &lt; 1000; $i++ )
+for ( $i = 0; $i < 1000; $i++ )
 {
-    $results = $q-&gt;fetchArray();
-    $q-&gt;free();
-}
-</code></pre>
+    $results = $q->fetchArray();
+    $q->free();
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="other-tips" name="other-tips"></a><h2 class="section-header"><a href="#other-tips">Other Tips<i class="fas fa-link"></i></a></h2>
 <ul><li>Helping the DQL parser

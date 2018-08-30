@@ -295,56 +295,49 @@ autoincrement definitions removed.</p>
 date columns 'created' and 'updated' to the record class that loads this
 template. Additionally this template uses a listener called Timestamp
 listener which updates these fields based on record actions.</p>
-
-<pre><code class="">// models/TimestampListener.php
+<div class="console"><pre><code class="console">// models/TimestampListener.php
 class TimestampListener extends Doctrine_Record_Listener
 {
     public function preInsert(Doctrine_Event $event)
     {
-        $event-&gt;getInvoker()-&gt;created = date('Y-m-d', time());
-        $event-&gt;getInvoker()-&gt;updated = date('Y-m-d', time());
+        $event->getInvoker()->created = date('Y-m-d', time());
+        $event->getInvoker()->updated = date('Y-m-d', time());
     }
 
     public function preUpdate(Doctrine_Event $event)
     {
-        $event-&gt;getInvoker()-&gt;updated = date('Y-m-d', time());
+        $event->getInvoker()->updated = date('Y-m-d', time());
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Now lets create a child Doctrine_Template named
 <code>TimestampTemplate</code> so we can attach it to our models with the
 <code>actAs()</code> method:</p>
-
-<pre><code class="">// models/TimestampBehavior.php
+<div class="console"><pre><code class="console">// models/TimestampBehavior.php
 ss TimestampTemplate extends Doctrine_Template
 
  public function setTableDefinition()
  {
-     $this-&gt;hasColumn('created', 'date');
-     $this-&gt;hasColumn('updated', 'date');
+     $this->hasColumn('created', 'date');
+     $this->hasColumn('updated', 'date');
 
-     $this-&gt;addListener(new TimestampListener());
- }
-
-</code></pre>
+     $this->addListener(new TimestampListener());
+ }</code></pre></div>
 <p>Lets say we have a class called <code>BlogPost</code> that needs the timestamp
 functionality. All we need to do is to add <code>actAs()</code> call in the class
 definition.</p>
-
-<pre><code class="">class BlogPost extends Doctrine_Record
+<div class="console"><pre><code class="console">class BlogPost extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('title', 'string', 200);
-        $this-&gt;hasColumn('body', 'clob');
+        $this->hasColumn('title', 'string', 200);
+        $this->hasColumn('body', 'clob');
     }
 
     public function setUp()
     {
-        $this-&gt;actAs('TimestampBehavior');
+        $this->actAs('TimestampBehavior');
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -366,14 +359,12 @@ the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <p>Now when we try and utilize the <code>BlogPost</code> model you will notice that
 the <code>created</code> and <code>updated</code> columns were added for you and
 automatically set when saved:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>blogPost        = new BlogPost();
+<span class="noselect">$ </span>blogPost->title = 'Test';
+<span class="noselect">$ </span>blogPost->body  = 'test';
+<span class="noselect">$ </span>blogPost->save();
 
-<pre><code class="">$blogPost        = new BlogPost();
-$blogPost-&gt;title = 'Test';
-$blogPost-&gt;body  = 'test';
-$blogPost-&gt;save();
-
-print_r($blogPost-&gt;toArray());
-</code></pre>
+print_r($blogPost->toArray());</code></pre></div>
 <p>The above example would produce the following output:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
 Array
@@ -397,20 +388,19 @@ relations to other model classes and you may want to replace given class
 with some extended class.</p>
 <p>Consider we have two classes, <code>User</code> and <code>Email</code>, with the following
 definitions:</p>
-
-<pre><code class="">class User extends Doctrine_Record
+<div class="console"><pre><code class="console">class User extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('username', 'string', 255);
-        $this-&gt;hasColumn('password', 'string', 255);
+        $this->hasColumn('username', 'string', 255);
+        $this->hasColumn('password', 'string', 255);
     }
 
     public function setUp()
     {
-        $this-&gt;hasMany('Email', array(
-                'local' =&gt; 'id',
-                'foreign' =&gt; 'user_id'
+        $this->hasMany('Email', array(
+                'local' => 'id',
+                'foreign' => 'user_id'
             )
         );
     }
@@ -420,20 +410,19 @@ class Email extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('address', 'string');
-        $this-&gt;hasColumn('user_id', 'integer');
+        $this->hasColumn('address', 'string');
+        $this->hasColumn('user_id', 'integer');
     }
 
     public function setUp()
     {
-        $this-&gt;hasOne('User', array(
-                'local' =&gt; 'user_id',
-                'foreign' =&gt; 'id'
+        $this->hasOne('User', array(
+                'local' => 'user_id',
+                'foreign' => 'id'
             )
         );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -475,59 +464,54 @@ with its dependency injection solution.</p>
 <p>In the following example we'll define two templates, <code>UserTemplate</code>
 and <code>EmailTemplate</code>, with almost identical definitions as the <code>User</code>
 and <code>Email</code> class had.</p>
-
-<pre><code class="">// models/UserTemplate.php
+<div class="console"><pre><code class="console">// models/UserTemplate.php
 class UserTemplate extends Doctrine_Template
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('username', 'string', 255);
-        $this-&gt;hasColumn('password', 'string', 255);
+        $this->hasColumn('username', 'string', 255);
+        $this->hasColumn('password', 'string', 255);
     }
 
     public function setUp()
     {
-        $this-&gt;hasMany('EmailTemplate as Emails', array(
-                'local' =&gt; 'id',
-                'foreign' =&gt; 'user_id'
+        $this->hasMany('EmailTemplate as Emails', array(
+                'local' => 'id',
+                'foreign' => 'user_id'
             )
         );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Now lets define the <code>EmailTemplate</code>:</p>
-
-<pre><code class="">// models/EmailTemplate.php
+<div class="console"><pre><code class="console">// models/EmailTemplate.php
 class EmailTemplate extends Doctrine_Template
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('address', 'string');
-        $this-&gt;hasColumn('user_id', 'integer');
+        $this->hasColumn('address', 'string');
+        $this->hasColumn('user_id', 'integer');
     }
 
     public function setUp()
     {
-        $this-&gt;hasOne('UserTemplate as User', array(
-                'local' =&gt; 'user_id',
-                'foreign' =&gt; 'id'
+        $this->hasOne('UserTemplate as User', array(
+                'local' => 'user_id',
+                'foreign' => 'id'
             )
         );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Notice how we set the relations. We are not pointing to concrete Record
 classes, rather we are setting the relations to templates. This tells
 Doctrine that it should try to find concrete Record classes for those
 templates. If Doctrine can't find these concrete implementations the
 relation parser will throw an exception, but before we go ahead of
 things, here are the actual record classes:</p>
-
-<pre><code class="">class User extends Doctrine_Record
+<div class="console"><pre><code class="console">class User extends Doctrine_Record
 {
     public function setUp()
     {
-        $this-&gt;actAs('UserTemplate');
+        $this->actAs('UserTemplate');
     }
 }
 
@@ -535,10 +519,9 @@ class Email extends Doctrine_Record
 {
     public function setUp()
     {
-        $this-&gt;actAs('EmailTemplate');
+        $this->actAs('EmailTemplate');
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -559,30 +542,24 @@ the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <tr><td class="line-number noselect"><a name="line-number-1814fa2a2c1bb50eb22b74d9630d702266353a59-6" class="line-number-anchor" /><a href="#line-number-1814fa2a2c1bb50eb22b74d9630d702266353a59-6">6</a></td></tr></table></div></code></pre>
 <p>Now consider the following code snippet. This does NOT work since we
 haven't yet set any concrete implementations for the templates.</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$user = new User();
-$user-&gt;Emails; // throws an exception
-</code></pre>
+<span class="noselect">$ </span>user = new User();
+<span class="noselect">$ </span>user->Emails; // throws an exception</code></pre></div>
 <p>The following version works. Notice how we set the concrete
 implementations for the templates globally using Doctrine_Manager:</p>
-
-<pre><code class="">// bootstrap.php
+<div class="console"><pre><code class="console">// bootstrap.php
 
 // ...
-$manager-&gt;setImpl('UserTemplate', 'User')
-        -&gt;setImpl('EmailTemplate', 'Email');
-</code></pre>
+<span class="noselect">$ </span>manager->setImpl('UserTemplate', 'User')
+        ->setImpl('EmailTemplate', 'Email');</code></pre></div>
 <p>Now this code will work and won't throw an exception like it did before:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>user                     = new User();
+<span class="noselect">$ </span>user->Emails[0]->address = 'jonwage@gmail.com';
+<span class="noselect">$ </span>user->save();
 
-<pre><code class="">$user                     = new User();
-$user-&gt;Emails[0]-&gt;address = 'jonwage@gmail.com';
-$user-&gt;save();
-
-print_r($user-&gt;toArray(true));
-</code></pre>
+print_r($user->toArray(true));</code></pre></div>
 <p>The above example would produce the following output:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
 Array
@@ -612,15 +589,14 @@ that loaded the templates. Internally the implementation uses magic
 method called <code>__call()</code> to achieve this functionality.</p>
 <p>Lets add to our previous example and add some custom methods to the
 <code>UserTemplate</code>:</p>
-
-<pre><code class="">// models/UserTemplate.php
+<div class="console"><pre><code class="console">// models/UserTemplate.php
 class UserTemplate extends Doctrine_Template
 {
     // ...
     public function authenticate($username, $password)
     {
-        $invoker = $this-&gt;getInvoker();
-        if ($invoker-&gt;username == $username &amp;&amp; $invoker-&gt;password == $password)
+        $invoker = $this->getInvoker();
+        if ($invoker->username == $username && $invoker->password == $password)
         {
             return true;
         }
@@ -629,49 +605,42 @@ class UserTemplate extends Doctrine_Template
             return false;
         }
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Now take a look at the following code and how we can use it:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>user           = new User();
+<span class="noselect">$ </span>user->username = 'jwage';
+<span class="noselect">$ </span>user->password = 'changeme';
 
-<pre><code class="">$user           = new User();
-$user-&gt;username = 'jwage';
-$user-&gt;password = 'changeme';
-
-if ($user-&gt;authenticate('jwage', 'changemte'))
+if ($user->authenticate('jwage', 'changemte'))
 {
     echo 'Authenticated successfully!';
 }
 else
 {
     echo 'Could not authenticate user!';
-}
-</code></pre>
+}</code></pre></div>
 <p>You can also delegate methods to Doctrine_Table classes just as
 easily. But, to avoid naming collisions the methods for table classes
 must have the string <code>TableProxy</code> appended to the end of the method
 name.</p>
 <p>Here is an example where we add a new finder method:</p>
-
-<pre><code class="">// models/UserTemplate.php
+<div class="console"><pre><code class="console">// models/UserTemplate.php
 class UserTemplate extends Doctrine_Template
 {
     // ...
     public function findUsersWithEmailTableProxy()
     {
         return Doctrine_Query::create()
-            -&gt;select('u.username')
-            -&gt;from('User u')
-            -&gt;innerJoin('u.Emails e')
-            -&gt;execute();
+            ->select('u.username')
+            ->from('User u')
+            ->innerJoin('u.Emails e')
+            ->execute();
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Now we can access that function from the Doctrine_Table object for
 the <code>User</code> model:</p>
-
-<pre><code class="">$userTable = Doctrine_Core::getTable('User');
-$users = $userTable-&gt;findUsersWithEmail();
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>userTable = Doctrine_Core::getTable('User');
+<span class="noselect">$ </span>users = $userTable->findUsersWithEmail();</code></pre></div>
 <div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i><p>Each class can consists of multiple templates. If the
 templates contain similar definitions the most recently loaded
 template always overrides the former.</p>
@@ -687,41 +656,37 @@ a <code>setTableDefinition()</code> method. Inside the <code>setTableDefinition(
 method various helper methods can be used for easily creating the
 dynamic record definition. Commonly the following methods are being
 used:</p>
-
-<pre><code class="">public function initOptions()
+<div class="console"><pre><code class="console">public function initOptions()
 public function buildLocalRelation()
 public function buildForeignKeys(Doctrine_Table $table)
 public function buildForeignRelation($alias = null)
-public function buildRelation() // calls buildForeignRelation() and buildLocalRelation()
-</code></pre>
-
-<pre><code class="">class EmailBehavior extends Doctrine_Record_Generator
+public function buildRelation() // calls buildForeignRelation() and buildLocalRelation()</code></pre></div>
+<div class="console"><pre><code class="console">class EmailBehavior extends Doctrine_Record_Generator
 {
     public function initOptions()
     {
-        $this-&gt;setOption('className', '%CLASS%Email');
+        $this->setOption('className', '%CLASS%Email');
 
         // Some other options
-        // $this-&gt;setOption('appLevelDelete', true);
-        // $this-&gt;setOption('cascadeDelete', false);
+        // $this->setOption('appLevelDelete', true);
+        // $this->setOption('cascadeDelete', false);
     }
 
     public function buildRelation()
     {
-        $this-&gt;buildForeignRelation('Emails');
-        $this-&gt;buildLocalRelation();
+        $this->buildForeignRelation('Emails');
+        $this->buildLocalRelation();
     }
 
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('address', 'string', 255, array(
-                'email'  =&gt; true,
-                'primary' =&gt; true
+        $this->hasColumn('address', 'string', 255, array(
+                'email'  => true,
+                'primary' => true
             )
         );
     }
-}
-</code></pre>
+}</code></pre></div>
 <hr />
 <a class="section-anchor" id="core-behaviors" name="core-behaviors"></a><h2 class="section-header"><a href="#core-behaviors">Core Behaviors<i class="fas fa-link"></i></a></h2>
 <p>For the next several examples using the core behaviors lets delete all
@@ -744,27 +709,25 @@ that come bundled with Doctrine.</p>
 <a class="section-anchor" id="versionable" name="versionable"></a><h3 class="section-header"><a href="#versionable">Versionable<i class="fas fa-link"></i></a></h3>
 <p>Lets create a <code>BlogPost</code> model that we want to have the ability to
 have versions:</p>
-
-<pre><code class="">// models/BlogPost.php
+<div class="console"><pre><code class="console">// models/BlogPost.php
 class BlogPost extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('title', 'string', 255);
-        $this-&gt;hasColumn('body', 'clob');
+        $this->hasColumn('title', 'string', 255);
+        $this->hasColumn('body', 'clob');
     }
 
     public function setUp()
     {
-        $this-&gt;actAs('Versionable', array(
-                'versionColumn' =&gt; 'version',
-                'className' =&gt; '%CLASS%Version',
-                'auditLog' =&gt; true
+        $this->actAs('Versionable', array(
+                'versionColumn' => 'version',
+                'className' => '%CLASS%Version',
+                'auditLog' => true
             )
         );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -796,17 +759,14 @@ log history. This is when you want to maintain a version number but
 not maintain the data at each version.</p>
 </div>
 <p>Lets check the SQL that is generated by the above models:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$sql = Doctrine_Core::generateSqlFromArray(array('BlogPost'));
-echo $sql[0] . &quot;\n&quot;;
-echo $sql[1];
-</code></pre>
+<span class="noselect">$ </span>sql = Doctrine_Core::generateSqlFromArray(array('BlogPost'));
+echo $sql[0] . "\n";
+echo $sql[1];</code></pre></div>
 <p>The above code would output the following SQL query:</p>
-
-<pre><code class="">CREATE TABLE blog_post_version (id BIGINT,
+<div class="console"><pre><code class="console">CREATE TABLE blog_post_version (id BIGINT,
 title VARCHAR(255),
 body LONGTEXT,
 version BIGINT,
@@ -817,8 +777,7 @@ title VARCHAR(255),
 body LONGTEXT,
 version BIGINT,
 PRIMARY KEY(id)) ENGINE = INNODB
-ALTER TABLE blog_post_version ADD FOREIGN KEY (id) REFERENCES blog_post(id) ON UPDATE CASCADE ON DELETE CASCADE
-</code></pre>
+ALTER TABLE blog_post_version ADD FOREIGN KEY (id) REFERENCES blog_post(id) ON UPDATE CASCADE ON DELETE CASCADE</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Notice how we have 2 additional statements we probably
 didn't expect to see. The behavior automatically created a
 <code>blog_post_version</code> table and related it to <code>blog_post</code>.</p>
@@ -836,17 +795,15 @@ what is happening internally:</p>
 </ul>
 
 <p>Now lets play around with the <code>BlogPost</code> model:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>blogPost        = new BlogPost();
+<span class="noselect">$ </span>blogPost->title = 'Test blog post';
+<span class="noselect">$ </span>blogPost->body  = 'test';
+<span class="noselect">$ </span>blogPost->save();
 
-<pre><code class="">$blogPost        = new BlogPost();
-$blogPost-&gt;title = 'Test blog post';
-$blogPost-&gt;body  = 'test';
-$blogPost-&gt;save();
+<span class="noselect">$ </span>blogPost->title = 'Modified blog post title';
+<span class="noselect">$ </span>blogPost->save();
 
-$blogPost-&gt;title = 'Modified blog post title';
-$blogPost-&gt;save();
-
-print_r($blogPost-&gt;toArray());
-</code></pre>
+print_r($blogPost->toArray());</code></pre></div>
 <p>The above example would produce the following output:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
 Array
@@ -862,10 +819,8 @@ We can easily revert to another version by using the <code>revert()</code>
 method that the behavior includes.</p>
 </div>
 <p>Lets revert back to the first version:</p>
-
-<pre><code class="">$blogPost-&gt;revert(1);
-print_r($blogPost-&gt;toArray());
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>blogPost->revert(1);
+print_r($blogPost->toArray());</code></pre></div>
 <p>The above example would produce the following output:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
 Array
@@ -888,17 +843,15 @@ inserted and updated.</p>
 <p>Since it is common to want to know the date a post is made lets expand
 our <code>BlogPost</code> model and add the <code>Timestampable</code> behavior to
 automatically set these dates for us.</p>
-
-<pre><code class="">// models/BlogPost.php
+<div class="console"><pre><code class="console">// models/BlogPost.php
 class BlogPost extends Doctrine_Record
 {
     // ...
     public function setUp()
     {
-        $this-&gt;actAs('Timestampable');
+        $this->actAs('Timestampable');
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -955,14 +908,12 @@ the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <tr><td class="line-number noselect"><a name="line-number-9e42b1edc603c85c9acbe1fc759758d28f0d367d-11" class="line-number-anchor" /><a href="#line-number-9e42b1edc603c85c9acbe1fc759758d28f0d367d-11">11</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-9e42b1edc603c85c9acbe1fc759758d28f0d367d-12" class="line-number-anchor" /><a href="#line-number-9e42b1edc603c85c9acbe1fc759758d28f0d367d-12">12</a></td></tr></table></div></code></pre>
 <p>Now look what happens when we create a new post:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>blogPost        = new BlogPost();
+<span class="noselect">$ </span>blogPost->title = 'Test blog post';
+<span class="noselect">$ </span>blogPost->body  = 'test';
+<span class="noselect">$ </span>blogPost->save();
 
-<pre><code class="">$blogPost        = new BlogPost();
-$blogPost-&gt;title = 'Test blog post';
-$blogPost-&gt;body  = 'test';
-$blogPost-&gt;save();
-
-print_r($blogPost-&gt;toArray());
-</code></pre>
+print_r($blogPost->toArray());</code></pre></div>
 <p>The above example would produce the following output:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
 Array
@@ -993,23 +944,21 @@ readable identifier that can be created from columns like title,
 subject, etc. These values can be used for search engine friendly urls.</p>
 <p>Lets expand our <code>BlogPost</code> model to use the <code>Sluggable</code> behavior
 because we will want to have nice URLs for our posts:</p>
-
-<pre><code class="">// models/BlogPost.php
+<div class="console"><pre><code class="console">// models/BlogPost.php
 class BlogPost extends Doctrine_Record
 {
     // ...
     public function setUp()
     {
         // ...
-        $this-&gt;actAs('Sluggable', array(
-                'unique'    =&gt; true,
-                'fields'    =&gt; array('title'),
-                'canUpdate' =&gt; true
+        $this->actAs('Sluggable', array(
+                'unique'    => true,
+                'fields'    => array('title'),
+                'canUpdate' => true
             )
         );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -1042,14 +991,12 @@ the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <tr><td class="line-number noselect"><a name="line-number-c7d97cabcc8c30342b154051eeb31792f2b0c35e-12" class="line-number-anchor" /><a href="#line-number-c7d97cabcc8c30342b154051eeb31792f2b0c35e-12">12</a></td></tr></table></div></code></pre>
 <p>Now look what happens when we create a new post. The slug column will
 automatically be set for us:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>blogPost        = new BlogPost();
+<span class="noselect">$ </span>blogPost->title = 'Test blog post';
+<span class="noselect">$ </span>blogPost->body  = 'test';
+<span class="noselect">$ </span>blogPost->save();
 
-<pre><code class="">$blogPost        = new BlogPost();
-$blogPost-&gt;title = 'Test blog post';
-$blogPost-&gt;body  = 'test';
-$blogPost-&gt;save();
-
-print_r($blogPost-&gt;toArray());
-</code></pre>
+print_r($blogPost->toArray());</code></pre></div>
 <p>The above example would produce the following output:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
 Array
@@ -1084,24 +1031,22 @@ internationalization support for record classes. In the following
 example we have a <code>NewsItem</code> class with two fields <code>title</code> and
 <code>content</code>. We want to have the field <code>title</code> with different
 languages support. This can be achieved as follows:</p>
-
-<pre><code class="">class NewsItem extends Doctrine_Record
+<div class="console"><pre><code class="console">class NewsItem extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('title', 'string', 255);
-        $this-&gt;hasColumn('body', 'blog');
+        $this->hasColumn('title', 'string', 255);
+        $this->hasColumn('body', 'blog');
     }
 
     public function setUp()
     {
-        $this-&gt;actAs('I18n', array(
-                'fields' =&gt; array('title', 'body')
+        $this->actAs('I18n', array(
+                'fields' => array('title', 'body')
             )
         );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -1128,25 +1073,21 @@ the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 behavior:</p>
 <table class="table table-bordered"><tr><td>Name</td><td>Default</td><td>Description</td></tr><tr><td><code>className</code> <code>fields</code> <code>type</code> <code>length</code> <code>options</code></td><td><code>%CLASS%Translation</code> <code>array()</code> <code>string</code> <code>2</code> <code>array()</code></td><td>The name pattern to use for generated class. The fields to internationalize. The type of <code>lang</code> column. The length of the <code>lang</code> column. Other options for the <code>lang</code> column.</td></tr></table>
 <p>Lets check the SQL that is generated by the above models:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$sql = Doctrine_Core::generateSqlFromArray(array('NewsItem'));
-echo $sql[0] . &quot;&quot;;
-echo $sql[1];
-</code></pre>
+<span class="noselect">$ </span>sql = Doctrine_Core::generateSqlFromArray(array('NewsItem'));
+echo $sql[0] . "";
+echo $sql[1];</code></pre></div>
 <p>The above code would output the following SQL query:</p>
-
-<pre><code class="">CREATE TABLE news_item_translation (id BIGINT,
+<div class="console"><pre><code class="console">CREATE TABLE news_item_translation (id BIGINT,
 title VARCHAR(255),
 body LONGTEXT,
 lang CHAR(2),
 PRIMARY KEY(id,
 lang)) ENGINE = INNODB
 CREATE TABLE news_item (id BIGINT AUTO_INCREMENT,
-PRIMARY KEY(id)) ENGINE = INNODB
-</code></pre>
+PRIMARY KEY(id)) ENGINE = INNODB</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Notice how the field <code>title</code> is not present in the
 <code>news_item</code> table. Since its present in the translation table it
 would be a waste of resources to have that same field in the main
@@ -1162,18 +1103,16 @@ initializes the behavior that builds the followings things:</p>
 
 <p>Lets take a look at how we can manipulate the translations of the
 <code>NewsItem</code>:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$newsItem = new NewsItem();
-$newsItem-&gt;Translation['en']-&gt;title = 'some title';
-$newsItem-&gt;Translation['en']-&gt;body  = 'test';
-$newsItem-&gt;Translation['fi']-&gt;title = 'joku otsikko';
-$newsItem-&gt;Translation['fi']-&gt;body  = 'test'; $newsItem-&gt;save();
+<span class="noselect">$ </span>newsItem = new NewsItem();
+<span class="noselect">$ </span>newsItem->Translation['en']->title = 'some title';
+<span class="noselect">$ </span>newsItem->Translation['en']->body  = 'test';
+<span class="noselect">$ </span>newsItem->Translation['fi']->title = 'joku otsikko';
+<span class="noselect">$ </span>newsItem->Translation['fi']->body  = 'test'; $newsItem->save();
 
-print_r($newsItem-&gt;toArray());
-</code></pre>
+print_r($newsItem->toArray());</code></pre></div>
 <p>The above example would produce the following output:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
 Array
@@ -1199,18 +1138,16 @@ Array
 )</code></pre></div>
 <p>How do we retrieve the translated data now? This is easy! Lets find all
 items and their Finnish translations:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$newsItems = Doctrine_Query::create()
-    -&gt;from('NewsItem n')
-    -&gt;leftJoin('n.Translation t')
-    -&gt;where('t.lang = ?')
-    -&gt;execute(array('fi'));
+<span class="noselect">$ </span>newsItems = Doctrine_Query::create()
+    ->from('NewsItem n')
+    ->leftJoin('n.Translation t')
+    ->where('t.lang = ?')
+    ->execute(array('fi'));
 
-echo $newsItems[0]-&gt;Translation['fi']-&gt;title;
-</code></pre>
+echo $newsItems[0]->Translation['fi']->title;</code></pre></div>
 <p>The above example would produce the following output:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
 joku otsikko</code></pre></div>
@@ -1223,25 +1160,23 @@ one efficient query. It also provided a nice interface for manipulating
 the data in your trees.</p>
 <p>Lets take a <code>Category</code> model for example where the categories need to
 be organized in a hierarchical tree structure:</p>
-
-<pre><code class="">// models/Category.php
+<div class="console"><pre><code class="console">// models/Category.php
 class Category extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('name', 'string', 255);
+        $this->hasColumn('name', 'string', 255);
     }
 
     public function setUp()
     {
-        $this-&gt;actAs('NestedSet', array(
-                'hasManyRoots' =&gt; true,
-                'rootColumnName' =&gt; 'root_id'
+        $this->actAs('NestedSet', array(
+                'hasManyRoots' => true,
+                'rootColumnName' => 'root_id'
             )
         );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -1271,23 +1206,19 @@ the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <tr><td class="line-number noselect"><a name="line-number-b69ddd9df9a81671586fa93449e021b919e84e43-10" class="line-number-anchor" /><a href="#line-number-b69ddd9df9a81671586fa93449e021b919e84e43-10">10</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-b69ddd9df9a81671586fa93449e021b919e84e43-11" class="line-number-anchor" /><a href="#line-number-b69ddd9df9a81671586fa93449e021b919e84e43-11">11</a></td></tr></table></div></code></pre>
 <p>Lets check the SQL that is generated by the above models:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$sql = Doctrine_Core::generateSqlFromArray(array('Category'));
-echo $sql[0];
-</code></pre>
+<span class="noselect">$ </span>sql = Doctrine_Core::generateSqlFromArray(array('Category'));
+echo $sql[0];</code></pre></div>
 <p>The above code would output the following SQL query:</p>
-
-<pre><code class="">CREATE TABLE category (id BIGINT AUTO_INCREMENT,
+<div class="console"><pre><code class="console">CREATE TABLE category (id BIGINT AUTO_INCREMENT,
 name VARCHAR(255),
 root_id INT,
 lft INT,
 rgt INT,
 level SMALLINT,
-PRIMARY KEY(id)) ENGINE = INNODB
-</code></pre>
+PRIMARY KEY(id)) ENGINE = INNODB</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Notice how the <code>root_id</code>, <code>lft</code>, <code>rgt</code> and <code>level</code>
 columns are automatically added. These columns are used to organize
 the tree structure and are handled automatically for you internally.</p>
@@ -1301,25 +1232,23 @@ very large behavior so it has its own <a href="hierarchical-data.html">Hierarchi
 It can be used for indexing and searching both database and files.</p>
 <p>Imagine we have a <code>Job</code> model for job postings and we want it to be
 easily searchable:</p>
-
-<pre><code class="">// models/Job.php
+<div class="console"><pre><code class="console">// models/Job.php
 class Job extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('title', 'string', 255);
-        $this-&gt;hasColumn('description', 'clob');
+        $this->hasColumn('title', 'string', 255);
+        $this->hasColumn('description', 'clob');
     }
 
     public function setUp()
     {
-        $this-&gt;actAs('Searchable', array(
-                'fields' =&gt; array('title', 'content')
+        $this->actAs('Searchable', array(
+                'fields' => array('title', 'content')
             )
         );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -1343,18 +1272,15 @@ the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <tr><td class="line-number noselect"><a name="line-number-892c04f40e7ac34b47d6ea284a0102412e23232e-7" class="line-number-anchor" /><a href="#line-number-892c04f40e7ac34b47d6ea284a0102412e23232e-7">7</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-892c04f40e7ac34b47d6ea284a0102412e23232e-8" class="line-number-anchor" /><a href="#line-number-892c04f40e7ac34b47d6ea284a0102412e23232e-8">8</a></td></tr></table></div></code></pre>
 <p>Lets check the SQL that is generated by the above models:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$sql = Doctrine_Core::generateSqlFromArray(array('Job'));
-echo $sql[0] . &quot;&quot;;
-echo $sql[1] . &quot;&quot;;
-echo $sql[2];
-</code></pre>
+<span class="noselect">$ </span>sql = Doctrine_Core::generateSqlFromArray(array('Job'));
+echo $sql[0] . "";
+echo $sql[1] . "";
+echo $sql[2];</code></pre></div>
 <p>The above code would output the following SQL query:</p>
-
-<pre><code class="">CREATE TABLE job_index (id BIGINT,
+<div class="console"><pre><code class="console">CREATE TABLE job_index (id BIGINT,
 keyword VARCHAR(200),
 field VARCHAR(50),
 position BIGINT,
@@ -1366,8 +1292,7 @@ CREATE TABLE job (id BIGINT AUTO_INCREMENT,
 title VARCHAR(255),
 description LONGTEXT,
 PRIMARY KEY(id)) ENGINE = INNODB
-ALTER TABLE job_index ADD FOREIGN KEY (id) REFERENCES job(id) ON UPDATE CASCADE ON DELETE CASCADE
-</code></pre>
+ALTER TABLE job_index ADD FOREIGN KEY (id) REFERENCES job(id) ON UPDATE CASCADE ON DELETE CASCADE</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Notice how the <code>job_index</code> table is automatically
 created for you and a foreign key between <code>job</code> and <code>job_index</code>
 was automatically created.</p>
@@ -1381,25 +1306,23 @@ chapter.</p>
 <p>The below is only a demo. The Geographical behavior can be used with any
 data record for determining the number of miles or kilometers between 2
 records.</p>
-
-<pre><code class="">// models/Zipcode.php
+<div class="console"><pre><code class="console">// models/Zipcode.php
 class Zipcode extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('zipcode', 'string', 255);
-        $this-&gt;hasColumn('city', 'string', 255);
-        $this-&gt;hasColumn('state', 'string', 2);
-        $this-&gt;hasColumn('county', 'string', 255);
-        $this-&gt;hasColumn('zip_class', 'string', 255);
+        $this->hasColumn('zipcode', 'string', 255);
+        $this->hasColumn('city', 'string', 255);
+        $this->hasColumn('state', 'string', 2);
+        $this->hasColumn('county', 'string', 255);
+        $this->hasColumn('zip_class', 'string', 255);
     }
 
     public function setUp()
     {
-        $this-&gt;actAs('Geographical');
+        $this->actAs('Geographical');
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -1431,16 +1354,13 @@ the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <tr><td class="line-number noselect"><a name="line-number-a6957ad44b8cfd575ddb55af3afc766d472b305b-11" class="line-number-anchor" /><a href="#line-number-a6957ad44b8cfd575ddb55af3afc766d472b305b-11">11</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-a6957ad44b8cfd575ddb55af3afc766d472b305b-12" class="line-number-anchor" /><a href="#line-number-a6957ad44b8cfd575ddb55af3afc766d472b305b-12">12</a></td></tr></table></div></code></pre>
 <p>Lets check the SQL that is generated by the above models:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$sql = Doctrine_Core::generateSqlFromArray(array('Zipcode'));
-echo $sql[0];
-</code></pre>
+<span class="noselect">$ </span>sql = Doctrine_Core::generateSqlFromArray(array('Zipcode'));
+echo $sql[0];</code></pre></div>
 <p>The above code would output the following SQL query:</p>
-
-<pre><code class="">CREATE TABLE zipcode (id BIGINT AUTO_INCREMENT,
+<div class="console"><pre><code class="console">CREATE TABLE zipcode (id BIGINT AUTO_INCREMENT,
 zipcode VARCHAR(255),
 city VARCHAR(255),
 state VARCHAR(2),
@@ -1448,48 +1368,40 @@ county VARCHAR(255),
 zip_class VARCHAR(255),
 latitude DOUBLE,
 longitude DOUBLE,
-PRIMARY KEY(id)) ENGINE = INNODB
-</code></pre>
+PRIMARY KEY(id)) ENGINE = INNODB</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Notice how the Geographical behavior automatically adds the
 <code>latitude</code> and <code>longitude</code> columns to the records used for
 calculating distance between two records. Below you will find some
 example usage.</p>
 </div>
 <p>First lets retrieve two different zipcode records:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$zipcode1 = Doctrine_Core::getTable('Zipcode')-&gt;findOneByZipcode('37209');
-$zipcode2 = Doctrine_Core::getTable('Zipcode')-&gt;findOneByZipcode('37388');
-</code></pre>
+<span class="noselect">$ </span>zipcode1 = Doctrine_Core::getTable('Zipcode')->findOneByZipcode('37209');
+<span class="noselect">$ </span>zipcode2 = Doctrine_Core::getTable('Zipcode')->findOneByZipcode('37388');</code></pre></div>
 <p>Now we can get the distance between those two records by using the
 <code>getDistance()</code> method that the behavior provides:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-echo $zipcode1-&gt;getDistance($zipcode2, $kilometers = false);
-</code></pre>
+echo $zipcode1->getDistance($zipcode2, $kilometers = false);</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>The 2nd argument of the <code>getDistance()</code> method is whether
 or not to return the distance in kilometers. The default is false.</p>
 </div>
 <p>Now lets get the 50 closest zipcodes that are not in the same city:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$q = $zipcode1-&gt;getDistanceQuery();
+<span class="noselect">$ </span>q = $zipcode1->getDistanceQuery();
 
-$q-&gt;orderby('miles asc')
-    -&gt;addWhere($q-&gt;getRootAlias() . '.city != ?', $zipcode1-&gt;city)
-    -&gt;limit(50);
+<span class="noselect">$ </span>q->orderby('miles asc')
+    ->addWhere($q->getRootAlias() . '.city != ?', $zipcode1->city)
+    ->limit(50);
 
-echo $q-&gt;getSqlQuery();
-</code></pre>
+echo $q->getSqlQuery();</code></pre></div>
 <p>The above call to <code>getSql()</code> would output the following SQL query:</p>
-
-<pre><code class="">SELECT
+<div class="console"><pre><code class="console">SELECT
 z.id AS z**id,
 z.zipcode AS z**zipcode,
 z.city AS z**city,
@@ -1503,33 +1415,29 @@ z.longitude AS z**longitude,
 FROM zipcode z
 WHERE z.city != ?
 ORDER BY z__0 asc
-LIMIT 50
-</code></pre>
+LIMIT 50</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Notice how the above SQL query includes a bunch of SQL that
 we did not write. This was automatically added by the behavior to
 calculate the number of miles between records.</p>
 </div>
 <p>Now we can execute the query and use the calculated number of miles
 values:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$result = $q-&gt;execute();
+<span class="noselect">$ </span>result = $q->execute();
 
 foreach ($result as $zipcode) {
-    echo $zipcode-&gt;city . &quot; - &quot; . $zipcode-&gt;miles . &quot;&quot;;
-    // You could also access $zipcode-&gt;kilometers
-}
-</code></pre>
+    echo $zipcode->city . " - " . $zipcode->miles . "";
+    // You could also access $zipcode->kilometers
+}</code></pre></div>
 <p>Get some sample zip code data to test this</p>
 <p><a href="http://www.populardata.com/zip_codes.zip">http://www.populardata.com/zip_codes.zip</a></p>
 <p>Download and import the csv file with the following function:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-function parseCsvFile($file, $columnheadings = false, $delimiter = ',', $enclosure = &quot;\&quot;&quot;)
+function parseCsvFile($file, $columnheadings = false, $delimiter = ',', $enclosure = "\"")
 {
     $row    = 1;
     $rows   = array();
@@ -1537,10 +1445,10 @@ function parseCsvFile($file, $columnheadings = false, $delimiter = ',', $enclosu
 
     while (($data = fgetcsv($handle, 1000, $delimiter, $enclosure)) !== FALSE) {
 
-        if (!($columnheadings == false) &amp;&amp; ($row == 1)) {
+        if (!($columnheadings == false) && ($row == 1)) {
             $headingTexts = $data;
         } elseif (!($columnheadings == false)) {
-            foreach ($data as $key =&gt; $value) {
+            foreach ($data as $key => $value) {
                 unset($data[$key]);
                 $data[$headingTexts[$key]] = $value;
             }
@@ -1555,14 +1463,13 @@ function parseCsvFile($file, $columnheadings = false, $delimiter = ',', $enclosu
     return $rows;
 }
 
-$array = parseCsvFile('zipcodes.csv', false);
+<span class="noselect">$ </span>array = parseCsvFile('zipcodes.csv', false);
 
-foreach ($array as $key =&gt; $value) {
+foreach ($array as $key => $value) {
     $zipcode = new Zipcode();
-    $zipcode-&gt;fromArray($value);
-    $zipcode-&gt;save();
-}
-</code></pre>
+    $zipcode->fromArray($value);
+    $zipcode->save();
+}</code></pre></div>
 <a id="behaviors-core-behaviors-softdelete"></a>
 <hr />
 <a class="section-anchor" id="softdelete" name="softdelete"></a><h3 class="section-header"><a href="#softdelete">SoftDelete<i class="fas fa-link"></i></a></h3>
@@ -1572,24 +1479,22 @@ behavior which overrides the <code>delete()</code> functionality and adds a
 the record from the database, a delete_at date is set. Below is an
 example of how to create a model with the <code>SoftDelete</code> behavior being
 used.</p>
-
-<pre><code class="">// models/SoftDeleteTest.php
+<div class="console"><pre><code class="console">// models/SoftDeleteTest.php
 class SoftDeleteTest extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('name', 'string', null, array(
-                'primary' =&gt; true
+        $this->hasColumn('name', 'string', null, array(
+                'primary' => true
             )
         );
     }
 
     public function setUp()
     {
-        $this-&gt;actAs('SoftDelete');
+        $this->actAs('SoftDelete');
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -1617,19 +1522,15 @@ the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <tr><td class="line-number noselect"><a name="line-number-97c37e6c1f856bfee5375fc10551319d881bc8e0-9" class="line-number-anchor" /><a href="#line-number-97c37e6c1f856bfee5375fc10551319d881bc8e0-9">9</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-97c37e6c1f856bfee5375fc10551319d881bc8e0-10" class="line-number-anchor" /><a href="#line-number-97c37e6c1f856bfee5375fc10551319d881bc8e0-10">10</a></td></tr></table></div></code></pre>
 <p>Lets check the SQL that is generated by the above models:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$sql = Doctrine_Core::generateSqlFromArray(array('SoftDeleteTest'));
-echo $sql[0];
-</code></pre>
+<span class="noselect">$ </span>sql = Doctrine_Core::generateSqlFromArray(array('SoftDeleteTest'));
+echo $sql[0];</code></pre></div>
 <p>The above code would output the following SQL query:</p>
-
-<pre><code class="">CREATE TABLE soft_delete_test (name VARCHAR(255),
+<div class="console"><pre><code class="console">CREATE TABLE soft_delete_test (name VARCHAR(255),
 deleted_at DATETIME DEFAULT NULL,
-PRIMARY KEY(name)) ENGINE = INNODB
-</code></pre>
+PRIMARY KEY(name)) ENGINE = INNODB</code></pre></div>
 <p>Now lets put the behavior in action.</p>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>You are required to enable DQL callbacks in order for all
 executed queries to have the dql callbacks executed on them. In the
@@ -1638,31 +1539,25 @@ exclude all records where the deleted\_at flag is set with an
 additional WHERE condition.</p>
 </div>
 <p><strong>Enable DQL Callbacks</strong></p>
-
-<pre><code class="">// bootstrap.php
+<div class="console"><pre><code class="console">// bootstrap.php
 
 // ...
-$manager-&gt;setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
-</code></pre>
+<span class="noselect">$ </span>manager->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);</code></pre></div>
 <p>Now save a new record so we can test the <code>SoftDelete</code> functionality:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$record       = new SoftDeleteTest();
-$record-&gt;name = 'new record';
-$record-&gt;save();
-</code></pre>
+<span class="noselect">$ </span>record       = new SoftDeleteTest();
+<span class="noselect">$ </span>record->name = 'new record';
+<span class="noselect">$ </span>record->save();</code></pre></div>
 <p>Now when we call <code>delete()</code> the <code>deleted_at</code> flag will be set to
 true:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$record-&gt;delete();
+<span class="noselect">$ </span>record->delete();
 
-print_r($record-&gt;toArray());
-</code></pre>
+print_r($record->toArray());</code></pre></div>
 <p>The above example would produce the following output:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
 Array
@@ -1671,70 +1566,62 @@ Array
     [deleted_at] => 2009-09-01 00:59:01
 )</code></pre></div>
 <p>Also, when we select some data the query is modified for you:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$q = Doctrine_Query::create()
-    -&gt;from('SoftDeleteTest t');
+<span class="noselect">$ </span>q = Doctrine_Query::create()
+    ->from('SoftDeleteTest t');
 
-echo $q-&gt;getSqlQuery();
-</code></pre>
+echo $q->getSqlQuery();</code></pre></div>
 <p>The above call to <code>getSql()</code> would output the following SQL query:</p>
-
-<pre><code class="">SELECT
+<div class="console"><pre><code class="console">SELECT
 s.name AS s**name,
 s.deleted_at AS s**deleted_at
 FROM soft_delete_test s
-WHERE (s.deleted_at IS NULL)
-</code></pre>
+WHERE (s.deleted_at IS NULL)</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>Notice how the where condition is automatically added to
 only return the records that have not been deleted.</p>
 </div>
 <p>Now if we execute the query:</p>
-
-<pre><code class="">// test.php
+<div class="console"><pre><code class="console">// test.php
 
 // ...
-$count = $q-&gt;count();
-echo $count;
-</code></pre>
+<span class="noselect">$ </span>count = $q->count();
+echo $count;</code></pre></div>
 <p>The above would be echo 0 because it would exclude the record saved
 above because the delete flag was set.</p>
 <hr />
 <a class="section-anchor" id="nesting-behaviors" name="nesting-behaviors"></a><h2 class="section-header"><a href="#nesting-behaviors">Nesting Behaviors<i class="fas fa-link"></i></a></h2>
 <p>Below is an example of several behaviors to give a complete wiki
 database that is versionable, searchable, sluggable, and full I18n.</p>
-
-<pre><code class="">class Wiki extends Doctrine_Record
+<div class="console"><pre><code class="console">class Wiki extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('title', 'string', 255);
-        $this-&gt;hasColumn('content', 'string');
+        $this->hasColumn('title', 'string', 255);
+        $this->hasColumn('content', 'string');
     }
 
     public function setUp()
     {
-        $options  = array('fields' =&gt; array('title', 'content'));
+        $options  = array('fields' => array('title', 'content'));
         $auditLog = new Doctrine_Template_Versionable($options);
         $search   = new Doctrine_Template_Searchable($options);
         $slug     = new Doctrine_Template_Sluggable(array(
-                'fields' =&gt; array('title')
+                'fields' => array('title')
             )
         );
         $i18n = new Doctrine_Template_I18n($options);
 
-        $i18n-&gt;addChild($auditLog)
-            -&gt;addChild($search)
-            -&gt;addChild($slug);
+        $i18n->addChild($auditLog)
+            ->addChild($search)
+            ->addChild($slug);
 
-        $this-&gt;actAs($i18n);
+        $this->actAs($i18n);
 
-        $this-&gt;actAs('Timestampable');
+        $this->actAs('Timestampable');
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -1783,25 +1670,23 @@ at run-time and no files containing the classes are ever written to
 disk. This can be changed with a configuration option. Below is an
 example of how to configure the I18n behavior to generate the classes
 and write them to files instead of evaluating them at run-time.</p>
-
-<pre><code class="">class NewsArticle extends Doctrine_Record
+<div class="console"><pre><code class="console">class NewsArticle extends Doctrine_Record
 {
     public function setTableDefinition() {
-        $this-&gt;hasColumn('title', 'string', 255);
-        $this-&gt;hasColumn('body', 'string', 255); $this-&gt;hasColumn('author', 'string', 255);
+        $this->hasColumn('title', 'string', 255);
+        $this->hasColumn('body', 'string', 255); $this->hasColumn('author', 'string', 255);
     }
 
     public function setUp()
     {
-        $this-&gt;actAs('I18n', array(
-                'fields'          =&gt; array('title', 'body'),
-                'generateFiles'   =&gt; true,
-                'generatePath'    =&gt; '/path/to/generate'
+        $this->actAs('I18n', array(
+                'fields'          => array('title', 'body'),
+                'generateFiles'   => true,
+                'generatePath'    => '/path/to/generate'
             )
         );
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
@@ -1840,15 +1725,13 @@ can do this by using the static <code>Doctrine_Core::initializeModels()</code>
 method.</p>
 <p>For example if you want to query the translation table for a
 <code>BlogPost</code> model you will need to run the following code:</p>
+<div class="console"><pre><code class="console">Doctrine_Core::initializeModels(array('BlogPost'));
 
-<pre><code class="">Doctrine_Core::initializeModels(array('BlogPost'));
+<span class="noselect">$ </span>q = Doctrine_Query::create()
+    ->from('BlogPostTranslation t')
+    ->where('t.id = ? AND t.lang = ?', array(1, 'en'));
 
-$q = Doctrine_Query::create()
-    -&gt;from('BlogPostTranslation t')
-    -&gt;where('t.id = ? AND t.lang = ?', array(1, 'en'));
-
-$translations = $q-&gt;execute();
-</code></pre>
+<span class="noselect">$ </span>translations = $q->execute();</code></pre></div>
 <div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>This is required because the behaviors are not instantiated
 until the model is instantiated for the first time. The above
 <code>initializeModels()</code> method instantiates the passed models and

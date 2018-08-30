@@ -257,35 +257,30 @@ testing suite.</p>
 <a class="section-anchor" id="importing" name="importing"></a><h2 class="section-header"><a href="#importing">Importing<i class="fas fa-link"></i></a></h2>
 <p>Importing data fixtures is just as easy as dumping. You can use the
 <code>loadData()</code> function:</p>
-
-<pre><code class="">Doctrine_Core::loadData('/path/to/data.yml');
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>Doctrine_Core::loadData('/path/to/data.yml');
+</code></pre></div>
 <p>You can either specify an individual yml file like we have done above,
 or you can specify an entire directory:</p>
-
-<pre><code class="">Doctrine_Core::loadData('/path/to/directory');
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>Doctrine_Core::loadData('/path/to/directory');
+</code></pre></div>
 <p>If you want to append the imported data to the already existing data
 then you need to use the second argument of the <code>loadData()</code> function.
 If you don't specify the second argument as true then the data will be
 purged before importing.</p>
 <p>Here is how you can append instead of purging:</p>
-
-<pre><code class="">Doctrine_Core::loadData('/path/to/data.yml', true);
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>Doctrine_Core::loadData('/path/to/data.yml', true);
+</code></pre></div>
 <hr />
 <a class="section-anchor" id="dumping" name="dumping"></a><h2 class="section-header"><a href="#dumping">Dumping<i class="fas fa-link"></i></a></h2>
 <p>You can dump data to fixtures file in many different formats to help you
 get started with writing your data fixtures. You can dump your data
 fixtures to one big YAML file like the following:</p>
-
-<pre><code class="">Doctrine_Core::dumpData('/path/to/data.yml');
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>Doctrine_Core::dumpData('/path/to/data.yml');
+</code></pre></div>
 <p>Or you can optionally dump all data to individual files. One YAML file
 per model like the following:</p>
-
-<pre><code class="">Doctrine_Core::dumpData('/path/to/directory', true);
-</code></pre>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>Doctrine_Core::dumpData('/path/to/directory', true);
+</code></pre></div>
 <hr />
 <a class="section-anchor" id="implement" name="implement"></a><h2 class="section-header"><a href="#implement">Implement<i class="fas fa-link"></i></a></h2>
 <p>Now that we know a little about data fixtures lets implement them in to
@@ -299,12 +294,10 @@ sections.</p>
 <p>Now we need to just modify our <code>generate.php</code> script to include the
 code for loading the data fixtures. Add the following code to the bottom
 of <code>generate.php</code>:</p>
-
-<pre><code class="">// generate.php
+<div class="console"><pre><code class="console">// generate.php
 
 // ...
-Doctrine_Core::loadData('fixtures');
-</code></pre>
+Doctrine_Core::loadData('fixtures');</code></pre></div>
 <hr />
 <a class="section-anchor" id="writing" name="writing"></a><h2 class="section-header"><a href="#writing">Writing<i class="fas fa-link"></i></a></h2>
 <p>You can write your fixtures files manually and load them in to your
@@ -312,28 +305,27 @@ applications. Below is a sample <code>data.yml</code> fixtures file. You can als
 split your data fixtures file up in to multiple files. Doctrine will
 read all fixtures files and parse them, then load all data.</p>
 <p>For the next several examples we will use the following models:</p>
-
-<pre><code class="">// models/Resouce.php
+<div class="console"><pre><code class="console">// models/Resouce.php
 class Resource extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('name', 'string', 255);
-        $this-&gt;hasColumn('resource_type_id', 'integer');
+        $this->hasColumn('name', 'string', 255);
+        $this->hasColumn('resource_type_id', 'integer');
     }
 
     public function setUp()
     {
-        $this-&gt;hasOne('ResourceType as Type', array(
-                'local' =&gt; 'resource_type_id',
-                'foreign' =&gt; 'id'
+        $this->hasOne('ResourceType as Type', array(
+                'local' => 'resource_type_id',
+                'foreign' => 'id'
             )
         );
 
-        $this-&gt;hasMany('Tag as Tags', array(
-                'local' =&gt; 'resource_id',
-                'foreign' =&gt; 'tag_id',
-                'refClass' =&gt; 'ResourceTag'
+        $this->hasMany('Tag as Tags', array(
+                'local' => 'resource_id',
+                'foreign' => 'tag_id',
+                'refClass' => 'ResourceTag'
             )
         );
     }
@@ -344,14 +336,14 @@ class ResourceType extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('name', 'string', 255);
+        $this->hasColumn('name', 'string', 255);
     }
 
     public function setUp()
     {
-        $this-&gt;hasMany('Resource as Resouces', array(
-                'local' =&gt; 'id',
-                'foreign' =&gt; 'resource_type_id'
+        $this->hasMany('Resource as Resouces', array(
+                'local' => 'id',
+                'foreign' => 'resource_type_id'
             )
         );
     }
@@ -362,15 +354,15 @@ class Tag extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('name', 'string', 255);
+        $this->hasColumn('name', 'string', 255);
     }
 
     public function setUp()
     {
-        $this-&gt;hasMany('Resource as Resources', array(
-                'local' =&gt; 'tag_id',
-                'foreign' =&gt; 'resource_id',
-                'refClass' =&gt; 'ResourceTag'
+        $this->hasMany('Resource as Resources', array(
+                'local' => 'tag_id',
+                'foreign' => 'resource_id',
+                'refClass' => 'ResourceTag'
             )
         );
     }
@@ -381,8 +373,8 @@ class ResourceTag extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('resource_id', 'integer');
-        $this-&gt;hasColumn('tag_id', 'integer');
+        $this->hasColumn('resource_id', 'integer');
+        $this->hasColumn('tag_id', 'integer');
     }
 }
 
@@ -391,15 +383,15 @@ class BaseCategory extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('name', 'string', 255, array(
-                'type' =&gt; 'string', 'length' =&gt; '255'
+        $this->hasColumn('name', 'string', 255, array(
+                'type' => 'string', 'length' => '255'
             )
         );
     }
 
     public function setUp()
     {
-        $this-&gt;actAs('NestedSet');
+        $this->actAs('NestedSet');
     }
 }
 
@@ -407,23 +399,22 @@ class BaseArticle extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this-&gt;hasColumn('title', 'string', 255, array(
-                'type' =&gt; 'string', 'length' =&gt; '255'
+        $this->hasColumn('title', 'string', 255, array(
+                'type' => 'string', 'length' => '255'
             )
         );
 
-        $this-&gt;hasColumn('body', 'clob', null, array(
-                'type' =&gt; 'clob'
+        $this->hasColumn('body', 'clob', null, array(
+                'type' => 'clob'
             )
         );
     }
 
     public function setUp()
     {
-        $this-&gt;actAs('I18n', array('fields' =&gt; array('title', 'body')));
+        $this->actAs('I18n', array('fields' => array('title', 'body')));
     }
-}
-</code></pre>
+}</code></pre></div>
 <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 <pre class="code-block-table"><code class="yaml"><button
