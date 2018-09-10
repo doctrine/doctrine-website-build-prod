@@ -35,8 +35,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/css/style.css?5867a7"
-            integrity="sha384-+1pCIXgvWRNNW94am2iwEen5oANZ9PTI/GPh+HQJgXc4yNU9nRzeqXiFZWIsShcm"
+            href="https://www.doctrine-project.org/css/style.css?31b16e"
+            integrity="sha384-6D5mkroLnxrM96aFx3ZzHDWenPO1pEo9vHWZ/hCITj1SeSVLnEAHQJ3KHvJkmmcm"
             crossorigin="anonymous"
         />
 
@@ -489,54 +489,56 @@ $evm-&gt;dispatchEvent(TestEventSubscriber::preFoo);</td></tr>
 <a class="section-anchor" id="lifecycle-events" name="lifecycle-events"></a><h2 class="section-header"><a href="#lifecycle-events">Lifecycle Events<i class="fas fa-link"></i></a></h2>
 <p>The DocumentManager and UnitOfWork trigger several events during
 the life-time of their registered documents.</p>
-<p>-<br />   preRemove - The preRemove event occurs for a given document before
+<ul><li class="dash">   preRemove - The preRemove event occurs for a given document before
    the respective DocumentManager remove operation for that document
-   is executed.
--<br />   postRemove - The postRemove event occurs for a document after the
+   is executed.</li>
+<li class="dash">   postRemove - The postRemove event occurs for a document after the
    document has been removed. It will be invoked after the database
-   delete operations.
--<br />   prePersist - The prePersist event occurs for a given document
+   delete operations.</li>
+<li class="dash">   prePersist - The prePersist event occurs for a given document
    before the respective DocumentManager persist operation for that
-   document is executed.
--<br />   postPersist - The postPersist event occurs for a document after
+   document is executed.</li>
+<li class="dash">   postPersist - The postPersist event occurs for a document after
    the document has been made persistent. It will be invoked after the
    database insert operations. Generated primary key values are
-   available in the postPersist event.
--<br />   preUpdate - The preUpdate event occurs before the database update
-   operations to document data.
--<br />   postUpdate - The postUpdate event occurs after the database update
-   operations to document data.
--
+   available in the postPersist event.</li>
+<li class="dash">   preUpdate - The preUpdate event occurs before the database update
+   operations to document data.</li>
+<li class="dash">   postUpdate - The postUpdate event occurs after the database update
+   operations to document data.</li>
+<li class="dash">
    preLoad - The preLoad event occurs for a document before the
    document has been loaded into the current DocumentManager from the
-   database or after the refresh operation has been applied to it.
--
+   database or after the refresh operation has been applied to it.</li>
+<li class="dash">
    postLoad - The postLoad event occurs for a document after the
    document has been loaded into the current DocumentManager from the
-   database or after the refresh operation has been applied to it.
--<br />   loadClassMetadata - The loadClassMetadata event occurs after the
+   database or after the refresh operation has been applied to it.</li>
+<li class="dash">   loadClassMetadata - The loadClassMetadata event occurs after the
    mapping metadata for a class has been loaded from a mapping source
-   (annotations/xml/yaml).
--
+   (annotations/xml/yaml).</li>
+<li class="dash">
    preFlush - The preFlush event occurs before the change-sets of all
    managed documents are computed. This both a lifecycle call back and
-   and listener.
--
+   and listener.</li>
+<li class="dash">
    postFlush - The postFlush event occurs after the change-sets of all
-   managed documents are computed.
--<br />   onFlush - The onFlush event occurs after the change-sets of all
+   managed documents are computed.</li>
+<li class="dash">   onFlush - The onFlush event occurs after the change-sets of all
    managed documents are computed. This event is not a lifecycle
-   callback.
--
+   callback.</li>
+<li class="dash">
    onClear - The onClear event occurs after the UnitOfWork has had
-   its state cleared.
--
+   its state cleared.</li>
+<li class="dash">
    documentNotFound - The documentNotFound event occurs when a proxy object
-   could not be initialized. This event is not a lifecycle callback.
--
+   could not be initialized. This event is not a lifecycle callback.</li>
+<li class="dash">
    postCollectionLoad - The postCollectionLoad event occurs just after
    collection has been initialized (loaded) and before new elements
-   are re-added to it.</p>
+   are re-added to it.</li>
+</ul>
+
 <p>You can access the Event constants from the <code>Events</code> class in the
 ODM package.</p>
 <pre class="code-block-table"><code class="php"><button
@@ -555,19 +557,21 @@ ODM package.</p>
 <tr><td class="line-number noselect"><a name="line-number-5b4bde6abb253d13bb749bec2ac323bc748c2fbd-5" class="line-number-anchor" /><a href="#line-number-5b4bde6abb253d13bb749bec2ac323bc748c2fbd-5">5</a></td></tr></table></div></code></pre>
 <p>These can be hooked into by two different types of event
 listeners:</p>
-<p>-<br />   Lifecycle Callbacks are methods on the document classes that are
+<ul><li class="dash">   Lifecycle Callbacks are methods on the document classes that are
    called when the event is triggered. They receive instances
-   of <code>Doctrine\ODM\MongoDB\Event\LifecycleEventArgs</code> (see relevant<br />   examples below) as arguments and are specifically designed to allow<br />   changes inside the document classes state.
--<br />   Lifecycle Event Listeners are classes with specific callback
+   of <code>Doctrine\ODM\MongoDB\Event\LifecycleEventArgs</code> (see relevant<br />   examples below) as arguments and are specifically designed to allow<br />   changes inside the document classes state.</li>
+<li class="dash">   Lifecycle Event Listeners are classes with specific callback
    methods that receives some kind of <code>EventArgs</code> instance which
    give access to the document, DocumentManager or other relevant
-   data.</p>
-<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>All Lifecycle events that happen during the <code>flush()</code> of
+   data.</li>
+</ul>
+
+<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>All Lifecycle events that happen during the <code>flush()</code> of
 a DocumentManager have very specific constraints on the allowed
 operations that can be executed. Please read the
 <em>Implementing Event Listeners</em> section very carefully to understand
 which operations are allowed in which lifecycle event.</p>
-</div>
+</td></tr></table></div>
 <a class="section-anchor" id="lifecycle-callbacks" name="lifecycle-callbacks"></a><h2 class="section-header"><a href="#lifecycle-callbacks">Lifecycle Callbacks<i class="fas fa-link"></i></a></h2>
 <p>A lifecycle event is a regular event with the additional feature of
 providing a mechanism to register direct callbacks inside the
@@ -1077,9 +1081,9 @@ $evm-&gt;addEventListener(Events::preUpdate, $test);</td></tr>
 <tr><td class="line-number noselect"><a name="line-number-96d62047cd95b2a3b66b02f6a049654d52937901-11" class="line-number-anchor" /><a href="#line-number-96d62047cd95b2a3b66b02f6a049654d52937901-11">11</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-96d62047cd95b2a3b66b02f6a049654d52937901-12" class="line-number-anchor" /><a href="#line-number-96d62047cd95b2a3b66b02f6a049654d52937901-12">12</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-96d62047cd95b2a3b66b02f6a049654d52937901-13" class="line-number-anchor" /><a href="#line-number-96d62047cd95b2a3b66b02f6a049654d52937901-13">13</a></td></tr></table></div></code></pre>
-<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>If you modify a document in the preUpdate event you must call <code>recomputeSingleDocumentChangeSet</code>
+<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>If you modify a document in the preUpdate event you must call <code>recomputeSingleDocumentChangeSet</code>
 for the modified document in order for the changes to be persisted.</p>
-</div>
+</td></tr></table></div>
 <a class="section-anchor" id="onclear" name="onclear"></a><h3 class="section-header"><a href="#onclear">onClear<i class="fas fa-link"></i></a></h3>
 <pre class="code-block-table"><code class="php"><button
             type="button"
@@ -1237,8 +1241,8 @@ $evm-&gt;addEventListener(Events::postPersist, $test);</td></tr>
 <tr><td class="line-number noselect"><a name="line-number-e32b839b07831770ffe266c74174f0cd09c989fb-15" class="line-number-anchor" /><a href="#line-number-e32b839b07831770ffe266c74174f0cd09c989fb-15">15</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-e32b839b07831770ffe266c74174f0cd09c989fb-16" class="line-number-anchor" /><a href="#line-number-e32b839b07831770ffe266c74174f0cd09c989fb-16">16</a></td></tr></table></div></code></pre>
 <a class="section-anchor" id="postcollectionload" name="postcollectionload"></a><h3 class="section-header"><a href="#postcollectionload">postCollectionLoad<i class="fas fa-link"></i></a></h3>
-<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i><p>This event was introduced in version 1.1</p>
-</div>
+<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>This event was introduced in version 1.1</p>
+</td></tr></table></div>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
