@@ -292,7 +292,7 @@ to PHPCR when you call <code>DocumentManager#flush()</code>.</p>
 <p>A Unit of Work can be manually closed by calling <code>DocumentManager#close()</code>.
 Any changes to documents within this UnitOfWork that have not yet been
 persisted are lost.</p>
-<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>It is very important to understand that only
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>It is very important to understand that only
 <code>DocumentManager::flush()</code> ever causes write operations against the
 repository to be executed. Any other methods such as
 <code>DocumentManager::persist($document)</code> or
@@ -301,7 +301,7 @@ perform these operations during flush.</p>
 <p>Not calling <code>DocumentManager::flush()</code> will lead to all changes
 during that request being lost.</p>
 </td></tr></table></div>
-<div class="alert tip bg-success text-light border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-question-circle mr-2"></i></td><td><p>The <code>DocumentManager</code> is very similar to the Doctrine ORM EntityManager and
+<div class="alert tip-admonition bg-success text-light border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-question-circle mr-2"></i></td><td><p>The <code>DocumentManager</code> is very similar to the Doctrine ORM EntityManager and
 this chapter is similar to its <a href="https://doctrine-orm.readthedocs.org/en/latest/reference/working-with-objects.html">corresponding ORM chapter</a>.
 This chapter tries to help you by highlighting the places where PHPCR-ODM
 is different from the ORM.</p>
@@ -317,7 +317,7 @@ $article-&gt;setHeadline('Hello World dude!');
 $article2 = $documentManager-&gt;find(null, '/cms/article/hello-world');
 echo $article2-&gt;getHeadline(); // Hello World dude!
 </code></pre>
-<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The first argument to <code>find()</code> is the document class name. While the ORM
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The first argument to <code>find()</code> is the document class name. While the ORM
 has a table per class and thus always needs the document class name,
 PHPCR-ODM has one tree for all documents. The above call will find you
 whatever document is at that path. Note that you may optionally specify
@@ -346,7 +346,7 @@ start over. We use this regularly in our unit tests to enforce
 loading documents from the repository again instead of serving them
 from the identity map. You can call <code>DocumentManager::clear()</code> to
 achieve this result.</p>
-<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>In PHPCR-ODM, the ID is the PHPCR path of the document. This means it is
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>In PHPCR-ODM, the ID is the PHPCR path of the document. This means it is
 possible to change the ID of a document by moving it in the tree using the
 the <code>DocumentManager::move()</code> operation.
 To create a reference to a document that is stable over move operations,
@@ -408,7 +408,7 @@ passing you back a real Author instance and a collection of
 comments, Doctrine will create proxy instances for you. Only if you
 access these proxies for the first time they will go through the
 <code>DocumentManager</code> and load their state from the repository.</p>
-<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>In PHPCR-ODM, relations between documents are expressed in <em>references</em>.
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>In PHPCR-ODM, relations between documents are expressed in <em>references</em>.
 References are directed links. You can map the backlinks using the
 <code>Referrers</code> mapping.</p>
 </td></tr></table></div>
@@ -454,7 +454,7 @@ methods along the lines of the <code>getName()</code> method shown below:</p>
     // .. other public methods of User
 }
 </code></pre>
-<div class="alert warning bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td><td><p>Traversing the object graph for parts that are lazy-loaded will
+<div class="alert warning-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td><td><p>Traversing the object graph for parts that are lazy-loaded will
 easily trigger lots of repository lookups and will perform badly if used
 too heavily. If you often use child documents for example, look into
 the <code>fetchDepth</code> configuration.</p>
@@ -466,7 +466,7 @@ MANAGED. You only need to do that on object instantiation. From now on,
 whenever you modify the object you loaded from the <code>DocumentManager</code>, it will
 automatically be synchronized with the repository when
 <code>DocumentManager::flush()</code> is invoked.</p>
-<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Invoking the <code>persist</code> method for a document does NOT
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Invoking the <code>persist</code> method for a document does NOT
 cause an immediate addNode on the repository.
 Doctrine applies a strategy called &quot;transactional write-behind&quot;,
 which means that it will delay most SQL commands until
@@ -481,7 +481,7 @@ $user-&gt;setName('Mr.Right');
 $dm-&gt;persist($user);
 $dm-&gt;flush();
 </code></pre>
-<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Generated document identifiers / primary keys are
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Generated document identifiers / primary keys are
 guaranteed to be available after the next successful flush
 operation that involves the document in question. You may not rely on
 a generated identifier to be available directly after invoking
@@ -509,7 +509,7 @@ the <code>DocumentManager::remove($document)</code> method. By applying the
 <code>remove</code> operation on some document, that document becomes REMOVED,
 which means that its persistent state will be deleted once
 <code>DocumentManager::flush()</code> is invoked.</p>
-<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Just like <code>persist</code>, invoking <code>remove</code> with a document
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Just like <code>persist</code>, invoking <code>remove</code> with a document
 does NOT cause an immediate remove() to be issued on the
 repository. The document will be deleted on the next invocation of
 <code>DocumentManager::flush()</code> that involves that document. This
@@ -553,7 +553,7 @@ its a Single association it will pass this document to
 will loop over all its elements and pass them to<code>DocumentManager::remove()</code>.
 In both cases the cascade remove semantics are applied recursively.
 For large object graphs this removal strategy can be very costly.</p>
-<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Contrary to the ORM, the PHPCR query language knows no DELETE statement.
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Contrary to the ORM, the PHPCR query language knows no DELETE statement.
 If you expect to remove large object graphs, try to model them in a way
 that you can simply remove the parent, as children removal is as cheap
 as having a relational database cascade removal through foreign keys.</p>
@@ -639,7 +639,7 @@ used as <code>persist</code> and <code>remove</code>. The most common scenario f
 the <code>merge</code> operation is to reattach documents to a <code>DocumentManager</code>
 that come from some cache (and are therefore detached) and you want
 to modify and persist such a document.</p>
-<div class="alert warning bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td><td><p>If you need to perform multiple merges of documents that share
+<div class="alert warning-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td><td><p>If you need to perform multiple merges of documents that share
 certain subparts of their object-graphs and cascade merge, then you
 have to call <code>DocumentManager::clear()</code> between the successive
 calls to <code>DocumentManager::merge()</code>. Otherwise you might end up
@@ -647,7 +647,7 @@ with multiple copies of the &quot;same&quot; object in the repository, however
 with different IDs, or a duplicate ID conflict - depending on how
 you generate IDs.</p>
 </td></tr></table></div>
-<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>If you load some detached documents from a cache and you do
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>If you load some detached documents from a cache and you do
 not need to persist or delete them or otherwise make use of them
 without the need for persistence services there is no need to use
 <code>merge</code>. I.e. you can simply pass detached objects from a cache
@@ -733,7 +733,7 @@ Work. This size affects the performance of flush() operations due
 to change tracking (see &quot;Change Tracking Policies&quot;) and, of course,
 memory consumption, so you may want to check it from time to time
 during development.</p>
-<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Do not invoke <code>flush</code> after every change to a document
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Do not invoke <code>flush</code> after every change to a document
 or every single invocation of persist/remove/merge/... This is an
 anti-pattern and unnecessarily reduces the performance of your
 application. Instead, form units of work that operate on your
@@ -747,7 +747,7 @@ single HTTP request there should be usually no need for invoking
 instance the <code>DocumentManager</code> is currently using:</p>
 <pre><code class="">$uow = $em-&gt;getUnitOfWork();
 </code></pre>
-<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Directly manipulating a UnitOfWork is not recommended.
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Directly manipulating a UnitOfWork is not recommended.
 When working directly with the UnitOfWork API, respect methods
 marked as INTERNAL by not using them and carefully read the API
 documentation.</p>
@@ -820,7 +820,7 @@ $users = $dm-&gt;getRepository('MyProject\Domain\User')-&gt;findBy(array('age' =
 // A single user by its nickname
 $user = $dm-&gt;getRepository('MyProject\Domain\User')-&gt;findOneBy(array('nickname' =&gt; 'romanb'));
 </code></pre>
-<div class="alert warning bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td><td><p>Note that due to the nature of PHPCR, the primary identifier is no field.
+<div class="alert warning-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td><td><p>Note that due to the nature of PHPCR, the primary identifier is no field.
 You can thus not use <code>findBy(array('id' =&gt; '/my/path'))</code> but should
 pass the ID into the <code>find</code> method. There is also findMany if you
 need to fetch several documents.</p>
@@ -837,7 +837,7 @@ limit and offset as second to fourth parameters:</p>
     -&gt;getRepository('MyProject\Domain\User')
     -&gt;findBy(array('age' =&gt; 20), array('name' =&gt; 'ASC'), 10, 0);
 </code></pre>
-<div class="alert note bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The ORM has a shortcut for querying by one field, using the <code>__call</code>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The ORM has a shortcut for querying by one field, using the <code>__call</code>
 handler. In PHPCR-ODM this is not yet implemented, so the rest of this
 section does not work yet.</p>
 </td></tr></table></div>
