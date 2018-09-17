@@ -338,6 +338,13 @@ one bundle that integrates them into Symfony.</p>
 <tr><td class="line-number noselect"><a name="line-number-b317a3f95799c4aff7f8d0bfacaa0ad5eda9030b-3" class="line-number-anchor" /><a href="#line-number-b317a3f95799c4aff7f8d0bfacaa0ad5eda9030b-3">3</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-b317a3f95799c4aff7f8d0bfacaa0ad5eda9030b-4" class="line-number-anchor" /><a href="#line-number-b317a3f95799c4aff7f8d0bfacaa0ad5eda9030b-4">4</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-b317a3f95799c4aff7f8d0bfacaa0ad5eda9030b-5" class="line-number-anchor" /><a href="#line-number-b317a3f95799c4aff7f8d0bfacaa0ad5eda9030b-5">5</a></td></tr></table></div></code></pre>
+<p>If you are planning to use `autowiring`, you must install version 3.5 or later:</p>
+<pre><code class="">{
+    &quot;require&quot;: {
+        &quot;doctrine/mongodb-odm-bundle&quot;: &quot;^3.5&quot;
+    },
+}
+</code></pre>
 <p>You can now install the new dependencies by running Composer's <code>update</code>
 command from the directory where your <code>composer.json</code> file is located:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php composer.phar update doctrine/mongodb-odm-bundle
@@ -432,6 +439,10 @@ the MongoDB ODM across your application:</p>
 <tr><td class="line-number noselect"><a name="line-number-fd74a429b3f7840cee21c5379735cb2973a1605b-8" class="line-number-anchor" /><a href="#line-number-fd74a429b3f7840cee21c5379735cb2973a1605b-8">8</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-fd74a429b3f7840cee21c5379735cb2973a1605b-9" class="line-number-anchor" /><a href="#line-number-fd74a429b3f7840cee21c5379735cb2973a1605b-9">9</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-fd74a429b3f7840cee21c5379735cb2973a1605b-10" class="line-number-anchor" /><a href="#line-number-fd74a429b3f7840cee21c5379735cb2973a1605b-10">10</a></td></tr></table></div></code></pre>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>If you are using Symfony Flex, you can allow `recipes` in the &quot;contrib&quot; repository to<br />work with this bundle by executing the following command:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>composer config extra.symfony.allow-contrib true
+</code></pre></div>
+</td></tr></table></div>
 <div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Of course, you'll also need to make sure that the MongoDB server is running
 in the background. For more details, see the MongoDB <a href="http://www.mongodb.org/display/DOCS/Quickstart">Quick Start</a> guide.</p>
 </td></tr></table></div>
@@ -675,6 +686,55 @@ route that points to this action to see it in work.</p>
   so the document manager makes a query to MongoDB, which adds a new entry.</li>
 </ul>
 
+<p>If you are using `autowiring`, you can use type hinting to fetch the <code>doctrine_mongodb.odm.document_manager</code> service:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="bad2f05eb8663845efca4e6ea4595f2d71370e5b"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="bad2f05eb8663845efca4e6ea4595f2d71370e5b"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-1" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-1">1</a></td><td class="code-line" rowspan="22"><span class="hljs-comment">// App/Controller/DefaultController.php</span>
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Controller</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Bundle</span>\<span class="hljs-title">FrameworkBundle</span>\<span class="hljs-title">Controller</span>\<span class="hljs-title">AbstractController</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">DocumentManager</span> <span class="hljs-title">as</span> <span class="hljs-title">DocumentManager</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Document</span>\<span class="hljs-title">Product</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">HttpFoundation</span>\<span class="hljs-title">Response</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DefaultController</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractController</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createProduct</span><span class="hljs-params">(DocumentManager $dm)</span>
+    </span>{
+        $product = <span class="hljs-keyword">new</span> Product();
+        $product-&gt;setName(<span class="hljs-string">'A Foo Bar'</span>);
+        $product-&gt;setPrice(<span class="hljs-string">'19.99'</span>);
+
+        $dm-&gt;persist($product);
+        $dm-&gt;flush();
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Response(<span class="hljs-string">'Created product id '</span>.$product-&gt;getId());
+    }
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-2" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-3" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-4" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-5" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-6" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-7" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-8" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-9" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-10" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-11" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-12" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-13" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-14" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-15" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-16" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-17" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-18" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-19" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-20" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-21" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-22" class="line-number-anchor" /><a href="#line-number-bad2f05eb8663845efca4e6ea4595f2d71370e5b-22">22</a></td></tr></table></div></code></pre>
 <div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>In fact, since Doctrine is aware of all your managed objects, when you
 call the <code>flush()</code> method, it calculates an overall changeset and executes
 the most efficient operation possible.</p>
