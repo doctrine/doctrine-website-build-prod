@@ -462,6 +462,7 @@ window.projectVersion = 'master';
                     {"type": "Method", "fromName": "Doctrine\\RST\\Parser", "fromLink": "Doctrine/RST/Parser.html", "link": "Doctrine/RST/Parser.html#method_createSpan", "name": "Doctrine\\RST\\Parser::createSpan", "doc": "&quot;&quot;"},
                     {"type": "Method", "fromName": "Doctrine\\RST\\Parser", "fromLink": "Doctrine/RST/Parser.html", "link": "Doctrine/RST/Parser.html#method_parse", "name": "Doctrine\\RST\\Parser::parse", "doc": "&quot;&quot;"},
                     {"type": "Method", "fromName": "Doctrine\\RST\\Parser", "fromLink": "Doctrine/RST/Parser.html", "link": "Doctrine/RST/Parser.html#method_parseLocal", "name": "Doctrine\\RST\\Parser::parseLocal", "doc": "&quot;&quot;"},
+                    {"type": "Method", "fromName": "Doctrine\\RST\\Parser", "fromLink": "Doctrine/RST/Parser.html", "link": "Doctrine/RST/Parser.html#method_parseFragment", "name": "Doctrine\\RST\\Parser::parseFragment", "doc": "&quot;&quot;"},
                     {"type": "Method", "fromName": "Doctrine\\RST\\Parser", "fromLink": "Doctrine/RST/Parser.html", "link": "Doctrine/RST/Parser.html#method_parseFile", "name": "Doctrine\\RST\\Parser::parseFile", "doc": "&quot;&quot;"},
             
             {"type": "Class", "fromName": "Doctrine\\RST\\Parser", "fromLink": "Doctrine/RST/Parser.html", "link": "Doctrine/RST/Parser/Buffer.html", "name": "Doctrine\\RST\\Parser\\Buffer", "doc": "&quot;&quot;"},
