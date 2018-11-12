@@ -342,7 +342,7 @@ installed:</p>
 </ul>
 
 <p>The code of this tutorial is <a href="https://github.com/doctrine/doctrine2-orm-tutorial">available on Github</a>.</p>
-<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>This tutorial assumes you work with <strong>Doctrine 2.4</strong> and above.
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>This tutorial assumes you work with <strong>Doctrine 2.6</strong> and above.
 Some of the code will not work with lower versions.</p>
 </td></tr></table></div>
 <a class="section-anchor" id="what-is-doctrine" name="what-is-doctrine"></a><h2 class="section-header"><a href="#what-is-doctrine">What is Doctrine?<i class="fas fa-link"></i></a></h2>
@@ -385,11 +385,11 @@ requirements:</p>
 
 <a class="section-anchor" id="project-setup" name="project-setup"></a><h2 class="section-header"><a href="#project-setup">Project Setup<i class="fas fa-link"></i></a></h2>
 <p>Create a new empty folder for this tutorial project, for example
-<code>doctrine2-tutorial</code> and create a new file <code>composer.json</code> with
-the following contents:</p>
+<code>doctrine2-tutorial</code> and create a new file <code>composer.json</code> inside
+that directory with the following contents:</p>
 <div class="console"><pre><code class="console">{
     "require": {
-        "doctrine/orm": "2.4.*",
+        "doctrine/orm": "^2.6.2",
         "symfony/yaml": "2.*"
     },
     "autoload": {
@@ -399,13 +399,16 @@ the following contents:</p>
 <p>Install Doctrine using the Composer Dependency Management tool, by calling:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>composer install</code></pre></div>
 <p>This will install the packages Doctrine Common, Doctrine DBAL, Doctrine ORM,
-Symfony YAML and Symfony Console into the `vendor` directory. The Symfony<br />dependencies are not required by Doctrine but will be used in this tutorial.</p>
+into the <code>vendor</code> directory.</p>
 <p>Add the following directories:</p>
 <div class="console"><pre><code class="console">doctrine2-tutorial
 |-- config
-|   |-- xml
+|   `-- xml
 |   `-- yaml
 `-- src</code></pre></div>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The YAML driver is deprecated and will be removed in version 3.0.
+It is strongly recommended to switch to one of the other mappings.</p>
+</td></tr></table></div>
 <a class="section-anchor" id="obtaining-the-entitymanager" name="obtaining-the-entitymanager"></a><h2 class="section-header"><a href="#obtaining-the-entitymanager">Obtaining the EntityManager<i class="fas fa-link"></i></a></h2>
 <p>Doctrine's public interface is through the <code>EntityManager</code>. This class
 provides access points to the complete lifecycle management for your entities,
@@ -461,7 +464,10 @@ $entityManager = EntityManager::create($conn, $config);</td></tr>
 <tr><td class="line-number noselect"><a name="line-number-bafc1b9092783eb6d544808abc40a88fd3513e36-20" class="line-number-anchor" /><a href="#line-number-bafc1b9092783eb6d544808abc40a88fd3513e36-20">20</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-bafc1b9092783eb6d544808abc40a88fd3513e36-21" class="line-number-anchor" /><a href="#line-number-bafc1b9092783eb6d544808abc40a88fd3513e36-21">21</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-bafc1b9092783eb6d544808abc40a88fd3513e36-22" class="line-number-anchor" /><a href="#line-number-bafc1b9092783eb6d544808abc40a88fd3513e36-22">22</a></td></tr></table></div></code></pre>
-<p>The require_once statement sets up the class autoloading for Doctrine and
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The YAML driver is deprecated and will be removed in version 3.0.
+It is strongly recommended to switch to one of the other mappings.</p>
+</td></tr></table></div>
+<p>The <code>require_once</code> statement sets up the class autoloading for Doctrine and
 its dependencies using Composer's autoloader.</p>
 <p>The second block consists of the instantiation of the ORM
 <code>Configuration</code> object using the Setup helper. It assumes a bunch
@@ -478,7 +484,7 @@ factory method.</p>
 <p>Doctrine has a command-line interface that allows you to access the SchemaTool,
 a component that can generate a relational database schema based entirely on the
 defined entity classes and their metadata. For this tool to work, a
-cli-config.php file must exist in the project root directory:</p>
+<code>cli-config.php</code> file must exist in the project root directory:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
@@ -493,10 +499,9 @@ cli-config.php file must exist in the project root directory:</p>
 <tr><td class="line-number noselect"><a name="line-number-da7cbfb681faad69925b8674469c9de87e64e002-3" class="line-number-anchor" /><a href="#line-number-da7cbfb681faad69925b8674469c9de87e64e002-3">3</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-da7cbfb681faad69925b8674469c9de87e64e002-4" class="line-number-anchor" /><a href="#line-number-da7cbfb681faad69925b8674469c9de87e64e002-4">4</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-da7cbfb681faad69925b8674469c9de87e64e002-5" class="line-number-anchor" /><a href="#line-number-da7cbfb681faad69925b8674469c9de87e64e002-5">5</a></td></tr></table></div></code></pre>
-<p>Change into your project directory and call the Doctrine command-line tool:</p>
-<div class="console"><pre><code class="console"><span class="noselect">$ </span>cd project/
-<span class="noselect">$ </span>vendor/bin/doctrine orm:schema-tool:create</code></pre></div>
-<p>Since we haven't added any entity metadata in `src` yet, you'll see a message
+<p>Now call the Doctrine command-line tool:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>vendor/bin/doctrine orm:schema-tool:create</code></pre></div>
+<p>Since we haven't added any entity metadata in <code>src</code> yet, you'll see a message
 stating &quot;No Metadata Classes to process.&quot; In the next section, we'll create a
 Product entity along with the corresponding metadata, and run this command again.</p>
 <p>Note that as you modify your entities' metadata during the development process,
@@ -506,8 +511,8 @@ You can easily recreate the database using the following commands:</p>
 <span class="noselect">$ </span>vendor/bin/doctrine orm:schema-tool:create</code></pre></div>
 <p>Or you can use the update functionality:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>vendor/bin/doctrine orm:schema-tool:update --force</code></pre></div>
-<p>The updating of databases uses a Diff Algorithm for a given
-Database Schema. This is a cornerstone of the <code>Doctrine\DBAL</code> package,
+<p>The updating of databases uses a diff algorithm for a given
+database schema. This is a cornerstone of the <code>Doctrine\DBAL</code> package,
 which can even be used without the Doctrine ORM package.</p>
 <a class="section-anchor" id="starting-with-the-product-entity" name="starting-with-the-product-entity"></a><h2 class="section-header"><a href="#starting-with-the-product-entity">Starting with the Product Entity<i class="fas fa-link"></i></a></h2>
 <p>We start with the simplest entity, the Product. Create a <code>src/Product.php</code> file to contain the <code>Product</code>
@@ -572,11 +577,15 @@ entity definition:</p>
 <tr><td class="line-number noselect"><a name="line-number-b2a361833634b9b76a9b4155e66e54f0224b1fa2-26" class="line-number-anchor" /><a href="#line-number-b2a361833634b9b76a9b4155e66e54f0224b1fa2-26">26</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-b2a361833634b9b76a9b4155e66e54f0224b1fa2-27" class="line-number-anchor" /><a href="#line-number-b2a361833634b9b76a9b4155e66e54f0224b1fa2-27">27</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-b2a361833634b9b76a9b4155e66e54f0224b1fa2-28" class="line-number-anchor" /><a href="#line-number-b2a361833634b9b76a9b4155e66e54f0224b1fa2-28">28</a></td></tr></table></div></code></pre>
-<p>When creating entity classes, all of the fields should be protected or private
-(not public), with getter and setter methods for each one (except $id).
+<p>When creating entity classes, all of the fields should be <code>protected</code> or <code>private</code>
+(not <code>public</code>), with getter and setter methods for each one (except <code>$id</code>).
 The use of mutators allows Doctrine to hook into calls which
-manipulate the entities in ways that it could not if you just<br />directly set the values with <code>entity#field = foo;</code></p>
-<p>The id field has no setter since, generally speaking, your code<br />should not set this value since it represents a database id value.<br />(Note that Doctrine itself can still set the value using the<br />Reflection API instead of a defined setter function)</p>
+manipulate the entities in ways that it could not if you just
+directly set the values with <code>entity#field = foo;</code></p>
+<p>The id field has no setter since, generally speaking, your code
+should not set this value since it represents a database id value.
+(Note that Doctrine itself can still set the value using the
+Reflection API instead of a defined setter function.)</p>
 <p>The next step for persistence with Doctrine is to describe the
 structure of the <code>Product</code> entity to Doctrine using a metadata
 language. The metadata language describes how entities, their
@@ -648,7 +657,10 @@ but you only need to choose one.</p>
 <tr><td class="line-number noselect"><a name="line-number-3462c4a78079c8f510e13cc21c7904155619d4a0-11" class="line-number-anchor" /><a href="#line-number-3462c4a78079c8f510e13cc21c7904155619d4a0-11">11</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-3462c4a78079c8f510e13cc21c7904155619d4a0-12" class="line-number-anchor" /><a href="#line-number-3462c4a78079c8f510e13cc21c7904155619d4a0-12">12</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-3462c4a78079c8f510e13cc21c7904155619d4a0-13" class="line-number-anchor" /><a href="#line-number-3462c4a78079c8f510e13cc21c7904155619d4a0-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3462c4a78079c8f510e13cc21c7904155619d4a0-14" class="line-number-anchor" /><a href="#line-number-3462c4a78079c8f510e13cc21c7904155619d4a0-14">14</a></td></tr></table></div></code></pre></div></li><li><em>YAML</em><div class="highlight-yaml"><pre class="code-block-table"><code class="yaml"><button
+<tr><td class="line-number noselect"><a name="line-number-3462c4a78079c8f510e13cc21c7904155619d4a0-14" class="line-number-anchor" /><a href="#line-number-3462c4a78079c8f510e13cc21c7904155619d4a0-14">14</a></td></tr></table></div></code></pre></div></li></ul></div>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The YAML driver is deprecated and will be removed in version 3.0.
+It is strongly recommended to switch to one of the other mappings.</p>
+<pre class="code-block-table"><code class="yaml"><button
             type="button"
             class="copy-to-clipboard"
             data-copy-element-id="ee6aa2b406d9b4141d5a45300f9677bddd667c40"
@@ -675,9 +687,10 @@ but you only need to choose one.</p>
 <tr><td class="line-number noselect"><a name="line-number-ee6aa2b406d9b4141d5a45300f9677bddd667c40-9" class="line-number-anchor" /><a href="#line-number-ee6aa2b406d9b4141d5a45300f9677bddd667c40-9">9</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-ee6aa2b406d9b4141d5a45300f9677bddd667c40-10" class="line-number-anchor" /><a href="#line-number-ee6aa2b406d9b4141d5a45300f9677bddd667c40-10">10</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-ee6aa2b406d9b4141d5a45300f9677bddd667c40-11" class="line-number-anchor" /><a href="#line-number-ee6aa2b406d9b4141d5a45300f9677bddd667c40-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ee6aa2b406d9b4141d5a45300f9677bddd667c40-12" class="line-number-anchor" /><a href="#line-number-ee6aa2b406d9b4141d5a45300f9677bddd667c40-12">12</a></td></tr></table></div></code></pre></div></li></ul></div>
-<p>The top-level <code>entity</code> definition tag specifies information about
-the class and table-name. The primitive type <code>Product#name</code> is
+<tr><td class="line-number noselect"><a name="line-number-ee6aa2b406d9b4141d5a45300f9677bddd667c40-12" class="line-number-anchor" /><a href="#line-number-ee6aa2b406d9b4141d5a45300f9677bddd667c40-12">12</a></td></tr></table></div></code></pre>
+</td></tr></table></div>
+<p>The top-level <code>entity</code> definition specifies information about
+the class and table name. The primitive type <code>Product#name</code> is
 defined as a <code>field</code> attribute. The <code>id</code> property is defined with
 the <code>id</code> tag.  It has a <code>generator</code> tag nested inside, which
 specifies that the primary key generation mechanism should automatically
@@ -1485,7 +1498,10 @@ the <code>Product</code> before:</p>
 <tr><td class="line-number noselect"><a name="line-number-4e508556be942f0c44761343b2ac2d034dbab6a8-18" class="line-number-anchor" /><a href="#line-number-4e508556be942f0c44761343b2ac2d034dbab6a8-18">18</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-4e508556be942f0c44761343b2ac2d034dbab6a8-19" class="line-number-anchor" /><a href="#line-number-4e508556be942f0c44761343b2ac2d034dbab6a8-19">19</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-4e508556be942f0c44761343b2ac2d034dbab6a8-20" class="line-number-anchor" /><a href="#line-number-4e508556be942f0c44761343b2ac2d034dbab6a8-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4e508556be942f0c44761343b2ac2d034dbab6a8-21" class="line-number-anchor" /><a href="#line-number-4e508556be942f0c44761343b2ac2d034dbab6a8-21">21</a></td></tr></table></div></code></pre></div></li><li><em>YAML</em><div class="highlight-yaml"><pre class="code-block-table"><code class="yaml"><button
+<tr><td class="line-number noselect"><a name="line-number-4e508556be942f0c44761343b2ac2d034dbab6a8-21" class="line-number-anchor" /><a href="#line-number-4e508556be942f0c44761343b2ac2d034dbab6a8-21">21</a></td></tr></table></div></code></pre></div></li></ul></div>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The YAML driver is deprecated and will be removed in version 3.0.
+It is strongly recommended to switch to one of the other mappings.</p>
+<pre class="code-block-table"><code class="yaml"><button
             type="button"
             class="copy-to-clipboard"
             data-copy-element-id="d60746364acafea7eaed8d360dad46ff60333648"
@@ -1540,7 +1556,8 @@ the <code>Product</code> before:</p>
 <tr><td class="line-number noselect"><a name="line-number-d60746364acafea7eaed8d360dad46ff60333648-23" class="line-number-anchor" /><a href="#line-number-d60746364acafea7eaed8d360dad46ff60333648-23">23</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-d60746364acafea7eaed8d360dad46ff60333648-24" class="line-number-anchor" /><a href="#line-number-d60746364acafea7eaed8d360dad46ff60333648-24">24</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-d60746364acafea7eaed8d360dad46ff60333648-25" class="line-number-anchor" /><a href="#line-number-d60746364acafea7eaed8d360dad46ff60333648-25">25</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d60746364acafea7eaed8d360dad46ff60333648-26" class="line-number-anchor" /><a href="#line-number-d60746364acafea7eaed8d360dad46ff60333648-26">26</a></td></tr></table></div></code></pre></div></li></ul></div>
+<tr><td class="line-number noselect"><a name="line-number-d60746364acafea7eaed8d360dad46ff60333648-26" class="line-number-anchor" /><a href="#line-number-d60746364acafea7eaed8d360dad46ff60333648-26">26</a></td></tr></table></div></code></pre>
+</td></tr></table></div>
 <p>Here we have the entity, id and primitive type definitions.
 For the &quot;created&quot; field we have used the <code>datetime</code> type,<br />which translates the YYYY-mm-dd HH:mm:ss database format<br />into a PHP DateTime instance and back.</p>
 <p>After the field definitions, the two qualified references to the
@@ -1665,7 +1682,10 @@ on the <code>many-to-many</code> tag.</p>
 <tr><td class="line-number noselect"><a name="line-number-70846747a02262bf8e60b46ce33a54b9a319f58b-14" class="line-number-anchor" /><a href="#line-number-70846747a02262bf8e60b46ce33a54b9a319f58b-14">14</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-70846747a02262bf8e60b46ce33a54b9a319f58b-15" class="line-number-anchor" /><a href="#line-number-70846747a02262bf8e60b46ce33a54b9a319f58b-15">15</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-70846747a02262bf8e60b46ce33a54b9a319f58b-16" class="line-number-anchor" /><a href="#line-number-70846747a02262bf8e60b46ce33a54b9a319f58b-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-70846747a02262bf8e60b46ce33a54b9a319f58b-17" class="line-number-anchor" /><a href="#line-number-70846747a02262bf8e60b46ce33a54b9a319f58b-17">17</a></td></tr></table></div></code></pre></div></li><li><em>YAML</em><div class="highlight-yaml"><pre class="code-block-table"><code class="yaml"><button
+<tr><td class="line-number noselect"><a name="line-number-70846747a02262bf8e60b46ce33a54b9a319f58b-17" class="line-number-anchor" /><a href="#line-number-70846747a02262bf8e60b46ce33a54b9a319f58b-17">17</a></td></tr></table></div></code></pre></div></li></ul></div>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The YAML driver is deprecated and will be removed in version 3.0.
+It is strongly recommended to switch to one of the other mappings.</p>
+<pre class="code-block-table"><code class="yaml"><button
             type="button"
             class="copy-to-clipboard"
             data-copy-element-id="e58b4f6f8d591444689aa6f25b092a740ab2e5b2"
@@ -1706,7 +1726,8 @@ on the <code>many-to-many</code> tag.</p>
 <tr><td class="line-number noselect"><a name="line-number-e58b4f6f8d591444689aa6f25b092a740ab2e5b2-16" class="line-number-anchor" /><a href="#line-number-e58b4f6f8d591444689aa6f25b092a740ab2e5b2-16">16</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-e58b4f6f8d591444689aa6f25b092a740ab2e5b2-17" class="line-number-anchor" /><a href="#line-number-e58b4f6f8d591444689aa6f25b092a740ab2e5b2-17">17</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-e58b4f6f8d591444689aa6f25b092a740ab2e5b2-18" class="line-number-anchor" /><a href="#line-number-e58b4f6f8d591444689aa6f25b092a740ab2e5b2-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e58b4f6f8d591444689aa6f25b092a740ab2e5b2-19" class="line-number-anchor" /><a href="#line-number-e58b4f6f8d591444689aa6f25b092a740ab2e5b2-19">19</a></td></tr></table></div></code></pre></div></li></ul></div>
+<tr><td class="line-number noselect"><a name="line-number-e58b4f6f8d591444689aa6f25b092a740ab2e5b2-19" class="line-number-anchor" /><a href="#line-number-e58b4f6f8d591444689aa6f25b092a740ab2e5b2-19">19</a></td></tr></table></div></code></pre>
+</td></tr></table></div>
 <p>Here are some new things to mention about the <code>one-to-many</code> tags.
 Remember that we discussed about the inverse and owning side. Now
 both reportedBugs and assignedBugs are inverse relations, which
@@ -2380,7 +2401,10 @@ we have to adjust the metadata slightly.</p>
 <tr><td class="line-number noselect"><a name="line-number-6efd2b93070f8c6450165b7464efc3bc4e946ffc-6" class="line-number-anchor" /><a href="#line-number-6efd2b93070f8c6450165b7464efc3bc4e946ffc-6">6</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-6efd2b93070f8c6450165b7464efc3bc4e946ffc-7" class="line-number-anchor" /><a href="#line-number-6efd2b93070f8c6450165b7464efc3bc4e946ffc-7">7</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-6efd2b93070f8c6450165b7464efc3bc4e946ffc-8" class="line-number-anchor" /><a href="#line-number-6efd2b93070f8c6450165b7464efc3bc4e946ffc-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-6efd2b93070f8c6450165b7464efc3bc4e946ffc-9" class="line-number-anchor" /><a href="#line-number-6efd2b93070f8c6450165b7464efc3bc4e946ffc-9">9</a></td></tr></table></div></code></pre></div></li><li><em>YAML</em><div class="highlight-yaml"><pre class="code-block-table"><code class="yaml"><button
+<tr><td class="line-number noselect"><a name="line-number-6efd2b93070f8c6450165b7464efc3bc4e946ffc-9" class="line-number-anchor" /><a href="#line-number-6efd2b93070f8c6450165b7464efc3bc4e946ffc-9">9</a></td></tr></table></div></code></pre></div></li></ul></div>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The YAML driver is deprecated and will be removed in version 3.0.
+It is strongly recommended to switch to one of the other mappings.</p>
+<pre class="code-block-table"><code class="yaml"><button
             type="button"
             class="copy-to-clipboard"
             data-copy-element-id="4eacca44ca4ee091e2d133f388bf22a3de7ebd06"
@@ -2389,7 +2413,8 @@ we have to adjust the metadata slightly.</p>
 <span class="hljs-attr">  type:</span> <span class="hljs-string">entity</span>
 <span class="hljs-attr">  repositoryClass:</span> <span class="hljs-string">BugRepository</span></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-4eacca44ca4ee091e2d133f388bf22a3de7ebd06-2" class="line-number-anchor" /><a href="#line-number-4eacca44ca4ee091e2d133f388bf22a3de7ebd06-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4eacca44ca4ee091e2d133f388bf22a3de7ebd06-3" class="line-number-anchor" /><a href="#line-number-4eacca44ca4ee091e2d133f388bf22a3de7ebd06-3">3</a></td></tr></table></div></code></pre></div></li></ul></div>
+<tr><td class="line-number noselect"><a name="line-number-4eacca44ca4ee091e2d133f388bf22a3de7ebd06-3" class="line-number-anchor" /><a href="#line-number-4eacca44ca4ee091e2d133f388bf22a3de7ebd06-3">3</a></td></tr></table></div></code></pre>
+</td></tr></table></div>
 <p>Now we can remove our query logic in all the places and instead use them through the EntityRepository.
 As an example here is the code of the first use case &quot;List of Bugs&quot;:</p>
 <pre class="code-block-table"><code class="php"><button
