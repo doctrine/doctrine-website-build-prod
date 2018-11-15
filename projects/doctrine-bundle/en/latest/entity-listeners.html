@@ -292,126 +292,80 @@
                             
 <p></p>
 <a class="section-anchor" id="entity-listeners" name="entity-listeners"></a><h1 class="section-header"><a href="#entity-listeners">Entity Listeners<i class="fas fa-link"></i></a></h1>
-<p>To set up an entity listener, start by creating a listener class:</p>
+<p>Entity listeners that are services must be registered with the entity
+listener resolver. You can tag your entity listeners and they will automatically
+be added to the resolver. Use the entity_manager attribute to specify which
+entity manager it should be registered with. Example:</p>
+<div class="configuration-block jsactive clearfix"><ul class="simple"><li><em>YAML</em><div class="highlight-yaml"><pre class="code-block-table"><code class="yaml"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="997b1d553863da0689bf1f428726f6670b292b55"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="997b1d553863da0689bf1f428726f6670b292b55"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-997b1d553863da0689bf1f428726f6670b292b55-1" class="line-number-anchor" /><a href="#line-number-997b1d553863da0689bf1f428726f6670b292b55-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-attr">services:</span>
+<span class="hljs-attr">    user_listener:</span>
+<span class="hljs-attr">        class:</span> <span class="hljs-string">\UserListener</span>
+<span class="hljs-attr">        tags:</span>
+<span class="hljs-bullet">            -</span> <span class="hljs-string">{</span> <span class="hljs-attr">name:</span> <span class="hljs-string">doctrine.orm.entity_listener</span> <span class="hljs-string">}</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-997b1d553863da0689bf1f428726f6670b292b55-2" class="line-number-anchor" /><a href="#line-number-997b1d553863da0689bf1f428726f6670b292b55-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-997b1d553863da0689bf1f428726f6670b292b55-3" class="line-number-anchor" /><a href="#line-number-997b1d553863da0689bf1f428726f6670b292b55-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-997b1d553863da0689bf1f428726f6670b292b55-4" class="line-number-anchor" /><a href="#line-number-997b1d553863da0689bf1f428726f6670b292b55-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-997b1d553863da0689bf1f428726f6670b292b55-5" class="line-number-anchor" /><a href="#line-number-997b1d553863da0689bf1f428726f6670b292b55-5">5</a></td></tr></table></div></code></pre></div></li></ul></div>
+<ul><li class="dash">
+                        name: doctrine.orm.entity_listener
+                        event: preUpdate
+                        entity: App\Entity\User
+                        entity_manager: custom
+    .. code-block:: xml
+        &lt;?xml version=&quot;1.0&quot; ?&gt;
+        &lt;container xmlns=&quot;http://symfony.com/schema/dic/services&quot;
+            xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+            &lt;services&gt;
+                &lt;service id=&quot;user_listener&quot; class=&quot;UserListener&quot;&gt;
+                    &lt;tag name=&quot;doctrine.orm.entity_listener&quot; event=&quot;preUpdate&quot; entity=&quot;App\Entity\User&quot; /&gt;
+                    &lt;tag
+                        name=&quot;doctrine.orm.entity_listener&quot;
+                        event=&quot;preUpdate&quot;
+                        entity=&quot;App\Entity\User&quot;
+                        entity_manager=&quot;custom&quot;
+                    /&gt;                &lt;/service&gt;
+            &lt;/services&gt;
+        &lt;/container&gt;</li>
+</ul>
+
+<p>If you use a version of doctrine/orm &lt; 2.5 you have to register the entity listener in your entity as well:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9"
+            data-copy-element-id="e5dca90457481d97a0b4695eda8884fb580d344b"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-1" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-1">1</a></td><td class="code-line" rowspan="13"><span class="hljs-comment">// src/EventListener/UserListener</span>
-<span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">EventListener</span>;
-
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Event</span>\<span class="hljs-title">LifecycleEventArgs</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Entity</span>\<span class="hljs-title">User</span>;
-
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserListener</span>
-</span>{    
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">prePersist</span><span class="hljs-params">(User $user, LifecycleEventArgs $event)</span>
-    </span>{
-        <span class="hljs-comment">// ...</span>
-    }
-}</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-2" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-3" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-4" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-5" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-6" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-7" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-8" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-9" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-10" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-11" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-12" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-13" class="line-number-anchor" /><a href="#line-number-2e60cbcb6c85a28933d5ba7e7ba86b31ad4488a9-13">13</a></td></tr></table></div></code></pre>
-<p>Next, you have to register the class as a listener. There are two ways to
-achieve this:</p>
-<p>You can either do the registration in your entity like this:</p>
-<pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="ad1f5602a5a2ff176ab8d33292b29fbae3543ca4"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="ad1f5602a5a2ff176ab8d33292b29fbae3543ca4"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-1" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-1">1</a></td><td class="code-line" rowspan="13"><span class="hljs-comment">// src/Entity/User.php</span>
-<span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Entity</span>\<span class="hljs-title">User</span>;
+        ><i class="fas fa-copy"></i></button><div id="e5dca90457481d97a0b4695eda8884fb580d344b"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-1" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-1">1</a></td><td class="code-line" rowspan="13"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// User.php</span>
 
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span> <span class="hljs-title">as</span> <span class="hljs-title">ORM</span>;
 
 <span class="hljs-comment">/**
  * <span class="hljs-doctag">@ORM</span>\Entity
- * <span class="hljs-doctag">@ORM</span>\EntityListeners({"App\EventListener\UserListener"})
+ * <span class="hljs-doctag">@ORM</span>\EntityListeners({"UserListener"})
  */</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span>
 </span>{
-    <span class="hljs-comment">// ...</span>
+    <span class="hljs-comment">// ....</span>
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-2" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-3" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-4" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-5" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-6" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-7" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-8" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-9" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-10" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-11" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-12" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-13" class="line-number-anchor" /><a href="#line-number-ad1f5602a5a2ff176ab8d33292b29fbae3543ca4-13">13</a></td></tr></table></div></code></pre>
-<p>This works fine, but your event listener will not be registered as a service
-(even if you have <code>autowire: true</code> in your <code>services.yaml</code>). So to register
-it as a service, you have to add this to your <code>services.yaml</code>:</p>
-<div class="configuration-block jsactive clearfix"><ul class="simple"><li><em>YAML</em><div class="highlight-yaml"><pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="1b373ee93b36aad194fb69c13ca1d93de462bfe9"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="1b373ee93b36aad194fb69c13ca1d93de462bfe9"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-1b373ee93b36aad194fb69c13ca1d93de462bfe9-1" class="line-number-anchor" /><a href="#line-number-1b373ee93b36aad194fb69c13ca1d93de462bfe9-1">1</a></td><td class="code-line" rowspan="4"><span class="hljs-attr">services:</span>
-    <span class="hljs-string">App\EventListener\UserListener:</span>
-<span class="hljs-attr">        tags:</span>
-<span class="hljs-bullet">            -</span> <span class="hljs-string">{</span> <span class="hljs-attr">name:</span> <span class="hljs-string">doctrine.orm.entity_listener</span> <span class="hljs-string">}</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b373ee93b36aad194fb69c13ca1d93de462bfe9-2" class="line-number-anchor" /><a href="#line-number-1b373ee93b36aad194fb69c13ca1d93de462bfe9-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b373ee93b36aad194fb69c13ca1d93de462bfe9-3" class="line-number-anchor" /><a href="#line-number-1b373ee93b36aad194fb69c13ca1d93de462bfe9-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b373ee93b36aad194fb69c13ca1d93de462bfe9-4" class="line-number-anchor" /><a href="#line-number-1b373ee93b36aad194fb69c13ca1d93de462bfe9-4">4</a></td></tr></table></div></code></pre></div></li><li><em>XML</em><div class="highlight-xml"><pre class="code-block-table"><code class="xml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-1" class="line-number-anchor" /><a href="#line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-1">1</a></td><td class="code-line" rowspan="11"><span class="php"><span class="hljs-meta">&lt;?</span>xml version=<span class="hljs-string">"1.0"</span> <span class="hljs-meta">?&gt;</span></span>
-
-<span class="hljs-tag">&lt;<span class="hljs-name">container</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://symfony.com/schema/dic/services"</span>
-    <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span>&gt;</span>
-
-    <span class="hljs-tag">&lt;<span class="hljs-name">services</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">service</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"App\EventListener\UserListener"</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-name">tag</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"doctrine.orm.entity_listener"</span> /&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-name">service</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">services</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">container</span>&gt;</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-2" class="line-number-anchor" /><a href="#line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-3" class="line-number-anchor" /><a href="#line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-4" class="line-number-anchor" /><a href="#line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-5" class="line-number-anchor" /><a href="#line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-6" class="line-number-anchor" /><a href="#line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-7" class="line-number-anchor" /><a href="#line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-8" class="line-number-anchor" /><a href="#line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-9" class="line-number-anchor" /><a href="#line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-10" class="line-number-anchor" /><a href="#line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-11" class="line-number-anchor" /><a href="#line-number-b336d53ef6b50b8dc3b5ee5f8b3d896e4b01e4f4-11">11</a></td></tr></table></div></code></pre></div></li></ul></div>
-<p>Alternatively, you could do the entire configuration in <code>services.yaml</code> and
-omit the <code>@ORM\EntityListeners</code> annotation in the entity:</p>
-<pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="8c43fcec5d2570630baf5b07a58e933827a90bd6"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="8c43fcec5d2570630baf5b07a58e933827a90bd6"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-8c43fcec5d2570630baf5b07a58e933827a90bd6-1" class="line-number-anchor" /><a href="#line-number-8c43fcec5d2570630baf5b07a58e933827a90bd6-1">1</a></td><td class="code-line" rowspan="4"><span class="hljs-attr">services:</span>
-    <span class="hljs-string">App\EventListener\UserListener:</span>
-<span class="hljs-attr">        tags:</span>
-<span class="hljs-bullet">            -</span> <span class="hljs-string">{</span> <span class="hljs-attr">name:</span> <span class="hljs-string">doctrine.orm.entity_listener,</span> <span class="hljs-attr">entity:</span> <span class="hljs-string">App\Entity\User,</span> <span class="hljs-attr">event:</span> <span class="hljs-string">prePersist</span> <span class="hljs-string">}</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8c43fcec5d2570630baf5b07a58e933827a90bd6-2" class="line-number-anchor" /><a href="#line-number-8c43fcec5d2570630baf5b07a58e933827a90bd6-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8c43fcec5d2570630baf5b07a58e933827a90bd6-3" class="line-number-anchor" /><a href="#line-number-8c43fcec5d2570630baf5b07a58e933827a90bd6-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8c43fcec5d2570630baf5b07a58e933827a90bd6-4" class="line-number-anchor" /><a href="#line-number-8c43fcec5d2570630baf5b07a58e933827a90bd6-4">4</a></td></tr></table></div></code></pre>
-<p>To register the listener for a custom entity manager, just add the <code>entity_manager</code> attribute.</p>
-<p>See also https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/events.html#entity-listeners for more info on entity listeners.</p>
+<tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-2" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-3" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-4" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-5" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-6" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-7" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-8" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-9" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-10" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-11" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-12" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e5dca90457481d97a0b4695eda8884fb580d344b-13" class="line-number-anchor" /><a href="#line-number-e5dca90457481d97a0b4695eda8884fb580d344b-13">13</a></td></tr></table></div></code></pre>
+<p>See also
+http://doctrine-orm.readthedocs.org/en/latest/reference/events.html#entity-listeners
+for more info on entity listeners and the resolver required by Symfony.</p>
 <p></p>
                                             </div>
                 </div>
