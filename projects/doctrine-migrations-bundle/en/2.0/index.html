@@ -247,7 +247,7 @@
                             <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
                     <div class="sidebar-sticky">
                         
-<div class="toc"><ul><li id="index-html-doctrinemigrationsbundle" class="toc-item"><a href="index.html#doctrinemigrationsbundle">DoctrineMigrationsBundle</a></li><ul><li id="index-html-installation" class="toc-item"><a href="index.html#installation">Installation</a></li><li id="index-html-configuration" class="toc-item"><a href="index.html#configuration">Configuration</a></li><li id="index-html-usage" class="toc-item"><a href="index.html#usage">Usage</a></li><ul><li id="index-html-running-migrations-during-deployment" class="toc-item"><a href="index.html#running-migrations-during-deployment">Running Migrations during Deployment</a></li><li id="index-html-skipping-migrations" class="toc-item"><a href="index.html#skipping-migrations">Skipping Migrations</a></li></ul><li id="index-html-generating-migrations-automatically" class="toc-item"><a href="index.html#generating-migrations-automatically">Generating Migrations Automatically</a></li><li id="index-html-container-aware-migrations" class="toc-item"><a href="index.html#container-aware-migrations">Container Aware Migrations</a></li><li id="index-html-manual-tables" class="toc-item"><a href="index.html#manual-tables">Manual Tables</a></li></ul></ul></div>
+<div class="toc"><ul><li id="index-html-doctrinemigrationsbundle" class="toc-item"><a href="index.html#doctrinemigrationsbundle">DoctrineMigrationsBundle</a></li><ul><li id="index-html-installation" class="toc-item"><a href="index.html#installation">Installation</a></li><li id="index-html-configuration" class="toc-item"><a href="index.html#configuration">Configuration</a></li><li id="index-html-usage" class="toc-item"><a href="index.html#usage">Usage</a></li><ul><li id="index-html-running-migrations-during-deployment" class="toc-item"><a href="index.html#running-migrations-during-deployment">Running Migrations during Deployment</a></li><li id="index-html-skipping-migrations" class="toc-item"><a href="index.html#skipping-migrations">Skipping Migrations</a></li></ul><li id="index-html-generating-migrations-automatically" class="toc-item"><a href="index.html#generating-migrations-automatically">Generating Migrations Automatically</a></li><li id="index-html-manual-tables" class="toc-item"><a href="index.html#manual-tables">Manual Tables</a></li></ul></ul></div>
                     </div>
                 </nav>
             
@@ -683,107 +683,6 @@ for your project.</p>
 <code>doctrine:schema:create</code>, you can tell Doctrine to skip all existing migrations:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>php bin/console doctrine:migrations:version --add --all</code></pre></div>
 <p>Otherwise Doctrine will try to run all migrations, which probably will not work.</p>
-<a class="section-anchor" id="container-aware-migrations" name="container-aware-migrations"></a><h2 class="section-header"><a href="#container-aware-migrations">Container Aware Migrations<i class="fas fa-link"></i></a></h2>
-<p>In some cases you might need access to the container to ensure the proper update of
-your data structure. This could be necessary to update relations with some specific
-logic or to create new entities.</p>
-<p>Therefore you can just implement the ContainerAwareInterface with its needed methods
-to get full access to the container or ContainerAwareTrait if you use Symfony &gt;= 2.4.</p>
-<pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="e9c28f0a207fdf3771e0f92053abb8d083fa5b06"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="e9c28f0a207fdf3771e0f92053abb8d083fa5b06"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-1" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-1">1</a></td><td class="code-line" rowspan="24"><span class="hljs-comment">// ...</span>
-<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">DependencyInjection</span>\<span class="hljs-title">ContainerAwareInterface</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">DependencyInjection</span>\<span class="hljs-title">ContainerInterface</span>;
-
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Version20130326212938</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractMigration</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ContainerAwareInterface</span>
-</span>{
-    <span class="hljs-keyword">private</span> $container;
-
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setContainer</span><span class="hljs-params">(ContainerInterface $container = null)</span>
-    </span>{
-        <span class="hljs-keyword">$this</span>-&gt;container = $container;
-    }
-
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">up</span><span class="hljs-params">(Schema $schema)</span>
-    </span>{
-        <span class="hljs-comment">// ... migration content</span>
-    }
-
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">postUp</span><span class="hljs-params">(Schema $schema)</span>
-    </span>{
-        $converter = <span class="hljs-keyword">$this</span>-&gt;container-&gt;get(<span class="hljs-string">'my_service.convert_data_to'</span>);
-        <span class="hljs-comment">// ... convert the data from markdown to html for instance</span>
-    }
-}</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-2" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-3" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-4" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-5" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-6" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-7" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-8" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-9" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-10" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-11" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-12" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-13" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-14" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-15" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-16" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-17" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-18" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-19" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-20" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-21" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-21">21</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-22" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-22">22</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-23" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-23">23</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-24" class="line-number-anchor" /><a href="#line-number-e9c28f0a207fdf3771e0f92053abb8d083fa5b06-24">24</a></td></tr></table></div></code></pre>
-<p>With the trait</p>
-<pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="3dc92501a14c9dea9ce6a6d4b9585a5bd009a850"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="3dc92501a14c9dea9ce6a6d4b9585a5bd009a850"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-1" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-1">1</a></td><td class="code-line" rowspan="19"><span class="hljs-comment">// ...</span>
-<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">DependencyInjection</span>\<span class="hljs-title">ContainerAwareInterface</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">DependencyInjection</span>\<span class="hljs-title">ContainerAwareTrait</span>;
-
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Version20130326212938</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractMigration</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ContainerAwareInterface</span>
-</span>{
-    <span class="hljs-keyword">use</span> <span class="hljs-title">ContainerAwareTrait</span>;
-
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">up</span><span class="hljs-params">(Schema $schema)</span>
-    </span>{
-        <span class="hljs-comment">// ... migration content</span>
-    }
-
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">postUp</span><span class="hljs-params">(Schema $schema)</span>
-    </span>{
-        $converter = <span class="hljs-keyword">$this</span>-&gt;container-&gt;get(<span class="hljs-string">'my_service.convert_data_to'</span>);
-        <span class="hljs-comment">// ... convert the data from markdown to html for instance</span>
-    }
-}</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-2" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-3" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-4" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-5" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-6" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-7" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-8" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-9" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-10" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-11" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-12" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-13" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-14" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-15" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-16" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-17" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-18" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-19" class="line-number-anchor" /><a href="#line-number-3dc92501a14c9dea9ce6a6d4b9585a5bd009a850-19">19</a></td></tr></table></div></code></pre>
 <a class="section-anchor" id="manual-tables" name="manual-tables"></a><h2 class="section-header"><a href="#manual-tables">Manual Tables<i class="fas fa-link"></i></a></h2>
 <p>It is a common use case, that in addition to your generated database structure
 based on your doctrine entities you might need custom tables. By default such
