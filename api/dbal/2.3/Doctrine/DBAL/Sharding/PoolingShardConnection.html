@@ -1,0 +1,2958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Doctrine\DBAL\Sharding\PoolingShardConnection | API</title>
+
+            <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/sami.css">
+        <script src="../../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../../js/bootstrap.min.js"></script>
+        <script src="../../../js/typeahead.min.js"></script>
+        <script src="../../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Doctrine_DBAL_Sharding_PoolingShardConnection" data-root-path="../../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                <script>
+            $('option[data-version="'+window.projectVersion+'"]').prop('selected', true);
+        </script>
+        <form id="search-form" action="../../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../../index.html">API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../../classes.html">Classes</a></li>
+                                            <li><a href="../../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../../traits.html">Traits</a></li>
+                    <li><a href="../../../doc-index.html">Index</a></li>
+                    <li><a href="../../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                        <li><a href="../../../Doctrine.html">Doctrine</a></li><li class="backslash">\</li><li><a href="../../../Doctrine/DBAL.html">DBAL</a></li><li class="backslash">\</li><li><a href="../../../Doctrine/DBAL/Sharding.html">Sharding</a></li><li class="backslash">\</li><li>PoolingShardConnection</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>
+            PoolingShardConnection
+                
+        </h1>
+    </div>
+
+    <p>    class
+    <strong>PoolingShardConnection</strong>        extends <a href="../../../Doctrine/DBAL/Connection.html"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a>        (<a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Sharding/PoolingShardConnection.php">View source</a>)
+</p>
+
+        
+    
+
+            <div class="description">
+            <p>Sharding implementation that pools many different connections
+internally and serves data from the currently active connection.</p>            <p>The internals of this class are:</p>
+
+<ul>
+<li>All sharding clients are specified and given a shard-id during
+configuration.</li>
+<li>By default, the global shard is selected. If no global shard is configured
+an exception is thrown on access.</li>
+<li>Selecting a shard by distribution value delegates the mapping
+"distributionValue" => "client" to the ShardChooser interface.</li>
+<li>An exception is thrown if trying to switch shards during an open
+transaction.</li>
+</ul>
+
+<p>Instantiation through the DriverManager looks like:</p>                    </div>
+    
+    
+            <h2>Constants</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td>TRANSACTION_READ_UNCOMMITTED</td>
+                <td class="last">
+                    <p><em>Constant for transaction isolation level READ UNCOMMITTED.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>TRANSACTION_READ_COMMITTED</td>
+                <td class="last">
+                    <p><em>Constant for transaction isolation level READ COMMITTED.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>TRANSACTION_REPEATABLE_READ</td>
+                <td class="last">
+                    <p><em>Constant for transaction isolation level REPEATABLE READ.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>TRANSACTION_SERIALIZABLE</td>
+                <td class="last">
+                    <p><em>Constant for transaction isolation level SERIALIZABLE.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>PARAM_INT_ARRAY</td>
+                <td class="last">
+                    <p><em>Represents an array of ints to be expanded by Doctrine SQL parsing.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>PARAM_STR_ARRAY</td>
+                <td class="last">
+                    <p><em>Represents an array of strings to be expanded by Doctrine SQL parsing.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>ARRAY_PARAM_OFFSET</td>
+                <td class="last">
+                    <p><em>Offset by which PARAM_* constants are detected as arrays of the param type.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+            </table>
+
+    
+            <h2>Properties</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td class="type" id="property__conn">
+                                        protected                                        <a href="../../../Doctrine/DBAL/Driver/Connection.html"><abbr title="Doctrine\DBAL\Driver\Connection">Connection</abbr></a>
+                </td>
+                <td>$_conn</td>
+                <td class="last">The wrapped driver connection.</td>
+                <td><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#property__conn"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__config">
+                                        protected                                        <a href="../../../Doctrine/DBAL/Configuration.html"><abbr title="Doctrine\DBAL\Configuration">Configuration</abbr></a>
+                </td>
+                <td>$_config</td>
+                <td class="last"></td>
+                <td><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#property__config"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__eventManager">
+                                        protected                                        <abbr title="Doctrine\Common\EventManager">EventManager</abbr>
+                </td>
+                <td>$_eventManager</td>
+                <td class="last"></td>
+                <td><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#property__eventManager"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__expr">
+                                        protected                                        <a href="../../../Doctrine/DBAL/Query/Expression/ExpressionBuilder.html"><abbr title="Doctrine\DBAL\Query\Expression\ExpressionBuilder">ExpressionBuilder</abbr></a>
+                </td>
+                <td>$_expr</td>
+                <td class="last"></td>
+                <td><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#property__expr"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__platform">
+                                        protected                                        <a href="../../../Doctrine/DBAL/Platforms/AbstractPlatform.html"><abbr title="Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr></a>
+                </td>
+                <td>$_platform</td>
+                <td class="last">The DatabasePlatform object that provides information about the
+database platform used by the connection.</td>
+                <td><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#property__platform"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__schemaManager">
+                                        protected                                        <a href="../../../Doctrine/DBAL/Schema/AbstractSchemaManager.html"><abbr title="Doctrine\DBAL\Schema\AbstractSchemaManager">AbstractSchemaManager</abbr></a>
+                </td>
+                <td>$_schemaManager</td>
+                <td class="last">The schema manager.</td>
+                <td><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#property__schemaManager"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__driver">
+                                        protected                                        <a href="../../../Doctrine/DBAL/Driver.html"><abbr title="Doctrine\DBAL\Driver">Driver</abbr></a>
+                </td>
+                <td>$_driver</td>
+                <td class="last">The used DBAL driver.</td>
+                <td><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#property__driver"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></td>
+            </tr>
+            </table>
+
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method___construct">__construct</a>(array $params, <a href="../../../Doctrine/DBAL/Driver.html"><abbr title="Doctrine\DBAL\Driver">Driver</abbr></a> $driver, <a href="../../../Doctrine/DBAL/Configuration.html"><abbr title="Doctrine\DBAL\Configuration">Configuration</abbr></a> $config = null, <abbr title="Doctrine\Common\EventManager">EventManager</abbr> $eventManager = null)
+        
+                                            <p>Initializes a new instance of the Connection class.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getParams">getParams</a>()
+        
+                                            <p>Gets the parameters used during instantiation.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getParams"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getDatabase">getDatabase</a>()
+        
+                                            <p>Gets the name of the database this Connection is connected to.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getDatabase"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getHost">getHost</a>()
+        
+                                            <p>Gets the hostname of the currently connected database.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getHost"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    mixed
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getPort">getPort</a>()
+        
+                                            <p>Gets the port of the currently connected database.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getPort"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getUsername">getUsername</a>()
+        
+                                            <p>Gets the username used by this connection.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getUsername"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getPassword">getPassword</a>()
+        
+                                            <p>Gets the password used by this connection.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getPassword"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Doctrine/DBAL/Driver.html"><abbr title="Doctrine\DBAL\Driver">Driver</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getDriver">getDriver</a>()
+        
+                                            <p>Gets the DBAL driver instance.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getDriver"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Doctrine/DBAL/Configuration.html"><abbr title="Doctrine\DBAL\Configuration">Configuration</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getConfiguration">getConfiguration</a>()
+        
+                                            <p>Gets the Configuration used by the Connection.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getConfiguration"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Doctrine\Common\EventManager">EventManager</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getEventManager">getEventManager</a>()
+        
+                                            <p>Gets the EventManager used by the Connection.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getEventManager"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Doctrine/DBAL/Platforms/AbstractPlatform.html"><abbr title="Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getDatabasePlatform">getDatabasePlatform</a>()
+        
+                                            <p>Gets the DatabasePlatform for the connection.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getDatabasePlatform"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Doctrine/DBAL/Query/Expression/ExpressionBuilder.html"><abbr title="Doctrine\DBAL\Query\Expression\ExpressionBuilder">ExpressionBuilder</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getExpressionBuilder">getExpressionBuilder</a>()
+        
+                                            <p>Gets the ExpressionBuilder for the connection.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getExpressionBuilder"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_connect">connect</a>(mixed $shardId = null)
+        
+                                            <p>Connect to a given shard</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setFetchMode">setFetchMode</a>(integer $fetchMode)
+        
+                                            <p>setFetchMode</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_setFetchMode"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_fetchAssoc">fetchAssoc</a>(string $statement, array $params = array())
+        
+                                            <p>Prepares and executes an SQL query and returns the first row of the result
+as an associative array.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_fetchAssoc"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_fetchArray">fetchArray</a>(string $statement, array $params = array())
+        
+                                            <p>Prepares and executes an SQL query and returns the first row of the result
+as a numerically indexed array.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_fetchArray"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    mixed
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_fetchColumn">fetchColumn</a>(string $statement, array $params = array(), int $colnum = 0)
+        
+                                            <p>Prepares and executes an SQL query and returns the value of a single column
+of the first row of the result.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_fetchColumn"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isConnected">isConnected</a>($shardId = null)
+        
+                                            <p>Whether an actual connection to the database is established.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isTransactionActive">isTransactionActive</a>()
+        
+                                            <p>Checks whether a transaction is currently active.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_isTransactionActive"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    integer
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_delete">delete</a>(string $tableName, array $identifier)
+        
+                                            <p>Executes an SQL DELETE statement on a table.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_delete"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_close">close</a>()
+        
+                                            <p>Closes the connection.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    integer
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setTransactionIsolation">setTransactionIsolation</a>(integer $level)
+        
+                                            <p>Sets the transaction isolation level.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_setTransactionIsolation"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    integer
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getTransactionIsolation">getTransactionIsolation</a>()
+        
+                                            <p>Gets the currently active transaction isolation level.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getTransactionIsolation"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    integer
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_update">update</a>(string $tableName, array $data, array $identifier, array $types = array())
+        
+                                            <p>Executes an SQL UPDATE statement on a table.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_update"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    integer
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_insert">insert</a>(string $tableName, array $data, array $types = array())
+        
+                                            <p>Inserts a table row with specified data.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_insert"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_quoteIdentifier">quoteIdentifier</a>(string $str)
+        
+                                            <p>Quote a string so it can be safely used as a table or column name, even if
+it is a reserved name.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_quoteIdentifier"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_quote">quote</a>($input, $type = null)
+        
+                                            <p>Quotes a given input parameter.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_quote"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_fetchAll">fetchAll</a>(string $sql, array $params = array())
+        
+                                            <p>Prepares and executes an SQL query and returns the result as an associative array.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_fetchAll"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_prepare">prepare</a>(string $statement)
+        
+                                            <p>Prepares an SQL statement.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_prepare"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Doctrine/DBAL/Driver/Statement.html"><abbr title="Doctrine\DBAL\Driver\Statement">Statement</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_executeQuery">executeQuery</a>(string $query, array $params = array(), array $types = array(), <a href="../../../Doctrine/DBAL/Cache/QueryCacheProfile.html"><abbr title="Doctrine\DBAL\Cache\QueryCacheProfile">QueryCacheProfile</abbr></a> $qcp = null)
+        
+                                            <p>Executes an, optionally parameterized, SQL query.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_executeQuery"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Doctrine/DBAL/Driver/ResultStatement.html"><abbr title="Doctrine\DBAL\Driver\ResultStatement">ResultStatement</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_executeCacheQuery">executeCacheQuery</a>(string $query, array $params, array $types, <a href="../../../Doctrine/DBAL/Cache/QueryCacheProfile.html"><abbr title="Doctrine\DBAL\Cache\QueryCacheProfile">QueryCacheProfile</abbr></a> $qcp)
+        
+                                            <p>Execute a caching query and</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_executeCacheQuery"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    mixed
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_project">project</a>($query, array $params, <a target="_blank" href="http://php.net/Closure">Closure</a> $function)
+        
+                                            <p>Executes an, optionally parameterized, SQL query and returns the result,
+applying a given projection/transformation function on each row of the result.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_project"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_query">query</a>()
+        
+                                            <p>Executes an SQL statement, returning a result set as a Statement object.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_query"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    integer
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_executeUpdate">executeUpdate</a>(string $query, array $params = array(), array $types = array())
+        
+                                            <p>Executes an SQL INSERT/UPDATE/DELETE query with the given parameters
+and returns the number of affected rows.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_executeUpdate"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_exec">exec</a>($statement)
+        
+                                            <p>Execute an SQL statement and return the number of affected rows.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_exec"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    integer
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getTransactionNestingLevel">getTransactionNestingLevel</a>()
+        
+                                            <p>Returns the current transaction nesting level.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getTransactionNestingLevel"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_errorCode">errorCode</a>()
+        
+                                            <p>Fetch the SQLSTATE associated with the last database operation.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_errorCode"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_errorInfo">errorInfo</a>()
+        
+                                            <p>Fetch extended error information associated with the last database operation.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_errorInfo"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_lastInsertId">lastInsertId</a>(string $seqName = null)
+        
+                                            <p>Returns the ID of the last inserted row, or the last value from a sequence object,
+depending on the underlying driver.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_lastInsertId"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_transactional">transactional</a>(<a target="_blank" href="http://php.net/Closure">Closure</a> $func)
+        
+                                            <p>Executes a function in a transaction.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_transactional"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setNestTransactionsWithSavepoints">setNestTransactionsWithSavepoints</a>(boolean $nestTransactionsWithSavepoints)
+        
+                                            <p>Set if nested transactions should use savepoints</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_setNestTransactionsWithSavepoints"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getNestTransactionsWithSavepoints">getNestTransactionsWithSavepoints</a>()
+        
+                                            <p>Get if nested transactions should use savepoints</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getNestTransactionsWithSavepoints"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    mixed
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__getNestedTransactionSavePointName">_getNestedTransactionSavePointName</a>()
+        
+                                            <p>Returns the savepoint name to use for nested transactions are false if they are not supported
+"savepointFormat" parameter is not set</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method__getNestedTransactionSavePointName"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_beginTransaction">beginTransaction</a>()
+        
+                                            <p>Starts a transaction by suspending auto-commit mode.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_beginTransaction"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_commit">commit</a>()
+        
+                                            <p>Commits the current transaction.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_commit"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_rollBack">rollBack</a>()
+        
+                                            <p>Cancel any database changes done during the current transaction.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_rollBack"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_createSavepoint">createSavepoint</a>(string $savepoint)
+        
+                                            <p>createSavepoint
+creates a new savepoint</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_createSavepoint"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_releaseSavepoint">releaseSavepoint</a>(string $savepoint)
+        
+                                            <p>releaseSavePoint
+releases given savepoint</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_releaseSavepoint"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_rollbackSavepoint">rollbackSavepoint</a>(string $savepoint)
+        
+                                            <p>rollbackSavePoint
+releases given savepoint</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_rollbackSavepoint"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Doctrine/DBAL/Driver/Connection.html"><abbr title="Doctrine\DBAL\Driver\Connection">Connection</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getWrappedConnection">getWrappedConnection</a>()
+        
+                                            <p>Gets the wrapped driver connection.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getWrappedConnection"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Doctrine/DBAL/Schema/AbstractSchemaManager.html"><abbr title="Doctrine\DBAL\Schema\AbstractSchemaManager">AbstractSchemaManager</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getSchemaManager">getSchemaManager</a>()
+        
+                                            <p>Gets the SchemaManager that can be used to inspect or change the
+database schema through the connection.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_getSchemaManager"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setRollbackOnly">setRollbackOnly</a>()
+        
+                                            <p>Marks the current transaction so that the only possible
+outcome for the transaction to be rolled back.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_setRollbackOnly"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isRollbackOnly">isRollbackOnly</a>()
+        
+                                            <p>Check whether the current transaction is marked for rollback only.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_isRollbackOnly"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    mixed
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_convertToDatabaseValue">convertToDatabaseValue</a>(mixed $value, string $type)
+        
+                                            <p>Converts a given value to its database representation according to the conversion
+rules of a specific DBAL mapping type.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_convertToDatabaseValue"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    mixed
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_convertToPHPValue">convertToPHPValue</a>(mixed $value, string $type)
+        
+                                            <p>Converts a given value to its PHP representation according to the conversion
+rules of a specific DBAL mapping type.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_convertToPHPValue"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_resolveParams">resolveParams</a>(array $params, array $types)
+        
+                                            <p>Resolves the parameters to a format which can be displayed.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_resolveParams"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Doctrine/DBAL/Query/QueryBuilder.html"><abbr title="Doctrine\DBAL\Query\QueryBuilder">QueryBuilder</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_createQueryBuilder">createQueryBuilder</a>()
+        
+                                            <p>Create a new instance of a SQL query builder.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Doctrine/DBAL/Connection.html#method_createQueryBuilder"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Doctrine/DBAL/Driver.html"><abbr title="Doctrine\DBAL\Driver">Driver</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_connectTo">connectTo</a>(string $shardId)
+        
+                                            <p>Connect to a specific connection</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method___construct">
+        <div class="location">at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Sharding/PoolingShardConnection.php#L89">line 89</a></div>
+        <code>                    
+    <strong>__construct</strong>(array $params, <a href="../../../Doctrine/DBAL/Driver.html"><abbr title="Doctrine\DBAL\Driver">Driver</abbr></a> $driver, <a href="../../../Doctrine/DBAL/Configuration.html"><abbr title="Doctrine\DBAL\Configuration">Configuration</abbr></a> $config = null, <abbr title="Doctrine\Common\EventManager">EventManager</abbr> $eventManager = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Initializes a new instance of the Connection class.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$params</td>
+                <td>The connection parameters.</td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Doctrine/DBAL/Driver.html"><abbr title="Doctrine\DBAL\Driver">Driver</abbr></a></td>
+                <td>$driver</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Doctrine/DBAL/Configuration.html"><abbr title="Doctrine\DBAL\Configuration">Configuration</abbr></a></td>
+                <td>$config</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><abbr title="Doctrine\Common\EventManager">EventManager</abbr></td>
+                <td>$eventManager</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getParams">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getParams"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L229">line 229</a></div>
+        <code>                    array
+    <strong>getParams</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the parameters used during instantiation.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td>$params</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getDatabase">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getDatabase"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L239">line 239</a></div>
+        <code>                    string
+    <strong>getDatabase</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the name of the database this Connection is connected to.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>$database</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getHost">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getHost"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L249">line 249</a></div>
+        <code>                    string
+    <strong>getHost</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the hostname of the currently connected database.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getPort">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getPort"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L259">line 259</a></div>
+        <code>                    mixed
+    <strong>getPort</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the port of the currently connected database.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>mixed</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getUsername">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getUsername"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L269">line 269</a></div>
+        <code>                    string
+    <strong>getUsername</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the username used by this connection.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getPassword">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getPassword"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L279">line 279</a></div>
+        <code>                    string
+    <strong>getPassword</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the password used by this connection.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getDriver">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getDriver"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L289">line 289</a></div>
+        <code>                    <a href="../../../Doctrine/DBAL/Driver.html"><abbr title="Doctrine\DBAL\Driver">Driver</abbr></a>
+    <strong>getDriver</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the DBAL driver instance.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Doctrine/DBAL/Driver.html"><abbr title="Doctrine\DBAL\Driver">Driver</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getConfiguration">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getConfiguration"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L299">line 299</a></div>
+        <code>                    <a href="../../../Doctrine/DBAL/Configuration.html"><abbr title="Doctrine\DBAL\Configuration">Configuration</abbr></a>
+    <strong>getConfiguration</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the Configuration used by the Connection.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Doctrine/DBAL/Configuration.html"><abbr title="Doctrine\DBAL\Configuration">Configuration</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getEventManager">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getEventManager"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L309">line 309</a></div>
+        <code>                    <abbr title="Doctrine\Common\EventManager">EventManager</abbr>
+    <strong>getEventManager</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the EventManager used by the Connection.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Doctrine\Common\EventManager">EventManager</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getDatabasePlatform">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getDatabasePlatform"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L319">line 319</a></div>
+        <code>                    <a href="../../../Doctrine/DBAL/Platforms/AbstractPlatform.html"><abbr title="Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr></a>
+    <strong>getDatabasePlatform</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the DatabasePlatform for the connection.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Doctrine/DBAL/Platforms/AbstractPlatform.html"><abbr title="Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getExpressionBuilder">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getExpressionBuilder"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L329">line 329</a></div>
+        <code>                    <a href="../../../Doctrine/DBAL/Query/Expression/ExpressionBuilder.html"><abbr title="Doctrine\DBAL\Query\Expression\ExpressionBuilder">ExpressionBuilder</abbr></a>
+    <strong>getExpressionBuilder</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the ExpressionBuilder for the connection.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Doctrine/DBAL/Query/Expression/ExpressionBuilder.html"><abbr title="Doctrine\DBAL\Query\Expression\ExpressionBuilder">ExpressionBuilder</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_connect">
+        <div class="location">at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Sharding/PoolingShardConnection.php#L134">line 134</a></div>
+        <code>                    boolean
+    <strong>connect</strong>(mixed $shardId = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Connect to a given shard</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>mixed</td>
+                <td>$shardId</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td>TRUE if the connection was successfully established, FALSE if
+                the connection is already open.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setFetchMode">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_setFetchMode"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L366">line 366</a></div>
+        <code>                    
+    <strong>setFetchMode</strong>(integer $fetchMode)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>setFetchMode</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>integer</td>
+                <td>$fetchMode</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_fetchAssoc">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_fetchAssoc"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L379">line 379</a></div>
+        <code>                    array
+    <strong>fetchAssoc</strong>(string $statement, array $params = array())
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Prepares and executes an SQL query and returns the first row of the result
+as an associative array.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$statement</td>
+                <td>The SQL query.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$params</td>
+                <td>The query parameters.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_fetchArray">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_fetchArray"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L392">line 392</a></div>
+        <code>                    array
+    <strong>fetchArray</strong>(string $statement, array $params = array())
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Prepares and executes an SQL query and returns the first row of the result
+as a numerically indexed array.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$statement</td>
+                <td>sql query to be executed</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$params</td>
+                <td>prepared statement params</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_fetchColumn">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_fetchColumn"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L406">line 406</a></div>
+        <code>                    mixed
+    <strong>fetchColumn</strong>(string $statement, array $params = array(), int $colnum = 0)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Prepares and executes an SQL query and returns the value of a single column
+of the first row of the result.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$statement</td>
+                <td>sql query to be executed</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$params</td>
+                <td>prepared statement params</td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$colnum</td>
+                <td>0-indexed column number to retrieve</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>mixed</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isConnected">
+        <div class="location">at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Sharding/PoolingShardConnection.php#L186">line 186</a></div>
+        <code>                    boolean
+    <strong>isConnected</strong>($shardId = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Whether an actual connection to the database is established.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$shardId</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isTransactionActive">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_isTransactionActive"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L426">line 426</a></div>
+        <code>                    boolean
+    <strong>isTransactionActive</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Checks whether a transaction is currently active.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td>TRUE if a transaction is currently active, FALSE otherwise.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_delete">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_delete"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L438">line 438</a></div>
+        <code>                    integer
+    <strong>delete</strong>(string $tableName, array $identifier)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Executes an SQL DELETE statement on a table.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$tableName</td>
+                <td>The name of the table on which to delete.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$identifier</td>
+                <td>The deletion criteria. An associative array containing column-value pairs.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>integer</td>
+            <td>The number of affected rows.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_close">
+        <div class="location">at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Sharding/PoolingShardConnection.php#L195">line 195</a></div>
+        <code>                    void
+    <strong>close</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Closes the connection.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setTransactionIsolation">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_setTransactionIsolation"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L471">line 471</a></div>
+        <code>                    integer
+    <strong>setTransactionIsolation</strong>(integer $level)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Sets the transaction isolation level.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>integer</td>
+                <td>$level</td>
+                <td>The level to set.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>integer</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getTransactionIsolation">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getTransactionIsolation"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L483">line 483</a></div>
+        <code>                    integer
+    <strong>getTransactionIsolation</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the currently active transaction isolation level.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>integer</td>
+            <td>The current transaction isolation level.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_update">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_update"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L497">line 497</a></div>
+        <code>                    integer
+    <strong>update</strong>(string $tableName, array $data, array $identifier, array $types = array())
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Executes an SQL UPDATE statement on a table.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$tableName</td>
+                <td>The name of the table to update.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$data</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$identifier</td>
+                <td>The update criteria. An associative array containing column-value pairs.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$types</td>
+                <td>Types of the merged $data and $identifier arrays in that order.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>integer</td>
+            <td>The number of affected rows.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_insert">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_insert"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L522">line 522</a></div>
+        <code>                    integer
+    <strong>insert</strong>(string $tableName, array $data, array $types = array())
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Inserts a table row with specified data.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$tableName</td>
+                <td>The name of the table to insert data into.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$data</td>
+                <td>An associative array containing column-value pairs.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$types</td>
+                <td>Types of the inserted data.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>integer</td>
+            <td>The number of affected rows.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_quoteIdentifier">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_quoteIdentifier"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L555">line 555</a></div>
+        <code>                    string
+    <strong>quoteIdentifier</strong>(string $str)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Quote a string so it can be safely used as a table or column name, even if
+it is a reserved name.</p>                    <p>Delimiting style depends on the underlying database platform that is being used.</p>
+
+<p>NOTE: Just because you CAN use quoted identifiers does not mean
+you SHOULD use them. In general, they end up causing way more
+problems than they solve.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$str</td>
+                <td>The name to be quoted.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>The quoted name.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_quote">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_quote"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L567">line 567</a></div>
+        <code>                    
+    <strong>quote</strong>($input, $type = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Quotes a given input parameter.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$input</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$type</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_fetchAll">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_fetchAll"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L582">line 582</a></div>
+        <code>                    array
+    <strong>fetchAll</strong>(string $sql, array $params = array())
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Prepares and executes an SQL query and returns the result as an associative array.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$sql</td>
+                <td>The SQL query.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$params</td>
+                <td>The query parameters.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_prepare">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_prepare"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L593">line 593</a></div>
+        <code>                    
+    <strong>prepare</strong>(string $statement)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Prepares an SQL statement.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$statement</td>
+                <td>The SQL statement to prepare.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_executeQuery">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_executeQuery"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L621">line 621</a></div>
+        <code>                    <a href="../../../Doctrine/DBAL/Driver/Statement.html"><abbr title="Doctrine\DBAL\Driver\Statement">Statement</abbr></a>
+    <strong>executeQuery</strong>(string $query, array $params = array(), array $types = array(), <a href="../../../Doctrine/DBAL/Cache/QueryCacheProfile.html"><abbr title="Doctrine\DBAL\Cache\QueryCacheProfile">QueryCacheProfile</abbr></a> $qcp = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Executes an, optionally parameterized, SQL query.</p>                    <p>If the query is parameterized, a prepared statement is used.
+If an SQLLogger is configured, the execution is logged.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$query</td>
+                <td>The SQL query to execute.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$params</td>
+                <td>The parameters to bind to the query, if any.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$types</td>
+                <td>The types the previous parameters are in.</td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Doctrine/DBAL/Cache/QueryCacheProfile.html"><abbr title="Doctrine\DBAL\Cache\QueryCacheProfile">QueryCacheProfile</abbr></a></td>
+                <td>$qcp</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Doctrine/DBAL/Driver/Statement.html"><abbr title="Doctrine\DBAL\Driver\Statement">Statement</abbr></a></td>
+            <td>The executed statement.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_executeCacheQuery">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_executeCacheQuery"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L670">line 670</a></div>
+        <code>                    <a href="../../../Doctrine/DBAL/Driver/ResultStatement.html"><abbr title="Doctrine\DBAL\Driver\ResultStatement">ResultStatement</abbr></a>
+    <strong>executeCacheQuery</strong>(string $query, array $params, array $types, <a href="../../../Doctrine/DBAL/Cache/QueryCacheProfile.html"><abbr title="Doctrine\DBAL\Cache\QueryCacheProfile">QueryCacheProfile</abbr></a> $qcp)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Execute a caching query and</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$query</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$params</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$types</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Doctrine/DBAL/Cache/QueryCacheProfile.html"><abbr title="Doctrine\DBAL\Cache\QueryCacheProfile">QueryCacheProfile</abbr></a></td>
+                <td>$qcp</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Doctrine/DBAL/Driver/ResultStatement.html"><abbr title="Doctrine\DBAL\Driver\ResultStatement">ResultStatement</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_project">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_project"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L709">line 709</a></div>
+        <code>                    mixed
+    <strong>project</strong>($query, array $params, <a target="_blank" href="http://php.net/Closure">Closure</a> $function)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Executes an, optionally parameterized, SQL query and returns the result,
+applying a given projection/transformation function on each row of the result.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$query</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$params</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a target="_blank" href="http://php.net/Closure">Closure</a></td>
+                <td>$function</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>mixed</td>
+            <td>The projected result of the query.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_query">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_query"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L730">line 730</a></div>
+        <code>                    
+    <strong>query</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Executes an SQL statement, returning a result set as a Statement object.</p>                                                </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_executeUpdate">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_executeUpdate"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L768">line 768</a></div>
+        <code>                    integer
+    <strong>executeUpdate</strong>(string $query, array $params = array(), array $types = array())
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Executes an SQL INSERT/UPDATE/DELETE query with the given parameters
+and returns the number of affected rows.</p>                    <p>This method supports PDO binding types as well as DBAL mapping types.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$query</td>
+                <td>The SQL query.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$params</td>
+                <td>The query parameters.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$types</td>
+                <td>The parameter types.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>integer</td>
+            <td>The number of affected rows.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_exec">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_exec"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L809">line 809</a></div>
+        <code>                    
+    <strong>exec</strong>($statement)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Execute an SQL statement and return the number of affected rows.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$statement</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getTransactionNestingLevel">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getTransactionNestingLevel"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L836">line 836</a></div>
+        <code>                    integer
+    <strong>getTransactionNestingLevel</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Returns the current transaction nesting level.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>integer</td>
+            <td>The nesting level. A value of 0 means there's no active transaction.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_errorCode">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_errorCode"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L846">line 846</a></div>
+        <code>                    
+    <strong>errorCode</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Fetch the SQLSTATE associated with the last database operation.</p>                                                </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_errorInfo">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_errorInfo"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L857">line 857</a></div>
+        <code>                    
+    <strong>errorInfo</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Fetch extended error information associated with the last database operation.</p>                                                </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_lastInsertId">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_lastInsertId"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L874">line 874</a></div>
+        <code>                    
+    <strong>lastInsertId</strong>(string $seqName = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Returns the ID of the last inserted row, or the last value from a sequence object,
+depending on the underlying driver.</p>                    <p>Note: This method may not return a meaningful or consistent result across different drivers,
+because the underlying database may not even support the notion of AUTO_INCREMENT/IDENTITY
+columns or sequences.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$seqName</td>
+                <td>Name of the sequence object from which the ID should be returned.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_transactional">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_transactional"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L890">line 890</a></div>
+        <code>                    
+    <strong>transactional</strong>(<a target="_blank" href="http://php.net/Closure">Closure</a> $func)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Executes a function in a transaction.</p>                    <p>The function gets passed this Connection instance as an (optional) parameter.</p>
+
+<p>If an exception occurs during execution of the function or transaction commit,
+the transaction is rolled back and the exception re-thrown.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a target="_blank" href="http://php.net/Closure">Closure</a></td>
+                <td>$func</td>
+                <td>The function to execute transactionally.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setNestTransactionsWithSavepoints">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_setNestTransactionsWithSavepoints"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L908">line 908</a></div>
+        <code>                    void
+    <strong>setNestTransactionsWithSavepoints</strong>(boolean $nestTransactionsWithSavepoints)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set if nested transactions should use savepoints</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>boolean</td>
+                <td>$nestTransactionsWithSavepoints</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getNestTransactionsWithSavepoints">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getNestTransactionsWithSavepoints"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L926">line 926</a></div>
+        <code>                    boolean
+    <strong>getNestTransactionsWithSavepoints</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get if nested transactions should use savepoints</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__getNestedTransactionSavePointName">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method__getNestedTransactionSavePointName"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L937">line 937</a></div>
+        <code>            protected        mixed
+    <strong>_getNestedTransactionSavePointName</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Returns the savepoint name to use for nested transactions are false if they are not supported
+"savepointFormat" parameter is not set</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>mixed</td>
+            <td>a string with the savepoint name or false</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_beginTransaction">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_beginTransaction"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L947">line 947</a></div>
+        <code>                    
+    <strong>beginTransaction</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Starts a transaction by suspending auto-commit mode.</p>                                                </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_commit">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_commit"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L981">line 981</a></div>
+        <code>                    
+    <strong>commit</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Commits the current transaction.</p>                                                </div>
+                <div class="tags">
+            
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Doctrine/DBAL/ConnectionException.html"><abbr title="Doctrine\DBAL\ConnectionException">ConnectionException</abbr></a></td>
+                <td>If the commit failed due to no active transaction or
+                            because the transaction was marked for rollback only.</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_rollBack">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_rollBack"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L1023">line 1023</a></div>
+        <code>                    
+    <strong>rollBack</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Cancel any database changes done during the current transaction.</p>                    <p>this method can be listened with onPreTransactionRollback and onTransactionRollback
+eventlistener methods</p>                            </div>
+                <div class="tags">
+            
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Doctrine/DBAL/ConnectionException.html"><abbr title="Doctrine\DBAL\ConnectionException">ConnectionException</abbr></a></td>
+                <td>If the rollback operation failed.</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_createSavepoint">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_createSavepoint"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L1065">line 1065</a></div>
+        <code>                    void
+    <strong>createSavepoint</strong>(string $savepoint)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>createSavepoint
+creates a new savepoint</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$savepoint</td>
+                <td>name of a savepoint to set</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_releaseSavepoint">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_releaseSavepoint"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L1081">line 1081</a></div>
+        <code>                    void
+    <strong>releaseSavepoint</strong>(string $savepoint)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>releaseSavePoint
+releases given savepoint</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$savepoint</td>
+                <td>name of a savepoint to release</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_rollbackSavepoint">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_rollbackSavepoint"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L1099">line 1099</a></div>
+        <code>                    void
+    <strong>rollbackSavepoint</strong>(string $savepoint)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>rollbackSavePoint
+releases given savepoint</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$savepoint</td>
+                <td>name of a savepoint to rollback to</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getWrappedConnection">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getWrappedConnection"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L1113">line 1113</a></div>
+        <code>                    <a href="../../../Doctrine/DBAL/Driver/Connection.html"><abbr title="Doctrine\DBAL\Driver\Connection">Connection</abbr></a>
+    <strong>getWrappedConnection</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the wrapped driver connection.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Doctrine/DBAL/Driver/Connection.html"><abbr title="Doctrine\DBAL\Driver\Connection">Connection</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getSchemaManager">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_getSchemaManager"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L1126">line 1126</a></div>
+        <code>                    <a href="../../../Doctrine/DBAL/Schema/AbstractSchemaManager.html"><abbr title="Doctrine\DBAL\Schema\AbstractSchemaManager">AbstractSchemaManager</abbr></a>
+    <strong>getSchemaManager</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the SchemaManager that can be used to inspect or change the
+database schema through the connection.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Doctrine/DBAL/Schema/AbstractSchemaManager.html"><abbr title="Doctrine\DBAL\Schema\AbstractSchemaManager">AbstractSchemaManager</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setRollbackOnly">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_setRollbackOnly"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L1141">line 1141</a></div>
+        <code>                    
+    <strong>setRollbackOnly</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Marks the current transaction so that the only possible
+outcome for the transaction to be rolled back.</p>                                                </div>
+                <div class="tags">
+            
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Doctrine/DBAL/ConnectionException.html"><abbr title="Doctrine\DBAL\ConnectionException">ConnectionException</abbr></a></td>
+                <td>If no transaction is active.</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isRollbackOnly">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_isRollbackOnly"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L1155">line 1155</a></div>
+        <code>                    boolean
+    <strong>isRollbackOnly</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Check whether the current transaction is marked for rollback only.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Doctrine/DBAL/ConnectionException.html"><abbr title="Doctrine\DBAL\ConnectionException">ConnectionException</abbr></a></td>
+                <td>If no transaction is active.</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_convertToDatabaseValue">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_convertToDatabaseValue"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L1171">line 1171</a></div>
+        <code>                    mixed
+    <strong>convertToDatabaseValue</strong>(mixed $value, string $type)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Converts a given value to its database representation according to the conversion
+rules of a specific DBAL mapping type.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>mixed</td>
+                <td>$value</td>
+                <td>The value to convert.</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$type</td>
+                <td>The name of the DBAL mapping type.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>mixed</td>
+            <td>The converted value.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_convertToPHPValue">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_convertToPHPValue"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L1184">line 1184</a></div>
+        <code>                    mixed
+    <strong>convertToPHPValue</strong>(mixed $value, string $type)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Converts a given value to its PHP representation according to the conversion
+rules of a specific DBAL mapping type.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>mixed</td>
+                <td>$value</td>
+                <td>The value to convert.</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$type</td>
+                <td>The name of the DBAL mapping type.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>mixed</td>
+            <td>The converted type.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_resolveParams">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_resolveParams"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L1263">line 1263</a></div>
+        <code>                    array
+    <strong>resolveParams</strong>(array $params, array $types)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Resolves the parameters to a format which can be displayed.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$params</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$types</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_createQueryBuilder">
+        <div class="location">in <a href="../../../Doctrine/DBAL/Connection.html#method_createQueryBuilder"><abbr title="Doctrine\DBAL\Connection">Connection</abbr></a> at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Connection.php#L1304">line 1304</a></div>
+        <code>                    <a href="../../../Doctrine/DBAL/Query/QueryBuilder.html"><abbr title="Doctrine\DBAL\Query\QueryBuilder">QueryBuilder</abbr></a>
+    <strong>createQueryBuilder</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Create a new instance of a SQL query builder.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Doctrine/DBAL/Query/QueryBuilder.html"><abbr title="Doctrine\DBAL\Query\QueryBuilder">QueryBuilder</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_connectTo">
+        <div class="location">at         <a href="https://github.com/doctrine/dbal/blob/2.3/lib/Doctrine/DBAL/Sharding/PoolingShardConnection.php#L172">line 172</a></div>
+        <code>            protected        <a href="../../../Doctrine/DBAL/Driver.html"><abbr title="Doctrine\DBAL\Driver">Driver</abbr></a>
+    <strong>connectTo</strong>(string $shardId)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Connect to a specific connection</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$shardId</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Doctrine/DBAL/Driver.html"><abbr title="Doctrine\DBAL\Driver">Driver</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>

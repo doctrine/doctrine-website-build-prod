@@ -1,0 +1,2235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Doctrine\ORM\Persisters\BasicEntityPersister | API</title>
+
+            <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/sami.css">
+        <script src="../../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../../js/bootstrap.min.js"></script>
+        <script src="../../../js/typeahead.min.js"></script>
+        <script src="../../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Doctrine_ORM_Persisters_BasicEntityPersister" data-root-path="../../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                <script>
+            $('option[data-version="'+window.projectVersion+'"]').prop('selected', true);
+        </script>
+        <form id="search-form" action="../../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../../index.html">API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../../classes.html">Classes</a></li>
+                                            <li><a href="../../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../../traits.html">Traits</a></li>
+                    <li><a href="../../../doc-index.html">Index</a></li>
+                    <li><a href="../../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                        <li><a href="../../../Doctrine.html">Doctrine</a></li><li class="backslash">\</li><li><a href="../../../Doctrine/ORM.html">ORM</a></li><li class="backslash">\</li><li><a href="../../../Doctrine/ORM/Persisters.html">Persisters</a></li><li class="backslash">\</li><li>BasicEntityPersister</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>
+            BasicEntityPersister
+                
+        </h1>
+    </div>
+
+    <p>    class
+    <strong>BasicEntityPersister</strong>        (<a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php">View source</a>)
+</p>
+
+        
+    
+
+            <div class="description">
+            <p>A BasicEntityPersiter maps an entity to a single table in a relational database.</p>            <p>A persister is always responsible for a single entity type.</p>
+
+<p>EntityPersisters are used during a UnitOfWork to apply any changes to the persistent
+state of entities onto a relational database when the UnitOfWork is committed,
+as well as for basic querying of entities and their associations (not DQL).</p>
+
+<p>The persisting operations that are invoked during a commit of a UnitOfWork to
+persist the persistent entity state are:</p>
+
+<ul>
+<li>{@link addInsert} : To schedule an entity for insertion.</li>
+<li>{@link executeInserts} : To execute all scheduled insertions.</li>
+<li>{@link update} : To update the persistent state of an entity.</li>
+<li>{@link delete} : To delete the persistent state of an entity.</li>
+</ul>
+
+<p>As can be seen from the above list, insertions are batched and executed all at once
+for increased efficiency.</p>
+
+<p>The querying operations invoked during a UnitOfWork, either through direct find
+requests or lazy-loading, are the following:</p>
+
+<ul>
+<li>{@link load} : Loads (the state of) a single, managed entity.</li>
+<li>{@link loadAll} : Loads multiple, managed entities.</li>
+<li>{@link loadOneToOneEntity} : Loads a one/many-to-one entity association (lazy-loading).</li>
+<li>{@link loadOneToManyCollection} : Loads a one-to-many entity association (lazy-loading).</li>
+<li>{@link loadManyToManyCollection} : Loads a many-to-many entity association (lazy-loading).</li>
+</ul>
+
+<p>The BasicEntityPersister implementation provides the default behavior for
+persisting and querying entities that are mapped to a single database table.</p>
+
+<p>Subclasses can be created to provide custom persisting and querying strategies,
+i.e. spanning multiple tables.</p>                    </div>
+    
+    
+    
+            <h2>Properties</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td class="type" id="property__class">
+                                        protected                                        <a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a>
+                </td>
+                <td>$_class</td>
+                <td class="last">Metadata object that describes the mapping of the mapped entity class.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__conn">
+                                        protected                                        <abbr title="Doctrine\DBAL\Connection">Connection</abbr>
+                </td>
+                <td>$_conn</td>
+                <td class="last">The underlying DBAL Connection of the used EntityManager.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__platform">
+                                        protected                                        <abbr title="Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>
+                </td>
+                <td>$_platform</td>
+                <td class="last">The database platform.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__em">
+                                        protected                                        <a href="../../../Doctrine/ORM/EntityManager.html"><abbr title="Doctrine\ORM\EntityManager">EntityManager</abbr></a>
+                </td>
+                <td>$_em</td>
+                <td class="last">The EntityManager instance.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__queuedInserts">
+                                        protected                                        array
+                </td>
+                <td>$_queuedInserts</td>
+                <td class="last">Queued inserts.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__rsm">
+                                        protected                                        <a href="../../../Doctrine/ORM/Query/ResultSetMapping.html"><abbr title="Doctrine\ORM\Query\ResultSetMapping">ResultSetMapping</abbr></a>
+                </td>
+                <td>$_rsm</td>
+                <td class="last">ResultSetMapping that is used for all queries. Is generated lazily once per request.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__columnTypes">
+                                        protected                                        array
+                </td>
+                <td>$_columnTypes</td>
+                <td class="last">The map of column names to DBAL mapping types of all prepared columns used
+when INSERTing or UPDATEing an entity.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__selectColumnListSql">
+                                        protected                                        string
+                </td>
+                <td>$_selectColumnListSql</td>
+                <td class="last">The SELECT column list SQL fragment used for querying entities by this persister.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__selectJoinSql">
+                                        protected                                        string
+                </td>
+                <td>$_selectJoinSql</td>
+                <td class="last">The JOIN SQL fragement used to eagerly load all many-to-one and one-to-one
+associations configured as FETCH_EAGER, aswell as all inverse one-to-one associations.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__sqlAliasCounter">
+                                        protected                                        integer
+                </td>
+                <td>$_sqlAliasCounter</td>
+                <td class="last">Counter for creating unique SQL table and column aliases.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property__sqlTableAliases">
+                                        protected                                        array
+                </td>
+                <td>$_sqlTableAliases</td>
+                <td class="last">Map from class names (FQCN) to the corresponding generated SQL table aliases.</td>
+                <td></td>
+            </tr>
+            </table>
+
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method___construct">__construct</a>(<a href="../../../Doctrine/ORM/EntityManager.html"><abbr title="Doctrine\ORM\EntityManager">EntityManager</abbr></a> $em, <a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $class)
+        
+                                            <p>Initializes a new <tt>BasicEntityPersister</tt> that uses the given EntityManager
+and persists instances of the class described by the given ClassMetadata descriptor.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getClassMetadata">getClassMetadata</a>()
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_addInsert">addInsert</a>(object $entity)
+        
+                                            <p>Adds an entity to the queued insertions.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_executeInserts">executeInserts</a>()
+        
+                                            <p>Executes all queued entity insertions and returns any generated post-insert
+identifiers that were created as a result of the insertions.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_assignDefaultVersionValue">assignDefaultVersionValue</a>(object $entity, mixed $id)
+        
+                                            <p>Retrieves the default version value which was created
+by the preceding INSERT statement and assigns it back in to the
+entities version field.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    mixed
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_fetchVersionValue">fetchVersionValue</a>(<a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $versionedClass, mixed $id)
+        
+                                            <p>Fetch the current version value of a versioned entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_update">update</a>(object $entity)
+        
+                                            <p>Updates a managed entity. The entity is updated according to its current changeset
+in the running UnitOfWork. If there is no changeset, nothing is updated.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__updateTable">_updateTable</a>(object $entity, string $quotedTableName, array $updateData, boolean $versioned = false)
+        
+                                            <p>Performs an UPDATE statement for an entity on a specific table.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_deleteJoinTableRecords">deleteJoinTableRecords</a>(array $identifier)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_delete">delete</a>(object $entity)
+        
+                                            <p>Deletes a managed entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__prepareUpdateData">_prepareUpdateData</a>(object $entity)
+        
+                                            <p>Prepares the changeset of an entity for database insertion (UPDATE).</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__prepareInsertData">_prepareInsertData</a>(object $entity)
+        
+                                            <p>Prepares the data changeset of a managed entity for database insertion (initial INSERT).</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getOwningTable">getOwningTable</a>(string $fieldName)
+        
+                                            <p>Gets the name of the table that owns the column the given field is mapped to.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    object
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_load">load</a>(array $criteria, object $entity = null, $assoc = null, array $hints = array(), int $lockMode = 0, int $limit = null)
+        
+                                            <p>Loads an entity by a list of field criteria.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    object
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_loadOneToOneEntity">loadOneToOneEntity</a>(array $assoc, object $sourceEntity, array $identifier = array())
+        
+                                            <p>Loads an entity of this persister's mapped class as part of a single-valued
+association from another entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_refresh">refresh</a>(array $id, $entity, $lockMode = 0)
+        
+                                            <p>Refreshes a managed entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_loadAll">loadAll</a>(array $criteria = array(), array $orderBy = null, int $limit = null, int $offset = null)
+        
+                                            <p>Loads a list of entities by a list of field criteria.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getManyToManyCollection">getManyToManyCollection</a>(array $assoc, object $sourceEntity, int|null $offset = null, int|null $limit = null)
+        
+                                            <p>Get (sliced or full) elements of the given collection.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_loadManyToManyCollection">loadManyToManyCollection</a>(array $assoc, $sourceEntity, <a href="../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $coll)
+        
+                                            <p>Loads a collection of entities of a many-to-many association.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__getSelectEntitiesSQL">_getSelectEntitiesSQL</a>(array $criteria, $assoc = null, $lockMode = 0, $limit = null, $offset = null, array $orderBy = null)
+        
+                                            <p>Gets the SELECT SQL to select one or more entities by a set of field criteria.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__getOrderBySQL">_getOrderBySQL</a>(array $orderBy, string $baseTableAlias)
+        
+                                            <p>Gets the ORDER BY SQL snippet for ordered collections.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__getSelectColumnListSQL">_getSelectColumnListSQL</a>()
+        
+                                            <p>Gets the SQL fragment with the list of columns to select when querying for
+an entity in this persister.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__getSelectColumnAssociationSQL">_getSelectColumnAssociationSQL</a>(string $field, array $assoc, <a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $class, string $alias = &#039;r&#039;)
+        
+                                            <p>Gets the SQL join fragment used when selecting entities from an association.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__getSelectManyToManyJoinSQL">_getSelectManyToManyJoinSQL</a>(array $manyToMany)
+        
+                                            <p>Gets the SQL join fragment used when selecting entities from a
+many-to-many association.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__getInsertSQL">_getInsertSQL</a>()
+        
+                                            <p>Gets the INSERT SQL used by the persister to persist a new entity.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__getInsertColumnList">_getInsertColumnList</a>()
+        
+                                            <p>Gets the list of columns to put in the INSERT SQL statement.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__getSelectColumnSQL">_getSelectColumnSQL</a>(string $field, <a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $class, string $alias = &#039;r&#039;)
+        
+                                            <p>Gets the SQL snippet of a qualified column name for the given field name.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__getSQLTableAlias">_getSQLTableAlias</a>($className, $assocName = &#039;&#039;)
+        
+                                            <p>Gets the SQL table alias for the given class name.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_lock">lock</a>(array $criteria, int $lockMode)
+        
+                                            <p>Lock all rows of this entity matching the given criteria with the specified pessimistic lock mode</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getLockTablesSql">getLockTablesSql</a>()
+        
+                                            <p>Get the FROM and optionally JOIN conditions to lock the entity managed by this persister.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method__getSelectConditionSQL">_getSelectConditionSQL</a>(array $criteria, <abbr title="Doctrine\ORM\Persisters\AssociationMapping">AssociationMapping</abbr> $assoc = null)
+        
+                                            <p>Gets the conditional SQL fragment used in the WHERE clause when selecting
+entities in this persister.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getOneToManyCollection">getOneToManyCollection</a>(array $assoc, object $sourceEntity, int $offset = null, int $limit = null)
+        
+                                            <p>Return an array with (sliced or full list) of elements in the specified collection.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_loadOneToManyCollection">loadOneToManyCollection</a>(array $assoc, $sourceEntity, <a href="../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $coll)
+        
+                                            <p>Loads a collection of entities in a one-to-many association.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_exists">exists</a>($entity, array $extraConditions = array())
+        
+                                            <p>Checks whether the given managed entity exists in the database.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getJoinSQLForJoinColumns">getJoinSQLForJoinColumns</a>(array $joinColumns)
+        
+                                            <p>Generates the appropriate join SQL for the given join column.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getSQLColumnAlias">getSQLColumnAlias</a>(string $columnName)
+        
+                                            <p>Gets an SQL column alias for a column name.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_generateFilterConditionSQL">generateFilterConditionSQL</a>(<a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $targetEntity, string $targetTableAlias)
+        
+                                            <p>Generates the filter SQL for a given entity and table alias.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method___construct">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L179">line 179</a></div>
+        <code>                    
+    <strong>__construct</strong>(<a href="../../../Doctrine/ORM/EntityManager.html"><abbr title="Doctrine\ORM\EntityManager">EntityManager</abbr></a> $em, <a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $class)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Initializes a new <tt>BasicEntityPersister</tt> that uses the given EntityManager
+and persists instances of the class described by the given ClassMetadata descriptor.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Doctrine/ORM/EntityManager.html"><abbr title="Doctrine\ORM\EntityManager">EntityManager</abbr></a></td>
+                <td>$em</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a></td>
+                <td>$class</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getClassMetadata">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L190">line 190</a></div>
+        <code>                    <a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a>
+    <strong>getClassMetadata</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_addInsert">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L201">line 201</a></div>
+        <code>                    
+    <strong>addInsert</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Adds an entity to the queued insertions.</p>                    <p>The entity remains queued until {@link executeInserts} is invoked.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to queue for insertion.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_executeInserts">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L215">line 215</a></div>
+        <code>                    array
+    <strong>executeInserts</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Executes all queued entity insertions and returns any generated post-insert
+identifiers that were created as a result of the insertions.</p>                    <p>If no inserts are queued, invoking this method is a NOOP.</p>                            </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td>An array of any generated post-insert IDs. This will be an empty array
+              if the entity class does not use the IDENTITY generation strategy.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_assignDefaultVersionValue">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L267">line 267</a></div>
+        <code>            protected        
+    <strong>assignDefaultVersionValue</strong>(object $entity, mixed $id)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Retrieves the default version value which was created
+by the preceding INSERT statement and assigns it back in to the
+entities version field.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>mixed</td>
+                <td>$id</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_fetchVersionValue">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L280">line 280</a></div>
+        <code>            protected        mixed
+    <strong>fetchVersionValue</strong>(<a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $versionedClass, mixed $id)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Fetch the current version value of a versioned entity.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a></td>
+                <td>$versionedClass</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>mixed</td>
+                <td>$id</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>mixed</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_update">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L310">line 310</a></div>
+        <code>                    
+    <strong>update</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Updates a managed entity. The entity is updated according to its current changeset
+in the running UnitOfWork. If there is no changeset, nothing is updated.</p>                    <p>The data to update is retrieved through {@link _prepareUpdateData}.
+Subclasses that override this method are supposed to obtain the update data
+in the same way, through {@link _prepareUpdateData}.</p>
+
+<p>Subclasses are also supposed to take care of versioning when overriding this method,
+if necessary. The {@link _updateTable} method can be used to apply the data retrieved
+from {@_prepareUpdateData} on the target tables, thereby optionally applying versioning.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to update.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__updateTable">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L337">line 337</a></div>
+        <code>final            protected        
+    <strong>_updateTable</strong>(object $entity, string $quotedTableName, array $updateData, boolean $versioned = false)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Performs an UPDATE statement for an entity on a specific table.</p>                    <p>The UPDATE can optionally be versioned, which requires the entity to have a version field.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity object being updated.</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$quotedTableName</td>
+                <td>The quoted name of the table to apply the UPDATE on.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$updateData</td>
+                <td>The map of columns to update (column => value).</td>
+            </tr>
+                    <tr>
+                <td>boolean</td>
+                <td>$versioned</td>
+                <td>Whether the UPDATE should be versioned.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_deleteJoinTableRecords">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L419">line 419</a></div>
+        <code>            protected        void
+    <strong>deleteJoinTableRecords</strong>(array $identifier)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$identifier</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_delete">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L470">line 470</a></div>
+        <code>                    
+    <strong>delete</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Deletes a managed entity.</p>                    <p>The entity to delete must be managed and have a persistent identifier.
+The deletion happens instantaneously.</p>
+
+<p>Subclasses may override this method to customize the semantics of entity deletion.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to delete.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__prepareUpdateData">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L499">line 499</a></div>
+        <code>            protected        array
+    <strong>_prepareUpdateData</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Prepares the changeset of an entity for database insertion (UPDATE).</p>                    <p>The changeset is obtained from the currently running UnitOfWork.</p>
+
+<p>During this preparation the array that is passed as the second parameter is filled with
+<columnName> => <value> pairs, grouped by table name.</p>
+
+<p>Example:
+<code>
+array(
+   'foo_table' => array('column1' => 'value1', 'column2' => 'value2', ...),
+   'bar_table' => array('columnX' => 'valueX', 'columnY' => 'valueY', ...),
+   ...
+)
+</code></p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity for which to prepare the data.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td>The prepared data.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__prepareInsertData">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L576">line 576</a></div>
+        <code>            protected        array
+    <strong>_prepareInsertData</strong>(object $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Prepares the data changeset of a managed entity for database insertion (initial INSERT).</p>                    <p>The changeset of the entity is obtained from the currently running UnitOfWork.</p>
+
+<p>The default insert data preparation is the same as for updates.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity for which to prepare the data.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td>The prepared data for the tables to update.</td>
+        </tr>
+    </table>
+
+            
+            
+                            <h4>See also</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+                                            <abbr title="Doctrine\ORM\Persisters\_prepareUpdateData">_prepareUpdateData</abbr>
+                                    </td>
+                <td></td>
+            </tr>
+            </table>
+
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getOwningTable">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L591">line 591</a></div>
+        <code>                    string
+    <strong>getOwningTable</strong>(string $fieldName)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the name of the table that owns the column the given field is mapped to.</p>                    <p>The default implementation in BasicEntityPersister always returns the name
+of the table the entity type of this persister is mapped to, since an entity
+is always persisted to a single table with a BasicEntityPersister.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$fieldName</td>
+                <td>The field name.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>The table name.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_load">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L609">line 609</a></div>
+        <code>                    object
+    <strong>load</strong>(array $criteria, object $entity = null, $assoc = null, array $hints = array(), int $lockMode = 0, int $limit = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Loads an entity by a list of field criteria.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$criteria</td>
+                <td>The criteria by which to load the entity.</td>
+            </tr>
+                    <tr>
+                <td>object</td>
+                <td>$entity</td>
+                <td>The entity to load the data into. If not specified,
+       a new entity is created.</td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$assoc</td>
+                <td>The association that connects the entity to load to another entity, if any.</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$hints</td>
+                <td>Hints for entity creation.</td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$lockMode</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$limit</td>
+                <td>Limit number of results</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>object</td>
+            <td>The loaded and managed entity instance or NULL if the entity can not be found.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_loadOneToOneEntity">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L637">line 637</a></div>
+        <code>                    object
+    <strong>loadOneToOneEntity</strong>(array $assoc, object $sourceEntity, array $identifier = array())
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Loads an entity of this persister's mapped class as part of a single-valued
+association from another entity.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$assoc</td>
+                <td>The association to load.</td>
+            </tr>
+                    <tr>
+                <td>object</td>
+                <td>$sourceEntity</td>
+                <td>The entity that owns the association (not necessarily the "owning side").</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$identifier</td>
+                <td>The identifier of the entity to load. Must be provided if
+                         the association to load represents the owning side, otherwise
+                         the identifier is derived from the $sourceEntity.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>object</td>
+            <td>The loaded and managed entity instance or NULL if the entity can not be found.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_refresh">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L705">line 705</a></div>
+        <code>                    
+    <strong>refresh</strong>(array $id, $entity, $lockMode = 0)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Refreshes a managed entity.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$id</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$lockMode</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_loadAll">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L724">line 724</a></div>
+        <code>                    array
+    <strong>loadAll</strong>(array $criteria = array(), array $orderBy = null, int $limit = null, int $offset = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Loads a list of entities by a list of field criteria.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$criteria</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$orderBy</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$limit</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$offset</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getManyToManyCollection">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L745">line 745</a></div>
+        <code>                    array
+    <strong>getManyToManyCollection</strong>(array $assoc, object $sourceEntity, int|null $offset = null, int|null $limit = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get (sliced or full) elements of the given collection.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$assoc</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>object</td>
+                <td>$sourceEntity</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int|null</td>
+                <td>$offset</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int|null</td>
+                <td>$limit</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_loadManyToManyCollection">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L811">line 811</a></div>
+        <code>                    array
+    <strong>loadManyToManyCollection</strong>(array $assoc, $sourceEntity, <a href="../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $coll)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Loads a collection of entities of a many-to-many association.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$assoc</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$sourceEntity</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a></td>
+                <td>$coll</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__getSelectEntitiesSQL">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L890">line 890</a></div>
+        <code>            protected        string
+    <strong>_getSelectEntitiesSQL</strong>(array $criteria, $assoc = null, $lockMode = 0, $limit = null, $offset = null, array $orderBy = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the SELECT SQL to select one or more entities by a set of field criteria.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$criteria</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$assoc</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$lockMode</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$limit</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$offset</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$orderBy</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__getOrderBySQL">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L932">line 932</a></div>
+        <code>final            protected        string
+    <strong>_getOrderBySQL</strong>(array $orderBy, string $baseTableAlias)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the ORDER BY SQL snippet for ordered collections.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$orderBy</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$baseTableAlias</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__getSelectColumnListSQL">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L971">line 971</a></div>
+        <code>            protected        string
+    <strong>_getSelectColumnListSQL</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the SQL fragment with the list of columns to select when querying for
+an entity in this persister.</p>                    <p>Subclasses should override this method to alter or change the select column
+list SQL fragment. Note that in the implementation of BasicEntityPersister
+the resulting SQL fragment is generated only once and cached in {@link _selectColumnListSql}.
+Subclasses may or may not do the same.</p>                            </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>The SQL fragment.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__getSelectColumnAssociationSQL">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1080">line 1080</a></div>
+        <code>            protected        string
+    <strong>_getSelectColumnAssociationSQL</strong>(string $field, array $assoc, <a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $class, string $alias = &#039;r&#039;)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the SQL join fragment used when selecting entities from an association.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$field</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$assoc</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a></td>
+                <td>$class</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$alias</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__getSelectManyToManyJoinSQL">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1105">line 1105</a></div>
+        <code>            protected        string
+    <strong>_getSelectManyToManyJoinSQL</strong>(array $manyToMany)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the SQL join fragment used when selecting entities from a
+many-to-many association.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$manyToMany</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__getInsertSQL">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1139">line 1139</a></div>
+        <code>            protected        string
+    <strong>_getInsertSQL</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the INSERT SQL used by the persister to persist a new entity.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__getInsertColumnList">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1185">line 1185</a></div>
+        <code>            protected        array
+    <strong>_getInsertColumnList</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the list of columns to put in the INSERT SQL statement.</p>                    <p>Subclasses should override this method to alter or change the list of
+columns placed in the INSERT statements used by the persister.</p>                            </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td>The list of columns.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__getSelectColumnSQL">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1219">line 1219</a></div>
+        <code>            protected        
+    <strong>_getSelectColumnSQL</strong>(string $field, <a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $class, string $alias = &#039;r&#039;)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the SQL snippet of a qualified column name for the given field name.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$field</td>
+                <td>The field name.</td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a></td>
+                <td>$class</td>
+                <td>The class that declares this field. The table this class is
+                            mapped to must own the column for the given field.</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$alias</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__getSQLTableAlias">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1242">line 1242</a></div>
+        <code>            protected        string
+    <strong>_getSQLTableAlias</strong>($className, $assocName = &#039;&#039;)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the SQL table alias for the given class name.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$className</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$assocName</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>The SQL table alias.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_lock">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1266">line 1266</a></div>
+        <code>                    void
+    <strong>lock</strong>(array $criteria, int $lockMode)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Lock all rows of this entity matching the given criteria with the specified pessimistic lock mode</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$criteria</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$lockMode</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getLockTablesSql">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1290">line 1290</a></div>
+        <code>            protected        string
+    <strong>getLockTablesSql</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get the FROM and optionally JOIN conditions to lock the entity managed by this persister.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method__getSelectConditionSQL">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1307">line 1307</a></div>
+        <code>            protected        string
+    <strong>_getSelectConditionSQL</strong>(array $criteria, <abbr title="Doctrine\ORM\Persisters\AssociationMapping">AssociationMapping</abbr> $assoc = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets the conditional SQL fragment used in the WHERE clause when selecting
+entities in this persister.</p>                    <p>Subclasses are supposed to override this method if they intend to change
+or alter the criteria by which entities are selected.</p>                            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$criteria</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><abbr title="Doctrine\ORM\Persisters\AssociationMapping">AssociationMapping</abbr></td>
+                <td>$assoc</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getOneToManyCollection">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1361">line 1361</a></div>
+        <code>                    array
+    <strong>getOneToManyCollection</strong>(array $assoc, object $sourceEntity, int $offset = null, int $limit = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Return an array with (sliced or full list) of elements in the specified collection.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$assoc</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>object</td>
+                <td>$sourceEntity</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$offset</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>int</td>
+                <td>$limit</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_loadOneToManyCollection">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1377">line 1377</a></div>
+        <code>                    
+    <strong>loadOneToManyCollection</strong>(array $assoc, $sourceEntity, <a href="../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a> $coll)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Loads a collection of entities in a one-to-many association.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$assoc</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$sourceEntity</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Doctrine/ORM/PersistentCollection.html"><abbr title="Doctrine\ORM\PersistentCollection">PersistentCollection</abbr></a></td>
+                <td>$coll</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_exists">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1536">line 1536</a></div>
+        <code>                    boolean
+    <strong>exists</strong>($entity, array $extraConditions = array())
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Checks whether the given managed entity exists in the database.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$extraConditions</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>boolean</td>
+            <td>TRUE if the entity exists in the database, FALSE otherwise.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getJoinSQLForJoinColumns">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1569">line 1569</a></div>
+        <code>            protected        string
+    <strong>getJoinSQLForJoinColumns</strong>(array $joinColumns)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Generates the appropriate join SQL for the given join column.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$joinColumns</td>
+                <td>The join columns definition of an association.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>LEFT JOIN if one of the columns is nullable, INNER JOIN otherwise.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getSQLColumnAlias">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1587">line 1587</a></div>
+        <code>                    string
+    <strong>getSQLColumnAlias</strong>(string $columnName)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Gets an SQL column alias for a column name.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$columnName</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_generateFilterConditionSQL">
+        <div class="location">at         <a href="https://github.com/doctrine/doctrine2/blob/2.2/lib/Doctrine/ORM/Persisters/BasicEntityPersister.php#L1604">line 1604</a></div>
+        <code>            protected        string
+    <strong>generateFilterConditionSQL</strong>(<a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a> $targetEntity, string $targetTableAlias)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Generates the filter SQL for a given entity and table alias.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Doctrine/ORM/Mapping/ClassMetadata.html"><abbr title="Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr></a></td>
+                <td>$targetEntity</td>
+                <td>Metadata of the target entity.</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$targetTableAlias</td>
+                <td>The table alias of the joined/selected table.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td>The SQL query part to add to a query.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>
