@@ -954,6 +954,8 @@ $builder
 <tr><td class="line-number noselect"><a name="line-number-3ae68a9434de265c577dad76e5caa6cedfb37e1c-4" class="line-number-anchor" /><a href="#line-number-3ae68a9434de265c577dad76e5caa6cedfb37e1c-4">4</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-3ae68a9434de265c577dad76e5caa6cedfb37e1c-5" class="line-number-anchor" /><a href="#line-number-3ae68a9434de265c577dad76e5caa6cedfb37e1c-5">5</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-3ae68a9434de265c577dad76e5caa6cedfb37e1c-6" class="line-number-anchor" /><a href="#line-number-3ae68a9434de265c577dad76e5caa6cedfb37e1c-6">6</a></td></tr></table></div></code></pre>
+<p>In MongoDB 3.2, the resulting array will be empty for a one-to-many relationship,
+you need to unwind your field at first and use a group stage afterwards.</p>
 <p>The resulting array will contain all matched item documents in an array. This has
 to be considered when looking up one-to-one relationships:</p>
 <pre class="code-block-table"><code class="php"><button
@@ -1001,6 +1003,9 @@ $builder
 <p>MongoDB will always return an array, even if the lookup only returned a single
 document. Thus, when looking up one-to-one references the result must be flattened
 using the <code>$unwind</code> operator.</p>
+<p>Looking up  a reference nested in an embedded document (like <code>-&gt;lookup('embedDoc.refDocs')</code>)
+is not supported. You'll need to make your lookup as if your Reference was not mapped
+See below for more.</p>
 <div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Due to a limitation in MongoDB, the <code>$lookup</code> stage can not be used with
 references that are stored as DBRef. To use references in a <code>$lookup</code>
 stage, store the reference as ID or <code>ref</code>. This is explained in the
