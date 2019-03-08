@@ -85,6 +85,8 @@ window.projectVersion = 'master';
                     {"type": "Method", "fromName": "Doctrine\\RST\\Builder", "fromLink": "Doctrine/RST/Builder.html", "link": "Doctrine/RST/Builder.html#method_getErrorManager", "name": "Doctrine\\RST\\Builder::getErrorManager", "doc": "&quot;&quot;"},
                     {"type": "Method", "fromName": "Doctrine\\RST\\Builder", "fromLink": "Doctrine/RST/Builder.html", "link": "Doctrine/RST/Builder.html#method_setIndexName", "name": "Doctrine\\RST\\Builder::setIndexName", "doc": "&quot;&quot;"},
                     {"type": "Method", "fromName": "Doctrine\\RST\\Builder", "fromLink": "Doctrine/RST/Builder.html", "link": "Doctrine/RST/Builder.html#method_getIndexName", "name": "Doctrine\\RST\\Builder::getIndexName", "doc": "&quot;&quot;"},
+                    {"type": "Method", "fromName": "Doctrine\\RST\\Builder", "fromLink": "Doctrine/RST/Builder.html", "link": "Doctrine/RST/Builder.html#method_getMetas", "name": "Doctrine\\RST\\Builder::getMetas", "doc": "&quot;&quot;"},
+                    {"type": "Method", "fromName": "Doctrine\\RST\\Builder", "fromLink": "Doctrine/RST/Builder.html", "link": "Doctrine/RST/Builder.html#method_getParseQueue", "name": "Doctrine\\RST\\Builder::getParseQueue", "doc": "&quot;&quot;"},
                     {"type": "Method", "fromName": "Doctrine\\RST\\Builder", "fromLink": "Doctrine/RST/Builder.html", "link": "Doctrine/RST/Builder.html#method_build", "name": "Doctrine\\RST\\Builder::build", "doc": "&quot;&quot;"},
                     {"type": "Method", "fromName": "Doctrine\\RST\\Builder", "fromLink": "Doctrine/RST/Builder.html", "link": "Doctrine/RST/Builder.html#method_copy", "name": "Doctrine\\RST\\Builder::copy", "doc": "&quot;&quot;"},
                     {"type": "Method", "fromName": "Doctrine\\RST\\Builder", "fromLink": "Doctrine/RST/Builder.html", "link": "Doctrine/RST/Builder.html#method_mkdir", "name": "Doctrine\\RST\\Builder::mkdir", "doc": "&quot;&quot;"},
@@ -238,6 +240,7 @@ window.projectVersion = 'master';
             {"type": "Class", "fromName": "Doctrine\\RST", "fromLink": "Doctrine/RST.html", "link": "Doctrine/RST/ErrorManager.html", "name": "Doctrine\\RST\\ErrorManager", "doc": "&quot;&quot;"},
                                                         {"type": "Method", "fromName": "Doctrine\\RST\\ErrorManager", "fromLink": "Doctrine/RST/ErrorManager.html", "link": "Doctrine/RST/ErrorManager.html#method___construct", "name": "Doctrine\\RST\\ErrorManager::__construct", "doc": "&quot;&quot;"},
                     {"type": "Method", "fromName": "Doctrine\\RST\\ErrorManager", "fromLink": "Doctrine/RST/ErrorManager.html", "link": "Doctrine/RST/ErrorManager.html#method_error", "name": "Doctrine\\RST\\ErrorManager::error", "doc": "&quot;&quot;"},
+                    {"type": "Method", "fromName": "Doctrine\\RST\\ErrorManager", "fromLink": "Doctrine/RST/ErrorManager.html", "link": "Doctrine/RST/ErrorManager.html#method_getErrors", "name": "Doctrine\\RST\\ErrorManager::getErrors", "doc": "&quot;&quot;"},
             
             {"type": "Class", "fromName": "Doctrine\\RST\\Event", "fromLink": "Doctrine/RST/Event.html", "link": "Doctrine/RST/Event/BuildEvent.html", "name": "Doctrine\\RST\\Event\\BuildEvent", "doc": "&quot;&quot;"},
                                                         {"type": "Method", "fromName": "Doctrine\\RST\\Event\\BuildEvent", "fromLink": "Doctrine/RST/Event/BuildEvent.html", "link": "Doctrine/RST/Event/BuildEvent.html#method___construct", "name": "Doctrine\\RST\\Event\\BuildEvent::__construct", "doc": "&quot;&quot;"},
@@ -266,7 +269,9 @@ window.projectVersion = 'master';
                     {"type": "Method", "fromName": "Doctrine\\RST\\Event\\PostParseDocumentEvent", "fromLink": "Doctrine/RST/Event/PostParseDocumentEvent.html", "link": "Doctrine/RST/Event/PostParseDocumentEvent.html#method_getDocumentNode", "name": "Doctrine\\RST\\Event\\PostParseDocumentEvent::getDocumentNode", "doc": "&quot;&quot;"},
             
             {"type": "Class", "fromName": "Doctrine\\RST\\Event", "fromLink": "Doctrine/RST/Event.html", "link": "Doctrine/RST/Event/PreBuildParseEvent.html", "name": "Doctrine\\RST\\Event\\PreBuildParseEvent", "doc": "&quot;&quot;"},
-                    
+                                                        {"type": "Method", "fromName": "Doctrine\\RST\\Event\\PreBuildParseEvent", "fromLink": "Doctrine/RST/Event/PreBuildParseEvent.html", "link": "Doctrine/RST/Event/PreBuildParseEvent.html#method___construct", "name": "Doctrine\\RST\\Event\\PreBuildParseEvent::__construct", "doc": "&quot;&quot;"},
+                    {"type": "Method", "fromName": "Doctrine\\RST\\Event\\PreBuildParseEvent", "fromLink": "Doctrine/RST/Event/PreBuildParseEvent.html", "link": "Doctrine/RST/Event/PreBuildParseEvent.html#method_getParseQueue", "name": "Doctrine\\RST\\Event\\PreBuildParseEvent::getParseQueue", "doc": "&quot;&quot;"},
+            
             {"type": "Class", "fromName": "Doctrine\\RST\\Event", "fromLink": "Doctrine/RST/Event.html", "link": "Doctrine/RST/Event/PreBuildRenderEvent.html", "name": "Doctrine\\RST\\Event\\PreBuildRenderEvent", "doc": "&quot;&quot;"},
                     
             {"type": "Class", "fromName": "Doctrine\\RST\\Event", "fromLink": "Doctrine/RST/Event.html", "link": "Doctrine/RST/Event/PreBuildScanEvent.html", "name": "Doctrine\\RST\\Event\\PreBuildScanEvent", "doc": "&quot;&quot;"},
