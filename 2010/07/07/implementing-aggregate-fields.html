@@ -49,8 +49,8 @@ of data that can be computed "
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?2ace77"
-                        integrity="sha384-zhZK0AtwX/AV3DxGQKmM+F/8unSCFXgUXDniH1EimODW0uDspbpgj1qs7qi1KZ0+"
+            href="https://www.doctrine-project.org/frontend/css/index.css?d37abc"
+                        integrity="sha384-ScJ/V05A1mvx/Ivordop4pYuq0QfmOBmsApInjJXevM+K5rxqmwQYg1yDqro84Bv"
                         crossorigin="anonymous"
         />
 
@@ -262,7 +262,7 @@ only. Also we omit the receiver/sender name, stated reason for transfer
 and the execution date. These all would have to be added on the <code>Entry</code>
 object.</p>
 <p>Our entities look like:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace Bank\Entities;
 
 /**
@@ -328,7 +328,7 @@ class Entry
 <p>The Doctrine Query Language allows you to select for aggregate values
 computed from fields of your Domain Model. You can select the current
 balance of your account by calling:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $dql = "SELECT SUM(e.amount) AS balance FROM Bank\Entities\Entry e " .
        "WHERE e.account = ?1";
 $balance = $em-&gt;createQuery($dql)
@@ -352,7 +352,7 @@ this balance against newly added entries.</p>
 <h1>Using your Domain Model</h1>
 <p><code>Account</code> and all the <code>Entry</code> instances are connected through a
 collection, which means we can compute this value at runtime:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 class Account
 {
     // .. previous code
@@ -375,7 +375,7 @@ creation, access and manipulation of its children.</p>
 <code>Account</code> by using a designated method. The <code>Account</code> is the aggregate
 root of this relation. We can also enforce the correctness of the
 bi-directional <code>Account</code> \&lt;-> <code>Entry</code> relation with this method:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 class Account
 {
     public function addEntry($amount)
@@ -388,7 +388,7 @@ class Account
     }
 }</code></pre>
 <p>Now look at the following test-code for our entities:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 class AccountTest extends \PHPUnit_Framework_TestCase
 {
     public function testAddEntry()
@@ -413,7 +413,7 @@ class AccountTest extends \PHPUnit_Framework_TestCase
 }</code></pre>
 <p>To enforce our rule we can now implement the assertion in
 <code>Account::addEntry</code>:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 class Account
 {
     private function assertAcceptEntryAllowed($amount)
@@ -430,7 +430,7 @@ example before. You can call <code>EntityManager::persist($account)</code> and t
 <code>EntityManager::flush()</code> at any point to save the account to the
 database. All the nested <code>Entry</code> objects are automatically flushed to
 the database also.</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $account = new Account("123456", 200);
 $account-&gt;addEntry(500);
 $account-&gt;addEntry(-200);
@@ -445,7 +445,7 @@ performance of your application.</p>
 entries collection) we want to add an aggregate field called &quot;balance&quot;
 on the Account and adjust the code in <code>Account::getBalance()</code> and
 <code>Account:addEntry()</code>:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 class Account
 {
     /**
@@ -479,7 +479,7 @@ balance and insert the new entry into the database.</p>
 <h1>Tackling Race Conditions with Aggregate Fields</h1>
 <p>Whenever you denormalize your database schema race-conditions can
 potentially lead to inconsistent state. See this example:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 // The Account $accId has a balance of 0 and a max credit limit of 200:
 // request 1 account
 $account1 = $em-&gt;find('Bank\Entities\Account', $accId);
@@ -499,7 +499,7 @@ aggregate fields against this kind of race-conditions. Reading Eric
 Evans DDD carefully he mentions that the &quot;Aggregate Root&quot; (Account in
 our example) needs a locking mechanism.</p>
 <p>Optimistic locking is as easy as adding a version column:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 class Amount
 {
     /** @Column(type="integer") @Version */
@@ -511,7 +511,7 @@ inconsistent state).</p>
 <p>Pessimmistic locking requires an additional flag set on the
 <code>EntityManager::find()</code> call, enabling write locking directly in the
 database using a FOR UPDATE.</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 use Doctrine\DBAL\LockMode;
 
 $account = $em-&gt;find('Bank\Entities\Account', $accId, LockMode::PESSIMISTIC_READ);</code></pre>

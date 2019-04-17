@@ -49,8 +49,8 @@ is schema-less. We can store"
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?2ace77"
-                        integrity="sha384-zhZK0AtwX/AV3DxGQKmM+F/8unSCFXgUXDniH1EimODW0uDspbpgj1qs7qi1KZ0+"
+            href="https://www.doctrine-project.org/frontend/css/index.css?d37abc"
+                        integrity="sha384-ScJ/V05A1mvx/Ivordop4pYuq0QfmOBmsApInjJXevM+K5rxqmwQYg1yDqro84Bv"
                         crossorigin="anonymous"
         />
 
@@ -255,7 +255,7 @@ documents.</p>
 store different documents in the same collection by using a
 discriminator field. First define an <code>Article</code> document that maps to
 <code>my_documents</code>:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 /**
  * @Document(collection="my_documents")
  * @DiscriminatorField(fieldName="type")
@@ -267,7 +267,7 @@ class Article
 }</code></pre>
 <p>Next create another document named <code>Album</code> and also map it to
 <code>my_documents</code>:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 /**
  * @Document(collection="my_documents")
  * @DiscriminatorField(fieldName="type")
@@ -281,7 +281,7 @@ class Album
 stored in the <code>my_documents</code> collection and will have a discriminator
 field named <code>type</code> automatically set with the value specified in the
 mapping:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $article = new Article();
 $article-&gt;setTitle('Sample Article');
 // ...
@@ -294,12 +294,12 @@ $dm-&gt;persist($album);</code></pre>
 <p>Finally, if you retrieve the documents they'll all be retrieved from
 <code>my_documents</code> but you will get back the proper PHP classes that created
 them:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $articles = $dm-&gt;find('Article');
 $albums = $dm-&gt;find('Album');</code></pre>
 <p>You can retrieve more then just one document type by specifying an
 array:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $documents = $dm
     -&gt;createQuery(array('Article', 'Album'))
     -&gt;execute();</code></pre>
@@ -308,7 +308,7 @@ $documents = $dm
 <p>You can store multiple types of documents in embedded documents by
 simply omitting the <code>targetDocument</code> option. First create a <code>User</code>
 document and embed multiple task documents:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 /** @Document(collection="users") */
 class User
 {
@@ -324,7 +324,7 @@ class User
 whether it is ``one`` or ``many``. This is because we know it is
 ``many`` due to the default value being an array.</code></pre>
 <p>Now create the different types of tasks we can add to the user:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 /** @EmbeddedDocument */
 class DownloadTask
 {
@@ -337,7 +337,7 @@ class UploadTask
     // ...
 }</code></pre>
 <p>Now you can embed any type of class in the <code>$tasks</code> property:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $user = $dm-&gt;findOne('User', array(...));
 
 $task = new DownloadTask();
@@ -357,7 +357,7 @@ omitting the <code>targetDocument</code> option. In this example a user can add
 references to all his favorite albums, songs and books. First define a
 <code>User</code> document with a many references property for storing the users
 favorites:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 /** @Document(collection="users") */
 class User
 {
@@ -369,7 +369,7 @@ class User
     // ...
 }</code></pre>
 <p>Now here is what the referenced documents would look like:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 /** @Document(collection="albums") */
 class Album
 {
@@ -388,7 +388,7 @@ class Book
     // ...
 }</code></pre>
 <p>Now it is easy to add the references to his favorites:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $user-&gt;addFavorite($album);
 $user-&gt;addFavorite($song);
 $user-&gt;addFavorite($book);
@@ -396,7 +396,7 @@ $user-&gt;addFavorite($book);
 $dm-&gt;flush();</code></pre>
 <p>When you retrieve the user and access the <code>$favorites</code> the documents
 will be grouped by type and loaded with one or more <code>$in</code> queries:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $user = $dm-&gt;findOne('User', array(...));
 $favorites = $user-&gt;getFavorites();
 

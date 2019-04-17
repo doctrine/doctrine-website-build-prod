@@ -49,8 +49,8 @@ capabilities handling behaviors "
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?2ace77"
-                        integrity="sha384-zhZK0AtwX/AV3DxGQKmM+F/8unSCFXgUXDniH1EimODW0uDspbpgj1qs7qi1KZ0+"
+            href="https://www.doctrine-project.org/frontend/css/index.css?d37abc"
+                        integrity="sha384-ScJ/V05A1mvx/Ivordop4pYuq0QfmOBmsApInjJXevM+K5rxqmwQYg1yDqro84Bv"
                         crossorigin="anonymous"
         />
 
@@ -299,13 +299,13 @@ Christophe Coevoet.</p>
 <p>## Setting up the autoloader and listeners</p>
 <p>First of all, download this library from public github repository and
 setup the autoloading for extensions:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $classLoader = new \Doctrine\Common\ClassLoader('Gedmo', "/path/to/library/DoctrineExtensions/lib");
 $classLoader-&gt;register();</code></pre>
 <p>Translatable behavior will need additional annotation driver for
 Translation Entity metadata. The example below illustrates the chain
 driver implementation:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $chainDriverImpl = new \Doctrine\ORM\Mapping\Driver\DriverChain();
 $yourDefaultDriverImpl = new \Doctrine\ORM\Mapping\Driver\YamlDriver('/yml/mapping/files'); // only an example
 $translatableDriverImpl = $doctrineOrmConfig-&gt;newDefaultAnnotationDriver(
@@ -315,7 +315,7 @@ $chainDriverImpl-&gt;addDriver($yourDefaultDriverImpl, 'Entity');
 $chainDriverImpl-&gt;addDriver($translatableDriverImpl, 'Gedmo\Translatable');
 $doctrineOrmConfig-&gt;setMetadataDriverImpl($chainDriverImpl);</code></pre>
 <h1>Attaching the Event Listeners on the event manager</h1>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $evm = new \Doctrine\Common\EventManager();
 // timestampable
 $evm-&gt;addEventSubscriber(new \Gedmo\Timestampable\TimestampableListener());
@@ -358,7 +358,7 @@ be mapped and that it may be used to override TranslationListener`s
 locale</li>
 </ul>
 <p>Translatable Entity example:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace Entity;
 
 /**
@@ -427,7 +427,7 @@ and easy to understand and you may inspect it and customize if you see
 any point in doing that.</p>
 <p>Here are standard usage examples, the locale was set to &quot;en_us&quot; on
 listener:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $article = new \Entity\Article;
 $article-&gt;setTitle('my title in en');
 $article-&gt;setContent('my content in en');
@@ -435,7 +435,7 @@ $em-&gt;persist($article);
 $em-&gt;flush();</code></pre>
 <p>This inserted an article and populated the translations for it in
 &quot;en_us&quot; locale. Now lets translate it into another language:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 // first load the article
 $article = $em-&gt;find('Entity\Article', 1 /*article id*/);
 $article-&gt;setTitle('my title in de');
@@ -446,7 +446,7 @@ $em-&gt;flush();</code></pre>
 <p>This updated an article and inserted the translations for it in &quot;de_de&quot;
 locale. The TranslationRepository gives some handy methods on retrieving
 all translations:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $em-&gt;clear(); // ensure the cache is clean
 $article = $em-&gt;find('Entity\Article', 1 /*article id*/);
 $repository = $em-&gt;getRepository('Gedmo\Translatable\Entity\Translation');
@@ -476,7 +476,7 @@ to specify a default locale which would force Entity to keep
 it<code>s field value on default locale. And if record has already been translated in this locale, the record will not update it</code>s
 value, only insert a new translation into translation table. You can
 specify the default locale on TranslationListener`s initialization:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $translationListener-&gt;setDefaultLocale('en_us');</code></pre>
 <h1>Using a diferent Translation Entity for translation storage:</h1>
 <p>In some cases when there are thousands of records we would like to have
@@ -485,7 +485,7 @@ performance on translation loading speed. The example below will show
 how to specify a diferent Entity for your translations by extending the
 translation mapped superclass. Thanks to Christophe Coevoet for the idea
 on translation abstraction.</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace Entity\Translation;
 
 use Gedmo\Translatable\Entity\AbstractTranslation;
@@ -505,7 +505,7 @@ class ArticleTranslation extends AbstractTranslation
 <p>This Entity will be used instead of default Translation Entity only if
 we specify a class annotation @gedmo:TranslationEntity(class=&quot;Entity&quot;).
 Now lets slightly modify our Article Entity:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 /**
  * @Entity
  * @gedmo:TranslationEntity(class="Entity\Translation\ArticleTranslation")
@@ -536,7 +536,7 @@ relation of parent node</li>
 </ul>
 <p>All these annotations are required for the Tree to be functional. And
 here is an example of a simple Tree Entity:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace Entity;
 
 /**
@@ -607,7 +607,7 @@ class Category
     }
 }</code></pre>
 <p>Basic usage example:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $food = new Entity\Category();
 $food-&gt;setTitle('Food');
 
@@ -634,7 +634,7 @@ $em-&gt;flush();</code></pre>
     /vegetables (4-7)
         /carrots (5-6)</code></pre>
 <h1>Using TreeNodeRepository functions:</h1>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $repo = $em-&gt;getRepository('Entity\Category');
 
 $food = $repo-&gt;findOneByTitle('Food');
@@ -698,7 +698,7 @@ simple index instead.</p>
 included in a slug</li>
 <li>@gedmo:Slug this column will be used to store the generated slug</li>
 </ul>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace Entity;
 
 /**
@@ -758,7 +758,7 @@ class Article
     }
 }</code></pre>
 <p>Basic usage example:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $article = new Entity\Article();
 $article-&gt;setTitle('the title');
 $article-&gt;setCode('my code');
@@ -778,7 +778,7 @@ words in slug</li>
 <li>style (optional, default=&quot;default&quot;) - &quot;default&quot; all letters will be
 lowercase, &quot;camel&quot; - first letter will be uppercase</li>
 </ul>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 // diferent slug configuration example
 class Article
 {
@@ -813,7 +813,7 @@ changes</li>
 <li>value - only valid if on=&quot;change&quot; is specified, if tracked field has
 the specified value when it triggers an update</li>
 </ul>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace Entity;
 
 /**
@@ -871,7 +871,7 @@ class Article
     }
 }</code></pre>
 <p>## All nested together</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace Entity;
 
 /**

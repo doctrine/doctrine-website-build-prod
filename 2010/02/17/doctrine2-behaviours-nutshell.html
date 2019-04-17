@@ -49,8 +49,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?2ace77"
-                        integrity="sha384-zhZK0AtwX/AV3DxGQKmM+F/8unSCFXgUXDniH1EimODW0uDspbpgj1qs7qi1KZ0+"
+            href="https://www.doctrine-project.org/frontend/css/index.css?d37abc"
+                        integrity="sha384-ScJ/V05A1mvx/Ivordop4pYuq0QfmOBmsApInjJXevM+K5rxqmwQYg1yDqro84Bv"
                         crossorigin="anonymous"
         />
 
@@ -271,7 +271,7 @@ inner workings.</p>
 <h1>Timestampable</h1>
 <p>Timestampable is a behaviour that requires you to hook into the
 pre-update event which is called whenever an entity is updated:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 /**
  * @Id
  * @HasLifecycleCallbacks
@@ -304,7 +304,7 @@ class BlogPost
 }</code></pre>
 <h1>Sluggable</h1>
 <p>The sluggable behaviour is trivial to implement in Doctrine 2:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 class BlogPost
 {
     /** @Column(type="string") */
@@ -345,7 +345,7 @@ search engines.</p>
 <p>For example using
 <a href="http://ezcomponents.org/docs/api/trunk/introduction_Search.html">ezcSearch</a>
 we can make our BlogPost accessible for Solr:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 class BlogPost implements ezcBasePersistable, ezcSearchDefinitionProvider
 {
     public function getState()
@@ -373,7 +373,7 @@ class BlogPost implements ezcBasePersistable, ezcSearchDefinitionProvider
 }</code></pre>
 <p>ezcSearch can then index a blog post whenever it is changed by hooking
 an EventListener into the Doctrine <code>PreUpdate</code> Event:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 class EzcSearchListener
 {
     private $_searchSession;
@@ -391,14 +391,14 @@ class EzcSearchListener
     }
 }</code></pre>
 <p>You can now hook this event into Doctrine's EntityManager:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $searchListener = new EzcSearchListener(...);
 $em-&gt;getEventManager()-&gt;addEventListener(
     array(Doctrine\ORM\Events::preUpdate), $searchListener
 );</code></pre>
 <p>Now when you search for your entities you get returned <code>BlogPost</code>
 instances from ezcSearchs Solr interface:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 // initialize a pre-configured query
 $q = $session-&gt;createFindQuery( 'BlogPost' );
 $searchWord = 'test';
@@ -414,7 +414,7 @@ $searchedBlogPosts = $session-&gt;find( $q );</code></pre>
 <p>These instances are detached from the EntityManager when they get
 returned from ezcSearch and can be merged back into the persistence
 context:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $searchedBlogPosts[0]-&gt;setTitle("ChangeFoo");
 $em-&gt;merge($searchedBlogPosts[0]);</code></pre>
 <p>Read about Merging, Detached instances and other cool stuff of Doctrines
@@ -429,7 +429,7 @@ behaviour. The required code is more verbose than the simple
 configuration of Doctrine 1, however there is much less magic involved
 and you can implement this behaviour in a way that is trivial to
 understand for someone new looking at your code:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 /**
  * @Entity
  * @HasLifeCycleCallbacks
@@ -532,7 +532,7 @@ State pattern instead.</p>
 <em>createdByUserId</em> and <em>modifiedByUserId</em> fields and setting them
 whenever one of your relevant fields change by hooking into setter
 methods:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 /**
  * @Entity
  */

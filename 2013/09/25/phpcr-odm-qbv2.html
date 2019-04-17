@@ -49,8 +49,8 @@ I developed the original query builder about 9 months ago - "
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?2ace77"
-                        integrity="sha384-zhZK0AtwX/AV3DxGQKmM+F/8unSCFXgUXDniH1EimODW0uDspbpgj1qs7qi1KZ0+"
+            href="https://www.doctrine-project.org/frontend/css/index.css?d37abc"
+                        integrity="sha384-ScJ/V05A1mvx/Ivordop4pYuq0QfmOBmsApInjJXevM+K5rxqmwQYg1yDqro84Bv"
                         crossorigin="anonymous"
         />
 
@@ -280,7 +280,7 @@ we are.</p>
 with node name &quot;My Post Title&quot; having the ODM class &quot;BlogPost&quot;. We order
 the result set first by publishing date and then by title.</p>
 <p>Using the PHPCR QOM:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $q = $qom-&gt;createQuery(
     // SourceInterface (from)
     $qom-&gt;selector('nt:unstructured', 'p')
@@ -305,7 +305,7 @@ $q-&gt;bindValue('phpcr_class', 'Blog\Post');
 $q-&gt;bindValue('post_title', 'My Post Title');
 $res = $q-&gt;execute();</code></pre>
 <p>Using the new PHPCR-ODM query builder:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $q = $documentManager-&gt;createQueryBuilder()
     -&gt;fromDocument('Blog\Post', 'p')
     -&gt;where()
@@ -323,7 +323,7 @@ are being slightly unfair to the PHPCR QOM as we are forced to add the
 <code>phpcr:class</code> constraint, which is a PHPCR-ODMism. Despite this, the new
 API is clearly less verbose and, I hope, more intelligible.</p>
 <p>The API allows chaining together operands:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $qb = $documentManager-&gt;createQueryBuilder();
 $qb
     -&gt;from()
@@ -339,14 +339,14 @@ $qb
         -&gt;end()
     -&gt;end();</code></pre>
 <p>The API also allows you to break the query into multiple statements:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $qb-&gt;from()-&gt;document('Blog\Post', 'p');
 $qb-&gt;where()-&gt;eq()-&gt;field('p.title')-&gt;literal('Foobar');
 $qb-&gt;orderBy()-&gt;asc()-&gt;field('p.title');</code></pre>
 <p>And to add extra criteria to an existing query builder instance (useful
 if the query builder is instantiated and initialized by a vendor
 library):</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 class MyExtension
 {
     public function modifyQuery(QueryBuilder $qb)
@@ -357,7 +357,7 @@ class MyExtension
 <p>As a bonus, the nature of the API also allows us to easily add multiple
 constraints to <code>andX</code> and <code>orX</code> operator nodes, something not easily
 done with the native PHPCR builder:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $qb-&gt;fromDocument('Blog\Post', 'p');
 
 // we can add one or many constraints to an "andX" node...

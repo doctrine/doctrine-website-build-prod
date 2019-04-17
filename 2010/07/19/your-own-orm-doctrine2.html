@@ -51,8 +51,8 @@ that will be developed much"
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?2ace77"
-                        integrity="sha384-zhZK0AtwX/AV3DxGQKmM+F/8unSCFXgUXDniH1EimODW0uDspbpgj1qs7qi1KZ0+"
+            href="https://www.doctrine-project.org/frontend/css/index.css?d37abc"
+                        integrity="sha384-ScJ/V05A1mvx/Ivordop4pYuq0QfmOBmsApInjJXevM+K5rxqmwQYg1yDqro84Bv"
                         crossorigin="anonymous"
         />
 
@@ -303,10 +303,10 @@ support this experiment any further, I hope somebody picks it up and
 starts maintaining it.</p>
 <p>With Jonathans old code, to allow active record entities, you have to
 bootstrap the ActiveEntity by passing a static EntityManager:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 \DoctrineExtensions\ActiveEntity::setEntityManager($em);</code></pre>
 <p>Now say we have a User Entity (using Jonathans old ActiveEntity):</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace Entities;
 
 use DoctrineExtensions\ActiveEntity;
@@ -323,12 +323,12 @@ class User extends ActiveEntity
 <p>With PHP 5.3 late-static binding functionality we can now access the
 <code>EntityRepository</code>, a finder object for entities using a Ruby on
 Rails'ish notation:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $user = User::find($id);
 $users = User::findBy(array("name" =&gt; "beberlei"));
 $beberlei = User::findOneBy(array("name" =&gt; "beberlei"));</code></pre>
 <p>The code to allow this functionality is very simple:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 public static function __callStatic($method, $arguments)
 {
     return call_user_func_array(array(self::$_em-&gt;getRepository(get_called_class()), $method), $arguments);
@@ -364,7 +364,7 @@ this class such that it works exactly the same from the outside.</p>
 the way to go. First extend the EntityManager to replace the
 <code>ClassMetadataFactory</code> used. This piece of code is the only hackish
 workaround, everything else is rather nice :-)</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace DoctrineExtensions\ActiveEntity;
 
 use DoctrineExtensions\ActiveEntity\Mapping\ClassMetadataFactory;
@@ -392,7 +392,7 @@ class ActiveEntityManager extends \Doctrine\ORM\EntityManager
     }
 }</code></pre>
 <p>And both the <code>ClassMetadataFactory</code> and <code>ClassMetadata</code>:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace DoctrineExtensions\ActiveEntity\Mapping;
 
 class ActiveClassMetadataFactory extends \Doctrine\ORM\Mapping\ClassMetadataFactory
@@ -426,7 +426,7 @@ I found out about all the necessary changes. To replace the
 <code>ReflectionClass</code> we only need to exchange <code>getProperty</code> and keep the
 rest. To exchange <code>ReflectionProperty</code> we only have to overwrite
 <code>setAccessible()</code>, <code>getValue()</code> and <code>setValue()</code>.</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace DoctrineExtensions\ActiveEntity\Reflection;
 
 class ActiveEntityReflectionClass extends \ReflectionClass
@@ -464,7 +464,7 @@ class ActiveEntityReflectionProperty
 simple ActiveRecord get/set approach. Now we need to replace the all the
 instantiations of <code>ReflectionClass</code> relevant for runtime mapping with
 our implementation:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace DoctrineExtensions\ActiveEntity\Mapping;
 
 use DoctrineExtensions\ActiveEntity\Reflection\ActiveEntityReflectionClass;
@@ -494,7 +494,7 @@ class ActiveClassMetadata extends \Doctrine\ORM\Mapping\ClassMetadata
 heavily modify the <code>ActiveEntity</code> now to loose the requirement to
 specify properties for the defined metadata. We can rewrite the User
 entity to be:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace Entities;
 
 use DoctrineExtensions\ActiveEntity\ActiveEntity;
@@ -508,12 +508,12 @@ work out of the box.</p>
 <p>In the spirit of Doctrine 1.* or GORM there should be a PHP based
 metadata mapping driver now and actually Doctrine2 ships with one
 already:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 $config = new \Doctrine\ORM\Configuration();
 $config-&gt;setMetadataDriverImpl(new \Doctrine\ORM\Mapping\Driver\StaticPHPDriver());
 // ...</code></pre>
 <p>This allows to specify the metadata within the User class:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace Entities;
 
 use DoctrineExtensions\ActiveEntity\ActiveEntity;
@@ -536,7 +536,7 @@ documentation</a>:</p>
 <p>Now this is untested code, as i don't have a PHP-5.3.99-DEV version
 compiled at this machine.</p>
 <p>The following trait can be used by our <code>User</code> entity:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace DoctrineExtensions\ActiveEntity\Behaviour;
 
 trait Timestampable
@@ -570,7 +570,7 @@ class User extends ActiveEntity use Timestampable
 }</code></pre>
 <p>We now need an Event that modifies the <code>ActiveClassMetadata</code> as
 required:</p>
-<pre><code class="language-{.sourceCode .php}">&lt;?php
+<pre><code class="language-{.sourceCode">&lt;?php
 namespace DoctrineExtensions\ActiveEntity\Behaviour;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
