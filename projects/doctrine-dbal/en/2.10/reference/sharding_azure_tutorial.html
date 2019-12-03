@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SQLAzure Sharding Tutorial - Doctrine Database Abstraction Layer (DBAL)</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="description" content="Doctrine Database Abstraction Layer Documentation: SQLAzure Sharding Tutorial ">
+
+        <meta name="keywords" content="abstraction,database,dbal,db2,mariadb,mssql,mysql,pgsql,postgresql,oci8,oracle,pdo,queryobject,sasql,sql,sqlanywhere,sqlite,sqlserver,sqlsrv,documentation,sqlazure,sharding,tutorial">
+
+                    <meta name="robots" content="index, follow">
+        
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-dbal/en/2.10/reference/sharding_azure_tutorial.html" />
+    
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://www.doctrine-project.org/frontend/css/index.css?d03983"
+                        integrity="sha384-4DDvrwHU8UHyL/15iEZltzugmeBoo5kRia0CANNVWf95JcnJimplks4zt9iMqIXa"
+                        crossorigin="anonymous"
+        />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://www.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://www.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://www.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://www.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://www.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://www.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://www.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://www.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://www.doctrine-project.org/images/mstile-310x310.png" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@doctrineproject" />
+        <meta name="twitter:creator" content="@doctrineproject" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.doctrine-project.org/projects/doctrine-dbal/en/2.10/reference/sharding_azure_tutorial.html" />
+        <meta property="og:title" content="SQLAzure Sharding Tutorial - Doctrine Database Abstraction Layer (DBAL)" />
+        <meta property="og:description" content="Doctrine Database Abstraction Layer Documentation: SQLAzure Sharding Tutorial " />
+        <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://www.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "url": "https://www.doctrine-project.org",
+            "logo": "https://www.doctrine-project.org/images/doctrine-logo.svg"
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://www.doctrine-project.org",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.doctrine-project.org?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Doctrine",
+            "url": "https://www.doctrine-project.org",
+            "sameAs": [
+                "https://twitter.com/doctrineproject"
+            ]
+        }
+        </script>
+
+                    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Doctrine Database Abstraction Layer",
+            "description": "SQLAzure Sharding Tutorial",
+            "provider": {
+                "@type": "Organization",
+                "name": "Doctrine",
+                "sameAs": "https://www.doctrine-project.org"
+            }
+        }
+        </script>
+    
+        
+            </head>
+    <body>
+                    
+            <nav class="doctrine-navbar navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="/index.html"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?c1fd47" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="/projects.html" id="navbarProjectsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarProjectsDropdown">
+                                                                    <a class="dropdown-item notranslate" href="/projects/annotations.html">Annotations</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/cache.html">Cache</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/coding-standard.html">Coding Standard</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/collections.html">Collections</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/common.html">Common</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/dbal.html">DBAL</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/event-manager.html">Event Manager</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/inflector.html">Inflector</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/instantiator.html">Instantiator</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/lexer.html">Lexer</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/migrations.html">Migrations</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/mongodb.html">MongoDB</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/mongodb-odm.html">MongoDB ODM</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/orm.html">ORM</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/persistence.html">Persistence</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/phpcr-odm.html">PHPCR ODM</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/reflection.html">Reflection</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/rst-parser.html">RST Parser</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/skeleton-mapper.html">Skeleton Mapper</a>
+                                                                <a class="dropdown-item bg-secondary text-white font-weight-bold" href="/projects.html">View All</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="/contribute/index.html" id="navbarDevelopmentDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Development</a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarContributeDropdown">
+                                <a class="dropdown-item" href="/community/index.html">Community</a>
+                                <a class="dropdown-item" href="/contribute/index.html">Contributor Workflow</a>
+                                <a class="dropdown-item" href="/contribute/maintainer/index.html">Maintainer Workflow</a>
+                                <a class="dropdown-item" href="/contribute/website/index.html">Contribute to Website</a>
+                                <a class="dropdown-item" href="/team/maintainers.html">Maintainers</a>
+                                <a class="dropdown-item" href="/team/contributors.html">Contributors</a>
+                                <a class="dropdown-item" href="/policies.html">Policies</a>
+                                <a class="dropdown-item" href="https://github.com/doctrine" target="_blank" rel="noopener noreferrer">GitHub</a>
+                                <a class="dropdown-item" href="/styleguide.html">Styleguide</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/events.html">Events</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/consulting.html">Consulting</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/partners.html">Partners</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/blog/index.html">Blog</a>
+                        </li>
+                    </ul>
+
+                    <div class="layout-edit-button d-inline-block mr-2">
+                                                    <a href="https://github.com/doctrine/dbal/edit/2.10/docs/en/reference/sharding_azure_tutorial.rst" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
+                                            </div>
+
+                    <div class="google-translate-dropdown dropdown show d-inline-block mr-2">
+                        <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="translateDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Translate
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="translateDropdown">
+                            <div class="dropdown-item" id="google_translate_element">Loading...</div>
+                        </div>
+                    </div>
+
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                </div>
+            </nav>
+
+            <div class="search-results rounded">
+                <div id="hits">
+                    <!-- Hits widget will appear here -->
+                </div>
+
+                <a href="https://www.algolia.com" target="_blank" rel="noopener noreferrer"><img src="https://www.doctrine-project.org/images/search-by-algolia.png" class="float-right" style="width: 150px;" /></a>
+            </div>
+        
+            <div class="container-wrapper container">
+        <div class="row row-offcanvas row-offcanvas-right">
+                            <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
+                    <div class="sidebar-sticky">
+                        <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7D553W&placement=wwwdoctrine-projectorg" id="_carbonads_js"></script>
+
+                        <div class="toc"><ul><li id="introduction-html-introduction" class="toc-item"><a href="introduction.html#introduction">Introduction</a></li><li id="architecture-html-architecture" class="toc-item"><a href="architecture.html#architecture">Architecture</a><ul><li id="architecture-html-drivers" class="toc-item"><a href="architecture.html#drivers">Drivers</a></li><li id="architecture-html-platforms" class="toc-item"><a href="architecture.html#platforms">Platforms</a></li><li id="architecture-html-logging" class="toc-item"><a href="architecture.html#logging">Logging</a></li><li id="architecture-html-schema" class="toc-item"><a href="architecture.html#schema">Schema</a></li><li id="architecture-html-types" class="toc-item"><a href="architecture.html#types">Types</a></li></ul></li><li id="configuration-html-configuration" class="toc-item"><a href="configuration.html#configuration">Configuration</a><ul><li id="configuration-html-getting-a-connection" class="toc-item"><a href="configuration.html#getting-a-connection">Getting a Connection</a><ul><li id="configuration-html-connecting-using-a-url" class="toc-item"><a href="configuration.html#connecting-using-a-url">Connecting using a URL</a></li><li id="configuration-html-driver" class="toc-item"><a href="configuration.html#driver">Driver</a></li><li id="configuration-html-wrapper-class" class="toc-item"><a href="configuration.html#wrapper-class">Wrapper Class</a></li><li id="configuration-html-connection-details" class="toc-item"><a href="configuration.html#connection-details">Connection Details</a></li><li id="configuration-html-automatic-platform-version-detection" class="toc-item"><a href="configuration.html#automatic-platform-version-detection">Automatic platform version detection</a></li><li id="configuration-html-custom-platform" class="toc-item"><a href="configuration.html#custom-platform">Custom Platform</a></li><li id="configuration-html-custom-driver-options" class="toc-item"><a href="configuration.html#custom-driver-options">Custom Driver Options</a></li></ul></li></ul></li><li id="data-retrieval-and-manipulation-html-data-retrieval-and-manipulation" class="toc-item"><a href="data-retrieval-and-manipulation.html#data-retrieval-and-manipulation">Data Retrieval And Manipulation</a><ul><li id="data-retrieval-and-manipulation-html-data-retrieval" class="toc-item"><a href="data-retrieval-and-manipulation.html#data-retrieval">Data Retrieval</a><ul><li id="data-retrieval-and-manipulation-html-dynamic-parameters-and-prepared-statements" class="toc-item"><a href="data-retrieval-and-manipulation.html#dynamic-parameters-and-prepared-statements">Dynamic Parameters and Prepared Statements</a></li><li id="data-retrieval-and-manipulation-html-using-prepared-statements" class="toc-item"><a href="data-retrieval-and-manipulation.html#using-prepared-statements">Using Prepared Statements</a></li></ul></li><li id="data-retrieval-and-manipulation-html-binding-types" class="toc-item"><a href="data-retrieval-and-manipulation.html#binding-types">Binding Types</a><ul><li id="data-retrieval-and-manipulation-html-doctrine-dbal-types-conversion" class="toc-item"><a href="data-retrieval-and-manipulation.html#doctrine-dbal-types-conversion">Doctrine\DBAL\Types Conversion</a></li><li id="data-retrieval-and-manipulation-html-list-of-parameters-conversion" class="toc-item"><a href="data-retrieval-and-manipulation.html#list-of-parameters-conversion">List of Parameters Conversion</a></li></ul></li><li id="data-retrieval-and-manipulation-html-api" class="toc-item"><a href="data-retrieval-and-manipulation.html#api">API</a><ul><li id="data-retrieval-and-manipulation-html-prepare" class="toc-item"><a href="data-retrieval-and-manipulation.html#prepare">prepare()</a></li><li id="data-retrieval-and-manipulation-html-executeupdate" class="toc-item"><a href="data-retrieval-and-manipulation.html#executeupdate">executeUpdate()</a></li><li id="data-retrieval-and-manipulation-html-executequery" class="toc-item"><a href="data-retrieval-and-manipulation.html#executequery">executeQuery()</a></li><li id="data-retrieval-and-manipulation-html-fetchall" class="toc-item"><a href="data-retrieval-and-manipulation.html#fetchall">fetchAll()</a></li><li id="data-retrieval-and-manipulation-html-fetcharray" class="toc-item"><a href="data-retrieval-and-manipulation.html#fetcharray">fetchArray()</a></li><li id="data-retrieval-and-manipulation-html-fetchcolumn" class="toc-item"><a href="data-retrieval-and-manipulation.html#fetchcolumn">fetchColumn()</a></li><li id="data-retrieval-and-manipulation-html-fetchassoc" class="toc-item"><a href="data-retrieval-and-manipulation.html#fetchassoc">fetchAssoc()</a></li><li id="data-retrieval-and-manipulation-html-delete" class="toc-item"><a href="data-retrieval-and-manipulation.html#delete">delete()</a></li><li id="data-retrieval-and-manipulation-html-insert" class="toc-item"><a href="data-retrieval-and-manipulation.html#insert">insert()</a></li><li id="data-retrieval-and-manipulation-html-update" class="toc-item"><a href="data-retrieval-and-manipulation.html#update">update()</a></li><li id="data-retrieval-and-manipulation-html-quote" class="toc-item"><a href="data-retrieval-and-manipulation.html#quote">quote()</a></li><li id="data-retrieval-and-manipulation-html-quoteidentifier" class="toc-item"><a href="data-retrieval-and-manipulation.html#quoteidentifier">quoteIdentifier()</a></li></ul></li></ul></li><li id="query-builder-html-sql-query-builder" class="toc-item"><a href="query-builder.html#sql-query-builder">SQL Query Builder</a><ul><li id="query-builder-html-security-safely-preventing-sql-injection" class="toc-item"><a href="query-builder.html#security-safely-preventing-sql-injection">Security: Safely preventing SQL Injection</a></li><li id="query-builder-html-building-a-query" class="toc-item"><a href="query-builder.html#building-a-query">Building a Query</a><ul><li id="query-builder-html-distinct-clause" class="toc-item"><a href="query-builder.html#distinct-clause">DISTINCT-Clause</a></li><li id="query-builder-html-where-clause" class="toc-item"><a href="query-builder.html#where-clause">WHERE-Clause</a></li><li id="query-builder-html-table-alias" class="toc-item"><a href="query-builder.html#table-alias">Table alias</a></li><li id="query-builder-html-group-by-and-having-clause" class="toc-item"><a href="query-builder.html#group-by-and-having-clause">GROUP BY and HAVING Clause</a></li><li id="query-builder-html-join-clauses" class="toc-item"><a href="query-builder.html#join-clauses">Join Clauses</a></li><li id="query-builder-html-order-by-clause" class="toc-item"><a href="query-builder.html#order-by-clause">Order-By Clause</a></li><li id="query-builder-html-limit-clause" class="toc-item"><a href="query-builder.html#limit-clause">Limit Clause</a></li><li id="query-builder-html-values-clause" class="toc-item"><a href="query-builder.html#values-clause">VALUES Clause</a></li><li id="query-builder-html-set-clause" class="toc-item"><a href="query-builder.html#set-clause">Set Clause</a></li></ul></li><li id="query-builder-html-building-expressions" class="toc-item"><a href="query-builder.html#building-expressions">Building Expressions</a></li><li id="query-builder-html-binding-parameters-to-placeholders" class="toc-item"><a href="query-builder.html#binding-parameters-to-placeholders">Binding Parameters to Placeholders</a></li></ul></li><li id="transactions-html-transactions" class="toc-item"><a href="transactions.html#transactions">Transactions</a><ul><li id="transactions-html-transaction-nesting" class="toc-item"><a href="transactions.html#transaction-nesting">Transaction Nesting</a></li><li id="transactions-html-auto-commit-mode" class="toc-item"><a href="transactions.html#auto-commit-mode">Auto-commit mode</a></li><li id="transactions-html-error-handling" class="toc-item"><a href="transactions.html#error-handling">Error handling</a></li></ul></li><li id="platforms-html-platforms" class="toc-item"><a href="platforms.html#platforms">Platforms</a><ul><li id="platforms-html-mysql" class="toc-item"><a href="platforms.html#mysql">MySQL</a></li><li id="platforms-html-mariadb" class="toc-item"><a href="platforms.html#mariadb">MariaDB</a></li><li id="platforms-html-oracle" class="toc-item"><a href="platforms.html#oracle">Oracle</a></li><li id="platforms-html-microsoft-sql-server" class="toc-item"><a href="platforms.html#microsoft-sql-server">Microsoft SQL Server</a></li><li id="platforms-html-postgresql" class="toc-item"><a href="platforms.html#postgresql">PostgreSQL</a></li><li id="platforms-html-sap-sybase-sql-anywhere" class="toc-item"><a href="platforms.html#sap-sybase-sql-anywhere">SAP Sybase SQL Anywhere</a></li><li id="platforms-html-sqlite" class="toc-item"><a href="platforms.html#sqlite">SQLite</a></li><li id="platforms-html-drizzle" class="toc-item"><a href="platforms.html#drizzle">Drizzle</a></li></ul></li><li id="types-html-types" class="toc-item"><a href="types.html#types">Types</a><ul><li id="types-html-reference" class="toc-item"><a href="types.html#reference">Reference</a><ul><li id="types-html-numeric-types" class="toc-item"><a href="types.html#numeric-types">Numeric types</a></li><li id="types-html-string-types" class="toc-item"><a href="types.html#string-types">String types</a></li><li id="types-html-bit-types" class="toc-item"><a href="types.html#bit-types">Bit types</a></li><li id="types-html-date-and-time-types" class="toc-item"><a href="types.html#date-and-time-types">Date and time types</a></li><li id="types-html-array-types" class="toc-item"><a href="types.html#array-types">Array types</a></li><li id="types-html-object-types" class="toc-item"><a href="types.html#object-types">Object types</a></li></ul></li><li id="types-html-mapping-matrix" class="toc-item"><a href="types.html#mapping-matrix">Mapping Matrix</a></li><li id="types-html-detection-of-database-types" class="toc-item"><a href="types.html#detection-of-database-types">Detection of Database Types</a></li><li id="types-html-custom-mapping-types" class="toc-item"><a href="types.html#custom-mapping-types">Custom Mapping Types</a></li></ul></li><li id="schema-manager-html-schema-manager" class="toc-item"><a href="schema-manager.html#schema-manager">Schema-Manager</a><ul><li id="schema-manager-html-listdatabases" class="toc-item"><a href="schema-manager.html#listdatabases">listDatabases()</a></li><li id="schema-manager-html-listsequences" class="toc-item"><a href="schema-manager.html#listsequences">listSequences()</a></li><li id="schema-manager-html-listtablecolumns" class="toc-item"><a href="schema-manager.html#listtablecolumns">listTableColumns()</a></li><li id="schema-manager-html-listtabledetails" class="toc-item"><a href="schema-manager.html#listtabledetails">listTableDetails()</a></li><li id="schema-manager-html-listtableforeignkeys" class="toc-item"><a href="schema-manager.html#listtableforeignkeys">listTableForeignKeys()</a></li><li id="schema-manager-html-listtableindexes" class="toc-item"><a href="schema-manager.html#listtableindexes">listTableIndexes()</a></li><li id="schema-manager-html-listtables" class="toc-item"><a href="schema-manager.html#listtables">listTables()</a></li><li id="schema-manager-html-listviews" class="toc-item"><a href="schema-manager.html#listviews">listViews()</a></li><li id="schema-manager-html-createschema" class="toc-item"><a href="schema-manager.html#createschema">createSchema()</a></li></ul></li><li id="schema-representation-html-schema-representation" class="toc-item"><a href="schema-representation.html#schema-representation">Schema-Representation</a><ul><li id="schema-representation-html-schema-assets" class="toc-item"><a href="schema-representation.html#schema-assets">Schema Assets</a><ul><li id="schema-representation-html-column" class="toc-item"><a href="schema-representation.html#column">Column</a></li></ul></li></ul></li><li id="events-html-events" class="toc-item"><a href="events.html#events">Events</a><ul><li id="events-html-postconnect-event" class="toc-item"><a href="events.html#postconnect-event">PostConnect Event</a></li><li id="events-html-schema-events" class="toc-item"><a href="events.html#schema-events">Schema Events</a><ul><li id="events-html-onschemacreatetable-event" class="toc-item"><a href="events.html#onschemacreatetable-event">OnSchemaCreateTable Event</a></li><li id="events-html-onschemacreatetablecolumn-event" class="toc-item"><a href="events.html#onschemacreatetablecolumn-event">OnSchemaCreateTableColumn Event</a></li><li id="events-html-onschemadroptable-event" class="toc-item"><a href="events.html#onschemadroptable-event">OnSchemaDropTable Event</a></li><li id="events-html-onschemaaltertable-event" class="toc-item"><a href="events.html#onschemaaltertable-event">OnSchemaAlterTable Event</a></li><li id="events-html-onschemaaltertableaddcolumn-event" class="toc-item"><a href="events.html#onschemaaltertableaddcolumn-event">OnSchemaAlterTableAddColumn Event</a></li><li id="events-html-onschemaaltertableremovecolumn-event" class="toc-item"><a href="events.html#onschemaaltertableremovecolumn-event">OnSchemaAlterTableRemoveColumn Event</a></li><li id="events-html-onschemaaltertablechangecolumn-event" class="toc-item"><a href="events.html#onschemaaltertablechangecolumn-event">OnSchemaAlterTableChangeColumn Event</a></li><li id="events-html-onschemaaltertablerenamecolumn-event" class="toc-item"><a href="events.html#onschemaaltertablerenamecolumn-event">OnSchemaAlterTableRenameColumn Event</a></li><li id="events-html-onschemacolumndefinition-event" class="toc-item"><a href="events.html#onschemacolumndefinition-event">OnSchemaColumnDefinition Event</a></li><li id="events-html-onschemaindexdefinition-event" class="toc-item"><a href="events.html#onschemaindexdefinition-event">OnSchemaIndexDefinition Event</a></li></ul></li></ul></li><li id="security-html-security" class="toc-item"><a href="security.html#security">Security</a><ul><li id="security-html-sql-injection-safe-and-unsafe-apis-for-user-input" class="toc-item"><a href="security.html#sql-injection-safe-and-unsafe-apis-for-user-input">SQL Injection: Safe and Unsafe APIs for User Input</a></li><li id="security-html-user-input-in-your-queries" class="toc-item"><a href="security.html#user-input-in-your-queries">User input in your queries</a><ul><li id="security-html-wrong-string-concatenation" class="toc-item"><a href="security.html#wrong-string-concatenation">Wrong: String Concatenation</a></li><li id="security-html-right-prepared-statements" class="toc-item"><a href="security.html#right-prepared-statements">Right: Prepared Statements</a></li><li id="security-html-right-quoting-escaping-values" class="toc-item"><a href="security.html#right-quoting-escaping-values">Right: Quoting/Escaping values</a></li></ul></li></ul></li><li id="sharding-html-sharding" class="toc-item"><a href="sharding.html#sharding">Sharding</a><ul><li id="sharding-html-id-generation" class="toc-item"><a href="sharding.html#id-generation">ID Generation</a><ul><li id="sharding-html-use-guid-uuids" class="toc-item"><a href="sharding.html#use-guid-uuids">Use GUID/UUIDs</a></li><li id="sharding-html-table-generator" class="toc-item"><a href="sharding.html#table-generator">Table Generator</a></li><li id="sharding-html-natural-identifiers" class="toc-item"><a href="sharding.html#natural-identifiers">Natural Identifiers</a></li></ul></li><li id="sharding-html-transactions" class="toc-item"><a href="sharding.html#transactions">Transactions</a></li><li id="sharding-html-foreign-keys" class="toc-item"><a href="sharding.html#foreign-keys">Foreign Keys</a></li><li id="sharding-html-complex-queries" class="toc-item"><a href="sharding.html#complex-queries">Complex Queries</a></li><li id="sharding-html-shardmanager-interface" class="toc-item"><a href="sharding.html#shardmanager-interface">ShardManager Interface</a></li><li id="sharding-html-schema-operations-schemasynchronizer-interface" class="toc-item"><a href="sharding.html#schema-operations-schemasynchronizer-interface">Schema Operations: SchemaSynchronizer Interface</a></li><li id="sharding-html-sql-azure-federations" class="toc-item"><a href="sharding.html#sql-azure-federations">SQL Azure Federations</a><ul><li id="sharding-html-schema-operations" class="toc-item"><a href="sharding.html#schema-operations">Schema Operations</a></li><li id="sharding-html-sqlazure-filtering" class="toc-item"><a href="sharding.html#sqlazure-filtering">SQLAzure Filtering</a></li></ul></li><li id="sharding-html-generic-sql-sharding-support" class="toc-item"><a href="sharding.html#generic-sql-sharding-support">Generic SQL Sharding Support</a></li></ul></li><li id="sharding-azure-tutorial-html-sqlazure-sharding-tutorial" class="toc-item"><a href="sharding_azure_tutorial.html#sqlazure-sharding-tutorial">SQLAzure Sharding Tutorial</a><ul><li id="sharding-azure-tutorial-html-install-doctrine" class="toc-item"><a href="sharding_azure_tutorial.html#install-doctrine">Install Doctrine</a></li><li id="sharding-azure-tutorial-html-setup-connection" class="toc-item"><a href="sharding_azure_tutorial.html#setup-connection">Setup Connection</a></li><li id="sharding-azure-tutorial-html-create-database" class="toc-item"><a href="sharding_azure_tutorial.html#create-database">Create Database</a></li><li id="sharding-azure-tutorial-html-create-schema" class="toc-item"><a href="sharding_azure_tutorial.html#create-schema">Create Schema</a></li><li id="sharding-azure-tutorial-html-view-federation-members" class="toc-item"><a href="sharding_azure_tutorial.html#view-federation-members">View Federation Members</a></li><li id="sharding-azure-tutorial-html-insert-data" class="toc-item"><a href="sharding_azure_tutorial.html#insert-data">Insert Data</a></li><li id="sharding-azure-tutorial-html-split-federation" class="toc-item"><a href="sharding_azure_tutorial.html#split-federation">Split Federation</a></li><li id="sharding-azure-tutorial-html-inserting-data-after-split" class="toc-item"><a href="sharding_azure_tutorial.html#inserting-data-after-split">Inserting Data after Split</a></li><li id="sharding-azure-tutorial-html-querying-data-with-filtering-off" class="toc-item"><a href="sharding_azure_tutorial.html#querying-data-with-filtering-off">Querying data with filtering off</a></li><li id="sharding-azure-tutorial-html-querying-data-with-filtering-on" class="toc-item"><a href="sharding_azure_tutorial.html#querying-data-with-filtering-on">Querying data with filtering on</a></li></ul></li><li id="supporting-other-databases-html-supporting-other-databases" class="toc-item"><a href="supporting-other-databases.html#supporting-other-databases">Supporting Other Databases</a><ul><li id="supporting-other-databases-html-implementation-steps-in-detail" class="toc-item"><a href="supporting-other-databases.html#implementation-steps-in-detail">Implementation Steps in Detail</a></li></ul></li><li id="portability-html-portability" class="toc-item"><a href="portability.html#portability">Portability</a><ul><li id="portability-html-connection-wrapper" class="toc-item"><a href="portability.html#connection-wrapper">Connection Wrapper</a></li><li id="portability-html-database-platform" class="toc-item"><a href="portability.html#database-platform">Database Platform</a></li><li id="portability-html-keyword-lists" class="toc-item"><a href="portability.html#keyword-lists">Keyword Lists</a></li></ul></li><li id="caching-html-caching" class="toc-item"><a href="caching.html#caching">Caching</a></li><li id="known-vendor-issues-html-known-vendor-issues" class="toc-item"><a href="known-vendor-issues.html#known-vendor-issues">Known Vendor Issues</a><ul><li id="known-vendor-issues-html-postgresql" class="toc-item"><a href="known-vendor-issues.html#postgresql">PostgreSQL</a><ul><li id="known-vendor-issues-html-datetime-datetimetz-and-time-types" class="toc-item"><a href="known-vendor-issues.html#datetime-datetimetz-and-time-types">DateTime, DateTimeTz and Time Types</a></li><li id="known-vendor-issues-html-timezones-and-datetimetz" class="toc-item"><a href="known-vendor-issues.html#timezones-and-datetimetz">Timezones and DateTimeTz</a></li></ul></li><li id="known-vendor-issues-html-mysql" class="toc-item"><a href="known-vendor-issues.html#mysql">MySQL</a><ul><li id="known-vendor-issues-html-datetimetz" class="toc-item"><a href="known-vendor-issues.html#datetimetz">DateTimeTz</a></li></ul></li><li id="known-vendor-issues-html-sqlite" class="toc-item"><a href="known-vendor-issues.html#sqlite">Sqlite</a><ul><li id="known-vendor-issues-html-buffered-queries-and-isolation" class="toc-item"><a href="known-vendor-issues.html#buffered-queries-and-isolation">Buffered Queries and Isolation</a></li><li id="known-vendor-issues-html-datetime" class="toc-item"><a href="known-vendor-issues.html#datetime">DateTime</a></li><li id="known-vendor-issues-html-datetimetz" class="toc-item"><a href="known-vendor-issues.html#datetimetz">DateTimeTz</a></li><li id="known-vendor-issues-html-reverse-engineering-primary-key-order" class="toc-item"><a href="known-vendor-issues.html#reverse-engineering-primary-key-order">Reverse engineering primary key order</a></li></ul></li><li id="known-vendor-issues-html-ibm-db2" class="toc-item"><a href="known-vendor-issues.html#ibm-db2">IBM DB2</a><ul><li id="known-vendor-issues-html-datetimetz" class="toc-item"><a href="known-vendor-issues.html#datetimetz">DateTimeTz</a></li></ul></li><li id="known-vendor-issues-html-oracle" class="toc-item"><a href="known-vendor-issues.html#oracle">Oracle</a><ul><li id="known-vendor-issues-html-datetimetz" class="toc-item"><a href="known-vendor-issues.html#datetimetz">DateTimeTz</a></li><li id="known-vendor-issues-html-oci-lob-instances" class="toc-item"><a href="known-vendor-issues.html#oci-lob-instances">OCI-LOB instances</a></li></ul></li><li id="known-vendor-issues-html-microsoft-sql-server" class="toc-item"><a href="known-vendor-issues.html#microsoft-sql-server">Microsoft SQL Server</a><ul><li id="known-vendor-issues-html-unique-and-null" class="toc-item"><a href="known-vendor-issues.html#unique-and-null">Unique and NULL</a></li><li id="known-vendor-issues-html-datetime-datetimetz-and-time-types" class="toc-item"><a href="known-vendor-issues.html#datetime-datetimetz-and-time-types">DateTime, DateTimeTz and Time Types</a></li></ul></li></ul></li><li id="upgrading-html-upgrading" class="toc-item"><a href="upgrading.html#upgrading">Upgrading</a><ul><li id="upgrading-html-deprecations" class="toc-item"><a href="upgrading.html#deprecations">Deprecations</a></li></ul></li></ul></div>
+                    </div>
+                </nav>
+            
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-9 pt-3 px-4">
+                <div class="row">
+                                        
+                                                                <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+                {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Projects",
+            "item": "https://www.doctrine-project.org/projects.html"
+        },                {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "DBAL",
+            "item": "https://www.doctrine-project.org/projects/dbal.html"
+        },                {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Documentation",
+            "item": "https://www.doctrine-project.org/projects/doctrine-dbal/en/2.10/index.html"
+        },                {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "SQLAzure Sharding Tutorial",
+            "item": "https://www.doctrine-project.org/projects/doctrine-dbal/en/2.10/reference/sharding_azure_tutorial.html"
+        }            ]
+}
+</script>
+
+<nav class="breadcrumbs d-none d-sm-block d-md-block d-lg-block d-xl-block" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects.html">Projects</a></li>
+                                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/dbal.html">DBAL</a></li>
+                                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine-dbal/en/2.10/index.html">Documentation</a></li>
+                                                <li class="breadcrumb-item active" aria-current="page">SQLAzure Sharding Tutorial</li>
+                        </ol>
+</nav>
+                                    </div>
+
+                
+
+                <div class="row">
+                    <div class="col-12">
+                                                    <button type="button" class="btn btn-primary btn-sm float-right toc-toggle" data-toggle="offcanvas" id="toc-toggle">Table of Contents</button>
+
+                                                            
+                                <div class="dropdown show d-inline-block">
+                                    <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-dbal/en/2.10/reference/sharding_azure_tutorial.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        2.10.0
+                                    </a>
+
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                                                    <h6 class="dropdown-header">Maintained</h6>
+
+                                                                                            
+                                                <a class="project-version-switcher dropdown-item" href="">
+                                                    3.0
+
+                                                    
+                                                                                                            (upcoming)
+                                                                                                    </a>
+                                                                                            
+                                                <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-dbal/en/2.10/reference/sharding_azure_tutorial.html">
+                                                    2.10.0
+
+                                                                                                            (current)
+                                                    
+                                                                                                    </a>
+                                                                                    
+                                                                                    <h6 class="dropdown-header">Unmaintained</h6>
+
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-dbal/en/2.9/reference/sharding_azure_tutorial.html">2.9</a>
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-dbal/en/2.8/reference/sharding_azure_tutorial.html">2.8</a>
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-dbal/en/2.7/reference/sharding_azure_tutorial.html">2.7</a>
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-dbal/en/2.6/reference/sharding_azure_tutorial.html">2.6</a>
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-dbal/en/2.5/reference/sharding_azure_tutorial.html">2.5</a>
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-dbal/en/2.4/reference/sharding_azure_tutorial.html">2.4</a>
+                                                                                                                        </div>
+                                </div>
+                            
+                            
+<div class="section"><a class="section-anchor" id="sqlazure-sharding-tutorial" name="sqlazure-sharding-tutorial"></a><h1 class="section-header"><a href="#sqlazure-sharding-tutorial">SQLAzure Sharding Tutorial<i class="fas fa-link"></i></a></h1>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The sharding extension is currently in transition from a separate Project
+into DBAL. Class names may differ.</p>
+</td></tr></table></div>
+<p>This tutorial builds upon the <a href="http://blogs.msdn.com/b/silverlining/archive/2012/01/18/using-sql-azure-federations-via-php.aspx">Brian Swans tutorial</a>
+on SQLAzure Sharding and turns all the examples into examples using the Doctrine Sharding support.</p>
+<p>It introduces SQL Azure Sharding, which is an abstraction layer in SQL Azure to
+support sharding. Many features for sharding are implemented on the database
+level, which makes it much easier to work with than generic sharding
+implementations.</p>
+<p>For this tutorial you need an Azure account. You don't need to deploy the code
+on Azure, you can run it from your own machine against the remote database.</p>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>You can look at the code from the 'examples/sharding' directory.</p>
+</td></tr></table></div>
+<div class="section"><a class="section-anchor" id="install-doctrine" name="install-doctrine"></a><h2 class="section-header"><a href="#install-doctrine">Install Doctrine<i class="fas fa-link"></i></a></h2>
+<p>For this tutorial we will install Doctrine and the Sharding Extension through
+<a href="http://getcomposer.org">Composer</a> which is the easiest way to install
+Doctrine. Composer is a new package manager for PHP. Download the
+<code>composer.phar</code> from their website and put it into a newly created folder for
+this tutorial. Now create a <code>composer.json</code> file in this project root with
+the following content:</p>
+<blockquote><dl></dl>
+<p>}</p>
+</blockquote>
+<p>Open up the commandline and switch to your tutorial root directory, then call
+<code>php composer.phar install</code>. It will grab the code and install it into the
+<code>vendor</code> subdirectory of your project. It also creates an autoloader, so that
+we don't have to care about this.</p>
+</div>
+<div class="section"><a class="section-anchor" id="setup-connection" name="setup-connection"></a><h2 class="section-header"><a href="#setup-connection">Setup Connection<i class="fas fa-link"></i></a></h2>
+<p>The first thing to start with is setting up Doctrine and the database connection:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="1475222315c5098c030b6ac0e932ffcd16cd5a35"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="1475222315c5098c030b6ac0e932ffcd16cd5a35"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-1" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-1">1</a></td><td class="code-line" rowspan="23"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// bootstrap.php</span>
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">DriverManager</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Shards</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">SQLAzure</span>\<span class="hljs-title">SQLAzureShardManager</span>;
+
+<span class="hljs-keyword">require_once</span> <span class="hljs-string">"vendor/autoload.php"</span>;
+
+$conn = DriverManager::getConnection(<span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'driver'</span>   =&gt; <span class="hljs-string">'pdo_sqlsrv'</span>,
+    <span class="hljs-string">'dbname'</span>   =&gt; <span class="hljs-string">'SalesDB'</span>,
+    <span class="hljs-string">'host'</span>     =&gt; <span class="hljs-string">'tcp:dbname.windows.net'</span>,
+    <span class="hljs-string">'user'</span>     =&gt; <span class="hljs-string">'user@dbname'</span>,
+    <span class="hljs-string">'password'</span> =&gt; <span class="hljs-string">'XXX'</span>,
+    <span class="hljs-string">'platform'</span>       =&gt; <span class="hljs-keyword">new</span> \Doctrine\DBAL\Platforms\SQLAzurePlatform(),
+    <span class="hljs-string">'driverOptions'</span>  =&gt; <span class="hljs-keyword">array</span>(<span class="hljs-string">'MultipleActiveResultSets'</span> =&gt; <span class="hljs-keyword">false</span>),
+    <span class="hljs-string">'sharding'</span> =&gt; <span class="hljs-keyword">array</span>(
+        <span class="hljs-string">'federationName'</span>   =&gt; <span class="hljs-string">'Orders_Federation'</span>,
+        <span class="hljs-string">'distributionKey'</span>  =&gt; <span class="hljs-string">'CustId'</span>,
+        <span class="hljs-string">'distributionType'</span> =&gt; <span class="hljs-string">'integer'</span>,
+    )
+));
+
+$shardManager = <span class="hljs-keyword">new</span> SQLAzureShardManager($conn);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-2" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-3" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-4" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-5" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-6" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-7" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-8" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-9" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-10" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-11" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-12" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-13" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-14" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-15" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-16" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-17" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-18" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-19" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-20" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-21" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-22" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-23" class="line-number-anchor" /><a href="#line-number-1475222315c5098c030b6ac0e932ffcd16cd5a35-23">23</a></td></tr></table></div></code></pre>
+</div>
+<div class="section"><a class="section-anchor" id="create-database" name="create-database"></a><h2 class="section-header"><a href="#create-database">Create Database<i class="fas fa-link"></i></a></h2>
+<p>Create a new database using the Azure/SQL Azure management console.</p>
+</div>
+<div class="section"><a class="section-anchor" id="create-schema" name="create-schema"></a><h2 class="section-header"><a href="#create-schema">Create Schema<i class="fas fa-link"></i></a></h2>
+<p>Doctrine has a powerful schema API. We don't need to use low-level DDL
+statements to generate the database schema. Instead you can use an Object-Oriented API
+to create the database schema and then have Doctrine turn it into DDL
+statements.</p>
+<p>We will recreate Brians example schema with Doctrine DBAL. Instead of having to
+create federations and schema separately as in his example, Doctrine will do it
+all in one step:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="4e22fda45180943cf46775e4072f79d4fc2ccda4"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="4e22fda45180943cf46775e4072f79d4fc2ccda4"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-1" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-1">1</a></td><td class="code-line" rowspan="49"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// create_schema.php</span>
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Schema</span>\<span class="hljs-title">Schema</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Shards</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">SQLAzure</span>\<span class="hljs-title">SQLAzureSchemaSynchronizer</span>;
+
+<span class="hljs-keyword">require_once</span> <span class="hljs-string">'bootstrap.php'</span>;
+
+$schema = <span class="hljs-keyword">new</span> Schema();
+
+$products = $schema-&gt;createTable(<span class="hljs-string">'Products'</span>);
+$products-&gt;addColumn(<span class="hljs-string">'ProductID'</span>, <span class="hljs-string">'integer'</span>);
+$products-&gt;addColumn(<span class="hljs-string">'SupplierID'</span>, <span class="hljs-string">'integer'</span>);
+$products-&gt;addColumn(<span class="hljs-string">'ProductName'</span>, <span class="hljs-string">'string'</span>);
+$products-&gt;addColumn(<span class="hljs-string">'Price'</span>, <span class="hljs-string">'decimal'</span>, <span class="hljs-keyword">array</span>(<span class="hljs-string">'scale'</span> =&gt; <span class="hljs-number">2</span>, <span class="hljs-string">'precision'</span> =&gt; <span class="hljs-number">12</span>));
+$products-&gt;setPrimaryKey(<span class="hljs-keyword">array</span>(<span class="hljs-string">'ProductID'</span>));
+$products-&gt;addOption(<span class="hljs-string">'azure.federated'</span>, <span class="hljs-keyword">true</span>);
+
+$customers = $schema-&gt;createTable(<span class="hljs-string">'Customers'</span>);
+$customers-&gt;addColumn(<span class="hljs-string">'CustomerID'</span>, <span class="hljs-string">'integer'</span>);
+$customers-&gt;addColumn(<span class="hljs-string">'CompanyName'</span>, <span class="hljs-string">'string'</span>);
+$customers-&gt;addColumn(<span class="hljs-string">'FirstName'</span>, <span class="hljs-string">'string'</span>);
+$customers-&gt;addColumn(<span class="hljs-string">'LastName'</span>, <span class="hljs-string">'string'</span>);
+$customers-&gt;setPrimaryKey(<span class="hljs-keyword">array</span>(<span class="hljs-string">'CustomerID'</span>));
+$customers-&gt;addOption(<span class="hljs-string">'azure.federated'</span>, <span class="hljs-keyword">true</span>);
+$customers-&gt;addOption(<span class="hljs-string">'azure.federatedOnColumnName'</span>, <span class="hljs-string">'CustomerID'</span>);
+
+$orders = $schema-&gt;createTable(<span class="hljs-string">'Orders'</span>);
+$orders-&gt;addColumn(<span class="hljs-string">'CustomerID'</span>, <span class="hljs-string">'integer'</span>);
+$orders-&gt;addColumn(<span class="hljs-string">'OrderID'</span>, <span class="hljs-string">'integer'</span>);
+$orders-&gt;addColumn(<span class="hljs-string">'OrderDate'</span>, <span class="hljs-string">'datetime'</span>);
+$orders-&gt;setPrimaryKey(<span class="hljs-keyword">array</span>(<span class="hljs-string">'CustomerID'</span>, <span class="hljs-string">'OrderID'</span>));
+$orders-&gt;addOption(<span class="hljs-string">'azure.federated'</span>, <span class="hljs-keyword">true</span>);
+$orders-&gt;addOption(<span class="hljs-string">'azure.federatedOnColumnName'</span>, <span class="hljs-string">'CustomerID'</span>);
+
+$orderItems = $schema-&gt;createTable(<span class="hljs-string">'OrderItems'</span>);
+$orderItems-&gt;addColumn(<span class="hljs-string">'CustomerID'</span>, <span class="hljs-string">'integer'</span>);
+$orderItems-&gt;addColumn(<span class="hljs-string">'OrderID'</span>, <span class="hljs-string">'integer'</span>);
+$orderItems-&gt;addColumn(<span class="hljs-string">'ProductID'</span>, <span class="hljs-string">'integer'</span>);
+$orderItems-&gt;addColumn(<span class="hljs-string">'Quantity'</span>, <span class="hljs-string">'integer'</span>);
+$orderItems-&gt;setPrimaryKey(<span class="hljs-keyword">array</span>(<span class="hljs-string">'CustomerID'</span>, <span class="hljs-string">'OrderID'</span>, <span class="hljs-string">'ProductID'</span>));
+$orderItems-&gt;addOption(<span class="hljs-string">'azure.federated'</span>, <span class="hljs-keyword">true</span>);
+$orderItems-&gt;addOption(<span class="hljs-string">'azure.federatedOnColumnName'</span>, <span class="hljs-string">'CustomerID'</span>);
+
+<span class="hljs-comment">// Create the Schema + Federation:</span>
+$synchronizer = <span class="hljs-keyword">new</span> SQLAzureSchemaSynchronizer($conn, $shardManager);
+$synchronizer-&gt;createSchema($schema);
+
+<span class="hljs-comment">// Or jut look at the SQL:</span>
+<span class="hljs-keyword">echo</span> implode(<span class="hljs-string">"\n"</span>, $synchronizer-&gt;getCreateSchema($schema));</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-2" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-3" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-4" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-5" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-6" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-7" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-8" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-9" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-10" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-11" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-12" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-13" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-14" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-15" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-16" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-17" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-18" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-19" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-20" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-21" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-22" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-23" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-24" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-25" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-26" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-27" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-28" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-29" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-30" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-31" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-32" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-33" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-34" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-35" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-36" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-36">36</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-37" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-37">37</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-38" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-38">38</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-39" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-39">39</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-40" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-40">40</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-41" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-41">41</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-42" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-42">42</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-43" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-43">43</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-44" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-44">44</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-45" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-45">45</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-46" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-46">46</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-47" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-47">47</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-48" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-48">48</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-49" class="line-number-anchor" /><a href="#line-number-4e22fda45180943cf46775e4072f79d4fc2ccda4-49">49</a></td></tr></table></div></code></pre>
+</div>
+<div class="section"><a class="section-anchor" id="view-federation-members" name="view-federation-members"></a><h2 class="section-header"><a href="#view-federation-members">View Federation Members<i class="fas fa-link"></i></a></h2>
+<p>To see how many shard instances (called Federation Members) your SQLAzure database currently has
+you can ask the <code>ShardManager</code> to enumerate all shards:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-1" class="line-number-anchor" /><a href="#line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// view_federation_members.php</span>
+<span class="hljs-keyword">require_once</span> <span class="hljs-string">"bootstrap.php"</span>;
+
+$shards = $shardManager-&gt;getShards();
+<span class="hljs-keyword">foreach</span> ($shards <span class="hljs-keyword">as</span> $shard) {
+    print_r($shard);
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-2" class="line-number-anchor" /><a href="#line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-3" class="line-number-anchor" /><a href="#line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-4" class="line-number-anchor" /><a href="#line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-5" class="line-number-anchor" /><a href="#line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-6" class="line-number-anchor" /><a href="#line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-7" class="line-number-anchor" /><a href="#line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-8" class="line-number-anchor" /><a href="#line-number-ebbae2ca64bf60be0642b74fcfeb86ee8f4d0b9d-8">8</a></td></tr></table></div></code></pre>
+</div>
+<div class="section"><a class="section-anchor" id="insert-data" name="insert-data"></a><h2 class="section-header"><a href="#insert-data">Insert Data<i class="fas fa-link"></i></a></h2>
+<p>Now we want to insert some test data into the database to see the behavior when
+we split the shards. We use the same test data as Brian, but use the Doctrine
+API to insert them. To insert data into federated tables we have to select the
+shard we want to put the data into. We can use the ShardManager to execute this
+operation for us:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="6c62f69a6ec74882854874dab1045a0dc081f1df"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="6c62f69a6ec74882854874dab1045a0dc081f1df"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-1" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-1">1</a></td><td class="code-line" rowspan="132"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// insert_data.php</span>
+<span class="hljs-keyword">require_once</span> <span class="hljs-string">"bootstrap.php"</span>;
+
+$shardManager-&gt;selectShard(<span class="hljs-number">0</span>);
+
+$conn-&gt;insert(<span class="hljs-string">"Products"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">"ProductID"</span> =&gt; <span class="hljs-number">386</span>,
+    <span class="hljs-string">"SupplierID"</span> =&gt; <span class="hljs-number">1001</span>,
+    <span class="hljs-string">"ProductName"</span> =&gt; <span class="hljs-string">'Titanium Extension Bracket Left Hand'</span>,
+    <span class="hljs-string">"Price"</span> =&gt; <span class="hljs-number">5.25</span>,
+));
+$conn-&gt;insert(<span class="hljs-string">"Products"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">"ProductID"</span> =&gt; <span class="hljs-number">387</span>,
+    <span class="hljs-string">"SupplierID"</span> =&gt; <span class="hljs-number">1001</span>,
+    <span class="hljs-string">"ProductName"</span> =&gt; <span class="hljs-string">'Titanium Extension Bracket Right Hand'</span>,
+    <span class="hljs-string">"Price"</span> =&gt; <span class="hljs-number">5.25</span>,
+));
+$conn-&gt;insert(<span class="hljs-string">"Products"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">"ProductID"</span> =&gt; <span class="hljs-number">388</span>,
+    <span class="hljs-string">"SupplierID"</span> =&gt; <span class="hljs-number">1001</span>,
+    <span class="hljs-string">"ProductName"</span> =&gt; <span class="hljs-string">'Fusion Generator Module 5 kV'</span>,
+    <span class="hljs-string">"Price"</span> =&gt; <span class="hljs-number">10.50</span>,
+));
+$conn-&gt;insert(<span class="hljs-string">"Products"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">"ProductID"</span> =&gt; <span class="hljs-number">388</span>,
+    <span class="hljs-string">"SupplierID"</span> =&gt; <span class="hljs-number">1001</span>,
+    <span class="hljs-string">"ProductName"</span> =&gt; <span class="hljs-string">'Bypass Filter 400 MHz Low Pass'</span>,
+    <span class="hljs-string">"Price"</span> =&gt; <span class="hljs-number">10.50</span>,
+));
+
+$conn-&gt;insert(<span class="hljs-string">"Customers"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'CustomerID'</span> =&gt; <span class="hljs-number">10</span>,
+    <span class="hljs-string">'CompanyName'</span> =&gt; <span class="hljs-string">'Van Nuys'</span>,
+    <span class="hljs-string">'FirstName'</span> =&gt; <span class="hljs-string">'Catherine'</span>,
+    <span class="hljs-string">'LastName'</span> =&gt; <span class="hljs-string">'Abel'</span>,
+));
+$conn-&gt;insert(<span class="hljs-string">"Customers"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'CustomerID'</span> =&gt; <span class="hljs-number">20</span>,
+    <span class="hljs-string">'CompanyName'</span> =&gt; <span class="hljs-string">'Abercrombie'</span>,
+    <span class="hljs-string">'FirstName'</span> =&gt; <span class="hljs-string">'Kim'</span>,
+    <span class="hljs-string">'LastName'</span> =&gt; <span class="hljs-string">'Branch'</span>,
+));
+$conn-&gt;insert(<span class="hljs-string">"Customers"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'CustomerID'</span> =&gt; <span class="hljs-number">30</span>,
+    <span class="hljs-string">'CompanyName'</span> =&gt; <span class="hljs-string">'Contoso'</span>,
+    <span class="hljs-string">'FirstName'</span> =&gt; <span class="hljs-string">'Frances'</span>,
+    <span class="hljs-string">'LastName'</span> =&gt; <span class="hljs-string">'Adams'</span>,
+));
+$conn-&gt;insert(<span class="hljs-string">"Customers"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'CustomerID'</span> =&gt; <span class="hljs-number">40</span>,
+    <span class="hljs-string">'CompanyName'</span> =&gt; <span class="hljs-string">'A. Datum Corporation'</span>,
+    <span class="hljs-string">'FirstName'</span> =&gt; <span class="hljs-string">'Mark'</span>,
+    <span class="hljs-string">'LastName'</span> =&gt; <span class="hljs-string">'Harrington'</span>,
+));
+$conn-&gt;insert(<span class="hljs-string">"Customers"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'CustomerID'</span> =&gt; <span class="hljs-number">50</span>,
+    <span class="hljs-string">'CompanyName'</span> =&gt; <span class="hljs-string">'Adventure Works'</span>,
+    <span class="hljs-string">'FirstName'</span> =&gt; <span class="hljs-string">'Keith'</span>,
+    <span class="hljs-string">'LastName'</span> =&gt; <span class="hljs-string">'Harris'</span>,
+));
+$conn-&gt;insert(<span class="hljs-string">"Customers"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'CustomerID'</span> =&gt; <span class="hljs-number">60</span>,
+    <span class="hljs-string">'CompanyName'</span> =&gt; <span class="hljs-string">'Alpine Ski House'</span>,
+    <span class="hljs-string">'FirstName'</span> =&gt; <span class="hljs-string">'Wilson'</span>,
+    <span class="hljs-string">'LastName'</span> =&gt; <span class="hljs-string">'Pais'</span>,
+));
+$conn-&gt;insert(<span class="hljs-string">"Customers"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'CustomerID'</span> =&gt; <span class="hljs-number">70</span>,
+    <span class="hljs-string">'CompanyName'</span> =&gt; <span class="hljs-string">'Baldwin Museum of Science'</span>,
+    <span class="hljs-string">'FirstName'</span> =&gt; <span class="hljs-string">'Roger'</span>,
+    <span class="hljs-string">'LastName'</span> =&gt; <span class="hljs-string">'Harui'</span>,
+));
+$conn-&gt;insert(<span class="hljs-string">"Customers"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'CustomerID'</span> =&gt; <span class="hljs-number">80</span>,
+    <span class="hljs-string">'CompanyName'</span> =&gt; <span class="hljs-string">'Blue Yonder Airlines'</span>,
+    <span class="hljs-string">'FirstName'</span> =&gt; <span class="hljs-string">'Pilar'</span>,
+    <span class="hljs-string">'LastName'</span> =&gt; <span class="hljs-string">'Pinilla'</span>,
+));
+$conn-&gt;insert(<span class="hljs-string">"Customers"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'CustomerID'</span> =&gt; <span class="hljs-number">90</span>,
+    <span class="hljs-string">'CompanyName'</span> =&gt; <span class="hljs-string">'City Power &amp; Light'</span>,
+    <span class="hljs-string">'FirstName'</span> =&gt; <span class="hljs-string">'Kari'</span>,
+    <span class="hljs-string">'LastName'</span> =&gt; <span class="hljs-string">'Hensien'</span>,
+));
+$conn-&gt;insert(<span class="hljs-string">"Customers"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'CustomerID'</span> =&gt; <span class="hljs-number">100</span>,
+    <span class="hljs-string">'CompanyName'</span> =&gt; <span class="hljs-string">'Coho Winery'</span>,
+    <span class="hljs-string">'FirstName'</span> =&gt; <span class="hljs-string">'Peter'</span>,
+    <span class="hljs-string">'LastName'</span> =&gt; <span class="hljs-string">'Brehm'</span>,
+));
+
+$conn-&gt;executeUpdate(<span class="hljs-string">"DECLARE @orderId INT
+
+    DECLARE @customerId INT
+
+    SET @orderId = 10
+    SELECT @customerId = CustomerId FROM Customers WHERE LastName = 'Hensien' and FirstName = 'Kari'
+
+    INSERT INTO Orders (CustomerId, OrderId, OrderDate)
+    VALUES (@customerId, @orderId, GetDate())
+
+    INSERT INTO OrderItems (CustomerID, OrderID, ProductID, Quantity)
+    VALUES (@customerId, @orderId, 388, 4)
+
+    SET @orderId = 20
+    SELECT @customerId = CustomerId FROM Customers WHERE LastName = 'Harui' and FirstName = 'Roger'
+
+    INSERT INTO Orders (CustomerId, OrderId, OrderDate)
+    VALUES (@customerId, @orderId, GetDate())
+
+    INSERT INTO OrderItems (CustomerID, OrderID, ProductID, Quantity)
+    VALUES (@customerId, @orderId, 389, 2)
+
+    SET @orderId = 30
+    SELECT @customerId = CustomerId FROM Customers WHERE LastName = 'Brehm' and FirstName = 'Peter'
+
+    INSERT INTO Orders (CustomerId, OrderId, OrderDate)
+    VALUES (@customerId, @orderId, GetDate())
+
+    INSERT INTO OrderItems (CustomerID, OrderID, ProductID, Quantity)
+    VALUES (@customerId, @orderId, 387, 3)
+
+    SET @orderId = 40
+    SELECT @customerId = CustomerId FROM Customers WHERE LastName = 'Pais' and FirstName = 'Wilson'
+
+    INSERT INTO Orders (CustomerId, OrderId, OrderDate)
+    VALUES (@customerId, @orderId, GetDate())
+
+    INSERT INTO OrderItems (CustomerID, OrderID, ProductID, Quantity)
+    VALUES (@customerId, @orderId, 388, 1)"</span>
+);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-2" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-3" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-4" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-5" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-6" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-7" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-8" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-9" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-10" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-11" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-12" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-13" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-14" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-15" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-16" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-17" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-18" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-19" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-20" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-21" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-22" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-23" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-24" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-25" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-26" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-27" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-28" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-29" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-30" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-31" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-32" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-33" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-34" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-35" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-36" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-36">36</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-37" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-37">37</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-38" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-38">38</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-39" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-39">39</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-40" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-40">40</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-41" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-41">41</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-42" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-42">42</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-43" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-43">43</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-44" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-44">44</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-45" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-45">45</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-46" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-46">46</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-47" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-47">47</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-48" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-48">48</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-49" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-49">49</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-50" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-50">50</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-51" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-51">51</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-52" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-52">52</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-53" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-53">53</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-54" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-54">54</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-55" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-55">55</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-56" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-56">56</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-57" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-57">57</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-58" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-58">58</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-59" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-59">59</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-60" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-60">60</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-61" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-61">61</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-62" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-62">62</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-63" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-63">63</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-64" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-64">64</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-65" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-65">65</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-66" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-66">66</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-67" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-67">67</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-68" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-68">68</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-69" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-69">69</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-70" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-70">70</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-71" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-71">71</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-72" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-72">72</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-73" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-73">73</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-74" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-74">74</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-75" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-75">75</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-76" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-76">76</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-77" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-77">77</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-78" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-78">78</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-79" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-79">79</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-80" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-80">80</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-81" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-81">81</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-82" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-82">82</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-83" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-83">83</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-84" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-84">84</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-85" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-85">85</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-86" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-86">86</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-87" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-87">87</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-88" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-88">88</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-89" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-89">89</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-90" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-90">90</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-91" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-91">91</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-92" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-92">92</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-93" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-93">93</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-94" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-94">94</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-95" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-95">95</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-96" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-96">96</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-97" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-97">97</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-98" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-98">98</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-99" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-99">99</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-100" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-100">100</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-101" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-101">101</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-102" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-102">102</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-103" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-103">103</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-104" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-104">104</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-105" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-105">105</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-106" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-106">106</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-107" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-107">107</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-108" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-108">108</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-109" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-109">109</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-110" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-110">110</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-111" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-111">111</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-112" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-112">112</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-113" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-113">113</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-114" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-114">114</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-115" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-115">115</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-116" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-116">116</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-117" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-117">117</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-118" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-118">118</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-119" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-119">119</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-120" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-120">120</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-121" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-121">121</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-122" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-122">122</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-123" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-123">123</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-124" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-124">124</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-125" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-125">125</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-126" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-126">126</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-127" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-127">127</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-128" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-128">128</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-129" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-129">129</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-130" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-130">130</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-131" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-131">131</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-132" class="line-number-anchor" /><a href="#line-number-6c62f69a6ec74882854874dab1045a0dc081f1df-132">132</a></td></tr></table></div></code></pre>
+<p>This puts the data into the currently only existing federation member. We
+selected that federation member by picking 0 as distribution value, which is by
+definition part of the only existing federation.</p>
+</div>
+<div class="section"><a class="section-anchor" id="split-federation" name="split-federation"></a><h2 class="section-header"><a href="#split-federation">Split Federation<i class="fas fa-link"></i></a></h2>
+<p>Now lets split the federation, creating a second federation member. SQL Azure
+will automatically redistribute the data into the two federations after you
+executed this command.</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="9efe3e80b5de97d2371fa116952610a43a63771a"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="9efe3e80b5de97d2371fa116952610a43a63771a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-9efe3e80b5de97d2371fa116952610a43a63771a-1" class="line-number-anchor" /><a href="#line-number-9efe3e80b5de97d2371fa116952610a43a63771a-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// split_federation.php</span>
+<span class="hljs-keyword">require_once</span> <span class="hljs-string">'bootstrap.php'</span>;
+
+$shardManager-&gt;splitFederation(<span class="hljs-number">60</span>);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9efe3e80b5de97d2371fa116952610a43a63771a-2" class="line-number-anchor" /><a href="#line-number-9efe3e80b5de97d2371fa116952610a43a63771a-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9efe3e80b5de97d2371fa116952610a43a63771a-3" class="line-number-anchor" /><a href="#line-number-9efe3e80b5de97d2371fa116952610a43a63771a-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9efe3e80b5de97d2371fa116952610a43a63771a-4" class="line-number-anchor" /><a href="#line-number-9efe3e80b5de97d2371fa116952610a43a63771a-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9efe3e80b5de97d2371fa116952610a43a63771a-5" class="line-number-anchor" /><a href="#line-number-9efe3e80b5de97d2371fa116952610a43a63771a-5">5</a></td></tr></table></div></code></pre>
+<p>This little script uses the shard manager with a special method only existing
+on the SQL AZure implementation <code>splitFederation</code>. It accepts a value at
+at which the split is executed.</p>
+<p>If you reexecute the <code>view_federation_members.php</code> script you can now see
+that there are two federation members instead of just one as before. You can
+see with the <code>rangeLow</code> and <code>rangeHigh</code> parameters what customers and
+related entries are now served by which federation.</p>
+</div>
+<div class="section"><a class="section-anchor" id="inserting-data-after-split" name="inserting-data-after-split"></a><h2 class="section-header"><a href="#inserting-data-after-split">Inserting Data after Split<i class="fas fa-link"></i></a></h2>
+<p>Now after we splitted the data we now have to make sure to be connected to the
+right federation before inserting data. Lets add a new customer with ID 55 and
+have him create an order.</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="035585d79e0622cc03bb0059f14205fd9129ed4a"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="035585d79e0622cc03bb0059f14205fd9129ed4a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-1" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-1">1</a></td><td class="code-line" rowspan="27"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// insert_data_aftersplit.php</span>
+<span class="hljs-keyword">require_once</span> <span class="hljs-string">'bootstrap.php'</span>;
+
+$newCustomerId = <span class="hljs-number">55</span>;
+
+$shardManager-&gt;selectShard($newCustomerId);
+
+$conn-&gt;insert(<span class="hljs-string">"Customers"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">"CustomerID"</span> =&gt; $newCustomerId,
+    <span class="hljs-string">"CompanyName"</span> =&gt; <span class="hljs-string">"Microsoft"</span>,
+    <span class="hljs-string">"FirstName"</span> =&gt; <span class="hljs-string">"Brian"</span>,
+    <span class="hljs-string">"LastName"</span> =&gt; <span class="hljs-string">"Swan"</span>,
+));
+
+$conn-&gt;insert(<span class="hljs-string">"Orders"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">"CustomerID"</span> =&gt; <span class="hljs-number">55</span>,
+    <span class="hljs-string">"OrderID"</span> =&gt; <span class="hljs-number">37</span>,
+    <span class="hljs-string">"OrderDate"</span> =&gt; date(<span class="hljs-string">'Y-m-d H:i:s'</span>),
+));
+
+$conn-&gt;insert(<span class="hljs-string">"OrderItems"</span>, <span class="hljs-keyword">array</span>(
+    <span class="hljs-string">"CustomerID"</span> =&gt; <span class="hljs-number">55</span>,
+    <span class="hljs-string">"OrderID"</span> =&gt; <span class="hljs-number">37</span>,
+    <span class="hljs-string">"ProductID"</span> =&gt; <span class="hljs-number">387</span>,
+    <span class="hljs-string">"Quantity"</span> =&gt; <span class="hljs-number">1</span>,
+));</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-2" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-3" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-4" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-5" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-6" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-7" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-8" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-9" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-10" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-11" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-12" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-13" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-14" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-15" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-16" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-17" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-18" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-19" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-20" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-21" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-22" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-23" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-24" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-25" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-26" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-27" class="line-number-anchor" /><a href="#line-number-035585d79e0622cc03bb0059f14205fd9129ed4a-27">27</a></td></tr></table></div></code></pre>
+<p>As you can see its very important to pick the right distribution key in your
+sharded application. Otherwise you have to switch the shards very often, which
+is not really easy to work with. If you pick the sharding key right then it
+should be possible to select the shard only once per request for the major
+number of use-cases.</p>
+<p>Fan-out the queries accross multiple shards should only be necessary for a
+small number of queries, because these kind of queries are complex.</p>
+</div>
+<div class="section"><a class="section-anchor" id="querying-data-with-filtering-off" name="querying-data-with-filtering-off"></a><h2 class="section-header"><a href="#querying-data-with-filtering-off">Querying data with filtering off<i class="fas fa-link"></i></a></h2>
+<p>To access the data you have to pick a shard again and then start selecting data
+from it.</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="665fa4db57cbaf15251aebcdf53d5ce1218c950d"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="665fa4db57cbaf15251aebcdf53d5ce1218c950d"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-1" class="line-number-anchor" /><a href="#line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// query_filtering_off.php</span>
+<span class="hljs-keyword">require_once</span> <span class="hljs-string">"bootstrap.php"</span>;
+
+$shardManager-&gt;selectShard(<span class="hljs-number">0</span>);
+
+$data = $conn-&gt;fetchAll(<span class="hljs-string">'SELECT * FROM Customers'</span>);
+print_r($data);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-2" class="line-number-anchor" /><a href="#line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-3" class="line-number-anchor" /><a href="#line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-4" class="line-number-anchor" /><a href="#line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-5" class="line-number-anchor" /><a href="#line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-6" class="line-number-anchor" /><a href="#line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-7" class="line-number-anchor" /><a href="#line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-8" class="line-number-anchor" /><a href="#line-number-665fa4db57cbaf15251aebcdf53d5ce1218c950d-8">8</a></td></tr></table></div></code></pre>
+<p>This returns all customers from the shard with distribution value 0. This will
+be all customers with id 10 to less than 60, since we split federations at 60.</p>
+</div>
+<div class="section"><a class="section-anchor" id="querying-data-with-filtering-on" name="querying-data-with-filtering-on"></a><h2 class="section-header"><a href="#querying-data-with-filtering-on">Querying data with filtering on<i class="fas fa-link"></i></a></h2>
+<p>One special feature of SQL Azure is the possibility to database level filtering
+based on the sharding distribution values. This means that SQL Azure will add
+WHERE clauses with distributionkey=current distribution value conditions to
+each distribution key.</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="3804169bf6f54c224b3a2ffcc67d1a5646acb3bf"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="3804169bf6f54c224b3a2ffcc67d1a5646acb3bf"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-1" class="line-number-anchor" /><a href="#line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-1">1</a></td><td class="code-line" rowspan="9"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// query_filtering_on.php</span>
+<span class="hljs-keyword">require_once</span> <span class="hljs-string">"bootstrap.php"</span>;
+
+$shardManager-&gt;setFilteringEnabled(<span class="hljs-keyword">true</span>);
+$shardManager-&gt;selectShard(<span class="hljs-number">55</span>);
+
+$data = $conn-&gt;fetchAll(<span class="hljs-string">'SELECT * FROM Customers'</span>);
+print_r($data);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-2" class="line-number-anchor" /><a href="#line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-3" class="line-number-anchor" /><a href="#line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-4" class="line-number-anchor" /><a href="#line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-5" class="line-number-anchor" /><a href="#line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-6" class="line-number-anchor" /><a href="#line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-7" class="line-number-anchor" /><a href="#line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-8" class="line-number-anchor" /><a href="#line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-9" class="line-number-anchor" /><a href="#line-number-3804169bf6f54c224b3a2ffcc67d1a5646acb3bf-9">9</a></td></tr></table></div></code></pre>
+<p>Now you only get the customer with id = 55. The same holds for queries on the
+<code>Orders</code> and <code>OrderItems</code> table, which are restricted by customer id = 55.</p>
+
+</div>
+</div>
+
+                                                </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+        <button id="back-to-top" title="Go to top">Top</button>
+
+                    <footer class="footer">
+                <div class="container">
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><a href="/projects.html">Projects</a></li>
+                        <li class="list-inline-item"><a href="/partners.html">Partners</a></li>
+                        <li class="list-inline-item"><a href="/sponsorship.html">Sponsorship</a></li>
+                        <li class="list-inline-item"><a href="/community/index.html">Community</a></li>
+                        <li class="list-inline-item"><a href="/blog/index.html">Blog</a></li>
+                        <li class="list-inline-item"><a href="/events.html">Events</a></li>
+                        <li class="list-inline-item"><a href="/consulting.html">Consulting</a></li>
+                    </ul>
+                </div>
+            </footer>
+        
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script
+            src="https://www.doctrine-project.org/frontend/js/bundle.js?2dce55"
+                            integrity="sha384-ewravqv7qS2TQHo4lOtEo1UUYMkA7D/4cwiRS5bzwVRRJHkebpC447VV85tL38Yh"
+                        crossorigin="anonymous">
+        </script>
+
+                
+        <script type="text/javascript">
+            var projectSlug = 'dbal';
+            var versionSlug = '2.10';
+
+            var searchBoxSettings = {
+                container: '#search-box',
+                placeholder: 'Search DBAL 2.10'
+            };
+
+            function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
+                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                            }
+        </script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+            </body>
+</html>

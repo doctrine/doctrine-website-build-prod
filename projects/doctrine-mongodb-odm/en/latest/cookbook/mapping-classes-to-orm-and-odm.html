@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mapping Classes to the ORM and ODM - Doctrine MongoDB Object Document Mapper (MongoDB ODM)</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="description" content="Doctrine MongoDB Object Document Mapper Documentation: Mapping Classes to the ORM and ODM ">
+
+        <meta name="keywords" content="php,mongodb,odm,data,mapper,mapping,object,documentation,mapping,classes,to,the,orm,and,odm">
+
+                    <meta name="robots" content="index, follow">
+        
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/2.0/cookbook/mapping-classes-to-orm-and-odm.html" />
+    
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://www.doctrine-project.org/frontend/css/index.css?d03983"
+                        integrity="sha384-4DDvrwHU8UHyL/15iEZltzugmeBoo5kRia0CANNVWf95JcnJimplks4zt9iMqIXa"
+                        crossorigin="anonymous"
+        />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://www.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://www.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://www.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://www.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://www.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://www.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://www.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://www.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://www.doctrine-project.org/images/mstile-310x310.png" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@doctrineproject" />
+        <meta name="twitter:creator" content="@doctrineproject" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/cookbook/mapping-classes-to-orm-and-odm.html" />
+        <meta property="og:title" content="Mapping Classes to the ORM and ODM - Doctrine MongoDB Object Document Mapper (MongoDB ODM)" />
+        <meta property="og:description" content="Doctrine MongoDB Object Document Mapper Documentation: Mapping Classes to the ORM and ODM " />
+        <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://www.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "url": "https://www.doctrine-project.org",
+            "logo": "https://www.doctrine-project.org/images/doctrine-logo.svg"
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://www.doctrine-project.org",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.doctrine-project.org?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Doctrine",
+            "url": "https://www.doctrine-project.org",
+            "sameAs": [
+                "https://twitter.com/doctrineproject"
+            ]
+        }
+        </script>
+
+                    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Doctrine MongoDB Object Document Mapper",
+            "description": "Mapping Classes to the ORM and ODM",
+            "provider": {
+                "@type": "Organization",
+                "name": "Doctrine",
+                "sameAs": "https://www.doctrine-project.org"
+            }
+        }
+        </script>
+    
+        
+            </head>
+    <body>
+                    
+            <nav class="doctrine-navbar navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="/index.html"><img src="https://www.doctrine-project.org/images/doctrine-logo.svg?c1fd47" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="/projects.html" id="navbarProjectsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarProjectsDropdown">
+                                                                    <a class="dropdown-item notranslate" href="/projects/annotations.html">Annotations</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/cache.html">Cache</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/coding-standard.html">Coding Standard</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/collections.html">Collections</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/common.html">Common</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/dbal.html">DBAL</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/event-manager.html">Event Manager</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/inflector.html">Inflector</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/instantiator.html">Instantiator</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/lexer.html">Lexer</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/migrations.html">Migrations</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/mongodb.html">MongoDB</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/mongodb-odm.html">MongoDB ODM</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/orm.html">ORM</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/persistence.html">Persistence</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/phpcr-odm.html">PHPCR ODM</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/reflection.html">Reflection</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/rst-parser.html">RST Parser</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/skeleton-mapper.html">Skeleton Mapper</a>
+                                                                <a class="dropdown-item bg-secondary text-white font-weight-bold" href="/projects.html">View All</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="/contribute/index.html" id="navbarDevelopmentDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Development</a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarContributeDropdown">
+                                <a class="dropdown-item" href="/community/index.html">Community</a>
+                                <a class="dropdown-item" href="/contribute/index.html">Contributor Workflow</a>
+                                <a class="dropdown-item" href="/contribute/maintainer/index.html">Maintainer Workflow</a>
+                                <a class="dropdown-item" href="/contribute/website/index.html">Contribute to Website</a>
+                                <a class="dropdown-item" href="/team/maintainers.html">Maintainers</a>
+                                <a class="dropdown-item" href="/team/contributors.html">Contributors</a>
+                                <a class="dropdown-item" href="/policies.html">Policies</a>
+                                <a class="dropdown-item" href="https://github.com/doctrine" target="_blank" rel="noopener noreferrer">GitHub</a>
+                                <a class="dropdown-item" href="/styleguide.html">Styleguide</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/events.html">Events</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/consulting.html">Consulting</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/partners.html">Partners</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/blog/index.html">Blog</a>
+                        </li>
+                    </ul>
+
+                    <div class="layout-edit-button d-inline-block mr-2">
+                                                    <a href="https://github.com/doctrine/mongodb-odm/edit/master/docs/en/cookbook/mapping-classes-to-orm-and-odm.rst" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
+                                            </div>
+
+                    <div class="google-translate-dropdown dropdown show d-inline-block mr-2">
+                        <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="translateDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Translate
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="translateDropdown">
+                            <div class="dropdown-item" id="google_translate_element">Loading...</div>
+                        </div>
+                    </div>
+
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                </div>
+            </nav>
+
+            <div class="search-results rounded">
+                <div id="hits">
+                    <!-- Hits widget will appear here -->
+                </div>
+
+                <a href="https://www.algolia.com" target="_blank" rel="noopener noreferrer"><img src="https://www.doctrine-project.org/images/search-by-algolia.png" class="float-right" style="width: 150px;" /></a>
+            </div>
+        
+            <div class="container-wrapper container">
+        <div class="row row-offcanvas row-offcanvas-right">
+                            <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
+                    <div class="sidebar-sticky">
+                        <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7D553W&placement=wwwdoctrine-projectorg" id="_carbonads_js"></script>
+
+                        <div class="toc-section"><h2 class="toc-header">Tutorials</h2>
+<div class="toc"><ul><li id="tutorials-getting-started-html-getting-started" class="toc-item"><a href="../tutorials/getting-started.html#getting-started">Getting Started</a><ul><li id="tutorials-getting-started-html-example-model-simple-blog" class="toc-item"><a href="../tutorials/getting-started.html#example-model-simple-blog">Example Model: Simple Blog</a></li><li id="tutorials-getting-started-html-a-first-prototype" class="toc-item"><a href="../tutorials/getting-started.html#a-first-prototype">A first prototype</a></li><li id="tutorials-getting-started-html-persistent-models" class="toc-item"><a href="../tutorials/getting-started.html#persistent-models">Persistent Models</a></li><li id="tutorials-getting-started-html-usage" class="toc-item"><a href="../tutorials/getting-started.html#usage">Usage</a></li></ul></li></ul></div>
+</div>
+<div class="toc-section"><h2 class="toc-header">Reference</h2>
+<div class="toc"><ul><li id="reference-introduction-html-introduction" class="toc-item"><a href="../reference/introduction.html#introduction">Introduction</a><ul><li id="reference-introduction-html-features-overview" class="toc-item"><a href="../reference/introduction.html#features-overview">Features Overview</a></li><li id="reference-introduction-html-setup" class="toc-item"><a href="../reference/introduction.html#setup">Setup</a></li><li id="reference-introduction-html-providing-a-custom-client" class="toc-item"><a href="../reference/introduction.html#providing-a-custom-client">Providing a custom client</a></li></ul></li><li id="reference-architecture-html-architecture" class="toc-item"><a href="../reference/architecture.html#architecture">Architecture</a><ul><li id="reference-architecture-html-documents" class="toc-item"><a href="../reference/architecture.html#documents">Documents</a><ul><li id="reference-architecture-html-document-states" class="toc-item"><a href="../reference/architecture.html#document-states">Document states</a></li><li id="reference-architecture-html-persistent-fields" class="toc-item"><a href="../reference/architecture.html#persistent-fields">Persistent fields</a></li><li id="reference-architecture-html-serializing-documents" class="toc-item"><a href="../reference/architecture.html#serializing-documents">Serializing documents</a></li></ul></li><li id="reference-architecture-html-the-documentmanager" class="toc-item"><a href="../reference/architecture.html#the-documentmanager">The DocumentManager</a><ul><li id="reference-architecture-html-transactional-write-behind" class="toc-item"><a href="../reference/architecture.html#transactional-write-behind">Transactional write-behind</a></li><li id="reference-architecture-html-the-unit-of-work" class="toc-item"><a href="../reference/architecture.html#the-unit-of-work">The Unit of Work</a></li></ul></li></ul></li></ul></div>
+</div>
+<dl><dt>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</dt><dt>=======</dt><dt>&gt;&gt;&gt;&gt;&gt;&gt;&gt; 2.0.x</dt><dd>/reference/basic-mapping /reference/custom-mapping-types /reference/console-commands /reference/basic-mapping /reference//reference-mapping /reference/bidirectional-/references /reference/complex-/references /reference/indexes /reference/inheritance-mapping /reference/embedded-mapping /reference/trees /reference/storing-files-with-gridfs /reference/xml-mapping /reference/annotations-/reference /reference/metadata-drivers /reference/working-with-objects /reference/document-repositories /reference/events /reference/migrating-schemas /reference/query-builder-api /reference/aggregation-builder /reference/geospatial-queries /reference/find-and-update /reference/upserting-documents /reference/filters /reference/priming-/references /reference/capped-collections /reference/storage-strategies /reference/custom-collections /reference/sharding /reference/transactions-and-concurrency /reference/best-practices /reference/change-tracking-policies </dd></dl>
+<div class="toc-section"><h2 class="toc-header">Cookbook</h2>
+<div class="toc"><ul><li id="resolve-target-document-listener-html-keeping-your-modules-independent" class="toc-item"><a href="resolve-target-document-listener.html#keeping-your-modules-independent">Keeping Your Modules Independent</a><ul><li id="resolve-target-document-listener-html-background" class="toc-item"><a href="resolve-target-document-listener.html#background">Background</a></li><li id="resolve-target-document-listener-html-configuration" class="toc-item"><a href="resolve-target-document-listener.html#configuration">Configuration</a></li><li id="resolve-target-document-listener-html-final-thoughts" class="toc-item"><a href="resolve-target-document-listener.html#final-thoughts">Final Thoughts</a></li></ul></li><li id="implementing-wakeup-or-clone-html-implementing-wakeup-or-clone" class="toc-item"><a href="implementing-wakeup-or-clone.html#implementing-wakeup-or-clone">Implementing Wakeup or Clone</a><ul><li id="implementing-wakeup-or-clone-html-safely-implementing-wakeup" class="toc-item"><a href="implementing-wakeup-or-clone.html#safely-implementing-wakeup">Safely implementing \_\_wakeup</a></li><li id="implementing-wakeup-or-clone-html-safely-implementing-clone" class="toc-item"><a href="implementing-wakeup-or-clone.html#safely-implementing-clone">Safely implementing \_\_clone</a></li><li id="implementing-wakeup-or-clone-html-summary" class="toc-item"><a href="implementing-wakeup-or-clone.html#summary">Summary</a></li></ul></li><li id="soft-delete-extension-html-soft-delete-extension" class="toc-item"><a href="soft-delete-extension.html#soft-delete-extension">Soft Delete Extension</a><ul><li id="soft-delete-extension-html-installation" class="toc-item"><a href="soft-delete-extension.html#installation">Installation</a></li><li id="soft-delete-extension-html-setup" class="toc-item"><a href="soft-delete-extension.html#setup">Setup</a></li><li id="soft-delete-extension-html-softdeleteable-interface" class="toc-item"><a href="soft-delete-extension.html#softdeleteable-interface">SoftDeleteable Interface</a></li><li id="soft-delete-extension-html-example-implementation" class="toc-item"><a href="soft-delete-extension.html#example-implementation">Example Implementation</a></li><li id="soft-delete-extension-html-usage" class="toc-item"><a href="soft-delete-extension.html#usage">Usage</a></li><li id="soft-delete-extension-html-events" class="toc-item"><a href="soft-delete-extension.html#events">Events</a></li><li id="soft-delete-extension-html-cascading-soft-deletes" class="toc-item"><a href="soft-delete-extension.html#cascading-soft-deletes">Cascading Soft Deletes</a></li></ul></li><li id="blending-orm-and-mongodb-odm-html-blending-the-orm-and-mongodb-odm" class="toc-item"><a href="blending-orm-and-mongodb-odm.html#blending-the-orm-and-mongodb-odm">Blending the ORM and MongoDB ODM</a><ul><li id="blending-orm-and-mongodb-odm-html-define-product" class="toc-item"><a href="blending-orm-and-mongodb-odm.html#define-product">Define Product</a></li><li id="blending-orm-and-mongodb-odm-html-define-entity" class="toc-item"><a href="blending-orm-and-mongodb-odm.html#define-entity">Define Entity</a></li><li id="blending-orm-and-mongodb-odm-html-event-subscriber" class="toc-item"><a href="blending-orm-and-mongodb-odm.html#event-subscriber">Event Subscriber</a></li><li id="blending-orm-and-mongodb-odm-html-working-with-products-and-orders" class="toc-item"><a href="blending-orm-and-mongodb-odm.html#working-with-products-and-orders">Working with Products and Orders</a></li></ul></li><li id="simple-search-engine-html-simple-search-engine" class="toc-item"><a href="simple-search-engine.html#simple-search-engine">Simple Search Engine</a><ul><li id="simple-search-engine-html-sample-model-product" class="toc-item"><a href="simple-search-engine.html#sample-model-product">Sample Model: Product</a></li><li id="simple-search-engine-html-working-with-keywords" class="toc-item"><a href="simple-search-engine.html#working-with-keywords">Working with Keywords</a></li><li id="simple-search-engine-html-searching-keywords" class="toc-item"><a href="simple-search-engine.html#searching-keywords">Searching Keywords</a><ul><li id="simple-search-engine-html-user-input" class="toc-item"><a href="simple-search-engine.html#user-input">User Input</a></li></ul></li><li id="simple-search-engine-html-embedded-documents" class="toc-item"><a href="simple-search-engine.html#embedded-documents">Embedded Documents</a><ul><li id="simple-search-engine-html-definition" class="toc-item"><a href="simple-search-engine.html#definition">Definition</a></li></ul></li></ul></li><li id="validation-of-documents-html-validation-of-documents" class="toc-item"><a href="validation-of-documents.html#validation-of-documents">Validation of Documents</a></li><li id="mapping-classes-to-orm-and-odm-html-mapping-classes-to-the-orm-and-odm" class="toc-item"><a href="mapping-classes-to-orm-and-odm.html#mapping-classes-to-the-orm-and-odm">Mapping Classes to the ORM and ODM</a><ul><li id="mapping-classes-to-orm-and-odm-html-test-subject" class="toc-item"><a href="mapping-classes-to-orm-and-odm.html#test-subject">Test Subject</a></li><li id="mapping-classes-to-orm-and-odm-html-mapping-information" class="toc-item"><a href="mapping-classes-to-orm-and-odm.html#mapping-information">Mapping Information</a><ul><li id="mapping-classes-to-orm-and-odm-html-orm" class="toc-item"><a href="mapping-classes-to-orm-and-odm.html#orm">ORM</a></li><li id="mapping-classes-to-orm-and-odm-html-mongodb-odm" class="toc-item"><a href="mapping-classes-to-orm-and-odm.html#mongodb-odm">MongoDB ODM</a></li></ul></li><li id="mapping-classes-to-orm-and-odm-html-repository-classes" class="toc-item"><a href="mapping-classes-to-orm-and-odm.html#repository-classes">Repository Classes</a></li></ul></li><li id="implementing-array-access-for-domain-objects-html-implementing-arrayaccess-for-domain-objects" class="toc-item"><a href="implementing-array-access-for-domain-objects.html#implementing-arrayaccess-for-domain-objects">Implementing ArrayAccess for Domain Objects</a><ul><li id="implementing-array-access-for-domain-objects-html-option-1" class="toc-item"><a href="implementing-array-access-for-domain-objects.html#option-1">Option 1</a></li><li id="implementing-array-access-for-domain-objects-html-option-2" class="toc-item"><a href="implementing-array-access-for-domain-objects.html#option-2">Option 2</a></li><li id="implementing-array-access-for-domain-objects-html-read-only" class="toc-item"><a href="implementing-array-access-for-domain-objects.html#read-only">Read-only</a></li></ul></li><li id="implementing-the-notify-changetracking-policy-html-implementing-the-notify-changetracking-policy" class="toc-item"><a href="implementing-the-notify-changetracking-policy.html#implementing-the-notify-changetracking-policy">Implementing the Notify ChangeTracking Policy</a><ul><li id="implementing-the-notify-changetracking-policy-html-implementing-notifypropertychanged" class="toc-item"><a href="implementing-the-notify-changetracking-policy.html#implementing-notifypropertychanged">Implementing NotifyPropertyChanged</a></li></ul></li></ul></div>
+</div>
+                    </div>
+                </nav>
+            
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-9 pt-3 px-4">
+                <div class="row">
+                                        
+                                                                <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+                {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Projects",
+            "item": "https://www.doctrine-project.org/projects.html"
+        },                {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "MongoDB ODM",
+            "item": "https://www.doctrine-project.org/projects/mongodb-odm.html"
+        },                {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Documentation",
+            "item": "https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/index.html"
+        },                {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "Mapping Classes to the ORM and ODM",
+            "item": "https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/cookbook/mapping-classes-to-orm-and-odm.html"
+        }            ]
+}
+</script>
+
+<nav class="breadcrumbs d-none d-sm-block d-md-block d-lg-block d-xl-block" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects.html">Projects</a></li>
+                                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/mongodb-odm.html">MongoDB ODM</a></li>
+                                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/index.html">Documentation</a></li>
+                                                <li class="breadcrumb-item active" aria-current="page">Mapping Classes to the ORM and ODM</li>
+                        </ol>
+</nav>
+                                    </div>
+
+                    
+    <div class="alert caution bg-light-yellow text-dark border">
+    <table width="100%">
+        <tr>
+            <td width="10" class="align-top">
+                <i class="fas fa-exclamation-circle text-warning mr-2"></i>
+            </td>
+            <td><p>You are browsing a version that has not yet been released.</p></td>
+        </tr>
+    </table>
+</div>
+
+                <div class="row">
+                    <div class="col-12">
+                                                    <button type="button" class="btn btn-primary btn-sm float-right toc-toggle" data-toggle="offcanvas" id="toc-toggle">Table of Contents</button>
+
+                                                            
+                                <div class="dropdown show d-inline-block">
+                                    <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-mongodb-odm/en/latest/cookbook/mapping-classes-to-orm-and-odm.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        2.1
+                                    </a>
+
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                                                    <h6 class="dropdown-header">Maintained</h6>
+
+                                                                                            
+                                                <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-mongodb-odm/en/latest/cookbook/mapping-classes-to-orm-and-odm.html">
+                                                    2.1
+
+                                                    
+                                                                                                            (upcoming)
+                                                                                                    </a>
+                                                                                            
+                                                <a class="project-version-switcher dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.0/cookbook/mapping-classes-to-orm-and-odm.html">
+                                                    2.0.3
+
+                                                                                                            (current)
+                                                    
+                                                                                                    </a>
+                                                                                            
+                                                <a class="project-version-switcher dropdown-item" href="/projects/doctrine-mongodb-odm/en/1.3/cookbook/mapping-classes-to-orm-and-odm.html">
+                                                    1.3.5
+
+                                                    
+                                                                                                    </a>
+                                                                                    
+                                                                                    <h6 class="dropdown-header">Unmaintained</h6>
+
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-mongodb-odm/en/1.2/cookbook/mapping-classes-to-orm-and-odm.html">1.2</a>
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-mongodb-odm/en/1.1/cookbook/mapping-classes-to-orm-and-odm.html">1.1</a>
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-mongodb-odm/en/1.0/cookbook/mapping-classes-to-orm-and-odm.html">1.0</a>
+                                                                                                                        </div>
+                                </div>
+                            
+                            
+<div class="section"><a class="section-anchor" id="mapping-classes-to-the-orm-and-odm" name="mapping-classes-to-the-orm-and-odm"></a><h1 class="section-header"><a href="#mapping-classes-to-the-orm-and-odm">Mapping Classes to the ORM and ODM<i class="fas fa-link"></i></a></h1>
+<p>Because of the non-intrusive design of Doctrine, it is possible for you to have plain PHP classes
+that are mapped to both a relational database (with the Doctrine2 Object Relational Mapper) and
+MongoDB (with the Doctrine MongoDB Object Document Mapper), or any other persistence layer that
+implements the Doctrine Common <a href="https://github.com/doctrine/common/tree/master/lib/Doctrine/Common/Persistence">persistence</a> interfaces.</p>
+<div class="section"><a class="section-anchor" id="test-subject" name="test-subject"></a><h2 class="section-header"><a href="#test-subject">Test Subject<i class="fas fa-link"></i></a></h2>
+<p>For this cookbook entry, we need to define a class that can be persisted to both MySQL and MongoDB.
+We'll use a <code>BlogPost</code> as you may want to write some generic blogging functionality that has support
+for multiple Doctrine persistence layers:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="4c9a97adb6c380013c4733c61f16c5b0528d69cc"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="4c9a97adb6c380013c4733c61f16c5b0528d69cc"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-1" class="line-number-anchor" /><a href="#line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">&lt;?php</span>
+
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>\<span class="hljs-title">Blog</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span>
+</span>{
+    <span class="hljs-keyword">private</span> $id;
+    <span class="hljs-keyword">private</span> $title;
+    <span class="hljs-keyword">private</span> $body;
+
+    <span class="hljs-comment">// ...</span>
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-2" class="line-number-anchor" /><a href="#line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-3" class="line-number-anchor" /><a href="#line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-4" class="line-number-anchor" /><a href="#line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-5" class="line-number-anchor" /><a href="#line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-6" class="line-number-anchor" /><a href="#line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-7" class="line-number-anchor" /><a href="#line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-8" class="line-number-anchor" /><a href="#line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-9" class="line-number-anchor" /><a href="#line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-10" class="line-number-anchor" /><a href="#line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-11" class="line-number-anchor" /><a href="#line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-12" class="line-number-anchor" /><a href="#line-number-4c9a97adb6c380013c4733c61f16c5b0528d69cc-12">12</a></td></tr></table></div></code></pre>
+</div>
+<div class="section"><a class="section-anchor" id="mapping-information" name="mapping-information"></a><h2 class="section-header"><a href="#mapping-information">Mapping Information<i class="fas fa-link"></i></a></h2>
+<p>Now we just need to provide the mapping information for the Doctrine persistence layers so they know
+how to consume the objects and persist them to the database.</p>
+<div class="section"><a class="section-anchor" id="orm" name="orm"></a><h3 class="section-header"><a href="#orm">ORM<i class="fas fa-link"></i></a></h3>
+<p>First define the mapping for the ORM:</p>
+<div class="configuration-block jsactive clearfix"><ul class="simple"><li><em>PHP</em><div class="highlight-php"><pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="82a143d21e4fdb48c65e405b00577c8f5066dd67"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="82a143d21e4fdb48c65e405b00577c8f5066dd67"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-1" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-1">1</a></td><td class="code-line" rowspan="20"><span class="hljs-meta">&lt;?php</span>
+
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>\<span class="hljs-title">Blog</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Documents</span>\<span class="hljs-title">Blog</span>\<span class="hljs-title">Repository</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">BlogPostRepository</span>;
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@Entity</span>(repositoryClass=BlogPostRepository::class) */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span>
+</span>{
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Id</span> <span class="hljs-doctag">@Column</span>(type="integer") */</span>
+    <span class="hljs-keyword">private</span> $id;
+
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Column</span>(type="string") */</span>
+    <span class="hljs-keyword">private</span> $title;
+
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Column</span>(type="text") */</span>
+    <span class="hljs-keyword">private</span> $body;
+
+    <span class="hljs-comment">// ...</span>
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-2" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-3" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-4" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-5" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-6" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-7" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-8" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-9" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-10" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-11" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-12" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-13" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-14" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-15" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-16" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-17" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-18" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-19" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-20" class="line-number-anchor" /><a href="#line-number-82a143d21e4fdb48c65e405b00577c8f5066dd67-20">20</a></td></tr></table></div></code></pre></div></li><li><em>XML</em><div class="highlight-xml"><pre class="code-block-table"><code class="xml"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="21f4038f6a2b4931420e43958d460f508fd6107d"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="21f4038f6a2b4931420e43958d460f508fd6107d"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-21f4038f6a2b4931420e43958d460f508fd6107d-1" class="line-number-anchor" /><a href="#line-number-21f4038f6a2b4931420e43958d460f508fd6107d-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mapping</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://doctrine-project.org/schemas/orm/doctrine-mapping"</span>
+      <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
+      <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">"http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          http://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd"</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">entity</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"Documents\Blog\BlogPost"</span> <span class="hljs-attr">repository-class</span>=<span class="hljs-string">"Documents\Blog\Repository\ORM\BlogPostRepository"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"id"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"integer"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"name"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"string"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"email"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">entity</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mapping</span>&gt;</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21f4038f6a2b4931420e43958d460f508fd6107d-2" class="line-number-anchor" /><a href="#line-number-21f4038f6a2b4931420e43958d460f508fd6107d-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21f4038f6a2b4931420e43958d460f508fd6107d-3" class="line-number-anchor" /><a href="#line-number-21f4038f6a2b4931420e43958d460f508fd6107d-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21f4038f6a2b4931420e43958d460f508fd6107d-4" class="line-number-anchor" /><a href="#line-number-21f4038f6a2b4931420e43958d460f508fd6107d-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21f4038f6a2b4931420e43958d460f508fd6107d-5" class="line-number-anchor" /><a href="#line-number-21f4038f6a2b4931420e43958d460f508fd6107d-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21f4038f6a2b4931420e43958d460f508fd6107d-6" class="line-number-anchor" /><a href="#line-number-21f4038f6a2b4931420e43958d460f508fd6107d-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21f4038f6a2b4931420e43958d460f508fd6107d-7" class="line-number-anchor" /><a href="#line-number-21f4038f6a2b4931420e43958d460f508fd6107d-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21f4038f6a2b4931420e43958d460f508fd6107d-8" class="line-number-anchor" /><a href="#line-number-21f4038f6a2b4931420e43958d460f508fd6107d-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21f4038f6a2b4931420e43958d460f508fd6107d-9" class="line-number-anchor" /><a href="#line-number-21f4038f6a2b4931420e43958d460f508fd6107d-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21f4038f6a2b4931420e43958d460f508fd6107d-10" class="line-number-anchor" /><a href="#line-number-21f4038f6a2b4931420e43958d460f508fd6107d-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21f4038f6a2b4931420e43958d460f508fd6107d-11" class="line-number-anchor" /><a href="#line-number-21f4038f6a2b4931420e43958d460f508fd6107d-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-21f4038f6a2b4931420e43958d460f508fd6107d-12" class="line-number-anchor" /><a href="#line-number-21f4038f6a2b4931420e43958d460f508fd6107d-12">12</a></td></tr></table></div></code></pre></div></li></ul></div>
+<p>Now you are able to persist the <code>Documents\Blog\BlogPost</code> with an instance of <code>EntityManager</code>:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="73ec7b31eda29d7d33e45579b7684aa23fcf08df"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="73ec7b31eda29d7d33e45579b7684aa23fcf08df"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-1" class="line-number-anchor" /><a href="#line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-1">1</a></td><td class="code-line" rowspan="7"><span class="hljs-meta">&lt;?php</span>
+
+$blogPost = <span class="hljs-keyword">new</span> BlogPost();
+$blogPost-&gt;setTitle(<span class="hljs-string">'test'</span>);
+
+$em-&gt;persist($blogPost);
+$em-&gt;flush();</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-2" class="line-number-anchor" /><a href="#line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-3" class="line-number-anchor" /><a href="#line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-4" class="line-number-anchor" /><a href="#line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-5" class="line-number-anchor" /><a href="#line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-6" class="line-number-anchor" /><a href="#line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-7" class="line-number-anchor" /><a href="#line-number-73ec7b31eda29d7d33e45579b7684aa23fcf08df-7">7</a></td></tr></table></div></code></pre>
+<p>You can find the blog post:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="476a58259766d5ed73931078be7c8b2894c0e03f"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="476a58259766d5ed73931078be7c8b2894c0e03f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-476a58259766d5ed73931078be7c8b2894c0e03f-1" class="line-number-anchor" /><a href="#line-number-476a58259766d5ed73931078be7c8b2894c0e03f-1">1</a></td><td class="code-line" rowspan="3"><span class="hljs-meta">&lt;?php</span>
+
+$blogPost = $em-&gt;getRepository(BlogPost::class)-&gt;findOneBy(<span class="hljs-keyword">array</span>(<span class="hljs-string">'title'</span> =&gt; <span class="hljs-string">'test'</span>));</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-476a58259766d5ed73931078be7c8b2894c0e03f-2" class="line-number-anchor" /><a href="#line-number-476a58259766d5ed73931078be7c8b2894c0e03f-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-476a58259766d5ed73931078be7c8b2894c0e03f-3" class="line-number-anchor" /><a href="#line-number-476a58259766d5ed73931078be7c8b2894c0e03f-3">3</a></td></tr></table></div></code></pre>
+</div>
+<div class="section"><a class="section-anchor" id="mongodb-odm" name="mongodb-odm"></a><h3 class="section-header"><a href="#mongodb-odm">MongoDB ODM<i class="fas fa-link"></i></a></h3>
+<p>Now map the same class to the Doctrine MongoDB ODM:</p>
+<div class="configuration-block jsactive clearfix"><ul class="simple"><li><em>PHP</em><div class="highlight-php"><pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="768831d04a74f7f9977b834fff1d1c58816083b2"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="768831d04a74f7f9977b834fff1d1c58816083b2"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-1" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-1">1</a></td><td class="code-line" rowspan="20"><span class="hljs-meta">&lt;?php</span>
+
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>\<span class="hljs-title">Blog</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Documents</span>\<span class="hljs-title">Blog</span>\<span class="hljs-title">Repository</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">BlogPostRepository</span>;
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@Document</span>(repositoryClass=BlogPostRepository::class) */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span>
+</span>{
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Id</span> */</span>
+    <span class="hljs-keyword">private</span> $id;
+
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Field</span>(type="string") */</span>
+    <span class="hljs-keyword">private</span> $title;
+
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Field</span>(type="string") */</span>
+    <span class="hljs-keyword">private</span> $body;
+
+    <span class="hljs-comment">// ...</span>
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-2" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-3" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-4" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-5" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-6" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-7" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-8" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-9" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-10" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-11" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-12" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-13" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-14" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-15" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-16" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-17" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-18" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-19" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-768831d04a74f7f9977b834fff1d1c58816083b2-20" class="line-number-anchor" /><a href="#line-number-768831d04a74f7f9977b834fff1d1c58816083b2-20">20</a></td></tr></table></div></code></pre></div></li><li><em>XML</em><div class="highlight-xml"><pre class="code-block-table"><code class="xml"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-1" class="line-number-anchor" /><a href="#line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mongo-mapping</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://doctrine-project.org/schemas/orm/doctrine-mapping"</span>
+      <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
+      <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">"http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          http://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd"</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">document</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"Documents\Blog\BlogPost"</span> <span class="hljs-attr">repository-class</span>=<span class="hljs-string">"Documents\Blog\Repository\ODM\BlogPostRepository"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">strategy</span>=<span class="hljs-string">"INCREMENT"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"int"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">field-name</span>=<span class="hljs-string">"name"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"string"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">field-name</span>=<span class="hljs-string">"email"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">document</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mongo-mapping</span>&gt;</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-2" class="line-number-anchor" /><a href="#line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-3" class="line-number-anchor" /><a href="#line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-4" class="line-number-anchor" /><a href="#line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-5" class="line-number-anchor" /><a href="#line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-6" class="line-number-anchor" /><a href="#line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-7" class="line-number-anchor" /><a href="#line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-8" class="line-number-anchor" /><a href="#line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-9" class="line-number-anchor" /><a href="#line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-10" class="line-number-anchor" /><a href="#line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-11" class="line-number-anchor" /><a href="#line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-12" class="line-number-anchor" /><a href="#line-number-ab98538af4f9e2c8d8aa40cf7e9fa992674c7dc3-12">12</a></td></tr></table></div></code></pre></div></li></ul></div>
+<p>Now the same class is able to be persisted in the same way using an instance of <code>DocumentManager</code>:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="d84767d56932344788324c5d31b9d6a5cf7ff472"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="d84767d56932344788324c5d31b9d6a5cf7ff472"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-1" class="line-number-anchor" /><a href="#line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-1">1</a></td><td class="code-line" rowspan="7"><span class="hljs-meta">&lt;?php</span>
+
+$blogPost = <span class="hljs-keyword">new</span> BlogPost();
+$blogPost-&gt;setTitle(<span class="hljs-string">'test'</span>);
+
+$dm-&gt;persist($blogPost);
+$dm-&gt;flush();</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-2" class="line-number-anchor" /><a href="#line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-3" class="line-number-anchor" /><a href="#line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-4" class="line-number-anchor" /><a href="#line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-5" class="line-number-anchor" /><a href="#line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-6" class="line-number-anchor" /><a href="#line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-7" class="line-number-anchor" /><a href="#line-number-d84767d56932344788324c5d31b9d6a5cf7ff472-7">7</a></td></tr></table></div></code></pre>
+<p>You can find the blog post:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="4bc242c47362eed9f5c357f4cf53fa07edf8fca3"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="4bc242c47362eed9f5c357f4cf53fa07edf8fca3"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-4bc242c47362eed9f5c357f4cf53fa07edf8fca3-1" class="line-number-anchor" /><a href="#line-number-4bc242c47362eed9f5c357f4cf53fa07edf8fca3-1">1</a></td><td class="code-line" rowspan="3"><span class="hljs-meta">&lt;?php</span>
+
+$blogPost = $dm-&gt;getRepository(BlogPost::class)-&gt;findOneBy(<span class="hljs-keyword">array</span>(<span class="hljs-string">'title'</span> =&gt; <span class="hljs-string">'test'</span>));</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4bc242c47362eed9f5c357f4cf53fa07edf8fca3-2" class="line-number-anchor" /><a href="#line-number-4bc242c47362eed9f5c357f4cf53fa07edf8fca3-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4bc242c47362eed9f5c357f4cf53fa07edf8fca3-3" class="line-number-anchor" /><a href="#line-number-4bc242c47362eed9f5c357f4cf53fa07edf8fca3-3">3</a></td></tr></table></div></code></pre>
+</div>
+</div>
+</div>
+<div class="section"><a class="section-anchor" id="repository-classes" name="repository-classes"></a><h2 class="section-header"><a href="#repository-classes">Repository Classes<i class="fas fa-link"></i></a></h2>
+<p>You can implement the same repository interface for the ORM and MongoDB ODM easily, e.g. by creating <code>BlogPostRepositoryInterface</code>:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="d189cc77a67efd68723bb378e1e53a8595fff9b7"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="d189cc77a67efd68723bb378e1e53a8595fff9b7"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-1" class="line-number-anchor" /><a href="#line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-1">1</a></td><td class="code-line" rowspan="11"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// An Interface to ensure ORM and ODM Repository classes have the same methods implemented</span>
+
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>\<span class="hljs-title">Blog</span>\<span class="hljs-title">Repository</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Documents</span>\<span class="hljs-title">Blog</span>\<span class="hljs-title">BlogPost</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">BlogPostRepositoryInterface</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">findPostById</span><span class="hljs-params">(int $id)</span>: ?<span class="hljs-title">BlogPost</span></span>;
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-2" class="line-number-anchor" /><a href="#line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-3" class="line-number-anchor" /><a href="#line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-4" class="line-number-anchor" /><a href="#line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-5" class="line-number-anchor" /><a href="#line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-6" class="line-number-anchor" /><a href="#line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-7" class="line-number-anchor" /><a href="#line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-8" class="line-number-anchor" /><a href="#line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-9" class="line-number-anchor" /><a href="#line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-10" class="line-number-anchor" /><a href="#line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-11" class="line-number-anchor" /><a href="#line-number-d189cc77a67efd68723bb378e1e53a8595fff9b7-11">11</a></td></tr></table></div></code></pre>
+<p>Define repository methods required by the interface for the ORM:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="36c2b02c87820cf8f7061b006b735d66550f2bc1"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="36c2b02c87820cf8f7061b006b735d66550f2bc1"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-1" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-1">1</a></td><td class="code-line" rowspan="14"><span class="hljs-meta">&lt;?php</span>
+
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>\<span class="hljs-title">Blog</span>\<span class="hljs-title">Repository</span>\<span class="hljs-title">ORM</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Documents</span>\<span class="hljs-title">Blog</span>\<span class="hljs-title">Repository</span>\<span class="hljs-title">BlogPostRepositoryInterface</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">EntityRepository</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPostRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">EntityRepository</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">BlogPostRepositoryInterface</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">findPostById</span><span class="hljs-params">(int $id)</span>: ?<span class="hljs-title">BlogPost</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;findOneBy([<span class="hljs-string">'id'</span> =&gt; $id]);
+    }
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-2" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-3" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-4" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-5" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-6" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-7" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-8" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-9" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-10" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-11" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-12" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-13" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-14" class="line-number-anchor" /><a href="#line-number-36c2b02c87820cf8f7061b006b735d66550f2bc1-14">14</a></td></tr></table></div></code></pre>
+<p>Now define the same repository methods for the MongoDB ODM:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-1" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-1">1</a></td><td class="code-line" rowspan="14"><span class="hljs-meta">&lt;?php</span>
+
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>\<span class="hljs-title">Blog</span>\<span class="hljs-title">Repository</span>\<span class="hljs-title">ODM</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Documents</span>\<span class="hljs-title">Blog</span>\<span class="hljs-title">Repository</span>\<span class="hljs-title">BlogPostRepositoryInterface</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Repository</span>\<span class="hljs-title">DocumentRepository</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPostRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">DocumentRepository</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">BlogPostRepositoryInterface</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">findPostById</span><span class="hljs-params">(int $id)</span>: ?<span class="hljs-title">BlogPost</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;findOneBy([<span class="hljs-string">'id'</span> =&gt; $id]);
+    }
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-2" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-3" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-4" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-5" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-6" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-7" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-8" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-9" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-10" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-11" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-12" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-13" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-14" class="line-number-anchor" /><a href="#line-number-0457d1adbc8ad6a5f8ff4cdb4f1695a8ad7ce0cf-14">14</a></td></tr></table></div></code></pre>
+<p>As you can see the repositories are the same and the final returned data is the same vanilla
+PHP objects. The data is transparently injected to the objects for you automatically so you
+are not forced to extend some base class or shape your domain in any certain way for it to work
+with the Doctrine persistence layers.</p>
+
+</div>
+
+                                                </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+        <button id="back-to-top" title="Go to top">Top</button>
+
+                    <footer class="footer">
+                <div class="container">
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><a href="/projects.html">Projects</a></li>
+                        <li class="list-inline-item"><a href="/partners.html">Partners</a></li>
+                        <li class="list-inline-item"><a href="/sponsorship.html">Sponsorship</a></li>
+                        <li class="list-inline-item"><a href="/community/index.html">Community</a></li>
+                        <li class="list-inline-item"><a href="/blog/index.html">Blog</a></li>
+                        <li class="list-inline-item"><a href="/events.html">Events</a></li>
+                        <li class="list-inline-item"><a href="/consulting.html">Consulting</a></li>
+                    </ul>
+                </div>
+            </footer>
+        
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script
+            src="https://www.doctrine-project.org/frontend/js/bundle.js?2dce55"
+                            integrity="sha384-ewravqv7qS2TQHo4lOtEo1UUYMkA7D/4cwiRS5bzwVRRJHkebpC447VV85tL38Yh"
+                        crossorigin="anonymous">
+        </script>
+
+                
+        <script type="text/javascript">
+            var projectSlug = 'mongodb-odm';
+            var versionSlug = 'latest';
+
+            var searchBoxSettings = {
+                container: '#search-box',
+                placeholder: 'Search MongoDB ODM 2.1'
+            };
+
+            function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
+                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                            }
+        </script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+            </body>
+</html>
