@@ -19,8 +19,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?ac27f6"
-                        integrity="sha384-b21zbnBUhHK+ipRVWeEIf/eEDHbsBrEPixFK1wAIWBS8gOsP0hZrohMzz4YyhWaJ"
+            href="https://www.doctrine-project.org/frontend/css/index.css?99344e"
+                        integrity="sha384-F/vJJWxcmaxjTwI1038GuJsBm6ONPQwO9IT99Jkpub+hUgq/8lZsWjivZk4GJxby"
                         crossorigin="anonymous"
         />
 
@@ -299,7 +299,7 @@
                                                                                                     </a>
                                                                                             
                                                 <a class="project-version-switcher dropdown-item" href="/projects/doctrine-migrations/en/2.2/reference/configuration.html">
-                                                    2.2.0
+                                                    2.2.1
 
                                                                                                             (current)
                                                     
@@ -558,11 +558,50 @@ go ahead and create a folder to store your migrations in:</p>
                             </tr>
             </tbody>
 </table>
-<p>Here the possible options for <code>table_storage</code>:
-+----------------------------+------------+------------------------------+----------------------------------------------------------------------------------+
- Required    Description                                                                       table_name                  doctrine_migration_versions <br />+----------------------------+------------+------------------------------+----------------------------------------------------------------------------------+
- no          The name of the column which stores the version name.                             version_column_length       1024                        <br />+----------------------------+------------+------------------------------+----------------------------------------------------------------------------------+
- no          The name of the column which stores the date that a migration was executed.       execution_time_column_name  executed_at                 <br />+----------------------------+------------+------------------------------+----------------------------------------------------------------------------------+</p>
+<p>Here the possible options for <code>table_storage</code>:</p>
+<table>
+            <thead>
+            <tr>
+                                    <th>Name</th>
+                                    <th>Required</th>
+                                    <th>Default</th>
+                                    <th>Description</th>
+                            </tr>
+        </thead>
+    
+    <tbody>
+                    <tr>
+                                    <td>table_name</td>
+                                    <td>no</td>
+                                    <td>doctrine_migration_versions</td>
+                                    <td>The name of the table to track executed migrations in.</td>
+                            </tr>
+                    <tr>
+                                    <td>version_column_name</td>
+                                    <td>no</td>
+                                    <td>version</td>
+                                    <td>The name of the column which stores the version name.</td>
+                            </tr>
+                    <tr>
+                                    <td>version_column_length</td>
+                                    <td>no</td>
+                                    <td>1024</td>
+                                    <td>The length of the column which stores the version name.</td>
+                            </tr>
+                    <tr>
+                                    <td>executed_at_column_name</td>
+                                    <td>no</td>
+                                    <td>executed_at</td>
+                                    <td>The name of the column which stores the date that a migration was executed.</td>
+                            </tr>
+                    <tr>
+                                    <td>execution_time_column_name</td>
+                                    <td>no</td>
+                                    <td>executed_at</td>
+                                    <td>The name of the column which stores how long a migration took (milliseconds).</td>
+                            </tr>
+            </tbody>
+</table>
 <div class="section"><a class="section-anchor" id="manually-providing-migrations" name="manually-providing-migrations"></a><h3 class="section-header"><a href="#manually-providing-migrations">Manually Providing Migrations<i class="fas fa-link"></i></a></h3>
 <p>If you don't want to rely on Doctrine finding your migrations, you can explicitly specify the array of migration
 classes using the <code>migrations</code> configuration setting:</p>
@@ -690,6 +729,31 @@ project and return an array of connection information that can be passed to the 
 <p>You will need to make sure the <code>migrations_docs_example</code> database exists. If you are using MySQL you can create it with
 the following command:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>mysqladmin create migrations_docs_example</code></pre></div>
+<p>If you have already a DBAL connection available in your application, <code>migrations-db.php</code> can return it directly:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="d2de54d02efce265e9324be31ef7d7beea31b482"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="d2de54d02efce265e9324be31ef7d7beea31b482"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-d2de54d02efce265e9324be31ef7d7beea31b482-1" class="line-number-anchor" /><a href="#line-number-d2de54d02efce265e9324be31ef7d7beea31b482-1">1</a></td><td class="code-line" rowspan="10"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">DriverManager</span>;
+
+<span class="hljs-keyword">return</span> DriverManager::getConnection([
+    <span class="hljs-string">'dbname'</span> =&gt; <span class="hljs-string">'migrations_docs_example'</span>,
+    <span class="hljs-string">'user'</span> =&gt; <span class="hljs-string">'root'</span>,
+    <span class="hljs-string">'password'</span> =&gt; <span class="hljs-string">''</span>,
+    <span class="hljs-string">'host'</span> =&gt; <span class="hljs-string">'localhost'</span>,
+    <span class="hljs-string">'driver'</span> =&gt; <span class="hljs-string">'pdo_mysql'</span>,
+]);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d2de54d02efce265e9324be31ef7d7beea31b482-2" class="line-number-anchor" /><a href="#line-number-d2de54d02efce265e9324be31ef7d7beea31b482-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d2de54d02efce265e9324be31ef7d7beea31b482-3" class="line-number-anchor" /><a href="#line-number-d2de54d02efce265e9324be31ef7d7beea31b482-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d2de54d02efce265e9324be31ef7d7beea31b482-4" class="line-number-anchor" /><a href="#line-number-d2de54d02efce265e9324be31ef7d7beea31b482-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d2de54d02efce265e9324be31ef7d7beea31b482-5" class="line-number-anchor" /><a href="#line-number-d2de54d02efce265e9324be31ef7d7beea31b482-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d2de54d02efce265e9324be31ef7d7beea31b482-6" class="line-number-anchor" /><a href="#line-number-d2de54d02efce265e9324be31ef7d7beea31b482-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d2de54d02efce265e9324be31ef7d7beea31b482-7" class="line-number-anchor" /><a href="#line-number-d2de54d02efce265e9324be31ef7d7beea31b482-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d2de54d02efce265e9324be31ef7d7beea31b482-8" class="line-number-anchor" /><a href="#line-number-d2de54d02efce265e9324be31ef7d7beea31b482-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d2de54d02efce265e9324be31ef7d7beea31b482-9" class="line-number-anchor" /><a href="#line-number-d2de54d02efce265e9324be31ef7d7beea31b482-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d2de54d02efce265e9324be31ef7d7beea31b482-10" class="line-number-anchor" /><a href="#line-number-d2de54d02efce265e9324be31ef7d7beea31b482-10">10</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="advanced" name="advanced"></a><h3 class="section-header"><a href="#advanced">Advanced<i class="fas fa-link"></i></a></h3>
 <p>If you require a more advanced configuration and you want to get the connection to use
@@ -700,37 +764,35 @@ out of the root of your project.</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="81f019214cd809800404c87c9b5e34a7f67b19a3"
+            data-copy-element-id="6973a59fb3a7b215b85d88334a853e5a6b7b5013"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="81f019214cd809800404c87c9b5e34a7f67b19a3"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-1" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-1">1</a></td><td class="code-line" rowspan="15"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="6973a59fb3a7b215b85d88334a853e5a6b7b5013"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-1" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-1">1</a></td><td class="code-line" rowspan="14"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-keyword">require</span> <span class="hljs-string">'vendor/autoload.php'</span>;
 
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">DriverManager</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Console</span>\<span class="hljs-title">Helper</span>\<span class="hljs-title">ConnectionHelper</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Console</span>\<span class="hljs-title">Helper</span>\<span class="hljs-title">HelperSet</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Configuration</span>\<span class="hljs-title">Configuration</span>\<span class="hljs-title">PhpFile</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Configuration</span>\<span class="hljs-title">Connection</span>\<span class="hljs-title">ExistingConnection</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">DependencyFactory</span>;
 
-$dbParams = <span class="hljs-keyword">include</span> <span class="hljs-string">'migrations-db.php'</span>;
+$config = <span class="hljs-keyword">new</span> PhpFile(<span class="hljs-string">'migrations.php'</span>); <span class="hljs-comment">// Or use one of the Doctrine\Migrations\Configuration\Configuration\* loaders</span>
 
-$connection = DriverManager::getConnection($dbParams);
+$conn = DriverManager::getConnection([<span class="hljs-string">'driver'</span> =&gt; <span class="hljs-string">'pdo_sqlite'</span>, <span class="hljs-string">'memory'</span> =&gt; <span class="hljs-keyword">true</span>]);
 
-<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> HelperSet([
-    <span class="hljs-string">'db'</span> =&gt; <span class="hljs-keyword">new</span> ConnectionHelper($connection),
-]);</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-2" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-3" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-4" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-5" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-6" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-7" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-8" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-9" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-10" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-11" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-12" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-13" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-14" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-15" class="line-number-anchor" /><a href="#line-number-81f019214cd809800404c87c9b5e34a7f67b19a3-15">15</a></td></tr></table></div></code></pre>
+<span class="hljs-keyword">return</span> DependencyFactory::fromConnection($config, <span class="hljs-keyword">new</span> ExistingConnection($conn));</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-2" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-3" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-4" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-5" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-6" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-7" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-8" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-9" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-10" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-11" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-12" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-13" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-14" class="line-number-anchor" /><a href="#line-number-6973a59fb3a7b215b85d88334a853e5a6b7b5013-14">14</a></td></tr></table></div></code></pre>
 <p>The above setup assumes you are not using the ORM. If you want to use the ORM, first require it in your project
 with composer:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>composer require doctrine/orm
@@ -739,51 +801,43 @@ with composer:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="8b3063302cd62474907f9c41df292d4db6147906"
+            data-copy-element-id="8a39182fe626eeb41cf6033ecd65ef33b043961c"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="8b3063302cd62474907f9c41df292d4db6147906"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-1" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-1">1</a></td><td class="code-line" rowspan="22"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="8a39182fe626eeb41cf6033ecd65ef33b043961c"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-1" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-1">1</a></td><td class="code-line" rowspan="18"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-keyword">require</span> <span class="hljs-string">'vendor/autoload.php'</span>;
 
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Console</span>\<span class="hljs-title">Helper</span>\<span class="hljs-title">ConnectionHelper</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Console</span>\<span class="hljs-title">Helper</span>\<span class="hljs-title">EntityManagerHelper</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Setup</span>;
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">EntityManager</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Console</span>\<span class="hljs-title">Helper</span>\<span class="hljs-title">HelperSet</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Setup</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Configuration</span>\<span class="hljs-title">EntityManager</span>\<span class="hljs-title">ExistingEntityManager</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">DependencyFactory</span>;
+
+$config = <span class="hljs-keyword">new</span> PhpFile(<span class="hljs-string">'migrations.php'</span>); <span class="hljs-comment">// Or use one of the Doctrine\Migrations\Configuration\Configuration\* loaders</span>
 
 $paths = [<span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">'/lib/MyProject/Entities'</span>];
 $isDevMode = <span class="hljs-keyword">true</span>;
 
-$dbParams = <span class="hljs-keyword">include</span> <span class="hljs-string">'migrations-db.php'</span>;
-
 $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-$entityManager = EntityManager::create($dbParams, $config);
+$entityManager = EntityManager::create([<span class="hljs-string">'driver'</span> =&gt; <span class="hljs-string">'pdo_sqlite'</span>, <span class="hljs-string">'memory'</span> =&gt; <span class="hljs-keyword">true</span>], $config);
 
-<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> HelperSet([
-    <span class="hljs-string">'em'</span> =&gt; <span class="hljs-keyword">new</span> EntityManagerHelper($entityManager),
-    <span class="hljs-string">'db'</span> =&gt; <span class="hljs-keyword">new</span> ConnectionHelper($entityManager-&gt;getConnection()),
-]);</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-2" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-3" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-4" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-5" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-6" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-7" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-8" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-9" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-10" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-11" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-12" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-13" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-14" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-15" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-16" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-17" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-18" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-19" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-20" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-21" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-21">21</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8b3063302cd62474907f9c41df292d4db6147906-22" class="line-number-anchor" /><a href="#line-number-8b3063302cd62474907f9c41df292d4db6147906-22">22</a></td></tr></table></div></code></pre>
+<span class="hljs-keyword">return</span> DependencyFactory::fromEntityManager($config, <span class="hljs-keyword">new</span> ExistingEntityManager($entityManager));</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-2" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-3" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-4" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-5" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-6" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-7" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-8" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-9" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-10" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-11" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-12" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-13" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-14" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-15" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-16" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-17" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-18" class="line-number-anchor" /><a href="#line-number-8a39182fe626eeb41cf6033ecd65ef33b043961c-18">18</a></td></tr></table></div></code></pre>
 <p>Make sure to create the directory where your ORM entities will be located:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>mkdir lib/MyProject/Entities</code></pre></div>
 <p><a href="migration-classes.html">Next Chapter: Migration Classes</a></p>

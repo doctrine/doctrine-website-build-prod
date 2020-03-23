@@ -19,8 +19,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?ac27f6"
-                        integrity="sha384-b21zbnBUhHK+ipRVWeEIf/eEDHbsBrEPixFK1wAIWBS8gOsP0hZrohMzz4YyhWaJ"
+            href="https://www.doctrine-project.org/frontend/css/index.css?99344e"
+                        integrity="sha384-F/vJJWxcmaxjTwI1038GuJsBm6ONPQwO9IT99Jkpub+hUgq/8lZsWjivZk4GJxby"
                         crossorigin="anonymous"
         />
 
@@ -300,14 +300,14 @@
                                                                                                     </a>
                                                                                             
                                                 <a class="project-version-switcher dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.0/cookbook/blending-orm-and-mongodb-odm.html">
-                                                    2.0.3
+                                                    2.0.5
 
                                                                                                             (current)
                                                     
                                                                                                     </a>
                                                                                             
                                                 <a class="project-version-switcher dropdown-item" href="/projects/doctrine-mongodb-odm/en/1.3/cookbook/blending-orm-and-mongodb-odm.html">
-                                                    1.3.5
+                                                    1.3.6
 
                                                     
                                                                                                     </a>
@@ -326,9 +326,9 @@
                             
 <div class="section"><a class="section-anchor" id="blending-the-orm-and-mongodb-odm" name="blending-the-orm-and-mongodb-odm"></a><h1 class="section-header"><a href="#blending-the-orm-and-mongodb-odm">Blending the ORM and MongoDB ODM<i class="fas fa-link"></i></a></h1>
 <p>Since the start of the <a href="http://www.doctrine-project.org/projects/mongodb_odm">Doctrine MongoDB Object Document Mapper</a> project people have asked how it can be integrated with the <a href="http://www.doctrine-project.org/projects/orm">ORM</a>. This article will demonstrates how you can integrate the two transparently, maintaining a clean domain model.</p>
-<p>This example will have a `Product` that is stored in MongoDB and the `Order` stored in a MySQL database.</p>
+<p>This example will have a <code>Product</code> that is stored in MongoDB and the <code>Order</code> stored in a MySQL database.</p>
 <div class="section"><a class="section-anchor" id="define-product" name="define-product"></a><h2 class="section-header"><a href="#define-product">Define Product<i class="fas fa-link"></i></a></h2>
-<p>First lets define our `Product` document:</p>
+<p>First lets define our <code>Product</code> document:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
@@ -391,7 +391,7 @@
 <tr><td class="line-number noselect"><a name="line-number-6bde6ceec41c88cf6ed9e7e9077c39d239805a25-28" class="line-number-anchor" /><a href="#line-number-6bde6ceec41c88cf6ed9e7e9077c39d239805a25-28">28</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="define-entity" name="define-entity"></a><h2 class="section-header"><a href="#define-entity">Define Entity<i class="fas fa-link"></i></a></h2>
-<p>Next create the `Order` entity that has a `$product` and `$productId` property linking it to the `Product` that is stored with MongoDB:</p>
+<p>Next create the <code>Order</code> entity that has a <code>$product</code> and <code>$productId</code> property linking it to the <code>Product</code> that is stored with MongoDB:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
@@ -496,7 +496,7 @@
 <tr><td class="line-number noselect"><a name="line-number-8fe8c0bc42e4719ed5d0ebb52a20e1155762aec1-49" class="line-number-anchor" /><a href="#line-number-8fe8c0bc42e4719ed5d0ebb52a20e1155762aec1-49">49</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="event-subscriber" name="event-subscriber"></a><h2 class="section-header"><a href="#event-subscriber">Event Subscriber<i class="fas fa-link"></i></a></h2>
-<p>Now we need to setup an event subscriber that will set the `$product` property of all `Order` instances to a reference to the document product so it can be lazily loaded when it is accessed the first time. So first register a new event subscriber:</p>
+<p>Now we need to setup an event subscriber that will set the <code>$product</code> property of all <code>Order</code> instances to a reference to the document product so it can be lazily loaded when it is accessed the first time. So first register a new event subscriber:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
@@ -513,13 +513,24 @@ $eventManager-&gt;addEventListener(
 <tr><td class="line-number noselect"><a name="line-number-6da673ecc5c124739f5fb4cec793a20ae52b8f93-4" class="line-number-anchor" /><a href="#line-number-6da673ecc5c124739f5fb4cec793a20ae52b8f93-4">4</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-6da673ecc5c124739f5fb4cec793a20ae52b8f93-5" class="line-number-anchor" /><a href="#line-number-6da673ecc5c124739f5fb4cec793a20ae52b8f93-5">5</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-6da673ecc5c124739f5fb4cec793a20ae52b8f93-6" class="line-number-anchor" /><a href="#line-number-6da673ecc5c124739f5fb4cec793a20ae52b8f93-6">6</a></td></tr></table></div></code></pre>
-<p>So now we need to define a class named `MyEventSubscriber` and pass a dependency to the `DocumentManager`. It will have a `postLoad()` method that sets the product document reference:</p>
+<p>or in .yaml</p>
+<pre class="code-block-table"><code class="yaml"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="f5276cb6120973f425cc53c44a7d31fc04e5a5fa"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="f5276cb6120973f425cc53c44a7d31fc04e5a5fa"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-f5276cb6120973f425cc53c44a7d31fc04e5a5fa-1" class="line-number-anchor" /><a href="#line-number-f5276cb6120973f425cc53c44a7d31fc04e5a5fa-1">1</a></td><td class="code-line" rowspan="3"><span class="hljs-string">App\Listeners\MyEventSubscriber:</span>
+<span class="hljs-attr">    tags:</span>
+<span class="hljs-bullet">        -</span> <span class="hljs-string">{</span> <span class="hljs-attr">name:</span> <span class="hljs-string">doctrine.event_listener,</span> <span class="hljs-attr">connection:</span> <span class="hljs-string">default,</span> <span class="hljs-attr">event:</span> <span class="hljs-string">postLoad}</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f5276cb6120973f425cc53c44a7d31fc04e5a5fa-2" class="line-number-anchor" /><a href="#line-number-f5276cb6120973f425cc53c44a7d31fc04e5a5fa-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f5276cb6120973f425cc53c44a7d31fc04e5a5fa-3" class="line-number-anchor" /><a href="#line-number-f5276cb6120973f425cc53c44a7d31fc04e5a5fa-3">3</a></td></tr></table></div></code></pre>
+<p>So now we need to define a class named <code>MyEventSubscriber</code> and pass <code>DocumentManager</code> as a dependency. It will have a <code>postLoad()</code> method that sets the product document reference:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="a7aef4d0d574b60884f0cf0b6774aac5a8fab41a"
+            data-copy-element-id="d92f8851c91b63c185ed87672d6e61007d33e1eb"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="a7aef4d0d574b60884f0cf0b6774aac5a8fab41a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-1" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-1">1</a></td><td class="code-line" rowspan="24"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="d92f8851c91b63c185ed87672d6e61007d33e1eb"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-1" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-1">1</a></td><td class="code-line" rowspan="29"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">DocumentManager</span>;
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Event</span>\<span class="hljs-title">LifecycleEventArgs</span>;
@@ -534,42 +545,52 @@ $eventManager-&gt;addEventListener(
     <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">postLoad</span><span class="hljs-params">(LifecycleEventArgs $eventArgs)</span>: <span class="hljs-title">void</span>
     </span>{
         $order = $eventArgs-&gt;getEntity();
+
+        <span class="hljs-keyword">if</span> (!$order <span class="hljs-keyword">instanceof</span> Order) {
+            <span class="hljs-keyword">return</span>;
+        }
+
         $em = $eventArgs-&gt;getEntityManager();
-        $productReflProp = $em-&gt;getClassMetadata(<span class="hljs-string">'Entities\Order'</span>)
+        $productReflProp = $em-&gt;getClassMetadata(Order::class)
             -&gt;reflClass-&gt;getProperty(<span class="hljs-string">'product'</span>);
         $productReflProp-&gt;setAccessible(<span class="hljs-keyword">true</span>);
         $productReflProp-&gt;setValue(
-            $order, <span class="hljs-keyword">$this</span>-&gt;dm-&gt;getReference(<span class="hljs-string">'Documents\Product'</span>, $order-&gt;getProductId())
+            $order, <span class="hljs-keyword">$this</span>-&gt;dm-&gt;getReference(Product::class, $order-&gt;getProductId())
         );
     }
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-2" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-3" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-4" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-5" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-6" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-7" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-8" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-9" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-10" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-11" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-12" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-13" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-14" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-15" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-16" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-17" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-18" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-19" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-20" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-21" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-21">21</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-22" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-22">22</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-23" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-23">23</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-24" class="line-number-anchor" /><a href="#line-number-a7aef4d0d574b60884f0cf0b6774aac5a8fab41a-24">24</a></td></tr></table></div></code></pre>
-<p>The `postLoad` method will be invoked after an ORM entity is loaded from the database. This allows us to use the `DocumentManager` to set the `$product` property with a reference to the `Product` document with the product id we previously stored.</p>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-2" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-3" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-4" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-5" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-6" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-7" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-8" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-9" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-10" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-11" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-12" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-13" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-14" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-15" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-16" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-17" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-18" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-19" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-20" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-21" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-22" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-23" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-24" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-25" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-26" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-27" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-28" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-29" class="line-number-anchor" /><a href="#line-number-d92f8851c91b63c185ed87672d6e61007d33e1eb-29">29</a></td></tr></table></div></code></pre>
+<p>The <code>postLoad</code> method will be invoked after an ORM entity is loaded from the database. This allows us<br />to use the <code>DocumentManager</code> to set the <code>$product</code> property with a reference to the <code>Product</code> document<br />with the product id we previously stored. Please note, that the event subscriber will be called on<br />postLoad for all entities that are loaded by doctrine. Thus, it is recommended to check for the current<br />entity.</p>
 </div>
 <div class="section"><a class="section-anchor" id="working-with-products-and-orders" name="working-with-products-and-orders"></a><h2 class="section-header"><a href="#working-with-products-and-orders">Working with Products and Orders<i class="fas fa-link"></i></a></h2>
-<p>First create a new `Product`:</p>
+<p>First create a new <code>Product</code>:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
@@ -586,7 +607,7 @@ $dm-&gt;flush();</td></tr>
 <tr><td class="line-number noselect"><a name="line-number-6d5098613a387567d450c608862db34896bf662f-4" class="line-number-anchor" /><a href="#line-number-6d5098613a387567d450c608862db34896bf662f-4">4</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-6d5098613a387567d450c608862db34896bf662f-5" class="line-number-anchor" /><a href="#line-number-6d5098613a387567d450c608862db34896bf662f-5">5</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-6d5098613a387567d450c608862db34896bf662f-6" class="line-number-anchor" /><a href="#line-number-6d5098613a387567d450c608862db34896bf662f-6">6</a></td></tr></table></div></code></pre>
-<p>Now create a new `Order` and link it to a `Product` in MySQL:</p>
+<p>Now create a new <code>Order</code> and link it to a <code>Product</code> in MySQL:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
@@ -622,7 +643,7 @@ $product = $order-&gt;getProduct();
 <tr><td class="line-number noselect"><a name="line-number-b3b43752a9ccbd7cbbc7b10e2d1cd77b43ee474a-5" class="line-number-anchor" /><a href="#line-number-b3b43752a9ccbd7cbbc7b10e2d1cd77b43ee474a-5">5</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-b3b43752a9ccbd7cbbc7b10e2d1cd77b43ee474a-6" class="line-number-anchor" /><a href="#line-number-b3b43752a9ccbd7cbbc7b10e2d1cd77b43ee474a-6">6</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-b3b43752a9ccbd7cbbc7b10e2d1cd77b43ee474a-7" class="line-number-anchor" /><a href="#line-number-b3b43752a9ccbd7cbbc7b10e2d1cd77b43ee474a-7">7</a></td></tr></table></div></code></pre>
-<p>If you were to print the `$order` you would see that we got back regular PHP objects:</p>
+<p>If you were to print the <code>$order</code> you would see that we got back regular PHP objects:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"

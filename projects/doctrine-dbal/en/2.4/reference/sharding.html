@@ -19,8 +19,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?ac27f6"
-                        integrity="sha384-b21zbnBUhHK+ipRVWeEIf/eEDHbsBrEPixFK1wAIWBS8gOsP0hZrohMzz4YyhWaJ"
+            href="https://www.doctrine-project.org/frontend/css/index.css?99344e"
+                        integrity="sha384-F/vJJWxcmaxjTwI1038GuJsBm6ONPQwO9IT99Jkpub+hUgq/8lZsWjivZk4GJxby"
                         crossorigin="anonymous"
         />
 
@@ -291,6 +291,13 @@
                                                                                                             (upcoming)
                                                                                                     </a>
                                                                                             
+                                                <a class="project-version-switcher dropdown-item" href="/projects/doctrine-dbal/en/2.11/reference/sharding.html">
+                                                    2.11
+
+                                                    
+                                                                                                            (upcoming)
+                                                                                                    </a>
+                                                                                            
                                                 <a class="project-version-switcher dropdown-item" href="/projects/doctrine-dbal/en/2.10/reference/sharding.html">
                                                     2.10.1
 
@@ -332,7 +339,7 @@ means the sharding extension is primarily suited for:</p>
 
 <p>Both kind of application will work with both DBAL and ORM.</p>
 <div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Horizontal sharding is an evasive architecture that will affect your application code and using this
-extension to Doctrine will not make it work &quot;magically&quot;.</p>
+extension to Doctrine will not make it work magically.</p>
 </td></tr></table></div>
 <p>You have to understand and integrate the following drawbacks:</p>
 <ul><li class="dash">Pre-generation of IDs that are unique across all shards required.</li>
@@ -366,11 +373,11 @@ done by putting the amount of blogs on many different database servers.</p>
 <p>Now users can post and comment on different blogs that reside on different
 shards. This makes the database schema above slightly tricky, because both
 `author_id` columns cannot have foreign keys to `User (id)`. Instead the User
-table is located in an entirely different &quot;dimension&quot; of the application in
+table is located in an entirely different dimension of the application in
 terms of the sharding architecture.</p>
 <p>To simplify working with this kind of multi-dimensional database schema, you
-can replace the author_ids with something more &quot;meaningful&quot;, for example the
-e-mail address of the users if that is always known. The &quot;user&quot; table can then
+can replace the author_ids with something more meaningful, for example the
+e-mail address of the users if that is always known. The user table can then
 be separated from the database schema above and put on a second horizontally
 scaled sharding architecture.</p>
 <p>As you can see, even with just the four tables above, sharding actually becomes
@@ -453,7 +460,7 @@ Server however is completely unsuitable for sharding. Remember in a sharding
 architecture you have to know where the row for a specific ID is located and
 IDs have to be globally unique across all servers. Auto-Increment Primary Keys
 are missing both properties.</p>
-<p>To get around this issue you can use the so-called &quot;table-generator&quot; strategy.
+<p>To get around this issue you can use the so-called table-generator strategy.
 In this case you define a single database that is responsible for the
 generation of auto-incremented ids. You create a table on this database and
 through the use of locking create new sequential ids.</p>
@@ -533,9 +540,9 @@ calculate a result.</p>
 <p>The central API of the sharding extension is the <code>ShardManager</code> interface.
 It contains two different groups of functions with regard to sharding.</p>
 <p>First, it contains the Shard Selection API. You can pick a shard based on a
-so-called &quot;distribution-value&quot; or reset the connection to the &quot;global&quot; shard,
+so-called distribution-value or reset the connection to the global shard,
 a necessary database that often contains heavily cached, sharding independent
-data such as meta tables or the &quot;user/tenant&quot; table.</p>
+data such as meta tables or the user/tenant table.</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
@@ -592,7 +599,7 @@ $value = $shardManager-&gt;getCurrentDistributionValue();</td></tr>
 This is especially important when using sharding with the ORM. Because the ORM
 uses a single transaction during the flush-operation this means that you can
 only ever use one <code>EntityManager</code> with data from a single shard.</p>
-<p>The second API is the &quot;fan-out&quot; query API. This allows you to execute queries against
+<p>The second API is the fan-out query API. This allows you to execute queries against
 ALL shards. The order of the results of this operation is undefined, that means
 your query has to return the data in a way that works for the application, or
 you have to sort the data in the application.</p>
@@ -789,7 +796,7 @@ application. The restriction to make this work is that your application does not
 IDENTITY columns.</p>
 <p>Normally when you select a shard using <code>ShardManager#selectShard()</code> any query
 executed against this shard will return data from ALL the tenants located on
-this shard. With the &quot;FILTERING=ON&quot; flag on the <code>USE FEDERATION</code> query
+this shard. With the FILTERING=ON flag on the <code>USE FEDERATION</code> query
 however SQL Azure can automatically filter all SELECT queries with the chosen
 distribution value. Additionally you can automatically set the currently
 selected distribution value in every INSERT statement using a function for this
@@ -801,7 +808,7 @@ that way.</p>
 <p>To enable filtering you can use the
 <code>SQLAzureShardManager#setFilteringEnabled()</code> method. This method is not part
 of the interface. You can also set a default value for filtering by passing it
-as the &quot;sharding.filteringEnabled&quot; parameter to
+as the sharding.filteringEnabled parameter to
 <code>DriverManager#getConnection()</code>.</p>
 </div>
 </div>
