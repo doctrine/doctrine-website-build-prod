@@ -1774,6 +1774,85 @@ encouraged to use the <a href="storage-strategies.html#atomic_set">atomicSet</a>
 <a href="storage-strategies.html#atomic_set_array">atomicSetArray</a> strategies for such collections, which
 will ensure that collections are updated in the same write operation as the
 versioned parent document.</p>
+</div>
+<div class="section"><a class="section-anchor" id="view" name="view"></a><h2 class="section-header"><a href="#view">@View<i class="fas fa-link"></i></a></h2>
+<p>Required annotation to mark a PHP class as a view. Views are created from
+aggregation pipelines, which are returned from a special repository method.
+Views can be used like collections for any read operations. Result documents are
+not managed and cannot be referenced using the <a href="reference-mapping.html#reference_many">reference-many</a>
+and <a href="reference-mapping.html#reference_one">reference-one</a> mappings.</p>
+<p>Required attributes:</p>
+<ul><li class="dash">
+   <code>rootClass</code> - this is the base collection that the view is created from</li>
+<li class="dash">
+   <code>repositoryClass</code> - a repository class is required. This repository must
+   implement the <code>MongoDB\ODM\MongoDB\Repository\ViewRepository</code> interface.</li>
+</ul>
+
+<p>Optional attributes:</p>
+<ul><li class="dash">
+   <code>db</code> - By default, the document manager will use the MongoDB database
+   defined in the configuration, but this option may be used to override the
+   database for a particular document class.</li>
+<li class="dash">
+   <code>view</code> - By default, the view name is derived from the document's class
+   name, but this option may be used to override that behavior.</li>
+</ul>
+
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="bcf180c9cea5cac10016f93b7376b57380f9ede8"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="bcf180c9cea5cac10016f93b7376b57380f9ede8"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-1" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-1">1</a></td><td class="code-line" rowspan="22"><span class="hljs-meta">&lt;?php</span>
+
+<span class="hljs-comment">/**
+ * <span class="hljs-doctag">@View</span>(
+ *     db="documents",
+ *     rootClass=User::class,
+ *     repositoryClass=UserNameRepository::class,
+ * )
+ */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserName</span>
+</span>{
+    <span class="hljs-comment">//...</span>
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserNameRepository</span> <span class="hljs-keyword">implements</span> \<span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Repository</span>\<span class="hljs-title">ViewRepository</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createViewAggregation</span><span class="hljs-params">(Builder $builder)</span> : <span class="hljs-title">void</span>
+    </span>{
+        $builder-&gt;project()
+            -&gt;includeFields([<span class="hljs-string">'username'</span>]);
+    }
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-2" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-3" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-4" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-5" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-6" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-7" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-8" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-9" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-10" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-11" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-12" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-13" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-14" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-15" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-16" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-17" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-18" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-19" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-20" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-21" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-22" class="line-number-anchor" /><a href="#line-number-bcf180c9cea5cac10016f93b7376b57380f9ede8-22">22</a></td></tr></table></div></code></pre>
+<p>The <code>createViewAggregation</code> method can add any aggregation pipeline stage,
+except for the <code>$out</code> and <code>$merge</code> stages. The pipeline is created for the
+root class specified in the view mapping.</p>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Views must be created before they can be queried. This can be done using the
+<code>odm:schema:create</code> command.</p>
+</td></tr></table></div>
 
 </div>
 </div>
