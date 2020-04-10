@@ -16,6 +16,7 @@
                     <meta name="robots" content="index, follow">
         
         
+        
         <link
             rel="stylesheet"
             type="text/css"
@@ -196,6 +197,106 @@
         
             <main role="main" class="container-wrapper container">
                         <article>
+        <header>
+            <h2><a href="/2020/04/10/doctrine-migrations-3.0.html">Released doctrine/migrations 3.0-alpha</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on <date>April 10, 2020</date>
+                            by
+                                    <a href="mailto:goetas@gmail.com">Asmir Mustafic</a>
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p><a href="https://github.com/doctrine/migrations"><code>doctrine/migrations</code> 3.0-alpha</a>
+has been <a href="https://github.com/doctrine/migrations/tree/3.0.0-alpha1">published</a> on the 29th March 2020. </p>
+<p>The upcoming 3.0 new major release is the result of almost 6 months of work and brings
+a completely refactored/rewritten internal structure and some interesting new features.  </p>
+<h3>Why a new major release?</h3>
+<p>The <code>doctrine/migrations</code> <code>v1.x</code> codebase is 10 years old, and in the past years a lot of features have been added on top of its
+initial architecture.<br />
+<code>doctrine/migrations</code> <code>2.0</code> was released a bit more than a year ago. This major release did a bit of cleanup,
+but the general structure remained the same.
+In this schema you can see the dependencies between classes in the latest <code>2.3.x</code> branch:</p>
+<div class="text-center">
+<object width="70%" data="/images/posts/doctrine-migrations-3.0/complex-cycle-v2.svg" type="image/svg+xml"></object>
+</div>
+<p>The red lines are circular dependencies (and we already know that in software development circular dependencies are not
+a good thing).</p>
+<p>In <code>doctrine/migrations</code> <code>3.x</code>, most of the internal classes have been re-written and dependency injection has been
+widely adopted.<br />
+In this schema you can see the dependencies between classes in the latest <code>master</code> branch (release v3.0):</p>
+<div class="text-center">
+<object width="70%" data="/images/posts/doctrine-migrations-3.0/complex-cycle-v3.svg" type="image/svg+xml"></object>
+</div>
+<p>As you can see the circular dependencies are gone. This has been possible thanks to extensive use of dependency injection
+and applying SOLID principles.
+To reduce future backward incompatibilities, many classes have been marked as <code>final</code> or as <code>@internal</code> while
+keeping the functionalities intact. Extensibility is still possible by using dependency injection and providing
+classes implementing dedicated interfaces.</p>
+<p><em>These schemas have been generated using <a href="https://github.com/mamuz/PhpDependencyAnalysis">PhpDependencyAnalysis</a>
+with <a href="https://gist.github.com/goetas/e6343746a6ccd6ebb191cbbd675898e0">this configuration</a>.</em></p>
+<h3>New features and improvements</h3>
+<p>Beside the code quality improvements, there is a a long list of improvements (see below), but
+<strong>the main user-facing feature is the ability to collect migrations from multiple folders/namespaces and
+to specify dependencies between migrations.</strong></p>
+<p>Here a (probably not complete) list of improvements implemented in the upcoming <code>3.0</code> release: </p>
+<ul>
+<li>ability to collect migrations from multiple folders/namespaces and to specify dependencies between migrations</li>
+<li><code>doctrine/migrations</code> will write to your database only when running migrations
+(previously the metadata table was created on the very first command run even if it was a read-only command)</li>
+<li>Output verbosity can be controlled using the <code>-v</code>, <code>-vv</code> or <code>-vvv</code> command parameters</li>
+<li>Use of dependency injection allows you to decorate/replace most services</li>
+<li>Removed usage of console helpers to provide the connection or entity manager in favor of dependency injection</li>
+<li>Introduced <code>migrations:list</code> command to list the available/executed migrations</li>
+<li>Introduced <code>migrations:sync-metadata-storage</code> command to explicitly update the metadata schema in case a newer version
+introduces changes to the metadata table</li>
+<li>Multiple migrations can be passed to the <code>migrations:execute</code> command</li>
+<li>More organized output of the <code>migrations:status</code> command</li>
+<li>Configurations and Dependency Factory are read-only during the migration process</li>
+<li>The <code>down()</code> migration is optional now</li>
+<li>Multi-namespace migrations</li>
+<li>Custom migrations metadata storage</li>
+<li>Added warning when using the <code>migrations:diff</code> if there are not executed migrations</li>
+</ul>
+<h3>Backward compatibility</h3>
+<p>In <code>doctrine/migrations</code> <code>3.0</code> a lot of things changed, but for end-users most of the things will look the same.
+Your migration files do not need any update.</p>
+<p>You will have to change  your configuration files, as the configuration format has changed.
+The <a href="https://www.doctrine-project.org/projects/doctrine-migrations/en/latest/reference/configuration.html#configuration">official documentation</a> contains more information about these changes.
+This documentation should be particularly helpful if you did also some custom integration with third party frameworks
+or libraries.</p>
+<p>If you wrote custom event listeners, please take a look at them as the method signatures for event listeners have been updated.</p>
+<h3>Symfony Integration</h3>
+<p>If you are using <a href="https://github.com/doctrine/DoctrineMigrationsBundle">DoctrineMigrationsBundle</a> then things are even
+easier: the 2.3.0 release introduced some deprecation notices and if you have already solved them
+your configuration is already compatible. If you want you can have a look to the latest configuration format
+available on the <a href="https://www.doctrine-project.org/projects/doctrine-migrations-bundle/en/3.0/index.html#configuration">official documentation</a>.
+You can look more in detail to which changes are needed in the <a href="https://github.com/doctrine/DoctrineMigrationsBundle/blob/master/UPGRADE.md">upgrading</a> document.</p>
+<h3>What is next</h3>
+<p>In the upcoming weeks, we will be preparing the first beta release and starting the process to reach a stable release.
+<strong>To be able to deliver a good stable release it is important that you test the pre-release and share your feedback!</strong></p>
+<p>To try the alpha version, you can run:</p>
+<pre><code class="language-bash">composer require 'doctrine/migrations:^3.0@alpha'</code></pre>
+<p>If you are using Symfony: </p>
+<pre><code class="language-bash">composer require 'doctrine/doctrine-migrations-bundle:^3.0@alpha' 'doctrine/migrations:^3.0@alpha'</code></pre>
+<p>You can be also more brave trying the development versions by specifying <code>@dev</code> instead of <code>@alpha</code>
+when requiring the composer dependencies above.</p>
+<p>You can also have a look at the <a href="https://github.com/doctrine/migrations/releases/tag/3.0.0-alpha1">release notes</a>
+and the <a href="https://github.com/doctrine/migrations/blob/3.0.0-alpha1/UPGRADE.md">upgrading</a> document.</p>
+<p>Similarly you can also have a look at the <a href="https://github.com/doctrine/DoctrineMigrationsBundle/releases/tag/3.0.0-alpha.1">release notes</a>
+and the <a href="https://github.com/doctrine/DoctrineMigrationsBundle/blob/3.0.0-alpha.1/UPGRADE.md">upgrading</a> document for the Symfony bundle.</p>
+<p>In the alpha release, breaking changes are still possible.
+In the beta, release breaking changes are possible but will happen
+only if we will find very unexpected behaviors.
+When the alpha and beta phase will be completed, a stable version will be made available. </p>
+<h2>Note</h2>
+<p>This post was initially published on <a href="https://www.goetas.com/blog/released-doctrinemigrations-30-alpha/">https://www.goetas.com/blog/released-doctrinemigrations-30-alpha/</a>.</p>
+        </div>
+    </article>
+    <article>
         <header>
             <h2><a href="/2019/09/30/mongodb-odm-1.3.0-and-2.0.0-RC2.html">Doctrine MongoDB ODM 1.3.0 and 2.0.0-RC2 released</a></h2>
         </header>
@@ -788,80 +889,6 @@ upgrade can safely be used.</p>
 not consider the new version if the PHP version requirement is no longer
 fulfilled. Thus, you won't end up with a fatal error due to a wrong
 method signature, you just won't get the new version.</p>
-        </div>
-    </article>
-    <article>
-        <header>
-            <h2><a href="/2016/11/22/doctrine-mongodb-release-1.4.0.html">Doctrine MongoDB 1.4.0</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on <date>November 22, 2016</date>
-                            by
-                                    <a href="mailto:alcaeus@alcaeus.org">Andreas Braun</a>
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>We are happy to announce the immediate availability of Doctrine MongoDB
-Abstraction Layer
-<a href="https://github.com/doctrine/mongodb/releases/tag/1.4.0">1.4.0</a>.</p>
-<h1>Passing context options to the driver</h1>
-<p>With this release it's possible to pass driver options to the connection
-class, which will then be passed on to the MongoDB driver. For example,
-to pass a stream context with SSL context options, you could use the
-following code snippet:</p>
-<pre><code class="language-{.sourceCode">$context = stream_context_create([
-    'ssl' =&gt; [
-        'allow_self_signed' =&gt; false,
-    ]
-]);
-$connection = new \Doctrine\MongoDB\Connection(null, [], null, null, ['context' =&gt; $context]);</code></pre>
-<h1>Passing multiple expressions to logical operators</h1>
-<p>The <code>addAnd</code>, <code>addNor</code> and <code>addOr</code> methods in the query and aggregation
-builders now take multiple expression objects. Instead of having to call
-the method repeatedly, you may call it once with multiple arguments:</p>
-<pre><code class="language-{.sourceCode">// Before
-$builder
-    -&gt;addAnd($someExpression)
-    -&gt;addAnd($otherExpression);
-
-// After
-$builder-&gt;addAnd($someExpression, $otherExpression);</code></pre>
-<h1>Deprecations</h1>
-<p>The <code>update</code> and <code>multiple</code> methods in the query have been deprecated in
-favor of <code>updateOne</code> and <code>updateMany</code>. These deprecations help people
-using ODM prepare for the next version of ODM which will utilize the new
-MongoDB library API.</p>
-<h1>Bug fixes in this release</h1>
-<p>Notable fixes may be found in the
-<a href="https://github.com/doctrine/mongodb/blob/master/CHANGELOG-1.4.md#140-2016-11-22">changelog</a>.
-A full list of issues and pull requests included in this release may be
-found in the <a href="https://github.com/doctrine/mongodb/issues?q=milestone%3A1.4.0">1.4.0
-milestone</a>.</p>
-<h1>PHP version support</h1>
-<p>With this release, we have dropped support for PHP 5.5. Users using PHP
-5.5 or older are encouraged to upgrade to a newer PHP version. If you
-are using PHP 7.0 or 7.1, you can use this library by adding a polyfill
-for <code>ext-mongo</code>, like
-<a href="https://github.com/alcaeus/mongo-php-adapter">mongo-php-adapter</a>.</p>
-<h1>Future releases</h1>
-<p>This release is the last planned minor release of the MongoDB
-Abstraction Layer, with only bugfixes being done in maintenance
-releases. The library will not be rewritten to support the new MongoDB
-driver. Users are encouraged to use the new <a href="https://github.com/mongodb/mongo-php-library">MongoDB
-library</a>. Doctrine
-MongoDB ODM will be adapted to support the new driver and the MongoDB
-library.</p>
-<h1>Installation</h1>
-<p>You can install the latest version using the following <code>composer.json</code>
-definitions:</p>
-<pre><code class="language-{.sourceCode">{
-    "require": {
-        "doctrine/mongodb": "^1.4.0"
-    }
-}</code></pre>
         </div>
     </article>
 
