@@ -125,7 +125,6 @@
                                                                     <a class="dropdown-item notranslate" href="/projects/instantiator.html">Instantiator</a>
                                                                     <a class="dropdown-item notranslate" href="/projects/lexer.html">Lexer</a>
                                                                     <a class="dropdown-item notranslate" href="/projects/migrations.html">Migrations</a>
-                                                                    <a class="dropdown-item notranslate" href="/projects/mongodb.html">MongoDB</a>
                                                                     <a class="dropdown-item notranslate" href="/projects/mongodb-odm.html">MongoDB ODM</a>
                                                                     <a class="dropdown-item notranslate" href="/projects/orm.html">ORM</a>
                                                                     <a class="dropdown-item notranslate" href="/projects/persistence.html">Persistence</a>
@@ -197,6 +196,107 @@
         
             <main role="main" class="container-wrapper container">
                         <article>
+        <header>
+            <h2><a href="/2020/11/17/dbal-3.0.0.html">New Major Release: Doctrine DBAL 3.0</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on <date>November 17, 2020</date>
+                            by
+                                    <a href="mailto:kontakt@beberlei.de">Benjamin Eberlei</a>
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>We have released a new major version of Doctrine DBAL, version 3.0.0. This new
+major version comes almost 10 years after DBAL 2.0 was released on December
+2010, then coupled into the ORM 2.0.</p>
+<p>Today Doctrine DBAL is released independent of the ORM, thanks to Composer and
+sees its new major version before the ORM.</p>
+<p>This release was made possible foremost by
+<a href="https://twitter.com/srgmrzv">Sergei Morozov</a>, our primary DBAL maintainer, who has
+spent countless hours working on the package since 2016. Thank you!</p>
+<p>See the <a href="https://github.com/doctrine/dbal/releases/tag/3.0.0">Release Notes</a>
+for a detailed list of changes.</p>
+<p>This blog post covers a few of the major changes in a bit more detail to give
+you an idea of what DBAL 3.0 looks like.</p>
+<h3>Decouple DBAL from PDO</h3>
+<p>The major theme of DBAL 3.0 is the decoupling from PDO. Instead of copying the
+API verbatim like DBAL 2.0 did, DBAL 3.0 grows it into a better, more usable
+direction.</p>
+<p>We extract all fetch-methods from the <code>Statement</code> class and moved them to a new
+<code>Result</code> class that is returned from <code>Statement::execute</code>.</p>
+<p>Old code:</p>
+<pre><code>$statement = $connection-&gt;prepare('SELECT * FROM tbl WHERE col = ?');
+$statement-&gt;bindParam(1, $value);
+$statement-&gt;execute();
+
+while ($row = $statement-&gt;fetch()) {
+}</code></pre>
+<p>New Code:</p>
+<pre><code>$statement = $connection-&gt;prepare('SELECT * FROM tbl WHERE col = ?');
+$statement-&gt;bindParam(1, $value);
+$result = $statement-&gt;execute();
+
+while ($row = $result-&gt;fetchAssociative()) {
+}</code></pre>
+<p>The Result Fetching API was improved to use more human-readable names:</p>
+<pre><code>// Old
+$stmt-&gt;fetch();
+$stmt-&gt;fetch(PDO::FETCH_ARRAY);
+$stmt-&gt;fetchColumn();
+$stmt-&gt;fetchAll();
+
+// New
+$stmt-&gt;fetchAssociative();
+$stmt-&gt;fetchNumeric();
+$stmt-&gt;fetchOne();
+$stmt-&gt;fetchAllAssociative();</code></pre>
+<p>Many more changes have been made on the public API and also for the internals,
+but these are the most visible ones.</p>
+<h3>Upgrading to DBAL 3 from 2</h3>
+<p>DBAL 3 is a real new major release with significant changes to the public API. Depending
+on your codebase a migration could require non-trivial work. However we do not intend
+to leave you hanging with DBAL 2 and a future migration:</p>
+<ol>
+<li>
+<p>We intend to support DBAL 2.12 a while longer, including support for the
+upcoming PHP 8.0, so that there is no rush for you to upgrade to DBAL 3.</p>
+</li>
+<li>
+<p>DBAL 2.12 already includes forwards compatible API changes for all the new APIs,
+so that you can migrate your code step by step to the new APIs already.</p>
+</li>
+<li>
+<p>Deprecated methods in DBAL 2.12 are tagged with the <code>@deprecated</code> doc-block
+and static analysis tools such as Psalm, PHPStan and Phan can already help
+you detect using or calling this deprecated code in your application.</p>
+</li>
+<li>
+<p>We intend to release another version of DBAL 2 which includes
+optional triggering of deprecation messages at runtime similar to how Symfony
+deals with deprecations.</p>
+</li>
+</ol>
+<p>As you can see, with these approaches it will be possible for you to smoothly migrate
+your application from DBAL 2 to 3.</p>
+<p>As a note to libraries and frameworks that need to support multiple versions of
+Doctrine DBAL: We recommend you start out with DBAL 2.12 and migrate all usages
+of deprecated APIs to their newer counterparts. Then once you have managed
+this, you can allow 3.0 and try to get your code working with both versions.
+Unfortunately this may not be possible for all cases, because we could not
+provide replacement APIs for everything and some features have been dropped
+between DBAL 2 and 3.</p>
+<h3>Outlook</h3>
+<p>DBAL 3 is a huge first step towards a modern database abstraction layer,
+independent from the legacy of PHP and PDO API design. In the future we plan to
+improve DBAL in other ways that we haven't gotten around yet, such as more API
+modernization, increased safety with use of strict scalar types in the code
+base, better error handling and more.</p>
+        </div>
+    </article>
+    <article>
         <header>
             <h2><a href="/2020/04/10/doctrine-migrations-3.0.html">Released doctrine/migrations 3.0-alpha</a></h2>
         </header>
@@ -812,83 +912,6 @@ To ease the migration process, we will release a <code>1.3.0</code> which will b
 backwards compatible to the <code>1.2.x</code> line and only deprecate features to
 be removed in 2.0. The <code>1.x</code> line of MongoDB ODM will not receive any
 new features.</p>
-        </div>
-    </article>
-    <article>
-        <header>
-            <h2><a href="/2017/07/25/php-7.1-requirement-and-composer.html">PHP 7.1 requirement for Doctrine packages</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on <date>July 25, 2017</date>
-                            by
-                                    <a href="mailto:alcaeus@alcaeus.org">Andreas Braun</a>
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>A few days ago, the Doctrine team released new versions of many
-packages, dropping support for PHP 5.6 and 7.0, as well as HHVM. The
-affected packages are:</p>
-<ul>
-<li>doctrine/common 2.8.0</li>
-<li>doctrine/dbal 2.6.0</li>
-<li>doctrine/collections 1.5.0</li>
-<li>doctrine/inflector 1.2.0</li>
-<li>doctrine/cache 1.7.0</li>
-<li>doctrine/instantiator 1.1.0</li>
-<li>doctrine/annotations 1.5.0</li>
-</ul>
-<p>Since many people are encountering issues with these updates, here are a
-few suggestions to ensure your code continues working as usual.</p>
-<h1>Composer version constraints</h1>
-<p>Chances are your version constraints in <code>composer.json</code> look something
-like this:</p>
-<pre><code class="language-{.sourceCode">{
-    "require": {
-        "doctrine/orm": "^2.5"
-    }
-}</code></pre>
-<p>The <code>^2.5</code> constraint resolves to: <code>&gt;= 2.5.0 &amp;&amp; &lt;= 2.999999.999999</code>.
-This is intended: our projects all follow <a href="https://semver.org/">Semantic
-Versioning</a>, so you can safely install a new minor
-version without having to fear BC breaks.</p>
-<p>When determining what version to install, composer employs a SAT solver
-to make sure all dependencies are fulfilled. In our example above, the
-SAT solver finds a version newer than 2.5 that satisfies all
-requirements.</p>
-<h1>Making sure you get a compatible version</h1>
-<p>When you run <code>composer update</code> the next time, you'll automatically
-receive updates for the packages mentioned above, provided that you are
-running on PHP 7.1. If you are running an older PHP version, composer
-will not install a version that requires PHP 7.1, since its requirements
-are not fulfilled.</p>
-<p>A common problem is people running a newer PHP version on their
-developer machines than on their production servers. In this case,
-running <code>composer update</code> on a developer machine (with PHP 7.1) might
-happily pull in an update that simply won't work when deployed on a
-production machine running PHP 5.6.</p>
-<p>To make sure this doesn't happen to you, there are two choices:</p>
-<ul>
-<li>run <code>composer update</code> on a machine with the same PHP version that
-you use in production</li>
-<li>use the
-<a href="https://getcomposer.org/doc/06-config.md#platform">platform.config</a>
-config setting in <code>composer.json</code> to override your local PHP
-version.</li>
-</ul>
-<h1>Why dropping PHP support in a minor version is not a BC break</h1>
-<p>One question we frequently hear is, &quot;isn't dropping support for a PHP
-version a BC break&quot;? In a nutshell, no. A BC break happens when there is
-an incompatible change that your package manager can't handle. For
-example, changing a method signature in a minor version is a no-go,
-since the composer version constraints mentioned above assume any minor
-upgrade can safely be used.</p>
-<p>However, when we drop support for an older version of PHP, composer will
-not consider the new version if the PHP version requirement is no longer
-fulfilled. Thus, you won't end up with a fatal error due to a wrong
-method signature, you just won't get the new version.</p>
         </div>
     </article>
 

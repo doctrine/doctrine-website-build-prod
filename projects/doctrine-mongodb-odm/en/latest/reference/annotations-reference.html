@@ -137,7 +137,6 @@
                                                                     <a class="dropdown-item notranslate" href="/projects/instantiator.html">Instantiator</a>
                                                                     <a class="dropdown-item notranslate" href="/projects/lexer.html">Lexer</a>
                                                                     <a class="dropdown-item notranslate" href="/projects/migrations.html">Migrations</a>
-                                                                    <a class="dropdown-item notranslate" href="/projects/mongodb.html">MongoDB</a>
                                                                     <a class="dropdown-item notranslate" href="/projects/mongodb-odm.html">MongoDB ODM</a>
                                                                     <a class="dropdown-item notranslate" href="/projects/orm.html">ORM</a>
                                                                     <a class="dropdown-item notranslate" href="/projects/persistence.html">Persistence</a>
@@ -524,7 +523,8 @@ managed by ODM.</p>
 <li class="dash">
    <code>repositoryClass</code> - Specifies a custom repository class to use.</li>
 <li class="dash">
-   <code>indexes</code> - Specifies an array of indexes for this document.</li>
+   <code>indexes</code> - Specifies an array of indexes for this document (deprecated,
+   specify all <code>@Index</code> annotations on a class level).</li>
 <li class="dash">
    <code>readOnly</code> - Prevents document from being updated: it can only be inserted,
    upserted or removed.</li>
@@ -784,7 +784,8 @@ multiple document classes, and even other embedded documents!</p>
 <p>Optional attributes:</p>
 <ul><li class="dash">
    <code>indexes</code> - Specifies an array of indexes for this embedded document, to be
-   included in the schemas of any embedding documents.</li>
+   included in the schemas of any embedding documents (deprecated, specify all
+   <code>@Index</code> annotations on a class level).</li>
 </ul>
 
 </div>
@@ -864,7 +865,8 @@ data than regular documents.</p>
    must extend the <code>Doctrine\ODM\MongoDB\Repository\GridFSRepository</code>
    interface.</li>
 <li class="dash">
-   <code>indexes</code> - Specifies an array of indexes for this document.</li>
+   <code>indexes</code> - Specifies an array of indexes for this document (deprecated,
+   specify all <code>@Index</code> annotations on a class level).</li>
 <li class="dash">
    <code>readOnly</code> - Prevents the file from being updated: it can only be inserted,
    upserted or removed.</li>
@@ -967,8 +969,7 @@ customize this via the <a href="basic-mapping.html#basic_mapping_identifiers">st
 <tr><td class="line-number noselect"><a name="line-number-11c1da3d3de07f2e90f6881d4ac069de05aac6b0-8" class="line-number-anchor" /><a href="#line-number-11c1da3d3de07f2e90f6881d4ac069de05aac6b0-8">8</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="index" name="index"></a><h2 class="section-header"><a href="#index">@Index<i class="fas fa-link"></i></a></h2>
-<p>This annotation is used inside of the class-level <a href="reference/annotations-reference.html#document">@Document</a> or
-<a href="reference/annotations-reference.html#embeddeddocument">@EmbeddedDocument</a> annotations to specify indexes to be created on the
+<p>This annotation is used  to specify indexes to be created on the
 collection (or embedding document's collection in the case of
 <a href="reference/annotations-reference.html#embeddeddocument">@EmbeddedDocument</a>). It may also be used at the property-level to define
 single-field indexes.</p>
@@ -990,33 +991,27 @@ ODM allows mapped field names (i.e. PHP property names) to be used when defining
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="eed0efce4a1d57522a489a8866b18bd851565139"
+            data-copy-element-id="716045bd1629087ab910d313203cd83befabca2a"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="eed0efce4a1d57522a489a8866b18bd851565139"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-1" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-1">1</a></td><td class="code-line" rowspan="13"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="716045bd1629087ab910d313203cd83befabca2a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-716045bd1629087ab910d313203cd83befabca2a-1" class="line-number-anchor" /><a href="#line-number-716045bd1629087ab910d313203cd83befabca2a-1">1</a></td><td class="code-line" rowspan="10"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-comment">/**
- * <span class="hljs-doctag">@Document</span>(
- *   indexes={
- *     <span class="hljs-doctag">@Index</span>(keys={"username"="desc"}, options={"unique"=true})
- *   }
- * )
+ * <span class="hljs-doctag">@Document</span>
+ * <span class="hljs-doctag">@Index</span>(keys={"username"="desc"}, options={"unique"=true})
  */</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span>
 </span>{
     <span class="hljs-comment">//...</span>
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-2" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-3" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-4" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-5" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-6" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-7" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-8" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-9" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-10" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-11" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-12" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-eed0efce4a1d57522a489a8866b18bd851565139-13" class="line-number-anchor" /><a href="#line-number-eed0efce4a1d57522a489a8866b18bd851565139-13">13</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-716045bd1629087ab910d313203cd83befabca2a-2" class="line-number-anchor" /><a href="#line-number-716045bd1629087ab910d313203cd83befabca2a-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-716045bd1629087ab910d313203cd83befabca2a-3" class="line-number-anchor" /><a href="#line-number-716045bd1629087ab910d313203cd83befabca2a-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-716045bd1629087ab910d313203cd83befabca2a-4" class="line-number-anchor" /><a href="#line-number-716045bd1629087ab910d313203cd83befabca2a-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-716045bd1629087ab910d313203cd83befabca2a-5" class="line-number-anchor" /><a href="#line-number-716045bd1629087ab910d313203cd83befabca2a-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-716045bd1629087ab910d313203cd83befabca2a-6" class="line-number-anchor" /><a href="#line-number-716045bd1629087ab910d313203cd83befabca2a-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-716045bd1629087ab910d313203cd83befabca2a-7" class="line-number-anchor" /><a href="#line-number-716045bd1629087ab910d313203cd83befabca2a-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-716045bd1629087ab910d313203cd83befabca2a-8" class="line-number-anchor" /><a href="#line-number-716045bd1629087ab910d313203cd83befabca2a-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-716045bd1629087ab910d313203cd83befabca2a-9" class="line-number-anchor" /><a href="#line-number-716045bd1629087ab910d313203cd83befabca2a-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-716045bd1629087ab910d313203cd83befabca2a-10" class="line-number-anchor" /><a href="#line-number-716045bd1629087ab910d313203cd83befabca2a-10">10</a></td></tr></table></div></code></pre>
 <p>If you are creating a single-field index, you can simply specify an <a href="reference/annotations-reference.html#index">@Index</a> or
 <a href="reference/annotations-reference.html#uniqueindex">@UniqueIndex</a> on a mapped property:</p>
 <pre class="code-block-table"><code class="php"><button
@@ -1040,9 +1035,12 @@ shortening the index name or embedded field path.</p>
 </td></tr></table></div>
 </div>
 <div class="section"><a class="section-anchor" id="indexes" name="indexes"></a><h2 class="section-header"><a href="#indexes">@Indexes<i class="fas fa-link"></i></a></h2>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The <code>@Indexes</code> annotation was deprecated in 2.2 and will be removed in 3.0.
+Please move all nested <code>@Index</code> annotations to a class level.</p>
+</td></tr></table></div>
 <p>This annotation may be used at the class level to specify an array of <a href="reference/annotations-reference.html#index">@Index</a>
-annotations. It is functionally equivalent to using the <code>indexes</code> option for
-the <a href="reference/annotations-reference.html#document">@Document</a> or <a href="reference/annotations-reference.html#embeddeddocument">@EmbeddedDocument</a> annotations.</p>
+annotations. It is functionally equivalent to specifying multiple <code>@Index</code>
+annotations on a class level.</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
