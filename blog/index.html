@@ -204,6 +204,126 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="/2021/03/29/dbal-2.13.html">New Release: Doctrine DBAL 2.13 with Deprecations and Forward Compatibility</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on <date>March 29, 2021</date>
+                            by
+                                    <a href="mailto:kontakt@beberlei.de">Benjamin Eberlei</a>
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>We have released DBAL 2.13, what we plan to be the last minor version in the 2.x family of Doctrine DBAL.
+This release includes additional forward compatibility to DBAL 3 around
+<code>Statement</code> and <code>Result</code> API and with an integration in our new
+deprecations logging library.</p>
+<p>In addition this DBAL release re-enables PHP 7.1 and 7.2 compatibility to give
+as much flexibility as possible to everyone with forward compatibility.</p>
+<h3>Statement and Result Forward Compatibility</h3>
+<p>DBAL 3.0 extracts all fetch-methods from the <code>Statement</code> API and moved them
+to a new <code>Result</code> API that is returned from <code>Statement::execute</code>. We have
+backported this API to 2.13 - so that you can support writing code for both
+DBAL 2 and 3 at the same time.</p>
+<p>Old code:</p>
+<pre><code class="language-php">$statement = $connection-&gt;prepare('SELECT * FROM tbl WHERE col = ?');
+$statement-&gt;bindParam(1, $value);
+$statement-&gt;execute();
+
+while (($row = $statement-&gt;fetch()) !== false) {
+}
+
+$connection-&gt;executeQuery('SELECT * FROM tbl')-&gt;fetchAll();</code></pre>
+<p>New Code:</p>
+<pre><code class="language-php">$statement = $connection-&gt;prepare('SELECT * FROM tbl WHERE col = ?');
+$statement-&gt;bindParam(1, $value);
+$result = $statement-&gt;execute();
+
+while (($row = $result-&gt;fetchAssociative()) !== false) {
+}
+
+$connection-&gt;executeStatement('SELECT * FROM tbl')-&gt;fetchAllAssociative();</code></pre>
+<p>The Result Fetching API was improved to use more human-readable names:</p>
+<pre><code class="language-php">// Old
+$stmt-&gt;fetch();
+$stmt-&gt;fetch(PDO::FETCH_ARRAY);
+$stmt-&gt;fetchColumn();
+$stmt-&gt;fetchAll();
+
+// New
+$result = $stmt-&gt;execute();
+$result-&gt;fetchAssociative();
+$result-&gt;fetchNumeric();
+$result-&gt;fetchOne();
+$result-&gt;fetchAllAssociative();</code></pre>
+<p>Many more changes have been made on the public API and also for the internals,
+but these are the most common ones.</p>
+<p>Thank you to <a href="https://github.com/mdumoulin">mdumoulin</a> for the work on
+improving the forward compatiblity.</p>
+<h3>Deprecations Logging</h3>
+<p>We have wrestled internally for a long time with the strategy on runtime
+deprecation going forward and settled on introducing a small, new API for
+reporting the usage of deprecated APIs.</p>
+<p>The reason for this abstraction is the potential for side effects caused by an
+error handler and the potential overhead. We expect our deprecations to be
+triggered a few hundred times in some requests as such the production overhead
+must be minimal. </p>
+<p>This means deprecation logging is disabled by default and you must enable
+it to either use <code>@trigger_error</code> or a PSR-3 compatible logger.</p>
+<p>See the <a href="https://github.com/doctrine/deprecations/">deprecation library
+README.md</a> for details on how to
+configure and use it.</p>
+<h3>PHP 7.1 and 7.2 Support</h3>
+<p>A few large Doctrine DBAL deployments still support older versions of PHP that
+are not officially supported anymore, but are covered by support of a few Linux
+distributions.</p>
+<p>To provide the largest possible flexibility to the ecosystem to run code with
+both DBAL 2 or 3 this version of Doctrine DBAL will work again with PHP 7.1 and
+7.2</p>
+<h3>Migrate to DBAL 3</h3>
+<p>We recommend a three step strategy to move your code-base and that of your
+dependents to DBAL 3. It depends if you are working on a library or
+platform that is dependent upon, or if you are working on a standalone application.</p>
+<p>For a standalone application:</p>
+<ol>
+<li>Upgrade to DBAL 2.13 and enforce &quot;^2.13&quot; as a version constraint in
+composer.json</li>
+<li>Enable deprecation tracking and eliminate all deprecations triggered in your
+codebase.</li>
+<li>After fixing all deprecations, update composer constraint to &quot;^3.0&quot;.
+Doctrine will upgrade to version 3 if all other dependencies you are using
+are ready as well to upgrade to version 3. If it fails, you need to identify
+and update the dependencies as well.</li>
+</ol>
+<p>For a library, framework or platform:</p>
+<ol>
+<li>Upgrade to DBAL 2.13 and enforce &quot;^2.13&quot; as a version constraint in
+composer.json</li>
+<li>Enable deprecation tracking and eliminate all deprecations triggered in your
+codebase. Release a version so that all plugins and downstream users
+can be notified of using deprecated Doctrine DBAL directly themselves.</li>
+<li>After fixing all deprecations, update composer constraint to &quot;^2.13 | ^3.0&quot;.
+Doctrine will only upgrade to version 3 if all other dependencies you are
+using are ready as well to upgrade to version 3.</li>
+</ol>
+<p>We recommend the following strategies to detect the use of deprecated code:</p>
+<ul>
+<li>Use Psalm, other static analyzers or IDEs to detect the use of deprecated code.</li>
+<li>If you have an extensive test-suite, register a PSR-3 logger with Doctrine
+Deprecations to catch all deprecations while running the tests.</li>
+<li>Otherwise register a PSR-3 logger with Doctrine Deprecations in development
+or staging only and collect and fix them as well you can. This could be
+done for a longer amount of time of days, weeks or months.</li>
+<li>If that is not possible, register a PSR-3 logger in production. Make sure to
+eliminate high frequency deprecations quickly or call <code>ignoreDeprecation</code> to
+snooze them to avoid overhead.</li>
+</ul>
+        </div>
+    </article>
+    <article>
+        <header>
             <h2><a href="/2020/11/17/dbal-3.0.0.html">New Major Release: Doctrine DBAL 3.0</a></h2>
         </header>
 
@@ -842,83 +962,6 @@ provides several improvements and fixes, including:</p>
 become the 3.0 branch in the coming days. The changes are already too
 numerous to easily rebase a feature from the 2.x branch to the develop
 one.</p>
-        </div>
-    </article>
-    <article>
-        <header>
-            <h2><a href="/2017/10/24/odm-1-2-0-and-1-1-7.html">Doctrine MongoDB ODM 1.2.0 and 1.1.7 Released</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on <date>October 24, 2017</date>
-                            by
-                                    <a href="mailto:alcaeus@alcaeus.org">Andreas Braun</a>
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>We are happy to announce the immediate availability of Doctrine MongoDB
-ODM <a href="https://github.com/doctrine/mongodb-odm/releases/tag/1.2.0">1.2.0</a>
-and <a href="https://github.com/doctrine/mongodb-odm/releases/tag/1.1.7">1.1.7</a>.</p>
-<h1>MongoDB ODM 1.1.7</h1>
-<p>Notable fixes may be found in the
-<a href="https://github.com/doctrine/mongodb-odm/blob/1.1.x/CHANGELOG-1.1.md#117-2017-10-23">changelog</a>.
-A full list of issues and pull requests included in this release may be
-found in the <a href="https://github.com/doctrine/mongodb-odm/issues?q=milestone%3A1.1.7">1.1.7
-milestone</a>.</p>
-<h1>What is new in 1.2.0?</h1>
-<p>Doctrine MongoDB ODM 1.2.0 introduces the following new features:</p>
-<ul>
-<li>The <code>readOnly</code> mapping option allows you to map immutable documents.</li>
-<li>With <code>slaveOkay</code> being deprecated, you can now specify a
-<code>readPreference</code> for your documents. This <code>readPreference</code> will
-automatically be applied to all queries for those mapped documents.</li>
-<li>With <code>dbRef</code> only offering limited support in aggregation pipeline
-queries, there's a new reference storage strategy called <code>ref</code> that
-stores references as objects (without &quot;\$&quot;-prefixed field names),
-allowing you to use it with discriminators and aggregation pipeline
-queries.</li>
-<li>When mapping inverse references, you may now specify fields that
-will be primed when the reference is resolved. This saves you from
-writing a dedicated repository method for the sole purpose of
-priming references.</li>
-<li>The <code>odm:schema:validate</code> command validates the document mapping to
-help you spot mistakes.</li>
-<li>A new builder for aggregation pipeline queries, including support
-for marshalling results into read-only documents.</li>
-<li>Query result documents that can be used to hydrate results from an
-aggregation pipeline query. These documents cannot be written back
-to the database.</li>
-</ul>
-<h1>Upgrading to 1.2.0</h1>
-<p>The new version requires PHP 5.6. Running on PHP 7+ requires the use of
-a polyfill for the legacy driver, e.g.
-<a href="https://github.com/alcaeus/mongo-php-adapter">mongo-php-adapter</a>. When
-running on PHP 5.6, MongoDB ODM requires version 1.6.7 or newer of the
-legacy MongoDB driver.</p>
-<p>Several features have been deprecated in this release and will be
-dropped in the 2.0 release. To see this, please view the <a href="https://github.com/doctrine/mongodb-odm/blob/1.2.x/UPGRADE-1.2.md">UPGRADE
-document</a>.</p>
-<h1>Installation</h1>
-<p>You can install the new version of MongoDB ODM by using Composer and the
-following <code>composer.json</code> contents:</p>
-<pre><code class="language-json">{
-    "require": {
-        "doctrine/mongodb-odm": "^1.2.0"
-    }
-}</code></pre>
-<h1>Stability and upcoming releases</h1>
-<p>As of today, Doctrine MongoDB ODM <code>1.2.0</code> is the stable distribution.
-There is no release schedule for an upcoming version yet.</p>
-<p><code>1.1.7</code> is the last release of the <code>1.1.x</code> development line and will no
-longer receive bug fixes. Instead, we will focus on developing MongoDB
-ODM 2.0 with native support for the new MongoDB driver. This release
-will require at least PHP 7.1 and contain several BC breaking changes.
-To ease the migration process, we will release a <code>1.3.0</code> which will be
-backwards compatible to the <code>1.2.x</code> line and only deprecate features to
-be removed in 2.0. The <code>1.x</code> line of MongoDB ODM will not receive any
-new features.</p>
         </div>
     </article>
 
