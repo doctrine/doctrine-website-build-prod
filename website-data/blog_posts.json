@@ -1440,6 +1440,15 @@
         "date": "2013-11-12 00:00:00"
     },
     {
+        "url": "/2021/04/19/dbal-2.13.1-3.1.0.html",
+        "slug": "dbal-2.13.1-3.1.0",
+        "title": "New Release: Doctrine DBAL 2.13.1 and 3.1.0 with important Forward Compatibility fix",
+        "authorName": "Benjamin Eberlei",
+        "authorEmail": "kontakt@beberlei.de",
+        "contents": "Last month [we released DBAL\n2.13.0](https://www.doctrine-project.org/2021/03/29/dbal-2.13.html) as an\nimportant push for the ecosystem towards DBAL 3 with an extensive deprecation\nand forward compatibility layer.\n\nWe made a few mistakes, given that the forward compatibility layer is quite complex.\nAs such we have now released Doctrine DBAL 2.13.1 and 3.1.0 with two new APIs\nthat improve the forward compatiblity.\n\nThe problem lies in `Statement::execute()`: 2.13.0 would return a `bool` and\n3.0.0 would return a `Result` from this method. This kind of API change cannot\nbe handled with a forward compatibility.\n\nAs such we introduced two new APIs on `Statement` that replace `execute()`.\nWhen the old code was:\n\n```php\n$statement = $connection->prepare('SELECT * FROM tbl WHERE col = ?');\n$statement->execute();\n\n$rows = $statement->fetchAll();\n```\n\nThen the new code is now:\n\n```php\n$statement = $connection->prepare('SELECT * FROM tbl WHERE col = ?');\n$result = $statement->executeQuery();\n\n$rows = $result->fetchAllAssociative();\n```\n\nThe DBAL 2.13 forward compatiblity layer supports both versions of all code and\nreturns a Statement/Result hybrid that has all the APIs that the DBAL Statement\nhad up until version 2.12. This way you can move at your own pace from the old\nto the new API in your code.\n\nThank you again to [mdumoulin](https://github.com/mdumoulin) for the work on\nimproving the forward compatiblity and to [Sergei Morozov](https://twitter.com/srgmrzv)\nfor the thorough reviews and comments.\n\nAgain I want to highlight the Runtime Deprecations library that we introduced\nto support this migration. You can integrate this with your log stack during\ndevelopment and testing:\n\n```php\nuse Doctrine\\Deprecations\\Deprecation;\nuse Monolog\\Logger;\nuse Monolog\\Handler\\StreamHandler;\n\n$log = new Logger('doctrine');\n$log->pushHandler(new StreamHandler('deprecations.log', Logger::INFO));\n\nDeprecation::enableWithPsrLogger($log);\n```\n\nOr alternatively using PHP's global error handler:\n\n```php\nDeprecation::enableWithTriggerError();\n```\n\nSee the [2.13 blog\npost](https://www.doctrine-project.org/2021/03/29/dbal-2.13.html) for more\ninformation about the migration to DBAL 3 and strategy recommendations.\n",
+        "date": "2021-04-19 00:00:00"
+    },
+    {
         "url": "/2010/03/01/introduction-to-doctrine-2-webinar.html",
         "slug": "introduction-to-doctrine-2-webinar",
         "title": "Introduction to Doctrine 2 Webinar",
