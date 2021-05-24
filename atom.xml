@@ -3,9 +3,135 @@
     <title><![CDATA[Doctrine]]></title>
     <link href="https://www.doctrine-project.org/atom.xml" rel="self" />
     <link href="https://www.doctrine-project.org/" />
-    <updated>2021-05-08T20:09:09-04:00</updated>
+    <updated>2021-05-24T12:42:39-04:00</updated>
     <id>https://www.doctrine-project.org/</id>
 
+            <entry>
+            <title type="html"><![CDATA[New Release: Doctrine ORM 2.9 with Attributes, Typed Properties, more]]></title>
+            <link href="https://www.doctrine-project.org/2021/05/24/orm2.9.html"/>
+            <updated>2021-05-24T00:00:00-04:00</updated>
+            <id>https://www.doctrine-project.org/2021/05/24/orm2.9.html</id>
+            <content type="html"><![CDATA[<p>We have released a new minor version 2.9 of Doctrine ORM, the first version with
+support for using PHP 8 Attributes as a new driver for mapping entities
+and several other changes.</p>
+<h2>Attributes Mapping Driver</h2>
+<p>The following code example shows many of the mappings that are re-using
+the annotation classes for familiarity:</p>
+<pre><code class="language-php">use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping AS ORM;
+
+#[ORM\Entity(repositoryClass: PostRepository::class)]
+class Post
+{
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Id, ORM\GeneratedValue(strategy: 'AUTO')]
+    private ?int $id;
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $published = false;
+
+    #[ORM\Column(type: Types::SIMPLE_ARRAY)]
+    private array $text = [];
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    public $author;
+
+    #[ORM\ManyToMany(targetEntity: Tag::class)]
+    #[ORM\JoinTable(name: "post_tags")]
+    #[ORM\JoinColumn(name: "post_id", referencedColumnName: "id")]
+    #[ORM\InverseJoinColumn(name: "tag_id", referencedColumnName: "id")]
+    public Collection $tags;
+}</code></pre>
+<h2>Typed Property Defaults</h2>
+<p>Since PHP 7.4 types can be declared on class properties and Doctrine now
+uses these type declarations to reduce amount of mapping boilerplate:</p>
+<ul>
+<li>Columns don't need the type definitions</li>
+<li>ManyToOne and OneToOne don't need target entity definitions</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-php">use Doctrine\ORM\Mapping AS ORM;
+
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+class User
+{
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    public ?int $id = null;
+
+    #[ORM\Column]
+    public \DateTime $created;
+
+    #[ORM\ManyToOne]
+    public Email $email;
+}</code></pre>
+<h2>Psalmified APIs</h2>
+<p>Improved the documentation to make sure static analysis tools and IDEs know
+about the right entity classes returned from <code>EntityManager</code>,
+<code>EntityRepository</code> and other public ORM APIs. This includes generics support
+when you extend <code>EntityRepository</code>.</p>
+<pre><code class="language-php">use Doctrine\ORM\EntityRepository;
+use App\Entity\User;
+
+/**
+ * @template-extends EntityRepository&lt;User&gt;
+ */
+class UserRepository extends EntityRepository
+{
+}</code></pre>
+<h2>Query::HINT_READ_ONLY</h2>
+<p>A new query hint is added that allows hydrating entities through DQL that are
+marked as read only for the unit of work session, as long as they are not yet
+loaded as writeable:</p>
+<pre><code class="language-php">$dql = 'SELECT u FROM ' . ReadOnlyEntity::class . ' u WHERE u.id = ?1';
+
+$query = $entityManager-&gt;createQuery($dql);
+$query-&gt;setParameter(1, $user-&gt;id);
+$query-&gt;setHint(Query::HINT_READ_ONLY, true);
+
+$user = $query-&gt;getSingleResult();</code></pre>
+<h2>Index/UniqueConstraints using Field Names</h2>
+<p>Instead of specifying column names for an index or unique-constraint declaration
+you can now alternatively use field names.</p>
+<pre><code class="language-php">
+use Doctrine\ORM\Mapping AS ORM;
+
+#[ORM\Entity]
+#[ORM\Index(fields: ["isPublished"])]
+class Post
+{
+    #[ORM\Column]
+    public bool $isPublished = false;
+}</code></pre>
+<p>This simplifies mapping as the column names passed through the naming strategy
+do not need to be known.</p>
+<h2>INDEX BY Associations</h2>
+<p>Previously DQL <code>INDEX BY</code> was not possible for assocations, now you can:</p>
+<pre><code class="language-php">$dql = 'SELECT p, u FROM Post INDEX BY p.author JOIN p.author u WHERE p.id = 3';</code></pre>
+<h2>Deprecations</h2>
+<p>Doctrine ORM 2.9 rethinks deprecations and integrates with our new
+<a href="https://github.com/doctrine/deprecations/">doctrine/deprecations</a> library.</p>
+<ul>
+<li>Undeprecate <code>merge()</code> and <code>detach()</code> as no replacements are available yet</li>
+<li>Notify Persist Change Tracking: Use Explicit Change Tracking instead</li>
+<li>DQL <code>SELECT PARTIAL</code> syntax, use Value Objects with <code>SELECT NEW</code> instead</li>
+<li><code>EntityManager::flush()</code> with arguments</li>
+<li><code>EntityManager::clear()</code> with arguments (use detach)</li>
+<li>Named Queries in Mapping (use Repository)</li>
+<li><code>cli-config.php</code> for console command configuration, inject <code>EntityManagerProvider</code> instead.</li>
+<li>Deprecate <code>doctrine/cache</code> for metadata caching, use PSR-6 cache instead</li>
+</ul>
+<h2>PHP 7.1 Support</h2>
+<p>ORM 2.9 reintroduces PHP 7.1 support, because it wasn't technically unsupported
+anyways.  No changes were necessary to the code to allow it again except in the
+testsuite.</p>
+<p>The PHP 7.1 support was re-added to allow a very broad approach to prepare for
+some of the deprecations that are introduced in ORM 2 and will be removed in
+version 3.0.</p>
+<h2>Coding Standard Support</h2>
+<p>Doctrine ORM 2.9 now supports and fully validates against Doctrine Coding
+Standard version 9.0+. This greatly improves automatic pull request checks as
+all new violations in a PR get caught and inlined into the PR as comments.</p>]]></content>
+        </entry>
             <entry>
             <title type="html"><![CDATA[New Release: Doctrine DBAL 2.13.1 and 3.1.0 with important Forward Compatibility fix]]></title>
             <link href="https://www.doctrine-project.org/2021/04/19/dbal-2.13.1-3.1.0.html"/>
@@ -652,47 +778,5 @@ depends on <code>doctrine/cache</code> and <code>doctrine/event-manager</code> i
 <p>It no longer uses the long ago deprecated Lexer and Inflector from <code>doctrine/common</code>.</p>
 <p>For complete release notes,
 <a href="https://github.com/doctrine/orm/releases/tag/v2.6.2">visit GitHub</a>.</p>]]></content>
-        </entry>
-            <entry>
-            <title type="html"><![CDATA[New Website]]></title>
-            <link href="https://www.doctrine-project.org/2018/04/06/new-website.html"/>
-            <updated>2018-04-06T00:00:00-04:00</updated>
-            <id>https://www.doctrine-project.org/2018/04/06/new-website.html</id>
-            <content type="html"><![CDATA[<p>In 2007 Doctrine got its first official website at
-<a href="https://www.phpdoctrine.org/">phpdoctrine.org</a>. Before that, the
-website was an instance of <a href="https://trac.edgewall.org/">Trac</a> which also
-served as our documentation, issue tracker and project management tool.</p>
-<p>The new website design was created by <a href="https://phuson.com/">Phu Son
-Nguyen</a> who worked at Yahoo! at the time. It was a
-huge step forward for the Doctrine Project and it gave us 10 solid
-years!</p>
-<p>Fast-forward and today we are happy to be launching a new foundation for
-our website and documentation. In addition to the new look, here are
-some new features:</p>
-<ul>
-<li>GitHub Edit links on all documentation pages to make it easy to
-contribute fixes when you come across something that could be
-improved.</li>
-<li>Automated deploys with GitHub Pages. Simply create a pull request
-and it will be deployed to
-<a href="https://staging.doctrine-project.org">https://staging.doctrine-project.org</a>.
-Merges to master automatically deploy to
-<a href="https://www.doctrine-project.org">https://www.doctrine-project.org</a>.</li>
-<li>Search powered by <a href="https://www.algolia.com/">Algolia</a>.</li>
-<li>Mobile friendly.</li>
-<li>Documentation supports multiple versions.</li>
-<li>Documentation user experience improvements.</li>
-<li>HTTPS</li>
-</ul>
-<p>We hope that this helps improve the experience and make it easier to
-contribute. The code for the site is open source and can be found
-<a href="https://github.com/doctrine/doctrine-website/">here</a>. If you want to
-contribute to the documentation for a project, you can find the docs in
-a folder named <code>/docs</code> in the root of the project repository.
-<a href="https://github.com/doctrine/orm/tree/master/docs">Here</a> is the
-ORM for example.</p>
-<p>If you discover any issues, please report them on the <a href="https://github.com/doctrine/doctrine-website/issues">GitHub
-Issue</a> tracker for
-the project.</p>]]></content>
         </entry>
     </feed>
