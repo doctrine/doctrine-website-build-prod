@@ -15,7 +15,7 @@
                     <meta name="robots" content="index, follow">
         
         
-                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-annotations/en/1.10/annotations.html" />
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-annotations/en/1.13/annotations.html" />
     
         <link
             rel="stylesheet"
@@ -179,7 +179,7 @@
                     </ul>
 
                     <div class="layout-edit-button d-inline-block mr-2">
-                                                    <a href="https://github.com/doctrine/annotations/edit/1.11.x/docs/en/annotations.rst" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
+                                                    <a href="https://github.com/doctrine/annotations/edit/1.14.x/docs/en/annotations.rst" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
                                             </div>
 
                     <div class="google-translate-dropdown dropdown show d-inline-block mr-2">
@@ -277,7 +277,7 @@
                                                             
                                 <div class="dropdown show d-inline-block">
                                     <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-annotations/en/latest/annotations.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        1.11.2
+                                        1.14
                                     </a>
 
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -285,14 +285,14 @@
 
                                                                                             
                                                 <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-annotations/en/latest/annotations.html">
-                                                    1.11.2
+                                                    1.14
 
                                                     
                                                                                                             (upcoming)
                                                                                                     </a>
                                                                                             
-                                                <a class="project-version-switcher dropdown-item" href="/projects/doctrine-annotations/en/1.10/annotations.html">
-                                                    1.10.4
+                                                <a class="project-version-switcher dropdown-item" href="/projects/doctrine-annotations/en/1.13/annotations.html">
+                                                    1.13.2
 
                                                                                                             (current)
                                                     
@@ -301,9 +301,11 @@
                                                                                     <h6 class="dropdown-header">Unmaintained</h6>
 
                                                                                             
-                                                <a class="dropdown-item" href="/projects/doctrine-annotations/en/1.13/annotations.html">1.13</a>
-                                                                                            
                                                 <a class="dropdown-item" href="/projects/doctrine-annotations/en/1.12/annotations.html">1.12</a>
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-annotations/en/1.11/annotations.html">1.11</a>
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-annotations/en/1.10/annotations.html">1.10</a>
                                                                                             
                                                 <a class="dropdown-item" href="/projects/doctrine-annotations/en/1.9/annotations.html">1.9</a>
                                                                                             
@@ -460,58 +462,33 @@ exception to be thrown during the parsing of the docblock of
 <p>This creates a simple annotation reader with no caching other than in
 memory (in php arrays). Since parsing docblocks can be expensive you
 should cache this process by using a caching reader.</p>
-<p>You can use a file caching reader, but please note it is deprecated to
-do so:</p>
+<p>To cache annotations, you can create a <code>Doctrine\Common\Annotations\PsrCachedReader</code>.
+This reader decorates the original reader and stores all annotations in a PSR-6
+cache:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="4cab05aadced88858d4c91d6322d740c59f8ed93"
+            data-copy-element-id="c225cccf1e288069ef1507291483fb2dae2cf0fb"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="4cab05aadced88858d4c91d6322d740c59f8ed93"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-1" class="line-number-anchor" /><a href="#line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">FileCacheReader</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">AnnotationReader</span>;
+        ><i class="fas fa-copy"></i></button><div id="c225cccf1e288069ef1507291483fb2dae2cf0fb"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-1" class="line-number-anchor" /><a href="#line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-1">1</a></td><td class="code-line" rowspan="10"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">AnnotationReader</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">PsrCachedReader</span>;
 
-$reader = <span class="hljs-keyword">new</span> FileCacheReader(
+$cache = ... <span class="hljs-comment">// instantiate a PSR-6 Cache pool</span>
+
+$reader = <span class="hljs-keyword">new</span> PsrCachedReader(
     <span class="hljs-keyword">new</span> AnnotationReader(),
-    <span class="hljs-string">"/path/to/cache"</span>,
+    $cache,
     $debug = <span class="hljs-keyword">true</span>
 );</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-2" class="line-number-anchor" /><a href="#line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-3" class="line-number-anchor" /><a href="#line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-4" class="line-number-anchor" /><a href="#line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-5" class="line-number-anchor" /><a href="#line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-6" class="line-number-anchor" /><a href="#line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-7" class="line-number-anchor" /><a href="#line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-8" class="line-number-anchor" /><a href="#line-number-4cab05aadced88858d4c91d6322d740c59f8ed93-8">8</a></td></tr></table></div></code></pre>
-<p>If you set the <code>debug</code> flag to <code>true</code> the cache reader will check
-for changes in the original files, which is very important during
-development. If you don't set it to <code>true</code> you have to delete the
-directory to clear the cache. This gives faster performance, however
-should only be used in production, because of its inconvenience during
-development.</p>
-<p>You can also use one of the <code>Doctrine\Common\Cache\Cache</code> cache
-implementations to cache the annotations:</p>
-<pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-1" class="line-number-anchor" /><a href="#line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-1">1</a></td><td class="code-line" rowspan="9"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">AnnotationReader</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">CachedReader</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Cache</span>\<span class="hljs-title">ApcCache</span>;
-
-$reader = <span class="hljs-keyword">new</span> CachedReader(
-    <span class="hljs-keyword">new</span> AnnotationReader(),
-    <span class="hljs-keyword">new</span> ApcCache(),
-    $debug = <span class="hljs-keyword">true</span>
-);</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-2" class="line-number-anchor" /><a href="#line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-3" class="line-number-anchor" /><a href="#line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-4" class="line-number-anchor" /><a href="#line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-5" class="line-number-anchor" /><a href="#line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-6" class="line-number-anchor" /><a href="#line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-7" class="line-number-anchor" /><a href="#line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-8" class="line-number-anchor" /><a href="#line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-9" class="line-number-anchor" /><a href="#line-number-5001d73f2bd9d6c8cae687d0e2ec89568c52c5c6-9">9</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-2" class="line-number-anchor" /><a href="#line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-3" class="line-number-anchor" /><a href="#line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-4" class="line-number-anchor" /><a href="#line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-5" class="line-number-anchor" /><a href="#line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-6" class="line-number-anchor" /><a href="#line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-7" class="line-number-anchor" /><a href="#line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-8" class="line-number-anchor" /><a href="#line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-9" class="line-number-anchor" /><a href="#line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-10" class="line-number-anchor" /><a href="#line-number-c225cccf1e288069ef1507291483fb2dae2cf0fb-10">10</a></td></tr></table></div></code></pre>
 <p>The <code>debug</code> flag is used here as well to invalidate the cache files
 when the PHP class with annotations changed and should be used during
 development.</p>
@@ -715,7 +692,7 @@ $reader-&gt;setEnabledPhpImports(<span class="hljs-keyword">false</span>);</td><
 
             var searchBoxSettings = {
                 container: '#search-box',
-                placeholder: 'Search Annotations 1.11'
+                placeholder: 'Search Annotations 1.14'
             };
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {

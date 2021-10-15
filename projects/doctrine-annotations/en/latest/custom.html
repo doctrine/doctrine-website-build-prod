@@ -15,7 +15,7 @@
                     <meta name="robots" content="index, follow">
         
         
-                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-annotations/en/1.10/custom.html" />
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-annotations/en/1.13/custom.html" />
     
         <link
             rel="stylesheet"
@@ -179,7 +179,7 @@
                     </ul>
 
                     <div class="layout-edit-button d-inline-block mr-2">
-                                                    <a href="https://github.com/doctrine/annotations/edit/1.11.x/docs/en/custom.rst" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
+                                                    <a href="https://github.com/doctrine/annotations/edit/1.14.x/docs/en/custom.rst" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
                                             </div>
 
                     <div class="google-translate-dropdown dropdown show d-inline-block mr-2">
@@ -277,7 +277,7 @@
                                                             
                                 <div class="dropdown show d-inline-block">
                                     <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-annotations/en/latest/custom.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        1.11.2
+                                        1.14
                                     </a>
 
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -285,14 +285,14 @@
 
                                                                                             
                                                 <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-annotations/en/latest/custom.html">
-                                                    1.11.2
+                                                    1.14
 
                                                     
                                                                                                             (upcoming)
                                                                                                     </a>
                                                                                             
-                                                <a class="project-version-switcher dropdown-item" href="/projects/doctrine-annotations/en/1.10/custom.html">
-                                                    1.10.4
+                                                <a class="project-version-switcher dropdown-item" href="/projects/doctrine-annotations/en/1.13/custom.html">
+                                                    1.13.2
 
                                                                                                             (current)
                                                     
@@ -301,9 +301,11 @@
                                                                                     <h6 class="dropdown-header">Unmaintained</h6>
 
                                                                                             
-                                                <a class="dropdown-item" href="/projects/doctrine-annotations/en/1.13/custom.html">1.13</a>
-                                                                                            
                                                 <a class="dropdown-item" href="/projects/doctrine-annotations/en/1.12/custom.html">1.12</a>
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-annotations/en/1.11/custom.html">1.11</a>
+                                                                                            
+                                                <a class="dropdown-item" href="/projects/doctrine-annotations/en/1.10/custom.html">1.10</a>
                                                                                             
                                                 <a class="dropdown-item" href="/projects/doctrine-annotations/en/1.9/custom.html">1.9</a>
                                                                                             
@@ -403,21 +405,24 @@ values into public properties directly:</p>
 <div class="section"><a class="section-anchor" id="optional-constructors-with-named-parameters" name="optional-constructors-with-named-parameters"></a><h2 class="section-header"><a href="#optional-constructors-with-named-parameters">Optional: Constructors with Named Parameters<i class="fas fa-link"></i></a></h2>
 <p>Starting with Annotations v1.11 a new annotation instantiation strategy
 is available that aims at compatibility of Annotation classes with the PHP 8
-attribute feature.</p>
-<p>You can implement the
+attribute feature. You need to declare a constructor with regular parameter<br />names that match the named arguments in the annotation syntax.</p>
+<p>To enable this feature, you can tag your annotation class with<br /><code>@NamedArgumentConstructor</code> (available from v1.12) or implement the
 <code>Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation</code> interface
-and then declare a constructor with regular parameter names that are matched
-from the named arguments in the annotation syntax.</p>
+(available from v1.11 and deprecated as of v1.12).
+When using the <code>@NamedArgumentConstructor</code> tag, the first argument of the
+constructor is considered as the default one.</p>
+<p>Usage with the <code>@NamedArgumentContrustor</code> tag</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="fac8b1879654459a02a9b648644dbdf4727d3177"
+            data-copy-element-id="32b5d34d7e245c3f8e453969d63e1b752cb2b89a"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="fac8b1879654459a02a9b648644dbdf4727d3177"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-1" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-1">1</a></td><td class="code-line" rowspan="16"><span class="hljs-keyword">namespace</span> <span class="hljs-title">MyCompany</span>\<span class="hljs-title">Annotations</span>;
+        ><i class="fas fa-copy"></i></button><div id="32b5d34d7e245c3f8e453969d63e1b752cb2b89a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-1" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-1">1</a></td><td class="code-line" rowspan="18"><span class="hljs-keyword">namespace</span> <span class="hljs-title">MyCompany</span>\<span class="hljs-title">Annotations</span>;
 
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">NamedArgumentConstructorAnnotation</span>;
-
-<span class="hljs-comment">/** <span class="hljs-doctag">@Annotation</span> */</span>
+<span class="hljs-comment">/** 
+ * <span class="hljs-doctag">@Annotation</span> 
+ * <span class="hljs-doctag">@NamedArgumentConstructor</span>
+ */</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bar</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">NamedArgumentConstructorAnnotation</span>
 </span>{
     <span class="hljs-keyword">private</span> $foo;
@@ -428,46 +433,83 @@ from the named arguments in the annotation syntax.</p>
     }
 }
 
-<span class="hljs-comment">/** Useable with <span class="hljs-doctag">@Bar</span>(foo="baz") */</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-2" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-3" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-4" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-5" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-6" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-7" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-8" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-9" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-10" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-11" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-12" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-13" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-14" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-15" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-fac8b1879654459a02a9b648644dbdf4727d3177-16" class="line-number-anchor" /><a href="#line-number-fac8b1879654459a02a9b648644dbdf4727d3177-16">16</a></td></tr></table></div></code></pre>
+<span class="hljs-comment">/** Usable with <span class="hljs-doctag">@Bar</span>(foo="baz") */</span>
+<span class="hljs-comment">/** Usable with <span class="hljs-doctag">@Bar</span>("baz") */</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-2" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-3" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-4" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-5" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-6" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-7" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-8" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-9" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-10" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-11" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-12" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-13" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-14" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-15" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-16" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-17" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-18" class="line-number-anchor" /><a href="#line-number-32b5d34d7e245c3f8e453969d63e1b752cb2b89a-18">18</a></td></tr></table></div></code></pre>
 <p>In combination with PHP 8's constructor property promotion feature
 you can simplify this to:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="dbc598e9aa2ba50a63a27ecddd5c2daa2960db65"
+            data-copy-element-id="da84fd32a6f558c5f898aef0bec88a22b0561dd8"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="dbc598e9aa2ba50a63a27ecddd5c2daa2960db65"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-1" class="line-number-anchor" /><a href="#line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-1">1</a></td><td class="code-line" rowspan="9"><span class="hljs-keyword">namespace</span> <span class="hljs-title">MyCompany</span>\<span class="hljs-title">Annotations</span>;
+        ><i class="fas fa-copy"></i></button><div id="da84fd32a6f558c5f898aef0bec88a22b0561dd8"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-1" class="line-number-anchor" /><a href="#line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-1">1</a></td><td class="code-line" rowspan="10"><span class="hljs-keyword">namespace</span> <span class="hljs-title">MyCompany</span>\<span class="hljs-title">Annotations</span>;
+
+<span class="hljs-comment">/** 
+ * <span class="hljs-doctag">@Annotation</span> 
+ * <span class="hljs-doctag">@NamedArgumentConstructor</span>
+ */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bar</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">NamedArgumentConstructorAnnotation</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(private string $foo)</span> </span>{}
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-2" class="line-number-anchor" /><a href="#line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-3" class="line-number-anchor" /><a href="#line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-4" class="line-number-anchor" /><a href="#line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-5" class="line-number-anchor" /><a href="#line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-6" class="line-number-anchor" /><a href="#line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-7" class="line-number-anchor" /><a href="#line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-8" class="line-number-anchor" /><a href="#line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-9" class="line-number-anchor" /><a href="#line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-10" class="line-number-anchor" /><a href="#line-number-da84fd32a6f558c5f898aef0bec88a22b0561dd8-10">10</a></td></tr></table></div></code></pre>
+<p>Usage with the<br /><code>Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation</code>
+interface (v1.11, deprecated as of v1.12):</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="7790d4ba2b4694ab95ff4a139b27a9e02f0e442d"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="7790d4ba2b4694ab95ff4a139b27a9e02f0e442d"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-1" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-1">1</a></td><td class="code-line" rowspan="13"><span class="hljs-keyword">namespace</span> <span class="hljs-title">MyCompany</span>\<span class="hljs-title">Annotations</span>;
 
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">NamedArgumentConstructorAnnotation</span>;
 
 <span class="hljs-comment">/** <span class="hljs-doctag">@Annotation</span> */</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bar</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">NamedArgumentConstructorAnnotation</span>
 </span>{
+    <span class="hljs-keyword">private</span> $foo;
+
     <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(private string $foo)</span> </span>{}
-}</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-2" class="line-number-anchor" /><a href="#line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-3" class="line-number-anchor" /><a href="#line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-4" class="line-number-anchor" /><a href="#line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-5" class="line-number-anchor" /><a href="#line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-6" class="line-number-anchor" /><a href="#line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-7" class="line-number-anchor" /><a href="#line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-8" class="line-number-anchor" /><a href="#line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-9" class="line-number-anchor" /><a href="#line-number-dbc598e9aa2ba50a63a27ecddd5c2daa2960db65-9">9</a></td></tr></table></div></code></pre>
+}
+
+<span class="hljs-comment">/** Usable with <span class="hljs-doctag">@Bar</span>(foo="baz") */</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-2" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-3" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-4" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-5" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-6" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-7" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-8" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-9" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-10" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-11" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-12" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-13" class="line-number-anchor" /><a href="#line-number-7790d4ba2b4694ab95ff4a139b27a9e02f0e442d-13">13</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="annotation-target" name="annotation-target"></a><h2 class="section-header"><a href="#annotation-target">Annotation Target<i class="fas fa-link"></i></a></h2>
 <p><code>@Target</code> indicates the kinds of class elements to which an annotation
@@ -475,7 +517,8 @@ type is applicable. Then you could define one or more targets:</p>
 <ul><li class="dash"> <code>CLASS</code> Allowed in class docblocks</li>
 <li class="dash"> <code>PROPERTY</code> Allowed in property docblocks</li>
 <li class="dash"> <code>METHOD</code> Allowed in the method docblocks</li>
-<li class="dash"> <code>ALL</code> Allowed in class, property and method docblocks</li>
+<li class="dash"> <code>FUNCTION</code> Allowed in function dockblocks</li>
+<li class="dash"> <code>ALL</code> Allowed in class, property, method and function docblocks</li>
 <li class="dash"> <code>ANNOTATION</code> Allowed inside other annotations</li>
 </ul>
 
@@ -895,6 +938,22 @@ class, property or method docblock:</p>
             data-copy-element-id="b1dcbca570ba779e8fc7ca20f529934fd1985b31"
             title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><div id="b1dcbca570ba779e8fc7ca20f529934fd1985b31"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-b1dcbca570ba779e8fc7ca20f529934fd1985b31-1" class="line-number-anchor" /><a href="#line-number-b1dcbca570ba779e8fc7ca20f529934fd1985b31-1">1</a></td><td class="code-line" rowspan="1"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPropertyAnnotation</span><span class="hljs-params">(\ReflectionProperty $property, $annotationName)</span></span>;</td></tr></table></div></code></pre>
+</div>
+<div class="section"><a class="section-anchor" id="access-all-annotations-of-a-function" name="access-all-annotations-of-a-function"></a><h4 class="section-header"><a href="#access-all-annotations-of-a-function">Access all annotations of a function<i class="fas fa-link"></i></a></h4>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="84b090da77c463660a3e5698689ce7a63ec8b9cb"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="84b090da77c463660a3e5698689ce7a63ec8b9cb"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-84b090da77c463660a3e5698689ce7a63ec8b9cb-1" class="line-number-anchor" /><a href="#line-number-84b090da77c463660a3e5698689ce7a63ec8b9cb-1">1</a></td><td class="code-line" rowspan="1"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getFunctionAnnotations</span><span class="hljs-params">(\ReflectionFunction $property)</span></span>;</td></tr></table></div></code></pre>
+</div>
+<div class="section"><a class="section-anchor" id="access-one-annotation-of-a-function" name="access-one-annotation-of-a-function"></a><h4 class="section-header"><a href="#access-one-annotation-of-a-function">Access one annotation of a function<i class="fas fa-link"></i></a></h4>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="0d852b4f1aabf662b3b71f7ef59c22d32169d78c"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="0d852b4f1aabf662b3b71f7ef59c22d32169d78c"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-0d852b4f1aabf662b3b71f7ef59c22d32169d78c-1" class="line-number-anchor" /><a href="#line-number-0d852b4f1aabf662b3b71f7ef59c22d32169d78c-1">1</a></td><td class="code-line" rowspan="1"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getFunctionAnnotation</span><span class="hljs-params">(\ReflectionFunction $property, $annotationName)</span></span>;</td></tr></table></div></code></pre>
 
 </div>
 </div>
@@ -972,7 +1031,7 @@ class, property or method docblock:</p>
 
             var searchBoxSettings = {
                 container: '#search-box',
-                placeholder: 'Search Annotations 1.11'
+                placeholder: 'Search Annotations 1.14'
             };
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
