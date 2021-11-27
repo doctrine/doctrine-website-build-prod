@@ -3,9 +3,95 @@
     <title><![CDATA[Doctrine]]></title>
     <link href="https://www.doctrine-project.org/atom.xml" rel="self" />
     <link href="https://www.doctrine-project.org/" />
-    <updated>2021-11-26T19:49:06-05:00</updated>
+    <updated>2021-11-27T13:51:16-05:00</updated>
     <id>https://www.doctrine-project.org/</id>
 
+            <entry>
+            <title type="html"><![CDATA[New Release: Doctrine DBAL 3.2.0]]></title>
+            <link href="https://www.doctrine-project.org/2021/11/26/dbal-3.2.0.html"/>
+            <updated>2021-11-26T00:00:00-05:00</updated>
+            <id>https://www.doctrine-project.org/2021/11/26/dbal-3.2.0.html</id>
+            <content type="html"><![CDATA[<p>We are happy to announce the immediate availability of Doctrine DBAL 3.2.0. As most of the minor releases, this one
+focuses on new features, improvements and deprecations of the old APIs. Here are some details on the most significant
+features and improvements:</p>
+<h2>Platform-aware schema comparison (<a href="https://github.com/doctrine/dbal/pull/4746">#4746</a>)</h2>
+<p>Up until this release, the logic of comparing database schemas had a major design flaw: it took into account only the
+abstract schema definitions without taking the target platform into account.</p>
+<p>This flaw would lead to multiple issues which shared the same root cause: the two definitions could be considered
+different by the DBAL, but they would produce the same DDL.</p>
+<p>For instance, consider the two column definitions:</p>
+<pre><code class="language-php">// old schema
+$column1 = new Column('contents', Type::getType('text'));
+
+// new schema
+$column2 = new Column('contents', Type::getType('text'), ['default' =&gt; 'Hello, world!']);</code></pre>
+<p>If we compared them with the comparator, we'd get a diff:</p>
+<pre><code class="language-php">$comparator = new Comparator();
+$comparator-&gt;diffColumn($column1, $column2);
+// array(1) {
+//   [0] =&gt;
+//   string(7) "default"
+// }</code></pre>
+<p>This might be valid for the platforms that support the <code>DEFAULT</code>  constraint on <code>TEXT</code> columns but isn't valid for those
+that don't support it (e.g. MySQL). Regardless of the diff, both definitions would produce the same DDL on MySQL:</p>
+<pre><code class="language-sql">contents LONGTEXT NOT NULL</code></pre>
+<p>An attempt to migrate the old schema to the new one would produce a false-positive diff but applying it wouldn't result
+in any schema changes.</p>
+<p>A false-negative diff was also possible. Consider these following example:</p>
+<pre><code class="language-php">// old schema
+$column1 = new Column('settings', Type::getType('json'));
+
+// new schema
+$column2 = new Column('settings', Type::getType('json'), ['length' =&gt; 16777215]);</code></pre>
+<p>Comparison of the above column definitions should have triggered a diff on MySQL and migrate the underlying column
+from <code>TEXT</code> to <code>MEDIUMTEXT</code> but it didn't, because the DBAL would ignore the length of the <code>TEXT</code> columns.</p>
+<p>Apart from that, the DBAL would compare only a subset of the definitions, so some column options as the character set
+and collation weren't taken into account during comparison at all.</p>
+<h3>The new approach</h3>
+<p>Instead of comparing abstract definitions on a per-property basis, the new implementation compares the DDL that is generated from both definitions for the target database platform. If the definitions produce the same DDL, they are considered equal. According to the tests and the number of resolved issues, this approach should be more accurate and less error-prone.</p>
+<p>Implementing this approach was impossible without introducing a new API which rendered the existing API obsolete.</p>
+<p>Prior to DBAL <code>3.2.0</code>, the schema comparator could be only instantiated directly via the <code>new</code> keyword:</p>
+<pre><code class="language-php">$comparator = new Comparator();</code></pre>
+<p>Instantiated like this, the comparator doesn't have a notion of the target database platform and cannot perform the comparison properly. That is why, this way of instantiation is deprecated in favor of instantiating the comparator by the schema manager:</p>
+<pre><code class="language-php">$schemaManager = $connection-&gt;createSchemaManager();
+$comparator = $schemaManager-&gt;createComparator();</code></pre>
+<p>This way, the schema manager can instantiate a platform-specific comparator and provide it with the necessary context (e.g. the default collation used by the database).</p>
+<p>While the old API is still available, it is recommended to use the new API for more accurate comparison.</p>
+<h2>Support for <code>psr/cache</code> (<a href="https://github.com/doctrine/dbal/pull/4620">#4620</a>)</h2>
+<p>Since the Doctrine Cache library is being sunset, the new DBAL release introduced the ability to use a PSR-6 compatible implementation for result caching.</p>
+<p>While both the <code>doctrine/cache</code> and <code>psr/cache</code> APIs will be supported until the next major DBAL release, we recommend users to switch to a PSR-6 compatible implementation in their projects.</p>
+<h2>Support for <code>psr/log</code> (<a href="https://github.com/doctrine/dbal/pull/4967">#4967</a>)</h2>
+<p>The <code>SQLLogger</code> interface was designed long ago and has certain limitations: there is no way to log messages at different logger levels and it is really challenging to extend the logger functionality without introducing breaking API changes.</p>
+<p>The new DBAL release introduces a new middleware that can delegate logging to a PSR-3 compatible implementation.</p>
+<p>Note that the new logger won't produce the messages identical to the ones produced by the old one. If you have any processes built around analysing log messages, you may need to make some changes before adopting the new API.</p>
+<h2>Always cache the full result (<a href="https://github.com/doctrine/dbal/pull/5003">#5003</a>)</h2>
+<p>The implementation of the result cache prior to DBAL 3.2.0 would store the result set in the cache only once it was fetched completely. It led to the following issues:</p>
+<ol>
+<li>If the result isn't yet cached and its consumer didn't fetch it completely, the query would be executed again.</li>
+<li>In case of a cache miss, the DBAL would <code>get()</code> the cache entry twice: once to fetch the data and once to merge the just fetched result with other results that may be stored in the cache.</li>
+</ol>
+<p>The new implementation stores the results in the cache right after they were fetched. It simplifies the caching layer significantly and makes its behavior more straightforward.</p>
+<h2>Add events for Transaction begin/commit/rollback (<a href="https://github.com/doctrine/dbal/pull/4622">#4622</a>)</h2>
+<p>The new DBAL version introduces three more transaction-related events:</p>
+<ul>
+<li><code>onTransactionBegin</code>,</li>
+<li><code>onTransactionCommit</code>,</li>
+<li><code>onTransactionRollBack</code>.</li>
+</ul>
+<p>Subscribing to those might be helpful if the application logic integrates the database transaction flow with the business logic implemented outside the database. For instance, in the filesystem.</p>
+<h2>Basic exception handling in IBM DB2 and SQL Server drivers (<a href="https://github.com/doctrine/dbal/pull/4929">#4929</a>, <a href="https://github.com/doctrine/dbal/pull/4928">#4928</a>)</h2>
+<p>The DBAL provides a mechanism that converts driver-specific error codes to portable error-specific exceptions. For instance an attempt to insert <code>NULL</code> into a column that has a <code>NOT NULL</code> constraint applied will result in error with the code <code>1566</code> on MySQL and in <code>ORA-01400</code> on Oracle. The DBAL will convert these two errors to a portable <code>NotNullConstraintViolationException</code>.</p>
+<p>Historically, the DBAL drivers based on the <code>ibm_db2</code>, <code>sqlsrv</code> and <code>pdo_sqlsrv</code> extensions did not support this feature and would thow a generic <code>DriverException</code>.</p>
+<p>As of DBAL 3.2.0, this feature is supported by all bundled drivers.</p>
+<h2>Improved <code>AbstractPlatform::getLengthExpression()</code> (<a href="https://github.com/doctrine/dbal/pull/4855">#4855</a>)</h2>
+<p>Although the <code>LENGTH</code> expression was implemented for all supported database platforms, the different implementations didn't have consistent semantics:</p>
+<ol>
+<li>Most implementations would return the length in characters (Unicode code points), which is the most expected behavior.</li>
+<li>The implementations for MySQL and IBM DB2 would return the number of bytes. It worked fine for the strings that consisted only of the ANSI characters, but an attempt to use it with a wider range of characters would produce an unexpected result. For instance, the length of the string  <code>'Привет, мир!'</code> might be reported as <code>19</code> instead of <code>12</code>.</li>
+</ol>
+<p>As of DBAL 3.2.0, all platforms return the length in Unicode points according to the character set used by the database connection. Note, SQL Server supports UTF-8 only as of SQL Server 2019.</p>
+<p>You can find more details in the <a href="https://github.com/doctrine/dbal/releases/tag/3.2.0">release notes</a>.</p>]]></content>
+        </entry>
             <entry>
             <title type="html"><![CDATA[DBAL 3 SQL Injection Security Vulnerability fixed (CVE-2021-43608)]]></title>
             <link href="https://www.doctrine-project.org/2021/11/11/dbal3-vulnerability-fixed.html"/>
@@ -707,52 +793,5 @@ our users understand the trade-off we've made by choosing to place ads on our we
 promote each other. Through our partner network we hope to introduce our users to vetted services
 and offerings from which they can benefit. Thanks to our <a href="/partners.html">Partners</a> for supporting
 Doctrine.</p>]]></content>
-        </entry>
-            <entry>
-            <title type="html"><![CDATA[Migrations 2.0 Stable Released]]></title>
-            <link href="https://www.doctrine-project.org/2019/01/09/migrations-2-0-stable.html"/>
-            <updated>2019-01-09T00:00:00-05:00</updated>
-            <id>https://www.doctrine-project.org/2019/01/09/migrations-2-0-stable.html</id>
-            <content type="html"><![CDATA[<p>Today we are very excited to announce the stable release of Doctrine Migrations 2.0.
-Almost 10 years ago on Mar 23, 2010, the <a href="https://github.com/doctrine/migrations/commit/8f198ef623051a5eeb21d93bfc7a8a49efbe9d63">first commit</a> of the 1.0 codebase was created.
-The history of the Doctrine Migrations project actually even goes back further to the
-days of Doctrine1 ORM but this was before the days of GitHub, Composer, etc and I think
-some of that history has been lost. It is amazing to look back over the last decade at
-how much the PHP eco-system has changed. It makes us appreciate all the great tools we
-have, even with all their flaws.</p>
-<h2>What is in 2.0?</h2>
-<p>The 2.0 release should be a relatively easy upgrade for most people. The primary goal of the
-2.0 release was to modernize the codebase according to Doctrine Coding Standards, PHPStan and
-all of the other standardized Doctrine project infrastructure that has evolved over the last
-few years. This will ensure the project is alive and relevant for another decade.</p>
-<p>In addition to upgrading the infrastructure of the project, it came with a few new nice features:</p>
-<ul>
-<li><a href="https://github.com/doctrine/migrations/pull/724">724: Allow migrations in sub namespace to be loaded if the migration is in the namespace configured.</a> thanks to @jwage</li>
-<li><a href="https://github.com/doctrine/migrations/pull/693">693: Allow Migration Classes to be in Multiple Namespaces</a> thanks to @chrisguitarguy and @liquorvicar</li>
-<li><a href="https://github.com/doctrine/migrations/pull/683">683: Implement all or nothing transaction strategy for migrations.</a> thanks to @jwage and @stof</li>
-</ul>
-<p>You can view the full changelog in the release on <a href="https://github.com/doctrine/migrations/releases/tag/v2.0.0">GitHub</a>.</p>
-<p>This release contains <strong>36</strong> resolved issues with <strong>71</strong> pull requests coming from <strong>18</strong> different
-contributors. Thanks to the following people for their help with this release:</p>
-<ul>
-<li><a href="https://github.com/jwage">@jwage</a></li>
-<li><a href="https://github.com/theofidry">@theofidry</a></li>
-<li><a href="https://github.com/localheinz">@localheinz</a></li>
-<li><a href="https://github.com/Majkl578">@Majkl578</a></li>
-<li><a href="https://github.com/greg0ire">@greg0ire</a></li>
-<li><a href="https://github.com/lcobucci">@lcobucci</a></li>
-<li><a href="https://github.com/emodric">@emodric</a></li>
-<li><a href="https://github.com/PowerKiKi">@PowerKiKi</a></li>
-<li><a href="https://github.com/MasterOdin">@MasterOdin</a></li>
-<li><a href="https://github.com/Piskvor">@Piskvor</a></li>
-<li><a href="https://github.com/aik099">@aik099</a></li>
-<li><a href="https://github.com/chrisguitarguy">@chrisguitarguy</a></li>
-<li><a href="https://github.com/stof">@stof</a></li>
-<li><a href="https://github.com/bostjan">@bostjan</a></li>
-<li><a href="https://github.com/weaverryan">@weaverryan</a></li>
-<li><a href="https://github.com/SlvrEagle23">@SlvrEagle23</a></li>
-<li><a href="https://github.com/jaikdean">@jaikdean</a></li>
-<li><a href="https://github.com/liquorvicar">@liquorvicar</a></li>
-</ul>]]></content>
         </entry>
     </feed>
