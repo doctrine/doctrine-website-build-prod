@@ -641,37 +641,40 @@ $provider-&gt;createSchema() === $schema; <span class="hljs-comment">// true</sp
 <tr><td class="line-number noselect"><a name="line-number-e4af78a45030c4812bed6d62c8bdbba466c242af-20" class="line-number-anchor" /><a href="#line-number-e4af78a45030c4812bed6d62c8bdbba466c242af-20">20</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-e4af78a45030c4812bed6d62c8bdbba466c242af-21" class="line-number-anchor" /><a href="#line-number-e4af78a45030c4812bed6d62c8bdbba466c242af-21">21</a></td></tr></table></div></code></pre>
 <p>By default the Doctrine Migrations command line tool will only add the diff command if the ORM is present.
-Without the ORM, you'll have to add the diff command to your console application manually, passing in your schema
-provider implementation to the diff command's constructor. Take a look at the <a href="custom-integration.html">Custom Integration</a>
-chapter for information on how to setup a custom console application.</p>
+Without the ORM, you'll have to add the diff command to your console application manually and set your
+custom schema provider to the dependency factory, which will be passed to the the diff command's constructor.
+Take a look at the <a href="custom-integration.html">Custom Integration</a> chapter for information on how to setup a
+custom console application.</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0"
+            data-copy-element-id="6b93061446a4a8a9ce504da1bdcd1d87e69dfd07"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-1" class="line-number-anchor" /><a href="#line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="6b93061446a4a8a9ce504da1bdcd1d87e69dfd07"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-1" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-1">1</a></td><td class="code-line" rowspan="13"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Console</span>\<span class="hljs-title">Command</span>\<span class="hljs-title">DiffCommand</span>;
 
 $schemaProvider = <span class="hljs-keyword">new</span> CustomSchemaProvider();
+$dependencyFactory-&gt;setDefinition(SchemaProvider::class, <span class="hljs-keyword">static</span> fn () =&gt; $schemaProvider);
 
 <span class="hljs-comment">/** <span class="hljs-doctag">@var</span> Symfony\Component\Console\Application */</span>
-$cli-&gt;add(<span class="hljs-keyword">new</span> DiffCommand($schemaProvider));
+$cli-&gt;add(<span class="hljs-keyword">new</span> DiffCommand($dependencyFactory);
 
 <span class="hljs-comment">// ...</span>
 
 $cli-&gt;run();</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-2" class="line-number-anchor" /><a href="#line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-3" class="line-number-anchor" /><a href="#line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-4" class="line-number-anchor" /><a href="#line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-5" class="line-number-anchor" /><a href="#line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-6" class="line-number-anchor" /><a href="#line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-7" class="line-number-anchor" /><a href="#line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-8" class="line-number-anchor" /><a href="#line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-9" class="line-number-anchor" /><a href="#line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-10" class="line-number-anchor" /><a href="#line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-11" class="line-number-anchor" /><a href="#line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-12" class="line-number-anchor" /><a href="#line-number-9bb12760a18cd4a28dece2a5cb65db7fb7e3bef0-12">12</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-2" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-3" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-4" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-5" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-6" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-7" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-8" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-9" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-10" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-11" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-12" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-13" class="line-number-anchor" /><a href="#line-number-6b93061446a4a8a9ce504da1bdcd1d87e69dfd07-13">13</a></td></tr></table></div></code></pre>
 <p>With the custom provider in place the <code>diff</code> command will compare the current database schema to the one provided by
 the <code>SchemaProviderInterface</code> implementation. If there is a mismatch, the differences will be included in the
 generated migration just like the ORM examples above.</p>
