@@ -306,6 +306,8 @@
                                                                                     <h6 class="dropdown-header">Unmaintained</h6>
 
                                                                                             
+                                                <a class="dropdown-item" href="/projects/doctrine-persistence/en/2.4/reference/index.html">2.4</a>
+                                                                                            
                                                 <a class="dropdown-item" href="/projects/doctrine-persistence/en/2.1/reference/index.html">2.1</a>
                                                                                             
                                                 <a class="dropdown-item" href="/projects/doctrine-persistence/en/2.0/reference/index.html">2.0</a>
@@ -551,7 +553,7 @@ your mapped PHP classes.</p>
 <div class="section"><a class="section-anchor" id="mapping-driver" name="mapping-driver"></a><h1 class="section-header"><a href="#mapping-driver">Mapping Driver<i class="fas fa-link"></i></a></h1>
 <p>In order to load <code>ClassMetadata</code> instances you can use the <code>Doctrine\Persistence\Mapping\Driver\MappingDriver</code>
 interface. This is the interface that does the core loading of mapping information from wherever they are stored.
-That may be in files, annotations, yaml, xml, etc.</p>
+That may be in files, attributes, yaml, xml, etc.</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
@@ -576,8 +578,8 @@ That may be in files, annotations, yaml, xml, etc.</p>
 <tr><td class="line-number noselect"><a name="line-number-54061b8e1041912603cb25b99e3c7f304692ff76-8" class="line-number-anchor" /><a href="#line-number-54061b8e1041912603cb25b99e3c7f304692ff76-8">8</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-54061b8e1041912603cb25b99e3c7f304692ff76-9" class="line-number-anchor" /><a href="#line-number-54061b8e1041912603cb25b99e3c7f304692ff76-9">9</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-54061b8e1041912603cb25b99e3c7f304692ff76-10" class="line-number-anchor" /><a href="#line-number-54061b8e1041912603cb25b99e3c7f304692ff76-10">10</a></td></tr></table></div></code></pre>
-<p>The Doctrine Persistence project offers a few base implementations that make it easy to implement your own XML,
-Annotations or YAML drivers.</p>
+<p>The Doctrine Persistence project offers a few base implementations that
+make it easy to implement your own XML, Attributes or YAML drivers.</p>
 <div class="section"><a class="section-anchor" id="filedriver" name="filedriver"></a><h2 class="section-header"><a href="#filedriver">FileDriver<i class="fas fa-link"></i></a></h2>
 <p>The file driver operates in a mode where it loads the mapping files of individual classes on demand. This requires
 the user to adhere to the convention of 1 mapping file per class and the file names of the mapping files must
@@ -656,72 +658,9 @@ $jsonFileDriver-&gt;loadMetadataForClass(User::class, $classMetadata);</td></tr>
 <tr><td class="line-number noselect"><a name="line-number-c3819b1f2de7553f30c9bc8b8c64019e26536fe3-7" class="line-number-anchor" /><a href="#line-number-c3819b1f2de7553f30c9bc8b8c64019e26536fe3-7">7</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="annotationdriver" name="annotationdriver"></a><h2 class="section-header"><a href="#annotationdriver">AnnotationDriver<i class="fas fa-link"></i></a></h2>
-<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>This driver requires the <code>doctrine/annotations</code> project. You can install it with composer.</p>
-<pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="a2065f7cc616a2c81824bcfbb303df5b9dbceab9"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="a2065f7cc616a2c81824bcfbb303df5b9dbceab9"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-a2065f7cc616a2c81824bcfbb303df5b9dbceab9-1" class="line-number-anchor" /><a href="#line-number-a2065f7cc616a2c81824bcfbb303df5b9dbceab9-1">1</a></td><td class="code-line" rowspan="1">composer <span class="hljs-keyword">require</span> doctrine/annotations</td></tr></table></div></code></pre>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>This driver requires the <code>doctrine/annotations</code> project and is
+deprecated because of that.</p>
 </td></tr></table></div>
-<p>The AnnotationDriver reads the mapping metadata from docblock annotations.</p>
-<pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-1" class="line-number-anchor" /><a href="#line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyAnnotationDriver</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AnnotationDriver</span>
-</span>{
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadMetadataForClass</span><span class="hljs-params">($className, ClassMetadata $metadata)</span>
-    </span>{
-        <span class="hljs-comment">/** <span class="hljs-doctag">@var</span> ClassMetadata $class */</span>
-        $reflClass = $class-&gt;getReflectionClass();
-
-        $classAnnotations = <span class="hljs-keyword">$this</span>-&gt;reader-&gt;getClassAnnotations($reflClass);
-
-        <span class="hljs-comment">// Use the reader to read annotations from your classes to then populate the $metadata instance.</span>
-    }
-}</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-2" class="line-number-anchor" /><a href="#line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-3" class="line-number-anchor" /><a href="#line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-4" class="line-number-anchor" /><a href="#line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-5" class="line-number-anchor" /><a href="#line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-6" class="line-number-anchor" /><a href="#line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-7" class="line-number-anchor" /><a href="#line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-8" class="line-number-anchor" /><a href="#line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-9" class="line-number-anchor" /><a href="#line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-10" class="line-number-anchor" /><a href="#line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-11" class="line-number-anchor" /><a href="#line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-12" class="line-number-anchor" /><a href="#line-number-c8e7bf38ab3c4f96ad2bd2ab8df8c7b936186e65-12">12</a></td></tr></table></div></code></pre>
-<p>Now you can use it like the following:</p>
-<pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="49d50974d2342c91ed310084d96788b66f29df11"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="49d50974d2342c91ed310084d96788b66f29df11"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-49d50974d2342c91ed310084d96788b66f29df11-1" class="line-number-anchor" /><a href="#line-number-49d50974d2342c91ed310084d96788b66f29df11-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Model</span>\<span class="hljs-title">User</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">AnnotationReader</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ClassMetadata</span>;
-
-$annotationReader = <span class="hljs-keyword">new</span> AnnotationReader();
-
-$annotationDriver = <span class="hljs-keyword">new</span> AnnotationDriver($annotationReader, <span class="hljs-string">'/path/to/classes/with/annotations'</span>);
-
-$classMetadata = <span class="hljs-keyword">new</span> ClassMetadata();
-
-<span class="hljs-comment">// looks for a PHP file at /path/to/classes/with/annotations/App/Model/User.php</span>
-$annotationDriver-&gt;loadMetadataForClass(User::class, $classMetadata);</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-49d50974d2342c91ed310084d96788b66f29df11-2" class="line-number-anchor" /><a href="#line-number-49d50974d2342c91ed310084d96788b66f29df11-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-49d50974d2342c91ed310084d96788b66f29df11-3" class="line-number-anchor" /><a href="#line-number-49d50974d2342c91ed310084d96788b66f29df11-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-49d50974d2342c91ed310084d96788b66f29df11-4" class="line-number-anchor" /><a href="#line-number-49d50974d2342c91ed310084d96788b66f29df11-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-49d50974d2342c91ed310084d96788b66f29df11-5" class="line-number-anchor" /><a href="#line-number-49d50974d2342c91ed310084d96788b66f29df11-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-49d50974d2342c91ed310084d96788b66f29df11-6" class="line-number-anchor" /><a href="#line-number-49d50974d2342c91ed310084d96788b66f29df11-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-49d50974d2342c91ed310084d96788b66f29df11-7" class="line-number-anchor" /><a href="#line-number-49d50974d2342c91ed310084d96788b66f29df11-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-49d50974d2342c91ed310084d96788b66f29df11-8" class="line-number-anchor" /><a href="#line-number-49d50974d2342c91ed310084d96788b66f29df11-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-49d50974d2342c91ed310084d96788b66f29df11-9" class="line-number-anchor" /><a href="#line-number-49d50974d2342c91ed310084d96788b66f29df11-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-49d50974d2342c91ed310084d96788b66f29df11-10" class="line-number-anchor" /><a href="#line-number-49d50974d2342c91ed310084d96788b66f29df11-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-49d50974d2342c91ed310084d96788b66f29df11-11" class="line-number-anchor" /><a href="#line-number-49d50974d2342c91ed310084d96788b66f29df11-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-49d50974d2342c91ed310084d96788b66f29df11-12" class="line-number-anchor" /><a href="#line-number-49d50974d2342c91ed310084d96788b66f29df11-12">12</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="phpdriver" name="phpdriver"></a><h2 class="section-header"><a href="#phpdriver">PHPDriver<i class="fas fa-link"></i></a></h2>
 <p>The PHPDriver includes PHP files which just populate <code>ClassMetadata</code> instances with plain PHP code.</p>
