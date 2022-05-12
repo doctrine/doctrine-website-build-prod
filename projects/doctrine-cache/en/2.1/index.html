@@ -217,7 +217,7 @@
                     <div class="sidebar-sticky">
                         <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7D553W&placement=wwwdoctrine-projectorg" id="_carbonads_js"></script>
 
-                        <div class="toc"><ul><li id="index-html-deprecation-notice" class="toc-item"><a href="index.html#deprecation-notice">Deprecation Notice</a></li><li id="index-html-introduction" class="toc-item"><a href="index.html#introduction">Introduction</a></li></ul></div>
+                        <div class="toc"><ul><li id="index-html-deprecation-notice" class="toc-item"><a href="index.html#deprecation-notice">Deprecation Notice</a></li><li id="index-html-introduction" class="toc-item"><a href="index.html#introduction">Introduction</a></li><li id="index-html-use-with-psr-6" class="toc-item"><a href="index.html#use-with-psr-6">Use with PSR-6</a></li></ul></div>
                     </div>
                 </nav>
             
@@ -336,6 +336,44 @@ Here is what the <code>Cache</code> interface looks like.</p>
 <tr><td class="line-number noselect"><a name="line-number-22a2c91a41697c85141030ccbdbeed971d381a3b-8" class="line-number-anchor" /><a href="#line-number-22a2c91a41697c85141030ccbdbeed971d381a3b-8">8</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-22a2c91a41697c85141030ccbdbeed971d381a3b-9" class="line-number-anchor" /><a href="#line-number-22a2c91a41697c85141030ccbdbeed971d381a3b-9">9</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-22a2c91a41697c85141030ccbdbeed971d381a3b-10" class="line-number-anchor" /><a href="#line-number-22a2c91a41697c85141030ccbdbeed971d381a3b-10">10</a></td></tr></table></div></code></pre>
+</div>
+<div class="section"><a class="section-anchor" id="use-with-psr-6" name="use-with-psr-6"></a><h1 class="section-header"><a href="#use-with-psr-6">Use with PSR-6<i class="fas fa-link"></i></a></h1>
+<p>If you are using the <code>Cache</code> interface in your application, then you need to
+upgrade your application to use a PSR-6 cache library and wrap the PSR-6
+<code>CacheItemPoolInterface</code> into the
+<code>Doctrine\Common\Cache\Psr6\DoctrineProvider</code> wrapper:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="ee3c5a03afdd45a93602d8bc610f43f86544b301"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="ee3c5a03afdd45a93602d8bc610f43f86544b301"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ee3c5a03afdd45a93602d8bc610f43f86544b301-1" class="line-number-anchor" /><a href="#line-number-ee3c5a03afdd45a93602d8bc610f43f86544b301-1">1</a></td><td class="code-line" rowspan="3"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Cache</span>\<span class="hljs-title">Psr6</span>\<span class="hljs-title">DoctrineProvider</span>;
+
+$cache = DoctrineProvider::wrap($psr6CachePool);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ee3c5a03afdd45a93602d8bc610f43f86544b301-2" class="line-number-anchor" /><a href="#line-number-ee3c5a03afdd45a93602d8bc610f43f86544b301-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ee3c5a03afdd45a93602d8bc610f43f86544b301-3" class="line-number-anchor" /><a href="#line-number-ee3c5a03afdd45a93602d8bc610f43f86544b301-3">3</a></td></tr></table></div></code></pre>
+<p>An implementation of the PSR-6 cache is provided by <a href="https://symfony.com/doc/current/components/cache.html">&quot;symfony/cache&quot; library</a> for example, you can install it
+via Composer with:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>composer require symfony/cache
+</code></pre></div>
+<p>A full example to setup a filesystem based cache with symfony/cache then looks
+like this:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="9b306832f05035e3b99fb61c449a7af7a35906fd"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="9b306832f05035e3b99fb61c449a7af7a35906fd"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-9b306832f05035e3b99fb61c449a7af7a35906fd-1" class="line-number-anchor" /><a href="#line-number-9b306832f05035e3b99fb61c449a7af7a35906fd-1">1</a></td><td class="code-line" rowspan="6"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Cache</span>\<span class="hljs-title">Psr6</span>\<span class="hljs-title">DoctrineProvider</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Cache</span>\<span class="hljs-title">Adapter</span>\<span class="hljs-title">FilesystemAdapter</span>;
+
+$cachePool = <span class="hljs-keyword">new</span> FilesystemAdapter();
+$cache = DoctrineProvider::wrap($cachePool);
+<span class="hljs-comment">// $cache instanceof \Doctrine\Common\Cache\Cache</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b306832f05035e3b99fb61c449a7af7a35906fd-2" class="line-number-anchor" /><a href="#line-number-9b306832f05035e3b99fb61c449a7af7a35906fd-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b306832f05035e3b99fb61c449a7af7a35906fd-3" class="line-number-anchor" /><a href="#line-number-9b306832f05035e3b99fb61c449a7af7a35906fd-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b306832f05035e3b99fb61c449a7af7a35906fd-4" class="line-number-anchor" /><a href="#line-number-9b306832f05035e3b99fb61c449a7af7a35906fd-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b306832f05035e3b99fb61c449a7af7a35906fd-5" class="line-number-anchor" /><a href="#line-number-9b306832f05035e3b99fb61c449a7af7a35906fd-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b306832f05035e3b99fb61c449a7af7a35906fd-6" class="line-number-anchor" /><a href="#line-number-9b306832f05035e3b99fb61c449a7af7a35906fd-6">6</a></td></tr></table></div></code></pre>
 
 </div>
 
