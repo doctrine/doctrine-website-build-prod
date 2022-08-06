@@ -209,6 +209,68 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="/2022/08/06/dbal-3.4.0.html">New Release: Doctrine DBAL 3.4.0</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on <date>August 6, 2022</date>
+                            by
+                                    <a href="mailto:morozov@tut.by">Sergei Morozov</a>
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>Doctrine is proud to announce the release of Doctrine DBAL 3.4.0. Below is a summary of the most noteworthy changes
+in the new release:</p>
+<h2>Database schema introspection optimization (<a href="https://github.com/doctrine/dbal/pull/5268">#5268</a>)</h2>
+<p>Older DBAL versions, in order to introspect database schema, performed a set of queries for each table individually.
+This caused noticeable performance issues on some platforms like Oracle which seemingly rebuild their internal views
+for each such query.</p>
+<p>As of this release, the entire schema is introspected in a fixed number of queries. The more tables the schema contains,
+the more noticeable this optimization should be.</p>
+<p>It was impossible to make these optimizations while using the schema introspection platform methods
+(e.g. <code>getListTableColumnsSQL()</code>). As a result, although these methods are kept in the codebase for backward
+compatibility, the DBAL itself no longer uses them. The SQL queries used for schema introspection are no longer
+considered part of the public DBAL API.</p>
+<h2>Support for foreign key constraints on SQLite (<a href="https://github.com/doctrine/dbal/pull/5427">#5427</a>)</h2>
+<p>Although SQLite has supported foreign key constraints since its earliest versions, their support in the DBAL
+was quite limited. One of the reasons for that was that managing foreign key constraints in SQLite is quite different
+from the rest of the supported platforms.</p>
+<p>For example, when a foreign key constraint is declared, platforms like MySQL require that the referenced table
+must already exist. To support creating tables with mutually referencing constraints, the DBAL would
+create the tables first and create the constraints via <code>ALTER TABLE … ADD FOREIGN KEY …</code>.</p>
+<p>This approach doesn't work with SQLite since it doesn't allow adding constraints to an existing table. Fortunately,
+it doesn't require the referenced table to exist at the time of creating the foreign key either.</p>
+<p>The new DBAL release introduces a new API for building <code>CREATE TABLE</code> and <code>DROP TABLE</code> statements for multiple tables
+which could be tailored to the requirements of a given platform. The <code>AbstractPlatform::supportsForeignKeys()</code> method
+is now deprecated since the DBAL supports foreign key constraints on all supported platforms.</p>
+<h2>Support for TEXT/BLOB default values on MariaDB (<a href="https://github.com/doctrine/dbal/pull/5332">#5332</a>)</h2>
+<p>The platform layer in the DBAL is organized in the way that the code implementing the support for MySQL is also
+used to support MariaDB. As a result, even though MariaDB may support certain features the DBAL doesn't support them
+because they are not supported by MySQL. One of such features is the default values for TEXT and BLOB columns.</p>
+<p>As of the new release, the default TEXT and BLOB values are supported on MariaDB but are still unsupported on MySQL,
+even though MySQL supports them as of
+release <a href="https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-13.html#mysqld-8-0-13-data-types">8.0.13</a>.</p>
+<h2>Support for result caching in QueryBuilder (<a href="https://github.com/doctrine/dbal/pull/5539">#5539</a>)</h2>
+<p>The recently added <code>enableResultCache()</code> method of the <code>QueryBuilder</code> class allows specifying the query cache profile
+to be used for performing the queries built by the builder.</p>
+<h2>PHP 7.4 or newer is required (<a href="https://github.com/doctrine/dbal/pull/5459">#5459</a>)</h2>
+<p>The DBAL no longer supports PHP 7.3 since its support by the community ended last year. The codebase now
+actively uses such features of PHP 7.4 as
+<a href="https://wiki.php.net/rfc/covariant-returns-and-contravariant-parameters">covariant return types</a>
+and <a href="https://wiki.php.net/rfc/typed_properties_v2">typed properties</a>.</p>
+<h2>Deprecations</h2>
+<p>In light of the DBAL 4 release planned for later this year, the 3.4.0 release introduces over 30 deprecations which,
+as usual, focus on cleaning up obsolete features and making the API more robust and clearer from the
+static analysis standpoint.</p>
+<p>To learn more about upgrading your application, see the
+<a href="https://github.com/doctrine/dbal/blob/3.4.0/UPGRADE.md#upgrade-to-34">upgrade notes</a>. You can find the full
+list of changes in the release <a href="https://github.com/doctrine/dbal/milestone/107">milestone</a>.</p>
+        </div>
+    </article>
+    <article>
+        <header>
             <h2><a href="/2022/03/24/opencollective.html">On Doctrine Sponsoring with the help of OpenCollective</a></h2>
         </header>
 
@@ -990,107 +1052,6 @@ done for a longer amount of time of days, weeks or months.</li>
 eliminate high frequency deprecations quickly or call <code>ignoreDeprecation</code> to
 snooze them to avoid overhead.</li>
 </ul>
-        </div>
-    </article>
-    <article>
-        <header>
-            <h2><a href="/2020/11/17/dbal-3.0.0.html">New Major Release: Doctrine DBAL 3.0</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on <date>November 17, 2020</date>
-                            by
-                                    <a href="mailto:kontakt@beberlei.de">Benjamin Eberlei</a>
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>We have released a new major version of Doctrine DBAL, version 3.0.0. This new
-major version comes almost 10 years after DBAL 2.0 was released on December
-2010, then coupled into the ORM 2.0.</p>
-<p>Today Doctrine DBAL is released independent of the ORM, thanks to Composer and
-sees its new major version before the ORM.</p>
-<p>This release was made possible foremost by
-<a href="https://twitter.com/srgmrzv">Sergei Morozov</a>, our primary DBAL maintainer, who has
-spent countless hours working on the package since 2016. Thank you!</p>
-<p>See the <a href="https://github.com/doctrine/dbal/releases/tag/3.0.0">Release Notes</a>
-for a detailed list of changes.</p>
-<p>This blog post covers a few of the major changes in a bit more detail to give
-you an idea of what DBAL 3.0 looks like.</p>
-<h3>Decouple DBAL from PDO</h3>
-<p>The major theme of DBAL 3.0 is the decoupling from PDO. Instead of copying the
-API verbatim like DBAL 2.0 did, DBAL 3.0 grows it into a better, more usable
-direction.</p>
-<p>We extract all fetch-methods from the <code>Statement</code> class and moved them to a new
-<code>Result</code> class that is returned from <code>Statement::execute</code>.</p>
-<p>Old code:</p>
-<pre><code class="language-php">$statement = $connection-&gt;prepare('SELECT * FROM tbl WHERE col = ?');
-$statement-&gt;bindParam(1, $value);
-$statement-&gt;execute();
-
-while ($row = $statement-&gt;fetch()) {
-}</code></pre>
-<p>New Code:</p>
-<pre><code class="language-php">$statement = $connection-&gt;prepare('SELECT * FROM tbl WHERE col = ?');
-$statement-&gt;bindParam(1, $value);
-$result = $statement-&gt;execute();
-
-while ($row = $result-&gt;fetchAssociative()) {
-}</code></pre>
-<p>The Result Fetching API was improved to use more human-readable names:</p>
-<pre><code class="language-php">// Old
-$stmt-&gt;fetch();
-$stmt-&gt;fetch(PDO::FETCH_ARRAY);
-$stmt-&gt;fetchColumn();
-$stmt-&gt;fetchAll();
-
-// New
-$stmt-&gt;fetchAssociative();
-$stmt-&gt;fetchNumeric();
-$stmt-&gt;fetchOne();
-$stmt-&gt;fetchAllAssociative();</code></pre>
-<p>Many more changes have been made on the public API and also for the internals,
-but these are the most visible ones.</p>
-<h3>Upgrading to DBAL 3 from 2</h3>
-<p>DBAL 3 is a real new major release with significant changes to the public API. Depending
-on your codebase a migration could require non-trivial work. However we do not intend
-to leave you hanging with DBAL 2 and a future migration:</p>
-<ol>
-<li>
-<p>We intend to support DBAL 2.12 a while longer, including support for the
-upcoming PHP 8.0, so that there is no rush for you to upgrade to DBAL 3.</p>
-</li>
-<li>
-<p>DBAL 2.12 already includes forwards compatible API changes for all the new APIs,
-so that you can migrate your code step by step to the new APIs already.</p>
-</li>
-<li>
-<p>Deprecated methods in DBAL 2.12 are tagged with the <code>@deprecated</code> doc-block
-and static analysis tools such as Psalm, PHPStan and Phan can already help
-you detect using or calling this deprecated code in your application.</p>
-</li>
-<li>
-<p>We intend to release another version of DBAL 2 which includes
-optional triggering of deprecation messages at runtime similar to how Symfony
-deals with deprecations.</p>
-</li>
-</ol>
-<p>As you can see, with these approaches it will be possible for you to smoothly migrate
-your application from DBAL 2 to 3.</p>
-<p>As a note to libraries and frameworks that need to support multiple versions of
-Doctrine DBAL: We recommend you start out with DBAL 2.12 and migrate all usages
-of deprecated APIs to their newer counterparts. Then once you have managed
-this, you can allow 3.0 and try to get your code working with both versions.
-Unfortunately this may not be possible for all cases, because we could not
-provide replacement APIs for everything and some features have been dropped
-between DBAL 2 and 3.</p>
-<h3>Outlook</h3>
-<p>DBAL 3 is a huge first step towards a modern database abstraction layer,
-independent from the legacy of PHP and PDO API design. In the future we plan to
-improve DBAL in other ways that we haven't gotten around yet, such as more API
-modernization, increased safety with use of strict scalar types in the code
-base, better error handling and more.</p>
         </div>
     </article>
 
