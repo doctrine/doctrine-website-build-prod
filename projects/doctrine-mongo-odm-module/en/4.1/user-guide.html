@@ -491,24 +491,27 @@ namespace to the top of the file:</p>
 </div>
 <div class="section"><a class="section-anchor" id="test-the-newly-created-document" name="test-the-newly-created-document"></a><h2 class="section-header"><a href="#test-the-newly-created-document">Test the newly created document<i class="fas fa-link"></i></a></h2>
 <p>To test your Doctrine ODM configuration, replace the indexAction in
-<code>module/Application/src/Application/Controller/IndexController.php</code>:</p>
+<code>module/Application/src/Application/Controller/IndexController.php</code> and add the
+document manager to the constructor:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="28e9108cf139e03f793fd4aad142f554c0cd65fb"
+            data-copy-element-id="03afdb070d55c7b0850969b3c25037b005985828"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="28e9108cf139e03f793fd4aad142f554c0cd65fb"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-1" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-1">1</a></td><td class="code-line" rowspan="20"><span class="hljs-meta">&lt;?php</span>
-<span class="hljs-comment">//...</span>
-
+        ><i class="fas fa-copy"></i></button><div id="03afdb070d55c7b0850969b3c25037b005985828"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-1" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-1">1</a></td><td class="code-line" rowspan="23"><span class="hljs-meta">&lt;?php</span>
 <span class="hljs-keyword">use</span> <span class="hljs-title">Application</span>\<span class="hljs-title">Document</span>\<span class="hljs-title">Message</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Laminas</span>\<span class="hljs-title">Mvc</span>\<span class="hljs-title">Controller</span>\<span class="hljs-title">AbstractActionController</span>;
 
-    <span class="hljs-comment">//...</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IndexController</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractActionController</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(private DocumentManager $dm)</span>
+    </span>{}
+
     <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">indexAction</span><span class="hljs-params">()</span>
     </span>{
         $message = <span class="hljs-keyword">new</span> Message();
         $message-&gt;setText(<span class="hljs-string">"Hello Doctrine!"</span>);
 
-        $dm = <span class="hljs-keyword">$this</span>-&gt;getServiceLocator()-&gt;get(<span class="hljs-string">'doctrine.documentmanager.odm_default'</span>);
         $dm-&gt;persist($message);
         $dm-&gt;flush();
 
@@ -516,27 +519,76 @@ namespace to the top of the file:</p>
 
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ViewModel();
     }
-    <span class="hljs-comment">//...</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-2" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-3" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-4" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-5" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-6" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-7" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-8" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-9" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-10" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-11" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-12" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-13" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-14" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-15" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-16" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-17" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-18" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-19" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-20" class="line-number-anchor" /><a href="#line-number-28e9108cf139e03f793fd4aad142f554c0cd65fb-20">20</a></td></tr></table></div></code></pre>
-<p>The dumped variable should contain a new generated id:</p>
+    <span class="hljs-comment">//...</span>
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-2" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-3" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-4" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-5" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-6" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-7" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-8" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-9" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-10" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-11" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-12" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-13" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-14" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-15" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-16" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-17" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-18" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-19" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-20" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-21" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-22" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03afdb070d55c7b0850969b3c25037b005985828-23" class="line-number-anchor" /><a href="#line-number-03afdb070d55c7b0850969b3c25037b005985828-23">23</a></td></tr></table></div></code></pre>
+<p>Next, you need to set up a factory for your controller in
+<code>module/Application/src/Controller/IndexControllerFactory.php</code>,
+to boostrap it with the instance of Doctrine's document manager:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="7871d4f0b464f2c28293ad1e71bafa9885a38fcb"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="7871d4f0b464f2c28293ad1e71bafa9885a38fcb"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-1" class="line-number-anchor" /><a href="#line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-1">1</a></td><td class="code-line" rowspan="9"><span class="hljs-keyword">use</span> <span class="hljs-title">Psr</span>\<span class="hljs-title">Container</span>\<span class="hljs-title">ContainerInterface</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IndexControllerFactory</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__invoke</span><span class="hljs-params">(ContainerInterface $container)</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> IndexController($container-&gt;get(<span class="hljs-string">'doctrine.documentmanager.odm_default'</span>));
+    }
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-2" class="line-number-anchor" /><a href="#line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-3" class="line-number-anchor" /><a href="#line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-4" class="line-number-anchor" /><a href="#line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-5" class="line-number-anchor" /><a href="#line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-6" class="line-number-anchor" /><a href="#line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-7" class="line-number-anchor" /><a href="#line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-8" class="line-number-anchor" /><a href="#line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-9" class="line-number-anchor" /><a href="#line-number-7871d4f0b464f2c28293ad1e71bafa9885a38fcb-9">9</a></td></tr></table></div></code></pre>
+<p>Lastly, wire everything together by configuring your newly created factory
+for your controller in <code>module/Application/config/module.config.php</code>:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="3dae1324435af632b97bab2900a697ae55e123d8"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="3dae1324435af632b97bab2900a697ae55e123d8"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-3dae1324435af632b97bab2900a697ae55e123d8-1" class="line-number-anchor" /><a href="#line-number-3dae1324435af632b97bab2900a697ae55e123d8-1">1</a></td><td class="code-line" rowspan="7"><span class="hljs-comment">// ...</span>
+<span class="hljs-string">'controllers'</span> =&gt; [
+    <span class="hljs-string">'factories'</span> =&gt; [
+        Controller\IndexController::class =&gt; Controller\IndexControllerFactory::class,
+    ],
+],
+<span class="hljs-comment">// ...</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3dae1324435af632b97bab2900a697ae55e123d8-2" class="line-number-anchor" /><a href="#line-number-3dae1324435af632b97bab2900a697ae55e123d8-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3dae1324435af632b97bab2900a697ae55e123d8-3" class="line-number-anchor" /><a href="#line-number-3dae1324435af632b97bab2900a697ae55e123d8-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3dae1324435af632b97bab2900a697ae55e123d8-4" class="line-number-anchor" /><a href="#line-number-3dae1324435af632b97bab2900a697ae55e123d8-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3dae1324435af632b97bab2900a697ae55e123d8-5" class="line-number-anchor" /><a href="#line-number-3dae1324435af632b97bab2900a697ae55e123d8-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3dae1324435af632b97bab2900a697ae55e123d8-6" class="line-number-anchor" /><a href="#line-number-3dae1324435af632b97bab2900a697ae55e123d8-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3dae1324435af632b97bab2900a697ae55e123d8-7" class="line-number-anchor" /><a href="#line-number-3dae1324435af632b97bab2900a697ae55e123d8-7">7</a></td></tr></table></div></code></pre>
+<p>When accessing the index controller, the dumped variable should contain a new generated id:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
