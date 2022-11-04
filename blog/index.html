@@ -209,6 +209,139 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="/2022/11/04/annotations-to-attributes.html">From annotations to attributes</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on <date>November 4, 2022</date>
+                            by
+                                    <a href="mailto:postmaster@greg0ire.fr">Grégoire Paris</a>
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>Last month, we migrated the tests of the ORM from annotations to attributes.
+Let us look back on what lead to this moment.</p>
+<h2>Annotations</h2>
+<p>Let's go 20 years back in time. In 2002, Alex Buckley, a Specification lead for
+the Java language publishes <a href="https://www.cs.ubc.ca/~gregor/teaching/cpsc411/metadata-public-draft.html">JSR-175</a>, proposed to add user-defined
+annotations to the language, allowing to tag language elements with extra
+information. 2 years later, it gets approved and Java 1.5, also known as Java 5
+is released, <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/language/annotations.html">with support for annotations</a>.</p>
+<p>2 more years elapse and in 2004, Jano Suchal publishes <a href="https://github.com/jsuchal/addendum">Addendum</a>, a
+PHP library that adds support for &quot;Docblock/JavaDoc&quot; annotations, meaning that
+contrary to what is done in Java, Addendum annotations are contained inside
+phpdoc comments, like this:</p>
+<pre><code class="language-php">/** @test */
+function test_it_throws_on_invalid_argument(): void
+{}</code></pre>
+<p>That is because they are implemented in userland, without requiring a change in
+PHP itself.</p>
+<p>Doctrine ORM 2.0 is not released yet at that point, but <a href="https://github.com/doctrine/orm/commit/bcf0110249978c8fc705916d5a4f94216bb98b07">the library is used to
+build an annotation driver</a> in Doctrine 2 in early 2009.
+At that time, Doctrine was a project in a single repository, with <code>Common</code>,
+<code>DBAL</code> and <code>ORM</code> as top-level namespaces.
+<a href="https://github.com/doctrine/orm/commit/9075f10bf5da3058f6ef82ff08e4783ff70424a4">Addendum is replaced 6 months later</a>, with a new namespace
+under <code>Common</code> called <code>Annotations</code>.</p>
+<p>In the summer of 2010, Guilherme Blanco and Pierrick Charron submit
+<a href="https://wiki.php.net/rfc/annotations">an RFC to add annotations support to PHP</a>, but it
+<a href="https://externals.io/message/49733">gets declined</a>. The RFC already mentions the
+need for annotations in PHPUnit, Symfony, Zend Framework, FLOW3 and of course,
+Doctrine.</p>
+<p>Late 2010, Doctrine 2 is tagged, and the single repository is split into 3
+repositories.</p>
+<p>Finally, in 2013, the namespace above is isolated in its own repository, and
+<code>doctrine/annotations</code> 1.0.0 is tagged.</p>
+<p>Today, the package is widely used in the PHP ecosystem and has a little short
+of 300 million downloads on Packagist, and is depended on by over 2 thousand
+packages, including major frameworks and tools. It is fair to say annotations
+have proven valuable to many users.</p>
+<h2>Attributes</h2>
+<p>The RFC mentioned above is only one among <a href="https://wiki.php.net/rfc">many</a>. As mentioned
+before, annotations were implemented as phpdoc comments, which has several
+drawbacks:</p>
+<ul>
+<li>The comments are necessary to run the code, and <a href="https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.save-comments">need to be kept in the
+opcode cache</a>.</li>
+<li>They are obtained at runtime, by using the reflection API, and because of
+that, can only be detected as invalid at runtime.</li>
+<li>They are not well supported by IDEs if at all.</li>
+<li>They clutter comments, which were originally intended for humans.</li>
+<li>They can be confused with phpdoc, which are something else entirely.</li>
+</ul>
+<p>In March 2020, Benjamin Eberlei resurrects <a href="https://wiki.php.net/rfc/attributes">Dmitry Stogov's attributes
+RFC</a> and submits <a href="https://wiki.php.net/rfc/attributes_v2">the seventh RFC on this
+topic</a>, introducing attributes to PHP.</p>
+<p>A few rounds of RFCs about syntax later, PHP 8.0 is released, with a notable
+feature missing: nested attributes. PHP 8.0 attributes use a syntax that is
+forward-compatible with them though, and finally, with PHP 8.1, nested
+attributes are supported.</p>
+<h2>Migrating from one to the other</h2>
+<p>Since attributes are much better than annotations, with <code>doctrine/orm</code> 3.0,
+annotations will no longer be supported, which means applications using them as
+a way to map entities to tables need to migrate towards attributes (or another
+driver).
+As maintainers of that library, even we needed to migrate: most of the test
+suite of <code>doctrine/orm</code> used annotations.</p>
+<p>Enter <a href="https://github.com/rectorphp/rector">Rector</a>. Rector is a standalone tool that is invaluable when it
+comes to performing such migrations: it is able to understand PHP code and
+apply so-called Rectors to it. It is extensible, so it is possible to define
+such Rectors in order to address upgrades for anything, including Doctrine.</p>
+<p>What's more, it comes with batteries included: when you install
+<code>rector/rector</code>, what you get is code from <code>rector/rector-src</code> <em>and</em> its official
+extensions, among which you will find <a href="https://github.com/rectorphp/rector-doctrine"><code>rector/rector-doctrine</code></a>.
+That's right, there is already an entire extension dedicated to Doctrine.</p>
+<p>Rules are grouped together in sets, and the set that interests us here is
+<code>Rector\Doctrine\Set\DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES</code>.</p>
+<p>To migrate <code>doctrine/orm</code>'s test suite to annotations, here is how we
+proceeded:</p>
+<ol>
+<li>Install Rector: <code>composer require --dev rector/rector</code>.</li>
+<li>
+<p>Create a file called <code>rector.php</code> at the root of the library with the
+following contents:</p>
+<pre><code class="language-php">    &lt;?php
+
+    declare(strict_types=1);
+
+    use Rector\Config\RectorConfig;
+    use Rector\Doctrine\Set\DoctrineSetList;
+
+    return function (RectorConfig $rectorConfig): void {
+        $rectorConfig-&gt;paths([
+            __DIR__ . '/tests',
+        ]);
+        $rectorConfig-&gt;sets([
+            DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
+        ]);
+    };</code></pre>
+</li>
+<li>Run <code>vendor/bin/rector</code>, which obeys the above configuration.</li>
+<li>Uninstall Rector: <code>composer remove rector/rector &amp;&amp; rm rector.php</code></li>
+<li>Run <code>vendor/bin/phpcbf</code> to make the migrated codebase compliant with our
+coding standard.</li>
+</ol>
+<p>Or at least, it was the plan, because some annotations were not perfectly
+migrated. All in all, I found only <a href="https://github.com/rectorphp/rector/issues/7528">2</a> <a href="https://github.com/rectorphp/rector-src/pull/2988">bugs</a>, which looks great
+given how so many edge cases should appear in our test suite.</p>
+<p>I went on and reported those 2 bugs, and this is where the experience went from
+great to stellar:
+the issue template leads to <a href="https://getrector.org/demo">a playground</a>, much like the one you can
+find for other tools such as Psalm or PHPStan.</p>
+<p>This one comes with 2 buttons: &quot;Create an issue&quot;, which pre-fills the Github
+issue with useful information, and &quot;Create a test&quot;, that lets you create a test
+in the right directory (and also, the right repository, which is
+<code>rectorphp/rector-src</code>, and not <code>rectorphp/rector</code>).</p>
+<p>If you want to add a new test for the bug you reported, you should let
+<a href="https://github.com/rectorphp/rector/blob/main/docs/how_to_add_test_for_rector_rule.md">the official tutorial</a> walk you through that, it is very
+well written.</p>
+<p>Anyway, now that these 2 bugs are fixed and you know how to migrate, plan that
+migration, and let us know how it goes! Happy Rectoring!</p>
+        </div>
+    </article>
+    <article>
+        <header>
             <h2><a href="/2022/08/06/dbal-3.4.0.html">New Release: Doctrine DBAL 3.4.0</a></h2>
         </header>
 
@@ -932,126 +1065,6 @@ Deprecation::enableWithPsrLogger($log);</code></pre>
 <p>See the <a href="https://www.doctrine-project.org/2021/03/29/dbal-2.13.html">2.13 blog
 post</a> for more
 information about the migration to DBAL 3 and strategy recommendations.</p>
-        </div>
-    </article>
-    <article>
-        <header>
-            <h2><a href="/2021/03/29/dbal-2.13.html">New Release: Doctrine DBAL 2.13 with Deprecations and Forward Compatibility</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on <date>March 29, 2021</date>
-                            by
-                                    <a href="mailto:kontakt@beberlei.de">Benjamin Eberlei</a>
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>We have released DBAL 2.13, what we plan to be the last minor version in the 2.x family of Doctrine DBAL.
-This release includes additional forward compatibility to DBAL 3 around
-<code>Statement</code> and <code>Result</code> API and with an integration in our new
-deprecations logging library.</p>
-<p>In addition this DBAL release re-enables PHP 7.1 and 7.2 compatibility to give
-as much flexibility as possible to everyone with forward compatibility.</p>
-<h3>Statement and Result Forward Compatibility</h3>
-<p>DBAL 3.0 extracts all fetch-methods from the <code>Statement</code> API and moved them
-to a new <code>Result</code> API that is returned from <code>Statement::execute</code>. We have
-backported this API to 2.13 - so that you can support writing code for both
-DBAL 2 and 3 at the same time.</p>
-<p>Old code:</p>
-<pre><code class="language-php">$statement = $connection-&gt;prepare('SELECT * FROM tbl WHERE col = ?');
-$statement-&gt;bindParam(1, $value);
-$statement-&gt;execute();
-
-while (($row = $statement-&gt;fetch()) !== false) {
-}
-
-$connection-&gt;executeQuery('SELECT * FROM tbl')-&gt;fetchAll();</code></pre>
-<p>New Code:</p>
-<pre><code class="language-php">$statement = $connection-&gt;prepare('SELECT * FROM tbl WHERE col = ?');
-$statement-&gt;bindParam(1, $value);
-$result = $statement-&gt;executeQuery();
-
-while (($row = $result-&gt;fetchAssociative()) !== false) {
-}
-
-$connection-&gt;executeStatement('SELECT * FROM tbl')-&gt;fetchAllAssociative();</code></pre>
-<p>The Result Fetching API was improved to use more human-readable names:</p>
-<pre><code class="language-php">// Old
-$stmt-&gt;fetch();
-$stmt-&gt;fetch(PDO::FETCH_ARRAY);
-$stmt-&gt;fetchColumn();
-$stmt-&gt;fetchAll();
-
-// New
-$result = $stmt-&gt;execute();
-$result-&gt;fetchAssociative();
-$result-&gt;fetchNumeric();
-$result-&gt;fetchOne();
-$result-&gt;fetchAllAssociative();</code></pre>
-<p>Many more changes have been made on the public API and also for the internals,
-but these are the most common ones.</p>
-<p>Thank you to <a href="https://github.com/mdumoulin">mdumoulin</a> for the work on
-improving the forward compatiblity.</p>
-<h3>Deprecations Logging</h3>
-<p>We have wrestled internally for a long time with the strategy on runtime
-deprecation going forward and settled on introducing a small, new API for
-reporting the usage of deprecated APIs.</p>
-<p>The reason for this abstraction is the potential for side effects caused by an
-error handler and the potential overhead. We expect our deprecations to be
-triggered a few hundred times in some requests as such the production overhead
-must be minimal. </p>
-<p>This means deprecation logging is disabled by default and you must enable
-it to either use <code>@trigger_error</code> or a PSR-3 compatible logger.</p>
-<p>See the <a href="https://github.com/doctrine/deprecations/">deprecation library
-README.md</a> for details on how to
-configure and use it.</p>
-<h3>PHP 7.1 and 7.2 Support</h3>
-<p>A few large Doctrine DBAL deployments still support older versions of PHP that
-are not officially supported anymore, but are covered by support of a few Linux
-distributions.</p>
-<p>To provide the largest possible flexibility to the ecosystem to run code with
-both DBAL 2 or 3 this version of Doctrine DBAL will work again with PHP 7.1 and
-7.2</p>
-<h3>Migrate to DBAL 3</h3>
-<p>We recommend a three step strategy to move your code-base and that of your
-dependents to DBAL 3. It depends if you are working on a library or
-platform that is dependent upon, or if you are working on a standalone application.</p>
-<p>For a standalone application:</p>
-<ol>
-<li>Upgrade to DBAL 2.13 and enforce &quot;^2.13&quot; as a version constraint in
-composer.json</li>
-<li>Enable deprecation tracking and eliminate all deprecations triggered in your
-codebase.</li>
-<li>After fixing all deprecations, update composer constraint to &quot;^3.0&quot;.
-Doctrine will upgrade to version 3 if all other dependencies you are using
-are ready as well to upgrade to version 3. If it fails, you need to identify
-and update the dependencies as well.</li>
-</ol>
-<p>For a library, framework or platform:</p>
-<ol>
-<li>Upgrade to DBAL 2.13 and enforce &quot;^2.13&quot; as a version constraint in
-composer.json</li>
-<li>Enable deprecation tracking and eliminate all deprecations triggered in your
-codebase. Release a version so that all plugins and downstream users
-can be notified of using deprecated Doctrine DBAL directly themselves.</li>
-<li>After fixing all deprecations, update composer constraint to &quot;^2.13 | ^3.0&quot;.
-Doctrine will only upgrade to version 3 if all other dependencies you are
-using are ready as well to upgrade to version 3.</li>
-</ol>
-<p>We recommend the following strategies to detect the use of deprecated code:</p>
-<ul>
-<li>Use Psalm, other static analyzers or IDEs to detect the use of deprecated code.</li>
-<li>If you have an extensive test-suite, register a PSR-3 logger with Doctrine
-Deprecations to catch all deprecations while running the tests.</li>
-<li>Otherwise register a PSR-3 logger with Doctrine Deprecations in development
-or staging only and collect and fix them as well you can. This could be
-done for a longer amount of time of days, weeks or months.</li>
-<li>If that is not possible, register a PSR-3 logger in production. Make sure to
-eliminate high frequency deprecations quickly or call <code>ignoreDeprecation</code> to
-snooze them to avoid overhead.</li>
-</ul>
         </div>
     </article>
 

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>From annotations to attributes - Doctrine: PHP Open Source Project</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="description" content="The Doctrine Project is an open-source PHP project that is home to home to several PHP libraries primarily focused on database storage and object mapping. The core projects are the Object Relational Mapper (ORM) and the Database Abstraction Layer (DBAL) it is built upon.
+">
+
+        <meta name="keywords" content="php,mysql,orm,dbal,database,mongodb,odm,annotations,migrations,cache,couchdb">
+
+                    <meta name="robots" content="index, follow">
+        
+        
+            <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://www.doctrine-project.org/2022/11/04/annotations-to-attributes.html"
+        },
+        "headline": "From annotations to attributes",
+        "image": [
+            "https://www.doctrine-project.org/images/og.png"
+        ],
+        "datePublished": "2022-11-04T00:00:00-04:00",
+        "dateModified": "2022-11-04T00:00:00-04:00",
+        "author": {
+            "@type": "Person",
+            "name": "Grégoire Paris"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Doctrine",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://www.doctrine-project.org/images/og.png"
+            }
+        },
+        "description": "Last month, we migrated the tests of the ORM from annotations to attributes.
+Let us look back on wha"
+    }
+    </script>
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://www.doctrine-project.org/frontend/css/prismjs.css?d2443b"
+                            integrity="sha384-IcJ7eow//K0xRBscZjnk8kawYxbm2eUAZ9D6Xf/n0yuAi1NCvwOkep1S8XqPNB3E"
+                        crossorigin="anonymous"
+    />
+
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://www.doctrine-project.org/frontend/css/index.css?0370ec"
+                        integrity="sha384-ij2jSHPlCDmPePGT8x9V/AoreXbZSwko7CmHOp7fIc/zyJLEluaMt9e1MYig355W"
+                        crossorigin="anonymous"
+        />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://www.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://www.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://www.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://www.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://www.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://www.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://www.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://www.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://www.doctrine-project.org/images/mstile-310x310.png" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@doctrineproject" />
+        <meta name="twitter:creator" content="@doctrineproject" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.doctrine-project.org/2022/11/04/annotations-to-attributes.html" />
+        <meta property="og:title" content="From annotations to attributes - Doctrine: PHP Open Source Project" />
+        <meta property="og:description" content="The Doctrine Project is an open-source PHP project that is home to home to several PHP libraries primarily focused on database storage and object mapping. The core projects are the Object Relational Mapper (ORM) and the Database Abstraction Layer (DBAL) it is built upon.
+" />
+        <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://www.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "url": "https://www.doctrine-project.org",
+            "logo": "https://www.doctrine-project.org/logos/doctrine-logo.svg"
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://www.doctrine-project.org",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.doctrine-project.org?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Doctrine",
+            "url": "https://www.doctrine-project.org",
+            "sameAs": [
+                "https://twitter.com/doctrineproject"
+            ]
+        }
+        </script>
+
+        
+        
+            </head>
+    <body>
+                    
+            <nav class="doctrine-navbar stop-war-navbar navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
+                 <a href="/stop-war.html">🇺🇦 UKRAINE NEEDS YOUR HELP NOW!</a>
+            </nav>
+
+            <nav class="doctrine-navbar navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="/index.html"><img src="https://www.doctrine-project.org/logos/doctrine-logo.svg?1a5b7c" />Doctrine</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="/projects.html" id="navbarProjectsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarProjectsDropdown">
+                                                                    <a class="dropdown-item notranslate" href="/projects/annotations.html">Annotations</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/cache.html">Cache</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/coding-standard.html">Coding Standard</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/collections.html">Collections</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/common.html">Common</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/data-fixtures.html">Data fixtures</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/dbal.html">DBAL</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/event-manager.html">Event Manager</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/inflector.html">Inflector</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/instantiator.html">Instantiator</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/lexer.html">Lexer</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/migrations.html">Migrations</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/mongodb-odm.html">MongoDB ODM</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/orm.html">ORM</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/persistence.html">Persistence</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/phpcr-odm.html">PHPCR ODM</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/reflection.html">Reflection</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/rst-parser.html">RST Parser</a>
+                                                                    <a class="dropdown-item notranslate" href="/projects/skeleton-mapper.html">Skeleton Mapper</a>
+                                                                <a class="dropdown-item bg-secondary text-white font-weight-bold" href="/projects.html">View All</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="/contribute/index.html" id="navbarDevelopmentDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Development</a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarContributeDropdown">
+                                <a class="dropdown-item" href="/community/index.html">Community</a>
+                                <a class="dropdown-item" href="/contribute/index.html">Contributor Workflow</a>
+                                <a class="dropdown-item" href="/contribute/maintainer/index.html">Maintainer Workflow</a>
+                                <a class="dropdown-item" href="/contribute/website/index.html">Contribute to Website</a>
+                                <a class="dropdown-item" href="/team/maintainers.html">Maintainers</a>
+                                <a class="dropdown-item" href="/team/contributors.html">Contributors</a>
+                                <a class="dropdown-item" href="/policies.html">Policies</a>
+                                <a class="dropdown-item" href="https://github.com/doctrine" target="_blank" rel="noopener noreferrer">GitHub</a>
+                                <a class="dropdown-item" href="/styleguide.html">Styleguide</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/events.html">Events</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/consulting.html">Consulting</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/partners.html">Partners</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/blog/index.html">Blog</a>
+                        </li>
+                    </ul>
+
+                    <div class="layout-edit-button d-inline-block mr-2">
+                                                    <a href="https://github.com/doctrine/doctrine-website/edit/master/source/blog/2022-11-04-annotations-to-attributes.md" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
+                                            </div>
+
+                    <div class="google-translate-dropdown dropdown show d-inline-block mr-2">
+                        <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="translateDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Translate
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="translateDropdown">
+                            <div class="dropdown-item" id="google_translate_element">Loading...</div>
+                        </div>
+                    </div>
+
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                </div>
+            </nav>
+
+            <div class="search-results rounded">
+                <div id="hits">
+                    <!-- Hits widget will appear here -->
+                </div>
+
+                <a href="https://www.algolia.com" target="_blank" rel="noopener noreferrer"><img src="https://www.doctrine-project.org/images/search-by-algolia.png" class="float-right" style="width: 150px;" /></a>
+            </div>
+        
+            <main role="main" class="container-wrapper container">
+            <article>
+        <header>
+            <h2>From annotations to attributes</h2>
+        </header>
+
+        <p class="lead">
+            Posted on <date>November 4, 2022</date>
+                            by
+                                    <a href="mailto:postmaster@greg0ire.fr">Grégoire Paris</a>
+                                    </p>
+
+        <div class="row">
+            <div class="col">
+                <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7D553W&placement=wwwdoctrine-projectorg" id="_carbonads_js"></script>
+            </div>
+        </div>
+
+        <hr />
+
+        <div>
+                <p>Last month, we migrated the tests of the ORM from annotations to attributes.
+Let us look back on what lead to this moment.</p>
+<h2>Annotations</h2>
+<p>Let's go 20 years back in time. In 2002, Alex Buckley, a Specification lead for
+the Java language publishes <a href="https://www.cs.ubc.ca/~gregor/teaching/cpsc411/metadata-public-draft.html">JSR-175</a>, proposed to add user-defined
+annotations to the language, allowing to tag language elements with extra
+information. 2 years later, it gets approved and Java 1.5, also known as Java 5
+is released, <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/language/annotations.html">with support for annotations</a>.</p>
+<p>2 more years elapse and in 2004, Jano Suchal publishes <a href="https://github.com/jsuchal/addendum">Addendum</a>, a
+PHP library that adds support for &quot;Docblock/JavaDoc&quot; annotations, meaning that
+contrary to what is done in Java, Addendum annotations are contained inside
+phpdoc comments, like this:</p>
+<pre><code class="language-php">/** @test */
+function test_it_throws_on_invalid_argument(): void
+{}</code></pre>
+<p>That is because they are implemented in userland, without requiring a change in
+PHP itself.</p>
+<p>Doctrine ORM 2.0 is not released yet at that point, but <a href="https://github.com/doctrine/orm/commit/bcf0110249978c8fc705916d5a4f94216bb98b07">the library is used to
+build an annotation driver</a> in Doctrine 2 in early 2009.
+At that time, Doctrine was a project in a single repository, with <code>Common</code>,
+<code>DBAL</code> and <code>ORM</code> as top-level namespaces.
+<a href="https://github.com/doctrine/orm/commit/9075f10bf5da3058f6ef82ff08e4783ff70424a4">Addendum is replaced 6 months later</a>, with a new namespace
+under <code>Common</code> called <code>Annotations</code>.</p>
+<p>In the summer of 2010, Guilherme Blanco and Pierrick Charron submit
+<a href="https://wiki.php.net/rfc/annotations">an RFC to add annotations support to PHP</a>, but it
+<a href="https://externals.io/message/49733">gets declined</a>. The RFC already mentions the
+need for annotations in PHPUnit, Symfony, Zend Framework, FLOW3 and of course,
+Doctrine.</p>
+<p>Late 2010, Doctrine 2 is tagged, and the single repository is split into 3
+repositories.</p>
+<p>Finally, in 2013, the namespace above is isolated in its own repository, and
+<code>doctrine/annotations</code> 1.0.0 is tagged.</p>
+<p>Today, the package is widely used in the PHP ecosystem and has a little short
+of 300 million downloads on Packagist, and is depended on by over 2 thousand
+packages, including major frameworks and tools. It is fair to say annotations
+have proven valuable to many users.</p>
+<h2>Attributes</h2>
+<p>The RFC mentioned above is only one among <a href="https://wiki.php.net/rfc">many</a>. As mentioned
+before, annotations were implemented as phpdoc comments, which has several
+drawbacks:</p>
+<ul>
+<li>The comments are necessary to run the code, and <a href="https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.save-comments">need to be kept in the
+opcode cache</a>.</li>
+<li>They are obtained at runtime, by using the reflection API, and because of
+that, can only be detected as invalid at runtime.</li>
+<li>They are not well supported by IDEs if at all.</li>
+<li>They clutter comments, which were originally intended for humans.</li>
+<li>They can be confused with phpdoc, which are something else entirely.</li>
+</ul>
+<p>In March 2020, Benjamin Eberlei resurrects <a href="https://wiki.php.net/rfc/attributes">Dmitry Stogov's attributes
+RFC</a> and submits <a href="https://wiki.php.net/rfc/attributes_v2">the seventh RFC on this
+topic</a>, introducing attributes to PHP.</p>
+<p>A few rounds of RFCs about syntax later, PHP 8.0 is released, with a notable
+feature missing: nested attributes. PHP 8.0 attributes use a syntax that is
+forward-compatible with them though, and finally, with PHP 8.1, nested
+attributes are supported.</p>
+<h2>Migrating from one to the other</h2>
+<p>Since attributes are much better than annotations, with <code>doctrine/orm</code> 3.0,
+annotations will no longer be supported, which means applications using them as
+a way to map entities to tables need to migrate towards attributes (or another
+driver).
+As maintainers of that library, even we needed to migrate: most of the test
+suite of <code>doctrine/orm</code> used annotations.</p>
+<p>Enter <a href="https://github.com/rectorphp/rector">Rector</a>. Rector is a standalone tool that is invaluable when it
+comes to performing such migrations: it is able to understand PHP code and
+apply so-called Rectors to it. It is extensible, so it is possible to define
+such Rectors in order to address upgrades for anything, including Doctrine.</p>
+<p>What's more, it comes with batteries included: when you install
+<code>rector/rector</code>, what you get is code from <code>rector/rector-src</code> <em>and</em> its official
+extensions, among which you will find <a href="https://github.com/rectorphp/rector-doctrine"><code>rector/rector-doctrine</code></a>.
+That's right, there is already an entire extension dedicated to Doctrine.</p>
+<p>Rules are grouped together in sets, and the set that interests us here is
+<code>Rector\Doctrine\Set\DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES</code>.</p>
+<p>To migrate <code>doctrine/orm</code>'s test suite to annotations, here is how we
+proceeded:</p>
+<ol>
+<li>Install Rector: <code>composer require --dev rector/rector</code>.</li>
+<li>
+<p>Create a file called <code>rector.php</code> at the root of the library with the
+following contents:</p>
+<pre><code class="language-php">    &lt;?php
+
+    declare(strict_types=1);
+
+    use Rector\Config\RectorConfig;
+    use Rector\Doctrine\Set\DoctrineSetList;
+
+    return function (RectorConfig $rectorConfig): void {
+        $rectorConfig-&gt;paths([
+            __DIR__ . '/tests',
+        ]);
+        $rectorConfig-&gt;sets([
+            DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
+        ]);
+    };</code></pre>
+</li>
+<li>Run <code>vendor/bin/rector</code>, which obeys the above configuration.</li>
+<li>Uninstall Rector: <code>composer remove rector/rector &amp;&amp; rm rector.php</code></li>
+<li>Run <code>vendor/bin/phpcbf</code> to make the migrated codebase compliant with our
+coding standard.</li>
+</ol>
+<p>Or at least, it was the plan, because some annotations were not perfectly
+migrated. All in all, I found only <a href="https://github.com/rectorphp/rector/issues/7528">2</a> <a href="https://github.com/rectorphp/rector-src/pull/2988">bugs</a>, which looks great
+given how so many edge cases should appear in our test suite.</p>
+<p>I went on and reported those 2 bugs, and this is where the experience went from
+great to stellar:
+the issue template leads to <a href="https://getrector.org/demo">a playground</a>, much like the one you can
+find for other tools such as Psalm or PHPStan.</p>
+<p>This one comes with 2 buttons: &quot;Create an issue&quot;, which pre-fills the Github
+issue with useful information, and &quot;Create a test&quot;, that lets you create a test
+in the right directory (and also, the right repository, which is
+<code>rectorphp/rector-src</code>, and not <code>rectorphp/rector</code>).</p>
+<p>If you want to add a new test for the bug you reported, you should let
+<a href="https://github.com/rectorphp/rector/blob/main/docs/how_to_add_test_for_rector_rule.md">the official tutorial</a> walk you through that, it is very
+well written.</p>
+<p>Anyway, now that these 2 bugs are fixed and you know how to migrate, plan that
+migration, and let us know how it goes! Happy Rectoring!</p>
+        </div>
+    </article>
+    </main>
+
+        <button id="back-to-top" title="Go to top">Top</button>
+
+                    <footer class="footer">
+                <div class="container">
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><a href="/projects.html">Projects</a></li>
+                        <li class="list-inline-item"><a href="/partners.html">Partners</a></li>
+                        <li class="list-inline-item"><a href="/sponsorship.html">Sponsorship</a></li>
+                        <li class="list-inline-item"><a href="/community/index.html">Community</a></li>
+                        <li class="list-inline-item"><a href="/blog/index.html">Blog</a></li>
+                        <li class="list-inline-item"><a href="/events.html">Events</a></li>
+                        <li class="list-inline-item"><a href="/consulting.html">Consulting</a></li>
+                    </ul>
+                </div>
+            </footer>
+        
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script
+            src="https://www.doctrine-project.org/frontend/js/bundle.js?e690ec"
+                            integrity="sha384-HlquHHnsk57fOpIpNpH5aTJexhmiFWe5VxXE0QVH7gUjNSFr8HSaSFq1lqEAuxEr"
+                        crossorigin="anonymous">
+        </script>
+
+                
+        <script type="text/javascript">
+            var projectSlug = '';
+            var versionSlug = 'latest';
+
+            var searchBoxSettings = {
+                container: '#search-box',
+                placeholder: 'Search'
+            };
+
+            function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
+                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                            }
+        </script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+            <script
+            src="https://www.doctrine-project.org/frontend/js/prismjs.js?734bad"
+                            integrity="sha384-grLp9fRZF9gNTw6swxS6JSeblMyLpeDp3W9l0GYdH5T0jL4TphypaBu78dmD19jZ"
+                        crossorigin="anonymous">
+    </script>
+    </body>
+</html>
