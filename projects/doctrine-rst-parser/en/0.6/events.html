@@ -320,16 +320,16 @@
                             
 <div class="section"><a class="section-anchor" id="events" name="events"></a><h1 class="section-header"><a href="#events">Events<i class="fas fa-link"></i></a></h1>
 <p>The Doctrine RST parser dispatches several different events internally which enable you
-to hook in to the core of the parser to add custom functionality.</p>
+to hook into the core of the parser to add custom functionality.</p>
 <div class="section"><a class="section-anchor" id="event-manager" name="event-manager"></a><h2 class="section-header"><a href="#event-manager">Event Manager<i class="fas fa-link"></i></a></h2>
-<p>You can access the <code>Doctrine\Common\EventManager</code> instance with the <code>getEventManager()</code> method:</p>
+<p>You can access the <code>Doctrine\Common\EventManager</code> instance with the <code>Doctrine\RST\Configuration::getEventManager()</code> method:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
             data-copy-element-id="472967b2260f0e376a4635b9f73a3ad45e02ea9e"
             title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><div id="472967b2260f0e376a4635b9f73a3ad45e02ea9e"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-472967b2260f0e376a4635b9f73a3ad45e02ea9e-1" class="line-number-anchor" /><a href="#line-number-472967b2260f0e376a4635b9f73a3ad45e02ea9e-1">1</a></td><td class="code-line" rowspan="1">$eventManager = $configuration-&gt;getEventManager();</td></tr></table></div></code></pre>
-<p>If you want to set your own you can do so with the <code>setEventManager(EventManager $eventManager)</code> method:</p>
+<p>If you want to set your own event manager, you can do so with the <code>setEventManager(EventManager $eventManager)</code> method:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
@@ -350,34 +350,33 @@ $configuration-&gt;setEventManager($eventManager);</td></tr>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="82f3dec06d1d81057c54d883d8429e9bdcbf4e84"
+            data-copy-element-id="322b1de4ce9fff4d1122168c9997e93ca82ecd59"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="82f3dec06d1d81057c54d883d8429e9bdcbf4e84"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-1" class="line-number-anchor" /><a href="#line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-1">1</a></td><td class="code-line" rowspan="7"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Listeners</span>\<span class="hljs-title">PostParseDocumentListener</span>;
+        ><i class="fas fa-copy"></i></button><div id="322b1de4ce9fff4d1122168c9997e93ca82ecd59"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-1" class="line-number-anchor" /><a href="#line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-1">1</a></td><td class="code-line" rowspan="7"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Listeners</span>\<span class="hljs-title">DocumentListener</span>;
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">RST</span>\<span class="hljs-title">Event</span>\<span class="hljs-title">PostParseDocumentEvent</span>;
 
 $eventManager-&gt;addEventListener(
-    [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
-    <span class="hljs-keyword">new</span> PostParseDocumentListener()
+    [PostParseDocumentEvent::POST_PARSE_DOCUMENT <span class="hljs-comment">/*, other events, if any*/</span>],
+    <span class="hljs-keyword">new</span> DocumentListener()
 );</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-2" class="line-number-anchor" /><a href="#line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-3" class="line-number-anchor" /><a href="#line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-4" class="line-number-anchor" /><a href="#line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-5" class="line-number-anchor" /><a href="#line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-6" class="line-number-anchor" /><a href="#line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-7" class="line-number-anchor" /><a href="#line-number-82f3dec06d1d81057c54d883d8429e9bdcbf4e84-7">7</a></td></tr></table></div></code></pre>
-<p>Now define your listener in <code>App\Listeners\PostParseDocumentListener</code>. The <code>postParseDocument()</code>
-method will be notified every time a document is parsed:</p>
+<tr><td class="line-number noselect"><a name="line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-2" class="line-number-anchor" /><a href="#line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-3" class="line-number-anchor" /><a href="#line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-4" class="line-number-anchor" /><a href="#line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-5" class="line-number-anchor" /><a href="#line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-6" class="line-number-anchor" /><a href="#line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-7" class="line-number-anchor" /><a href="#line-number-322b1de4ce9fff4d1122168c9997e93ca82ecd59-7">7</a></td></tr></table></div></code></pre>
+<p>Now, define your listener in <code>App\Listeners\DocumentListener</code>. The <code>postParseDocument()</code>
+method will be invoked every time a document is parsed:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="dbe978a3814b8fcab837d59362d7f5c80c77e806"
+            data-copy-element-id="48da988b295edf69dd3c9de2230bd7e179297d9c"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="dbe978a3814b8fcab837d59362d7f5c80c77e806"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-1" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-1">1</a></td><td class="code-line" rowspan="14"><span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Listeners</span>;
+        ><i class="fas fa-copy"></i></button><div id="48da988b295edf69dd3c9de2230bd7e179297d9c"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-1" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-1">1</a></td><td class="code-line" rowspan="16"><span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Listeners</span>;
 
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">RST</span>\<span class="hljs-title">Event</span>\<span class="hljs-title">PostParseDocumentEvent</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">RST</span>\<span class="hljs-title">Event</span>\<span class="hljs-title">PostParseDocumentEvent</span>;
 
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PostParseDocumentListener</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DocumentListener</span>
 </span>{
     <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">postParseDocument</span><span class="hljs-params">(PostParseDocumentEvent $event)</span>
     </span>{
@@ -385,23 +384,28 @@ method will be notified every time a document is parsed:</p>
 
         <span class="hljs-comment">// do something with $documentNode</span>
     }
+    
+    <span class="hljs-comment">// Other event handlers, if any</span>
+    <span class="hljs-comment">// ...</span>
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-2" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-3" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-4" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-5" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-6" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-7" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-8" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-9" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-10" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-11" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-12" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-13" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-14" class="line-number-anchor" /><a href="#line-number-dbe978a3814b8fcab837d59362d7f5c80c77e806-14">14</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-2" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-3" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-4" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-5" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-6" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-7" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-8" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-9" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-10" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-11" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-12" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-13" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-14" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-15" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-16" class="line-number-anchor" /><a href="#line-number-48da988b295edf69dd3c9de2230bd7e179297d9c-16">16</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="available-events" name="available-events"></a><h2 class="section-header"><a href="#available-events">Available Events<i class="fas fa-link"></i></a></h2>
-<p>The events you can listen for are as follows:</p>
+<p>The events you can listen for and their respective handlers:</p>
 <ul><li class="dash"><code>PreBuildScanEvent::PRE_BUILD_SCAN</code> - Dispatches a method named <code>preBuildScan()</code> before files are scanned when using the builder.</li>
 <li class="dash"><code>PreBuildParseEvent::PRE_BUILD_PARSE</code> - Dispatches a method named <code>preBuildParse()</code> before files are parsed and after they are scanned when using the builder.</li>
 <li class="dash"><code>PreBuildRenderEvent::PRE_BUILD_RENDER</code> - Dispatches a method named <code>preBuildRender()</code> before files are rendered and after they are parsed when using the builder.</li>
