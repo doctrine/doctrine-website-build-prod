@@ -689,11 +689,57 @@ and <code>'false'</code> as strings you can change to integers by using:
 <p>Doctrine ships with different database platform implementations for some vendors
 to support version specific features, dialect and behaviour.</p>
 <p>The drivers will automatically detect the platform version and instantiate
-the corresponding platform class.</p>
+the corresponding platform class. However, this mechanism might cause the
+connection to be established prematurely.</p>
 <p>You can also pass the <code>serverVersion</code> option if you want to disable automatic
 database platform detection and choose the platform version implementation explicitly.</p>
-<p>If you are running a MariaDB database, you should prefix the <code>serverVersion</code>
-with <code>mariadb-</code> (ex: <code>mariadb-10.2.12</code>).</p>
+<p>Please specify the full server version as the database server would report it.
+This is especially important for MySQL and MariaDB where the full version
+string is taken into account when determining the platform.</p>
+<div class="section"><a class="section-anchor" id="mysql" name="mysql"></a><h4 class="section-header"><a href="#mysql">MySQL<i class="fas fa-link"></i></a></h4>
+<p>Connect to your MySQL server and run the <code>SELECT VERSION()</code> query:</p>
+<pre><code class="">mysql&gt; SELECT VERSION();
++-----------+
+| VERSION() |
++-----------+
+| 8.0.32    |
++-----------+
+1 row in set (0.00 sec)
+</code></pre>
+<p>In the example above, <code>8.0.32</code> is the correct value for <code>serverVersion</code>.</p>
+</div>
+<div class="section"><a class="section-anchor" id="mariadb" name="mariadb"></a><h4 class="section-header"><a href="#mariadb">MariaDB<i class="fas fa-link"></i></a></h4>
+<p>Connect to your MariaDB server and run the <code>SELECT VERSION()</code> query:</p>
+<pre><code class="">MariaDB [(none)]&gt; SELECT VERSION();
++-----------------------------------------+
+| VERSION()                               |
++-----------------------------------------+
+| 10.11.2-MariaDB-1:10.11.2+maria~ubu2204 |
++-----------------------------------------+
+1 row in set (0.001 sec)
+</code></pre>
+<p>In the example above, <code>10.11.2-MariaDB-1:10.11.2+maria~ubu2204</code> is the
+correct value for <code>serverVersion</code>.</p>
+</div>
+<div class="section"><a class="section-anchor" id="postgres" name="postgres"></a><h4 class="section-header"><a href="#postgres">Postgres<i class="fas fa-link"></i></a></h4>
+<p>Connect to your Postgres server and run the <code>SHOW server_version</code> query:</p>
+<pre><code class="">postgres=# SHOW server_version;
+         server_version
+--------------------------------
+ 15.2 (Debian 15.2-1.pgdg110+1)
+(1 row)
+</code></pre>
+<p>In the example above, <code>15.2 (Debian 15.2-1.pgdg110+1)</code> is the correct value for
+<code>server Version</code>.</p>
+</div>
+<div class="section"><a class="section-anchor" id="other-platforms" name="other-platforms"></a><h4 class="section-header"><a href="#other-platforms">Other Platforms<i class="fas fa-link"></i></a></h4>
+<p>For other platforms, DBAL currently does not implement version-specific
+platform detection, so specifying the <code>serverVersion</code> parameter has no effect.</p>
+<p>However, you can still do so. You can use the string that the following
+expression returns:</p>
+<pre><code class="">$connection-&gt;getWrappedConnection()-&gt;getServerVersion();
+</code></pre>
+</div>
 </div>
 <div class="section"><a class="section-anchor" id="custom-driver-options" name="custom-driver-options"></a><h3 class="section-header"><a href="#custom-driver-options">Custom Driver Options<i class="fas fa-link"></i></a></h3>
 <p>The <code>driverOptions</code> option allows to pass arbitrary options
