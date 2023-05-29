@@ -509,11 +509,80 @@ projects resides under <strong>vendor/</strong>.</p>
 constraint in composer.json and run:</p>
 <div class="console"><pre><code class="console"><span class="noselect">$ </span>composer update</code></pre></div>
 </div>
-<div class="section" id="running-tests">
-<h2>Running Tests</h2>
-<p>You must have installed the library with composer and the dev
-dependencies (default). To run the tests:</p>
-<div class="console"><pre><code class="console"><span class="noselect">$ </span>./vendor/bin/phpunit</code></pre></div>
+<div class="section" id="dealing-with-checks-and-tools">
+<h2>Dealing with checks and tools</h2>
+<p>We get lots of PRs, and each of them goes though a series of checks that
+should catch obvious mistakes, so that we can focus on higher order
+issues. The checks are fairly standardized across all our projects, so
+here is a list of the most common ones and how to deal with them.
+Before you can run any of these locally, you will need to install
+dependencies with <code>composer install</code>.</p>
+<div class="section" id="coding-standard-check">
+<h3>Coding standard check</h3>
+<p>We use <a href="https://github.com/squizlabs/PHP_CodeSniffer">PHP_CodeSniffer</a>
+along with the <a href="https://github.com/doctrine/coding-standard">Doctrine Coding Standard</a>.</p>
+<p>To get a list of coding standard issues, run:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>vendor/bin/phpcs</code></pre></div>
+<p>To automatically fix some of the issues, run:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>vendor/bin/phpcbf</code></pre></div>
+<p>Some issues are impossible to fix automatically, so you will have to fix
+them manually.</p>
+</div>
+<div class="section" id="static-analysis">
+<h3>Static analysis</h3>
+<p>We use two different static analysis tools, that can be complementary:</p>
+<ul><li class="dash"><a href="https://psalm.dev/">Psalm</a></li>
+<li class="dash"><a href="https://phpstan.org/">PHPStan</a></li>
+</ul>
+
+<p>Here is how to run both tools:</p>
+<div class="console"><pre><code class="console"><span class="noselect">$ </span>vendor/bin/psalm
+<span class="noselect">$ </span>vendor/bin/phpstan</code></pre></div>
+<p>It might happen that these tools report false positives. In that case,
+we try to report the false positives upstream, and then we ignore them
+in <code>psalm.xml</code> or <code>phpstan.neon</code>, along with a link to the bug
+report.</p>
+<p>When things get overwhelming, for instance when upgrading Psalm or
+PHPStan, we use baseline files, but as a last resort: it's better to
+have new code pass analysis with the latest version of the tools than to
+block the ugprade until every single issue is addressed.</p>
+<p>If you are looking for something to contribute, you can try to
+reduce the baseline files in repositories that have them.
+This might happen accidentally when working on code, and both tools are
+configured to let you know when you should remove lines from the
+baseline.</p>
+<p>We never rely on <code>@psalm-suppress</code> except in some Symfony bundles. We
+are aware of this inconsistency, and might resolve it someday. Until
+then, try to be consistent with the repository you are contributing to.</p>
+<p>Both tools understand most of each other annotations, and we use
+<code>@psalm-</code>-prefixed annotations and let PHPStan do the translation. We
+use prefixed annotations for advanced features that are not understood
+by all IDEs yet.</p>
+</div>
+<div class="section" id="tests">
+<h3>Tests</h3>
+<p>We use <a href="https://phpunit.de/">PHPUnit</a> for our tests. You can run them
+with <code>vendor/bin/phpunit</code>. We often have more than just one PHPUnit
+check, because we want to run them with different versions of PHP, or
+with different versions of infrastructure components (e.g. different
+RDBMS), etc. All these jobs produce coverage reports, which are gathered
+and sent to Codecov. If you see a coverage drop, it is likely that you
+are missing a test for some code you added.</p>
+</div>
+<div class="section" id="running-checks-before-pushing">
+<h3>Running checks before pushing</h3>
+<p>Rather than starting many containers on a remote infrastructure to
+figure what is wrong with your code, running some of the checks locally
+before pushing is never a bad idea. You can do so by creating a
+<code>.git/hooks/pre-push</code> file or even a <code>.git/hooks/pre-commit</code> file
+with the following content:</p>
+<div class="console"><pre><code class="console">#!/bin/bash
+set -e
+echo ''|vendor/bin/phpcs
+vendor/bin/phpstan
+vendor/bin/psalm
+vendor/bin/phpunit</code></pre></div>
+</div>
 </div>
 <div class="section" id="security-disclosures">
 <h2>Security Disclosures</h2>
