@@ -296,6 +296,8 @@
                                                                                     <h6 class="dropdown-header">Unmaintained</h6>
 
                                                                                             
+                                                <a class="dropdown-item" href="/projects/doctrine-orm-module/en/6.0/configuration.html">6.0</a>
+                                                                                            
                                                 <a class="dropdown-item" href="/projects/doctrine-orm-module/en/5.2/configuration.html">5.2</a>
                                                                                             
                                                 <a class="dropdown-item" href="/projects/doctrine-orm-module/en/5.1/configuration.html">5.1</a>
@@ -765,33 +767,34 @@ module.</p>
 <tr><td class="line-number noselect"><a name="line-number-4b578eba0b777a79b642af4f9ae828913c8612bf-7" class="line-number-anchor" /><a href="#line-number-4b578eba0b777a79b642af4f9ae828913c8612bf-7">7</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="how-to-exclude-tables-from-a-schema-diff" name="how-to-exclude-tables-from-a-schema-diff"></a><h2 class="section-header"><a href="#how-to-exclude-tables-from-a-schema-diff">How to Exclude Tables from a Schema Diff<i class="fas fa-link"></i></a></h2>
-<p>The schema_assets_filter option can be used to exclude certain tables from being created or deleted in a schema update:</p>
+<p>The schema_assets_filter option can be used to exclude certain tables from being deleted in a schema update.
+It should be set with a filter callback that will receive the table name and should return `false` for any tables that must be excluded and `true` for any other tables.</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="7aba60985437be9f9fcab11dd694a1ba4bc2f437"
+            data-copy-element-id="fa38af4c25240d983ed26a5b77b007dc828a1f18"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="7aba60985437be9f9fcab11dd694a1ba4bc2f437"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-1" class="line-number-anchor" /><a href="#line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-1">1</a></td><td class="code-line" rowspan="11"><span class="hljs-keyword">return</span> [
+        ><i class="fas fa-copy"></i></button><div id="fa38af4c25240d983ed26a5b77b007dc828a1f18"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-1" class="line-number-anchor" /><a href="#line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-1">1</a></td><td class="code-line" rowspan="11"><span class="hljs-keyword">return</span> [
     <span class="hljs-string">'doctrine'</span> =&gt; [
         <span class="hljs-string">'configuration'</span> =&gt; [
             <span class="hljs-string">'orm_default'</span> =&gt; [
                 <span class="hljs-string">'schema_assets_filter'</span> =&gt; fn (string $tableName): bool =&gt; (
-                    in_array($tableName, [<span class="hljs-string">'migrations'</span>, <span class="hljs-string">'doNotRemoveThisTable'</span>]);
+                    ! in_array($tableName, [<span class="hljs-string">'doNotRemoveThisTable'</span>, <span class="hljs-string">'alsoDoNotRemoveThisTable'</span>])
                 ),
             ],
         ],
     ],
 ];</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-2" class="line-number-anchor" /><a href="#line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-3" class="line-number-anchor" /><a href="#line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-4" class="line-number-anchor" /><a href="#line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-5" class="line-number-anchor" /><a href="#line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-6" class="line-number-anchor" /><a href="#line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-7" class="line-number-anchor" /><a href="#line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-8" class="line-number-anchor" /><a href="#line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-9" class="line-number-anchor" /><a href="#line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-10" class="line-number-anchor" /><a href="#line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-11" class="line-number-anchor" /><a href="#line-number-7aba60985437be9f9fcab11dd694a1ba4bc2f437-11">11</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-2" class="line-number-anchor" /><a href="#line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-3" class="line-number-anchor" /><a href="#line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-4" class="line-number-anchor" /><a href="#line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-5" class="line-number-anchor" /><a href="#line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-6" class="line-number-anchor" /><a href="#line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-7" class="line-number-anchor" /><a href="#line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-8" class="line-number-anchor" /><a href="#line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-9" class="line-number-anchor" /><a href="#line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-10" class="line-number-anchor" /><a href="#line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-11" class="line-number-anchor" /><a href="#line-number-fa38af4c25240d983ed26a5b77b007dc828a1f18-11">11</a></td></tr></table></div></code></pre>
 <div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>If you want your application config to be cached, you should use a callable in terms of a static
 function (like `MyFilterClass::filter`) instead of a closure.</p>
 </td></tr></table></div>
