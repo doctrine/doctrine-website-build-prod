@@ -269,7 +269,7 @@
                                                             
                                 <div class="dropdown show d-inline-block">
                                     <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-dbal/en/latest/reference/types.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        4.0.0-BETA3
+                                        4.0.0-RC1
                                     </a>
 
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -277,7 +277,7 @@
 
                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-dbal/en/latest/reference/types.html">
-                                                        4.0.0-BETA3
+                                                        4.0.0-RC1
 
                                                         
                                                                                                                     (upcoming)
@@ -291,7 +291,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-dbal/en/3.7/reference/types.html">
-                                                        3.7.0
+                                                        3.7.1
 
                                                                                                                     (current)
                                                         
@@ -402,18 +402,19 @@ might not be propagated to the database.</p>
 </div>
 <div class="section"><a class="section-anchor" id="bigint" name="bigint"></a><h5 class="section-header"><a href="#bigint">bigint<i class="fas fa-link"></i></a></h5>
 <p>Maps and converts 8-byte integer values.
-Unsigned integer values have a range of <strong>0</strong> to <strong>18446744073709551615</strong> while signed
+Unsigned integer values have a range of <strong>0</strong> to <strong>18446744073709551615</strong>, while signed
 integer values have a range of <strong>−9223372036854775808</strong> to <strong>9223372036854775807</strong>.
 If you know the integer data you want to store always fits into one of these ranges
 you should consider using this type.
-Values retrieved from the database are always converted to PHP's <code>string</code> type
-or <code>null</code> if no data is present.</p>
-<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>For compatibility reasons this type is not converted to an integer
-as PHP can only represent big integer values as real integers on
-systems with a 64-bit architecture and would fall back to approximated
-float values otherwise which could lead to false assumptions in applications.</p>
-<p>Not all of the database vendors support unsigned integers, so such an assumption
-might not be propagated to the database.</p>
+Values retrieved from the database are always converted to PHP's <code>integer</code> type
+if they are within PHP's integer range or <code>string</code> if they aren't.
+Otherwise, returns <code>null</code> if no data is present.</p>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Due to architectural differences, 32-bit PHP systems have a smaller
+integer range than their 64-bit counterparts. On 32-bit systems,
+values exceeding this range will be represented as strings instead
+of integers. Bear in mind that not all database vendors
+support unsigned integers, so schema configuration cannot be
+enforced.</p>
 </td></tr></table></div>
 </div>
 </div>
