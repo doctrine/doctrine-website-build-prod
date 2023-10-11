@@ -285,7 +285,7 @@
 
                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/latest/reference/basic-mapping.html">
-                                                        3.0
+                                                        3.0.0-BETA1
 
                                                         
                                                                                                                     (upcoming)
@@ -884,9 +884,34 @@ the field that serves as the identifier with the <code>#[Id]</code> attribute.</
 <tr><td class="line-number noselect"><a name="line-number-9f9a0683695617c8d321a8f73c9b4f5c3576d51d-8" class="line-number-anchor" /><a href="#line-number-9f9a0683695617c8d321a8f73c9b4f5c3576d51d-8">8</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-9f9a0683695617c8d321a8f73c9b4f5c3576d51d-9" class="line-number-anchor" /><a href="#line-number-9f9a0683695617c8d321a8f73c9b4f5c3576d51d-9">9</a></td></tr></table></div></code></pre></div></li></ul></div>
 <p>In most cases using the automatic generator strategy (<code>#[GeneratedValue]</code>) is
-what you want. It defaults to the identifier generation mechanism your current
-database vendor prefers: AUTO_INCREMENT with MySQL, sequences with PostgreSQL
-and Oracle and so on.</p>
+what you want, but for backwards-compatibility reasons it might not. It
+defaults to the identifier generation mechanism your current database
+vendor preferred at the time that strategy was introduced:
+<code>AUTO_INCREMENT</code> with MySQL, sequences with PostgreSQL and Oracle and
+so on.
+We now recommend using <code>IDENTITY</code> for PostgreSQL, and you can achieve
+that while still using the <code>AUTO</code> strategy, by configuring what it
+defaults to.</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="4cf8d3729cbe01b164a510b1f686717d06f37383"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="4cf8d3729cbe01b164a510b1f686717d06f37383"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-1" class="line-number-anchor" /><a href="#line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Platforms</span>\<span class="hljs-title">PostgreSQLPlatform</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Configuration</span>;
+
+$config = <span class="hljs-keyword">new</span> Configuration();
+$config-&gt;setIdentityGenerationPreferences([
+    PostgreSQLPlatform::class =&gt; ClassMetadata::GENERATOR_TYPE_IDENTITY,
+]);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-2" class="line-number-anchor" /><a href="#line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-3" class="line-number-anchor" /><a href="#line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-4" class="line-number-anchor" /><a href="#line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-5" class="line-number-anchor" /><a href="#line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-6" class="line-number-anchor" /><a href="#line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-7" class="line-number-anchor" /><a href="#line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-8" class="line-number-anchor" /><a href="#line-number-4cf8d3729cbe01b164a510b1f686717d06f37383-8">8</a></td></tr></table></div></code></pre>
 <a id="identifier-generation-strategies"></a>
 <div class="section"><a class="section-anchor" id="identifier-generation-strategies" name="identifier-generation-strategies"></a><h4 class="section-header"><a href="#identifier-generation-strategies">Identifier Generation Strategies<i class="fas fa-link"></i></a></h4>
 <p>The previous example showed how to use the default identifier
@@ -898,17 +923,18 @@ make use of some additional features.</p>
 <ul>
     <li class="dash"><code>AUTO</code> (default): Tells Doctrine to pick the strategy that is
 preferred by the used database platform. The preferred strategies
-are IDENTITY for MySQL, SQLite, MsSQL and SQL Anywhere and SEQUENCE
-for Oracle and PostgreSQL. This strategy provides full portability.</li>
-<li class="dash"><code>SEQUENCE</code>: Tells Doctrine to use a database sequence for ID
-generation. This strategy does currently not provide full
-portability. Sequences are supported by Oracle, PostgreSql and
-SQL Anywhere.</li>
+are <code>IDENTITY</code> for MySQL, SQLite, MsSQL and SQL Anywhere and, for
+historical reasons, <code>SEQUENCE</code> for Oracle and PostgreSQL. This
+strategy provides full portability.</li>
 <li class="dash"><code>IDENTITY</code>: Tells Doctrine to use special identity columns in
 the database that generate a value on insertion of a row. This
 strategy does currently not provide full portability and is
 supported by the following platforms: MySQL/SQLite/SQL Anywhere
-(AUTO_INCREMENT), MSSQL (IDENTITY) and PostgreSQL (SERIAL).</li>
+(<code>AUTO_INCREMENT</code>), MSSQL (<code>IDENTITY</code>) and PostgreSQL (<code>SERIAL</code>).</li>
+<li class="dash"><code>SEQUENCE</code>: Tells Doctrine to use a database sequence for ID
+generation. This strategy does currently not provide full
+portability. Sequences are supported by Oracle, PostgreSql and
+SQL Anywhere.</li>
 <li class="dash"><code>UUID</code> (deprecated): Tells Doctrine to use the built-in Universally
 Unique Identifier generator. This strategy provides full portability.</li>
 <li class="dash"><code>NONE</code>: Tells Doctrine that the identifiers are assigned (and
