@@ -435,50 +435,42 @@ other documents are mapped with cascade=PERSIST or cascade=ALL.</li>
 </div>
 <div class="section"><a class="section-anchor" id="flush-options" name="flush-options"></a><h2 class="section-header"><a href="#flush-options">Flush Options<i class="fas fa-link"></i></a></h2>
 <p>When committing your documents you can specify an array of options to the
-<code>flush</code> method. With it you can send options to the underlying database
-like <code>safe</code>, <code>fsync</code>, etc.</p>
+<code>flush</code> method. You can use this to pass a write options to the underlying
+operations, e.g. a custom write concern.</p>
 <p>Example:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="72a61ea9b5bee9824ff2c7073006106b34304856"
+            data-copy-element-id="4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="72a61ea9b5bee9824ff2c7073006106b34304856"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-72a61ea9b5bee9824ff2c7073006106b34304856-1" class="line-number-anchor" /><a href="#line-number-72a61ea9b5bee9824ff2c7073006106b34304856-1">1</a></td><td class="code-line" rowspan="6"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef-1" class="line-number-anchor" /><a href="#line-number-4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef-1">1</a></td><td class="code-line" rowspan="6"><span class="hljs-meta">&lt;?php</span>
 
 $user = $dm-&gt;getRepository(User::class)-&gt;find($userId);
 <span class="hljs-comment">// ...</span>
 $user-&gt;setPassword(<span class="hljs-string">'changeme'</span>);
-$dm-&gt;flush(<span class="hljs-keyword">null</span>, [<span class="hljs-string">'safe'</span> =&gt; <span class="hljs-keyword">true</span>, <span class="hljs-string">'fsync'</span> =&gt; <span class="hljs-keyword">true</span>]);</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-72a61ea9b5bee9824ff2c7073006106b34304856-2" class="line-number-anchor" /><a href="#line-number-72a61ea9b5bee9824ff2c7073006106b34304856-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-72a61ea9b5bee9824ff2c7073006106b34304856-3" class="line-number-anchor" /><a href="#line-number-72a61ea9b5bee9824ff2c7073006106b34304856-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-72a61ea9b5bee9824ff2c7073006106b34304856-4" class="line-number-anchor" /><a href="#line-number-72a61ea9b5bee9824ff2c7073006106b34304856-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-72a61ea9b5bee9824ff2c7073006106b34304856-5" class="line-number-anchor" /><a href="#line-number-72a61ea9b5bee9824ff2c7073006106b34304856-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-72a61ea9b5bee9824ff2c7073006106b34304856-6" class="line-number-anchor" /><a href="#line-number-72a61ea9b5bee9824ff2c7073006106b34304856-6">6</a></td></tr></table></div></code></pre>
+$dm-&gt;flush([<span class="hljs-string">'writeConcern'</span> =&gt; <span class="hljs-keyword">new</span> \MongoDB\Driver\WriteConcern(<span class="hljs-number">1</span>)]);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef-2" class="line-number-anchor" /><a href="#line-number-4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef-3" class="line-number-anchor" /><a href="#line-number-4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef-4" class="line-number-anchor" /><a href="#line-number-4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef-5" class="line-number-anchor" /><a href="#line-number-4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef-6" class="line-number-anchor" /><a href="#line-number-4ed5f6cf6713e50fdd8e8f88126a4fbfc35429ef-6">6</a></td></tr></table></div></code></pre>
 <p>You can configure the default flush options on your <code>Configuration</code> object
 if you want to set them globally for all flushes.</p>
 <p>Example:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="2e388b273334ec9f9660c71d19d41b21226255a4"
+            data-copy-element-id="1ed1148f3fe04712936c27bb5d91d2b91e03733a"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="2e388b273334ec9f9660c71d19d41b21226255a4"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-2e388b273334ec9f9660c71d19d41b21226255a4-1" class="line-number-anchor" /><a href="#line-number-2e388b273334ec9f9660c71d19d41b21226255a4-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="1ed1148f3fe04712936c27bb5d91d2b91e03733a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-1ed1148f3fe04712936c27bb5d91d2b91e03733a-1" class="line-number-anchor" /><a href="#line-number-1ed1148f3fe04712936c27bb5d91d2b91e03733a-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-meta">&lt;?php</span>
 
 $config-&gt;setDefaultCommitOptions(
-  [
-    <span class="hljs-string">'safe'</span> =&gt; <span class="hljs-keyword">true</span>,
-    <span class="hljs-string">'fsync'</span> =&gt; <span class="hljs-keyword">true</span>
-  ]
+  [<span class="hljs-string">'writeConcern'</span> =&gt; <span class="hljs-keyword">new</span> \MongoDB\Driver\WriteConcern(<span class="hljs-number">1</span>)]
 );</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e388b273334ec9f9660c71d19d41b21226255a4-2" class="line-number-anchor" /><a href="#line-number-2e388b273334ec9f9660c71d19d41b21226255a4-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e388b273334ec9f9660c71d19d41b21226255a4-3" class="line-number-anchor" /><a href="#line-number-2e388b273334ec9f9660c71d19d41b21226255a4-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e388b273334ec9f9660c71d19d41b21226255a4-4" class="line-number-anchor" /><a href="#line-number-2e388b273334ec9f9660c71d19d41b21226255a4-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e388b273334ec9f9660c71d19d41b21226255a4-5" class="line-number-anchor" /><a href="#line-number-2e388b273334ec9f9660c71d19d41b21226255a4-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e388b273334ec9f9660c71d19d41b21226255a4-6" class="line-number-anchor" /><a href="#line-number-2e388b273334ec9f9660c71d19d41b21226255a4-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e388b273334ec9f9660c71d19d41b21226255a4-7" class="line-number-anchor" /><a href="#line-number-2e388b273334ec9f9660c71d19d41b21226255a4-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2e388b273334ec9f9660c71d19d41b21226255a4-8" class="line-number-anchor" /><a href="#line-number-2e388b273334ec9f9660c71d19d41b21226255a4-8">8</a></td></tr></table></div></code></pre>
-<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Safe is set to true by default for all writes when using the ODM.</p>
-</td></tr></table></div>
+<tr><td class="line-number noselect"><a name="line-number-1ed1148f3fe04712936c27bb5d91d2b91e03733a-2" class="line-number-anchor" /><a href="#line-number-1ed1148f3fe04712936c27bb5d91d2b91e03733a-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ed1148f3fe04712936c27bb5d91d2b91e03733a-3" class="line-number-anchor" /><a href="#line-number-1ed1148f3fe04712936c27bb5d91d2b91e03733a-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ed1148f3fe04712936c27bb5d91d2b91e03733a-4" class="line-number-anchor" /><a href="#line-number-1ed1148f3fe04712936c27bb5d91d2b91e03733a-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ed1148f3fe04712936c27bb5d91d2b91e03733a-5" class="line-number-anchor" /><a href="#line-number-1ed1148f3fe04712936c27bb5d91d2b91e03733a-5">5</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="removing-documents" name="removing-documents"></a><h2 class="section-header"><a href="#removing-documents">Removing documents<i class="fas fa-link"></i></a></h2>
 <p>A document can be removed from persistent storage by passing it to
