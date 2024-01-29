@@ -278,7 +278,7 @@
 
                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/latest/cookbook/aggregate-fields.html">
-                                                        3.0.0-BETA2
+                                                        3.0.0-RC1
 
                                                         
                                                                                                                     (upcoming)
@@ -292,7 +292,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/2.17/cookbook/aggregate-fields.html">
-                                                        2.17.3
+                                                        2.17.4
 
                                                                                                                     (current)
                                                         
@@ -354,75 +354,54 @@ added on the <code>Entry</code> object.</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="12985b015a7d81ee5ee72683857df532d340ec07"
+            data-copy-element-id="54c1b10f005c7409d3d219aa94ac183835cbec4a"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="12985b015a7d81ee5ee72683857df532d340ec07"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-1" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-1">1</a></td><td class="code-line" rowspan="75"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="54c1b10f005c7409d3d219aa94ac183835cbec4a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-1" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-1">1</a></td><td class="code-line" rowspan="54"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-keyword">namespace</span> <span class="hljs-title">Bank</span>\<span class="hljs-title">Entities</span>;
 
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span> <span class="hljs-title">as</span> <span class="hljs-title">ORM</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Collections</span>\<span class="hljs-title">ArrayCollection</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Collections</span>\<span class="hljs-title">Collection</span>;
 
-<span class="hljs-comment">/**
- * <span class="hljs-doctag">@ORM</span>\Entity
- */</span>
+<span class="hljs-comment">#[ORM\Entity]</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Account</span>
 </span>{
-    <span class="hljs-comment">/**
-     * <span class="hljs-doctag">@ORM</span>\Id
-     * <span class="hljs-doctag">@ORM</span>\GeneratedValue
-     * <span class="hljs-doctag">@ORM</span>\Column(type="integer")
-     */</span>
+    <span class="hljs-comment">#[ORM\Id]</span>
+    <span class="hljs-comment">#[ORM\GeneratedValue]</span>
+    <span class="hljs-comment">#[ORM\Column(type: 'integer')]</span>
     <span class="hljs-keyword">private</span> ?int $id;
 
-    <span class="hljs-comment">/**
-     * <span class="hljs-doctag">@ORM</span>\Column(type="string", unique=true)
-     */</span>
-    <span class="hljs-keyword">private</span> string $no;
+    <span class="hljs-comment">#[ORM\OneToMany(targetEntity: Entry::class, mappedBy: 'account', cascade: ['persist'])]</span>
+    <span class="hljs-keyword">private</span> Collection $entries;
 
-    <span class="hljs-comment">/**
-     * <span class="hljs-doctag">@ORM</span>\OneToMany(targetEntity="Entry", mappedBy="account", cascade={"persist"})
-     */</span>
-    <span class="hljs-keyword">private</span> <span class="hljs-keyword">array</span> $entries;
 
-    <span class="hljs-comment">/**
-     * <span class="hljs-doctag">@ORM</span>\Column(type="integer")
-     */</span>
-    <span class="hljs-keyword">private</span> int $maxCredit = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(
+        #[ORM\Column<span class="hljs-params">(type: <span class="hljs-string">'string'</span>, unique: true)</span>]
+        private string $no,
 
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(string $no, int $maxCredit = <span class="hljs-number">0</span>)</span>
-    </span>{
-        <span class="hljs-keyword">$this</span>-&gt;no = $no;
-        <span class="hljs-keyword">$this</span>-&gt;maxCredit = $maxCredit;
-        <span class="hljs-keyword">$this</span>-&gt;entries = <span class="hljs-keyword">new</span> \Doctrine\Common\Collections\ArrayCollection();
+        #[ORM\Column<span class="hljs-params">(type: <span class="hljs-string">'integer'</span>)</span>]
+        private int $maxCredit = <span class="hljs-number">0</span>,
+    )</span> </span>{
+        <span class="hljs-keyword">$this</span>-&gt;entries = <span class="hljs-keyword">new</span> ArrayCollection();
     }
 }
 
-<span class="hljs-comment">/**
- * <span class="hljs-doctag">@ORM</span>\Entity
- */</span>
+<span class="hljs-comment">#[ORM\Entity]</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Entry</span>
 </span>{
-    <span class="hljs-comment">/**
-     * <span class="hljs-doctag">@ORM</span>\Id
-     * <span class="hljs-doctag">@ORM</span>\GeneratedValue
-     * <span class="hljs-doctag">@ORM</span>\Column(type="integer")
-     */</span>
+    <span class="hljs-comment">#[ORM\Id]</span>
+    <span class="hljs-comment">#[ORM\GeneratedValue]</span>
+    <span class="hljs-comment">#[ORM\Column(type: 'integer')]</span>
     <span class="hljs-keyword">private</span> ?int $id;
 
-    <span class="hljs-comment">/**
-     * <span class="hljs-doctag">@ORM</span>\ManyToOne(targetEntity="Account", inversedBy="entries")
-     */</span>
-    <span class="hljs-keyword">private</span> Account $account;
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(
+        #[ORM\ManyToOne<span class="hljs-params">(targetEntity: Account::class, inversedBy: <span class="hljs-string">'entries'</span>)</span>]
+        private Account $account,
 
-    <span class="hljs-comment">/**
-     * <span class="hljs-doctag">@ORM</span>\Column(type="integer")
-     */</span>
-    <span class="hljs-keyword">private</span> int $amount;
-
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(Account $account, int $amount)</span>
-    </span>{
-        <span class="hljs-keyword">$this</span>-&gt;account = $account;
-        <span class="hljs-keyword">$this</span>-&gt;amount = $amount;
+        #[ORM\Column<span class="hljs-params">(type: <span class="hljs-string">'integer'</span>)</span>]
+        private int $amount,
+    )</span> </span>{
         <span class="hljs-comment">// more stuff here, from/to whom, stated reason, execution date and such</span>
     }
 
@@ -431,80 +410,59 @@ added on the <code>Entry</code> object.</p>
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;amount;
     }
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-2" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-3" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-4" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-5" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-6" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-7" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-8" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-9" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-10" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-11" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-12" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-13" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-14" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-15" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-16" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-17" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-18" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-19" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-20" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-21" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-21">21</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-22" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-22">22</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-23" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-23">23</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-24" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-24">24</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-25" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-25">25</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-26" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-26">26</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-27" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-27">27</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-28" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-28">28</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-29" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-29">29</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-30" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-30">30</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-31" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-31">31</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-32" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-32">32</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-33" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-33">33</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-34" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-34">34</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-35" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-35">35</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-36" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-36">36</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-37" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-37">37</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-38" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-38">38</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-39" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-39">39</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-40" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-40">40</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-41" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-41">41</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-42" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-42">42</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-43" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-43">43</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-44" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-44">44</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-45" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-45">45</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-46" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-46">46</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-47" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-47">47</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-48" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-48">48</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-49" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-49">49</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-50" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-50">50</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-51" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-51">51</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-52" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-52">52</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-53" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-53">53</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-54" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-54">54</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-55" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-55">55</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-56" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-56">56</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-57" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-57">57</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-58" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-58">58</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-59" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-59">59</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-60" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-60">60</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-61" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-61">61</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-62" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-62">62</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-63" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-63">63</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-64" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-64">64</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-65" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-65">65</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-66" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-66">66</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-67" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-67">67</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-68" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-68">68</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-69" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-69">69</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-70" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-70">70</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-71" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-71">71</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-72" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-72">72</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-73" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-73">73</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-74" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-74">74</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-12985b015a7d81ee5ee72683857df532d340ec07-75" class="line-number-anchor" /><a href="#line-number-12985b015a7d81ee5ee72683857df532d340ec07-75">75</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-2" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-3" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-4" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-5" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-6" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-7" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-8" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-9" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-10" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-11" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-12" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-13" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-14" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-15" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-16" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-17" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-18" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-19" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-20" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-21" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-22" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-23" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-24" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-25" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-26" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-27" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-28" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-29" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-30" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-31" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-32" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-33" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-34" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-35" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-36" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-36">36</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-37" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-37">37</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-38" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-38">38</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-39" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-39">39</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-40" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-40">40</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-41" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-41">41</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-42" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-42">42</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-43" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-43">43</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-44" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-44">44</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-45" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-45">45</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-46" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-46">46</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-47" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-47">47</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-48" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-48">48</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-49" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-49">49</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-50" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-50">50</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-51" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-51">51</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-52" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-52">52</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-53" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-53">53</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-54" class="line-number-anchor" /><a href="#line-number-54c1b10f005c7409d3d219aa94ac183835cbec4a-54">54</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="using-dql" name="using-dql"></a><h2 class="section-header"><a href="#using-dql">Using DQL<i class="fas fa-link"></i></a></h2>
 <p>The Doctrine Query Language allows you to select for aggregate
@@ -597,29 +555,27 @@ relation with this method:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="2162d5533b36126676ef3cfb345dc3694c61a749"
+            data-copy-element-id="f493a99b7509f18605e2c25b8ece0a4c0df56b98"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="2162d5533b36126676ef3cfb345dc3694c61a749"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-2162d5533b36126676ef3cfb345dc3694c61a749-1" class="line-number-anchor" /><a href="#line-number-2162d5533b36126676ef3cfb345dc3694c61a749-1">1</a></td><td class="code-line" rowspan="11"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="f493a99b7509f18605e2c25b8ece0a4c0df56b98"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-1" class="line-number-anchor" /><a href="#line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-1">1</a></td><td class="code-line" rowspan="10"><span class="hljs-meta">&lt;?php</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Account</span>
 </span>{
     <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addEntry</span><span class="hljs-params">(int $amount)</span>: <span class="hljs-title">void</span>
     </span>{
         <span class="hljs-keyword">$this</span>-&gt;assertAcceptEntryAllowed($amount);
 
-        $e = <span class="hljs-keyword">new</span> Entry(<span class="hljs-keyword">$this</span>, $amount);
-        <span class="hljs-keyword">$this</span>-&gt;entries[] = $e;
+        <span class="hljs-keyword">$this</span>-&gt;entries[] = <span class="hljs-keyword">new</span> Entry(<span class="hljs-keyword">$this</span>, $amount);
     }
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2162d5533b36126676ef3cfb345dc3694c61a749-2" class="line-number-anchor" /><a href="#line-number-2162d5533b36126676ef3cfb345dc3694c61a749-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2162d5533b36126676ef3cfb345dc3694c61a749-3" class="line-number-anchor" /><a href="#line-number-2162d5533b36126676ef3cfb345dc3694c61a749-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2162d5533b36126676ef3cfb345dc3694c61a749-4" class="line-number-anchor" /><a href="#line-number-2162d5533b36126676ef3cfb345dc3694c61a749-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2162d5533b36126676ef3cfb345dc3694c61a749-5" class="line-number-anchor" /><a href="#line-number-2162d5533b36126676ef3cfb345dc3694c61a749-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2162d5533b36126676ef3cfb345dc3694c61a749-6" class="line-number-anchor" /><a href="#line-number-2162d5533b36126676ef3cfb345dc3694c61a749-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2162d5533b36126676ef3cfb345dc3694c61a749-7" class="line-number-anchor" /><a href="#line-number-2162d5533b36126676ef3cfb345dc3694c61a749-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2162d5533b36126676ef3cfb345dc3694c61a749-8" class="line-number-anchor" /><a href="#line-number-2162d5533b36126676ef3cfb345dc3694c61a749-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2162d5533b36126676ef3cfb345dc3694c61a749-9" class="line-number-anchor" /><a href="#line-number-2162d5533b36126676ef3cfb345dc3694c61a749-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2162d5533b36126676ef3cfb345dc3694c61a749-10" class="line-number-anchor" /><a href="#line-number-2162d5533b36126676ef3cfb345dc3694c61a749-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2162d5533b36126676ef3cfb345dc3694c61a749-11" class="line-number-anchor" /><a href="#line-number-2162d5533b36126676ef3cfb345dc3694c61a749-11">11</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-2" class="line-number-anchor" /><a href="#line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-3" class="line-number-anchor" /><a href="#line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-4" class="line-number-anchor" /><a href="#line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-5" class="line-number-anchor" /><a href="#line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-6" class="line-number-anchor" /><a href="#line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-7" class="line-number-anchor" /><a href="#line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-8" class="line-number-anchor" /><a href="#line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-9" class="line-number-anchor" /><a href="#line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-10" class="line-number-anchor" /><a href="#line-number-f493a99b7509f18605e2c25b8ece0a4c0df56b98-10">10</a></td></tr></table></div></code></pre>
 <p>Now look at the following test-code for our entities:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
@@ -748,14 +704,12 @@ balance on the Account and adjust the code in
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="d5d2e11e5a9d29078b623b6155f08973edd20cf9"
+            data-copy-element-id="1ac8e3ba5930c716067e29ee1af34177b0aea285"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="d5d2e11e5a9d29078b623b6155f08973edd20cf9"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-1" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-1">1</a></td><td class="code-line" rowspan="22"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="1ac8e3ba5930c716067e29ee1af34177b0aea285"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-1" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-1">1</a></td><td class="code-line" rowspan="19"><span class="hljs-meta">&lt;?php</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Account</span>
 </span>{
-    <span class="hljs-comment">/**
-     * <span class="hljs-doctag">@ORM</span>\Column(type="integer")
-     */</span>
+    <span class="hljs-comment">#[ORM\Column(type: 'integer')]</span>
     <span class="hljs-keyword">private</span> int $balance = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getBalance</span><span class="hljs-params">()</span>: <span class="hljs-title">int</span>
@@ -767,32 +721,28 @@ balance on the Account and adjust the code in
     </span>{
         <span class="hljs-keyword">$this</span>-&gt;assertAcceptEntryAllowed($amount);
 
-        $e = <span class="hljs-keyword">new</span> Entry(<span class="hljs-keyword">$this</span>, $amount);
-        <span class="hljs-keyword">$this</span>-&gt;entries[] = $e;
+        <span class="hljs-keyword">$this</span>-&gt;entries[] = <span class="hljs-keyword">new</span> Entry(<span class="hljs-keyword">$this</span>, $amount);
         <span class="hljs-keyword">$this</span>-&gt;balance += $amount;
     }
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-2" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-3" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-4" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-5" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-6" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-7" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-8" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-9" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-10" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-11" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-12" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-13" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-14" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-15" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-16" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-17" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-18" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-19" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-20" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-21" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-21">21</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-22" class="line-number-anchor" /><a href="#line-number-d5d2e11e5a9d29078b623b6155f08973edd20cf9-22">22</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-2" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-3" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-4" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-5" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-6" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-7" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-8" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-9" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-10" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-11" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-12" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-13" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-14" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-15" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-16" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-17" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-18" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-19" class="line-number-anchor" /><a href="#line-number-1ac8e3ba5930c716067e29ee1af34177b0aea285-19">19</a></td></tr></table></div></code></pre>
 <p>This is a very simple change, but all the tests still pass. Our
 account entities return the correct balance. Now calling the
 <code>Account::getBalance()</code> method will not occur the overhead of
@@ -851,27 +801,23 @@ Eric Evans DDD carefully he mentions that the Aggregate Root
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="139a75dd353653e0282d8e1743dafe6a2b5f2cec"
+            data-copy-element-id="fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="139a75dd353653e0282d8e1743dafe6a2b5f2cec"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-1" class="line-number-anchor" /><a href="#line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-1">1</a></td><td class="code-line" rowspan="10"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-1" class="line-number-anchor" /><a href="#line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Account</span>
 </span>{
-    <span class="hljs-comment">/**
-     * <span class="hljs-doctag">@ORM</span>\Column(type="integer")
-     * <span class="hljs-doctag">@ORM</span>\Version
-     */</span>
+    <span class="hljs-comment">#[ORM\Column(type: 'integer')]</span>
+    <span class="hljs-comment">#[ORM\Version]</span>
     <span class="hljs-keyword">private</span> int $version;
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-2" class="line-number-anchor" /><a href="#line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-3" class="line-number-anchor" /><a href="#line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-4" class="line-number-anchor" /><a href="#line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-5" class="line-number-anchor" /><a href="#line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-6" class="line-number-anchor" /><a href="#line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-7" class="line-number-anchor" /><a href="#line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-8" class="line-number-anchor" /><a href="#line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-9" class="line-number-anchor" /><a href="#line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-10" class="line-number-anchor" /><a href="#line-number-139a75dd353653e0282d8e1743dafe6a2b5f2cec-10">10</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-2" class="line-number-anchor" /><a href="#line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-3" class="line-number-anchor" /><a href="#line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-4" class="line-number-anchor" /><a href="#line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-5" class="line-number-anchor" /><a href="#line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-6" class="line-number-anchor" /><a href="#line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-7" class="line-number-anchor" /><a href="#line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-8" class="line-number-anchor" /><a href="#line-number-fb0be4fa4dc1231ff5ad5d2b4902e371926fea3e-8">8</a></td></tr></table></div></code></pre>
 <p>The previous example would then throw an exception in the face of
 whatever request saves the entity last (and would create the
 inconsistent state).</p>
