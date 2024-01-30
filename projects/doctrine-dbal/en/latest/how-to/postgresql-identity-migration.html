@@ -334,14 +334,15 @@
                             
                             
 <div class="section"><a class="section-anchor" id="migration-to-identity-columns-on-postgresql" name="migration-to-identity-columns-on-postgresql"></a><h1 class="section-header"><a href="#migration-to-identity-columns-on-postgresql">Migration to identity columns on PostgreSQL<i class="fas fa-link"></i></a></h1>
-<p>As of version 4, the DBAL uses identity columns to implement the `autoincrement`
-behavior on PostgreSQL instead of `SERIAL*` column types.</p>
-<p>If you have a database with `autoincrement` columns created using DBAL 3 or earlier,
+<p>As of version 4, the DBAL uses identity columns to implement the <code>autoincrement</code>
+behavior on PostgreSQL instead of <code>SERIAL*</code> column types.</p>
+<p>If you have a database with <code>autoincrement</code> columns created using DBAL 3 or earlier,
 you will need to perform the following schema migration before being able to continue managing
 the schema with the DBAL:</p>
 <ol class="arabic">
-    <li>Identify all `autoincrement` columns and their tables.</li>
-<li><p>Create the <a href="https://www.2ndquadrant.com/en/blog/postgresql-10-identity-columns/">upgrade_serial_to_identity()` function in the database as described in `PostgreSQL 10 identity columns explained</a>:</p>
+    <li>Identify all <code>autoincrement</code> columns and their tables.</li>
+<li><p>Create the <code>upgrade_serial_to_identity()</code> function in the database as described in
+<a href="https://www.2ndquadrant.com/en/blog/postgresql-10-identity-columns/">PostgreSQL 10 identity columns explained</a>:</p>
 <blockquote><pre class="code-block-table"><code class="sql"><button
             type="button"
             class="copy-to-clipboard"
@@ -437,11 +438,11 @@ $$;</td></tr>
 <tr><td class="line-number noselect"><a name="line-number-403841a001c4b926700c7a427cd0ae84de649126-44" class="line-number-anchor" /><a href="#line-number-403841a001c4b926700c7a427cd0ae84de649126-44">44</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-403841a001c4b926700c7a427cd0ae84de649126-45" class="line-number-anchor" /><a href="#line-number-403841a001c4b926700c7a427cd0ae84de649126-45">45</a></td></tr></table></div></code></pre>
 </blockquote></li>
-<li>For each column and their table, run `upgrade_serial_to_identity(&lt;table&gt;, &lt;column&gt;)`.</li>
+<li>For each column and their table, run <code>upgrade_serial_to_identity(&lt;table&gt;, &lt;column&gt;)</code>.</li>
 </ol>
 <p>Without this migration, next time when DBAL 4 is used to manage the schema, it will perform a similar migration
 but instead of reusing the existing sequence, it will drop it and create a new one. As a result,
-all new sequence numbers will be generated from `1`, which is most likely undesired.</p>
+all new sequence numbers will be generated from <code>1</code>, which is most likely undesired.</p>
 
 </div>
 
