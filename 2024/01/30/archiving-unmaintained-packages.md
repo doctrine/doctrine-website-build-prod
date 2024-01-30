@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Doctrine: PHP Open Source Project</title>
+        <title>Archiving Unmaintained Packages - Doctrine: PHP Open Source Project</title>
 
         <meta charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -53,8 +53,8 @@
         <meta name="twitter:site" content="@doctrineproject" />
         <meta name="twitter:creator" content="@doctrineproject" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.doctrine-project.org/team/banrobert.html" />
-        <meta property="og:title" content="Doctrine: PHP Open Source Project" />
+        <meta property="og:url" content="https://www.doctrine-project.org/2024/01/30/archiving-unmaintained-packages.md" />
+        <meta property="og:title" content="Archiving Unmaintained Packages - Doctrine: PHP Open Source Project" />
         <meta property="og:description" content="The Doctrine Project is an open-source PHP project that is home to home to several PHP libraries primarily focused on database storage and object mapping. The core projects are the Object Relational Mapper (ORM) and the Database Abstraction Layer (DBAL) it is built upon.
 " />
         <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
@@ -155,7 +155,7 @@
                     </ul>
 
                     <div class="layout-edit-button d-inline-block mr-2">
-                                                    <a href="https://github.com/doctrine/doctrine-website/edit/master/source/team/banrobert.html" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
+                                                    <a href="https://github.com/doctrine/doctrine-website/edit/master/source/blog/2024-01-30-archiving-unmaintained-packages.md" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
                                             </div>
                 </div>
                 <div class="nav-outbound">
@@ -177,58 +177,19 @@
             </div>
         
             <main role="main" class="container-wrapper container">
-                    <div class="card">
-    <div class="card-header">
-        banrobert
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-lg-8 col-sm-12">
-                <img src="https://avatars.githubusercontent.com/u/900202?v=4" class="rounded float-left mr-5" style="width: 100px;" />
-
-                <strong>
-                                            banrobert
-                                    </strong>
-
-                <ul class="list-inline">
-                    
-                    
-                                            <li class="list-inline-item"><a href="https://github.com/banrobert/" target="_blank" rel="noopener noreferrer"><i class="fab fa-github mr-2"></i></a></li>
-                                    </ul>
-
-                3 commits <span class="text-success">34 ++</span> <span class="text-danger">4 --</span>
-            </div>
-
-            <div class="col-4 d-none d-lg-block">
-                <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7D553W&placement=wwwdoctrine-projectorg" id="_carbonads_js"></script>
-            </div>
-        </div>
-    </div>
-</div>
-
-<h2 class="mt-4">Projects Contributed To</h2>
-
-<ul class="list-group">
-            <li class="list-group-item">
-            <h5 class="card-title">
-                
-                <a href="https://www.doctrine-project.org/projects/mongodb-odm.html">MongoDB Object Document Mapper</a>
-            </h5>
-
-            <ul class="list-inline mt-2">
-                <li class="list-inline-item">
-                    <i class="fas fa-book"></i>
-                    <a href="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/2.5/index.html" class="mr-2">Docs</a>
-                </li>
-
-                <li class="list-inline-item">
-                    <i class="fab fa-github"></i>
-                    <a href="https://github.com/doctrine/mongodb-odm" class="mr-2" target="_blank" rel="noopener noreferrer">GitHub</a>
-                </li>
-            </ul>
-        </li>
-    </ul>
-            </main>
+                    <p>After long consideration, we have decided to archive a number of repositories that have not seen any activity in a
+while. This affects the CouchDB and OrientDB ODMs and their respective libraries, as well as the KeyValueStore project.
+The following repositories and composer packages are affected:</p>
+<ul>
+<li><a href="https://github.com/doctrine/couchdb-client">doctrine/couchdb</a></li>
+<li><a href="https://github.com/doctrine/couchdb-odm">doctrine/couchdb-odm</a></li>
+<li><a href="https://github.com/doctrine/DoctrineCouchDBBundle">doctrine/couchdb-odm-bundle</a></li>
+<li><a href="https://github.com/doctrine/orientdb-odm">doctrine/orientdb-odm</a></li>
+<li><a href="https://github.com/doctrine/KeyValueStore">doctrine/key-value-store</a></li>
+</ul>
+<p>The composer packages will remain available and installable, but we will not be making any bug fixes or security fixes
+in the affected libraries. If you or your business depends on one of these libraries, please fork them and maintain them
+yourself in the future.</p>            </main>
 
         <button id="back-to-top" title="Go to top">Top</button>
 
