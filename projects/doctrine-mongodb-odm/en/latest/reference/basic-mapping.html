@@ -622,7 +622,7 @@ object ID. The available strategies are:</p>
 <ul>
     <li class="dash"><code>AUTO</code> - Uses the native generated ObjectId.</li>
 <li class="dash"><code>ALNUM</code> - Generates an alpha-numeric string (based on an incrementing value).</li>
-<li class="dash"><code>CUSTOM</code> - Defers generation to a AbstractIdGenerator implementation specified in the <code>class</code> option.</li>
+<li class="dash"><code>CUSTOM</code> - Defers generation to an implementation of <code>IdGenerator</code> specified in the <code>class</code> option.</li>
 <li class="dash"><code>INCREMENT</code> - Uses another collection to auto increment an integer identifier.</li>
 <li class="dash"><code>UUID</code> - Generates a UUID identifier.</li>
 <li class="dash"><code>NONE</code> - Do not generate any identifier. ID must be manually set.</li>
@@ -719,9 +719,43 @@ $document = $dm-&gt;find(MyPersistentClass::class, <span class="hljs-string">'my
 <tr><td class="line-number noselect"><a name="line-number-365c7356368d50007240c79c32f25a00b43b8553-3" class="line-number-anchor" /><a href="#line-number-365c7356368d50007240c79c32f25a00b43b8553-3">3</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-365c7356368d50007240c79c32f25a00b43b8553-4" class="line-number-anchor" /><a href="#line-number-365c7356368d50007240c79c32f25a00b43b8553-4">4</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-365c7356368d50007240c79c32f25a00b43b8553-5" class="line-number-anchor" /><a href="#line-number-365c7356368d50007240c79c32f25a00b43b8553-5">5</a></td></tr></table></div></code></pre>
-<p>You can define your own ID generator by extending the
-<code>Doctrine\ODM\MongoDB\Id\AbstractIdGenerator</code> class and specifying the class
-as an option for the <code>CUSTOM</code> strategy:</p>
+<p>You can define your own ID generator by implementing the
+<code>Doctrine\ODM\MongoDB\Id\IdGenerator</code> interface:</p>
+<pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="c4e3114566bf57e133a0ceee1ff9bc22d47232f7"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="c4e3114566bf57e133a0ceee1ff9bc22d47232f7"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-1" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-1">1</a></td><td class="code-line" rowspan="15"><span class="hljs-meta">&lt;?php</span>
+
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">Vendor</span>\<span class="hljs-title">Specific</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">DocumentManager</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Id</span>\<span class="hljs-title">IdGenerator</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Generator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">IdGenerator</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generate</span><span class="hljs-params">(DocumentManager $dm, object $document)</span>
+    </span>{
+        <span class="hljs-comment">// Your own logic here</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-string">'my_generated_id'</span>;
+    }
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-2" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-3" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-4" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-5" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-6" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-7" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-8" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-9" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-10" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-11" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-12" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-13" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-14" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-15" class="line-number-anchor" /><a href="#line-number-c4e3114566bf57e133a0ceee1ff9bc22d47232f7-15">15</a></td></tr></table></div></code></pre>
+<p>Then specify the <code>class</code> option for the <code>CUSTOM</code> strategy:</p>
 <div class="configuration-block jsactive clearfix"><ul class="simple"><li><em>PHP</em><div class="highlight-php"><pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
