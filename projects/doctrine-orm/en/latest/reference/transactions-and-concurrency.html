@@ -431,35 +431,48 @@ require an active transaction. Such methods will throw a
 requirement.</p>
 <p>A more convenient alternative for explicit transaction demarcation is the use
 of provided control abstractions in the form of
-<code>Connection#transactional($func)</code> and <code>EntityManager#transactional($func)</code>.
+<code>Connection#transactional($func)</code> and <code>EntityManager#wrapInTransaction($func)</code>.
 When used, these control abstractions ensure that you never forget to rollback
 the transaction, in addition to the obvious code reduction. An example that is
 functionally equivalent to the previously shown code looks as follows:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="e21f15c72d3f770aa881795b301523475428d162"
+            data-copy-element-id="53983c951e177fbc7e45d5205c3affa903480762"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="e21f15c72d3f770aa881795b301523475428d162"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-e21f15c72d3f770aa881795b301523475428d162-1" class="line-number-anchor" /><a href="#line-number-e21f15c72d3f770aa881795b301523475428d162-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="53983c951e177fbc7e45d5205c3affa903480762"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-1" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-1">1</a></td><td class="code-line" rowspan="17"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// transactional with Connection instance</span>
+<span class="hljs-comment">// $conn instanceof Connection</span>
+$conn-&gt;transactional(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($conn)</span> </span>{
+    <span class="hljs-comment">// ... do some work</span>
+    $user = <span class="hljs-keyword">new</span> User;
+    $user-&gt;setName(<span class="hljs-string">'George'</span>);
+});
+
+<span class="hljs-comment">// transactional with EntityManager instance</span>
 <span class="hljs-comment">// $em instanceof EntityManager</span>
-$em-&gt;transactional(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($em)</span> </span>{
+$em-&gt;wrapInTransaction(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($em)</span> </span>{
     <span class="hljs-comment">// ... do some work</span>
     $user = <span class="hljs-keyword">new</span> User;
     $user-&gt;setName(<span class="hljs-string">'George'</span>);
     $em-&gt;persist($user);
 });</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e21f15c72d3f770aa881795b301523475428d162-2" class="line-number-anchor" /><a href="#line-number-e21f15c72d3f770aa881795b301523475428d162-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e21f15c72d3f770aa881795b301523475428d162-3" class="line-number-anchor" /><a href="#line-number-e21f15c72d3f770aa881795b301523475428d162-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e21f15c72d3f770aa881795b301523475428d162-4" class="line-number-anchor" /><a href="#line-number-e21f15c72d3f770aa881795b301523475428d162-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e21f15c72d3f770aa881795b301523475428d162-5" class="line-number-anchor" /><a href="#line-number-e21f15c72d3f770aa881795b301523475428d162-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e21f15c72d3f770aa881795b301523475428d162-6" class="line-number-anchor" /><a href="#line-number-e21f15c72d3f770aa881795b301523475428d162-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e21f15c72d3f770aa881795b301523475428d162-7" class="line-number-anchor" /><a href="#line-number-e21f15c72d3f770aa881795b301523475428d162-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e21f15c72d3f770aa881795b301523475428d162-8" class="line-number-anchor" /><a href="#line-number-e21f15c72d3f770aa881795b301523475428d162-8">8</a></td></tr></table></div></code></pre>
-<div class="alert warning-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td><td><p>For historical reasons, <code>EntityManager#transactional($func)</code> will return
-<code>true</code> whenever the return value of <code>$func</code> is loosely false.
-Some examples of this include <code>array()</code>, <code>&quot;0&quot;</code>, <code>&quot;&quot;</code>, <code>0</code>, and
-<code>null</code>.</p>
-</td></tr></table></div>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-2" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-3" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-4" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-5" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-6" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-7" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-8" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-9" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-10" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-11" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-12" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-13" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-14" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-15" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-16" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-17" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-17">17</a></td></tr></table></div></code></pre>
 <p>The difference between <code>Connection#transactional($func)</code> and
 <code>EntityManager#transactional($func)</code> is that the latter
 abstraction flushes the <code>EntityManager</code> prior to transaction
