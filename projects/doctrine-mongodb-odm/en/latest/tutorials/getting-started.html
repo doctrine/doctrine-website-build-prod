@@ -328,99 +328,126 @@ initial configuration and setup in <a href="../reference/introduction.html">Intr
 Document Mapper</a>. This section will give you a basic
 overview of what could be accomplished using Doctrine MongoDB ODM.</p>
 <div class="section"><a class="section-anchor" id="example-model-simple-blog" name="example-model-simple-blog"></a><h2 class="section-header"><a href="#example-model-simple-blog">Example Model: Simple Blog<i class="fas fa-link"></i></a></h2>
-<p>To create the simplest example, let’s assume the following in a simple blog web application:</p>
+<p>To create the simplest example, let’s assume the following in a simple blog web
+application:</p>
 <ul>
-    <li class="dash">Blog has a user.</li>
-<li class="dash">Blog user can make blog posts</li>
+    <li class="dash">a Blog has a &quot;user&quot;.</li>
+<li class="dash">a Blog &quot;user&quot; can make &quot;blog posts&quot;</li>
 </ul>
 </div>
 <div class="section"><a class="section-anchor" id="a-first-prototype" name="a-first-prototype"></a><h2 class="section-header"><a href="#a-first-prototype">A first prototype<i class="fas fa-link"></i></a></h2>
-<p>For the above mentioned example, something as simple as this could be modeled with plain PHP classes.
-First define the <code>User</code> document:</p>
+<p>For the above mentioned example, we start by defining two simple PHP classes:
+<code>User</code> and <code>BlogPost</code>. The <code>User</code> class will have a collection of
+<code>BlogPost</code> objects.</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="1b50e02d25c5925b2bd79adcf74851b4eb3191ff"
+            data-copy-element-id="11ed920d5bfe14464467fd0445c7029902499f9f"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="1b50e02d25c5925b2bd79adcf74851b4eb3191ff"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-1" class="line-number-anchor" /><a href="#line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="11ed920d5bfe14464467fd0445c7029902499f9f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-1" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-1">1</a></td><td class="code-line" rowspan="15"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>;
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span>
 </span>{
-    <span class="hljs-keyword">private</span> $name;
-    <span class="hljs-keyword">private</span> $email;
-    <span class="hljs-keyword">private</span> $posts = [];
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(
+        public string $name = <span class="hljs-string">''</span>,
+        public string $email = <span class="hljs-string">''</span>,
+        public array $posts = [],
+    )</span> </span>{
+    }
 
     <span class="hljs-comment">// ...</span>
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-2" class="line-number-anchor" /><a href="#line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-3" class="line-number-anchor" /><a href="#line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-4" class="line-number-anchor" /><a href="#line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-5" class="line-number-anchor" /><a href="#line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-6" class="line-number-anchor" /><a href="#line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-7" class="line-number-anchor" /><a href="#line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-8" class="line-number-anchor" /><a href="#line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-9" class="line-number-anchor" /><a href="#line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-10" class="line-number-anchor" /><a href="#line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-11" class="line-number-anchor" /><a href="#line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-12" class="line-number-anchor" /><a href="#line-number-1b50e02d25c5925b2bd79adcf74851b4eb3191ff-12">12</a></td></tr></table></div></code></pre>
-<p>Now define the <code>BlogPost</code> document:</p>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-2" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-3" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-4" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-5" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-6" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-7" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-8" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-9" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-10" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-11" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-12" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-13" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-14" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-11ed920d5bfe14464467fd0445c7029902499f9f-15" class="line-number-anchor" /><a href="#line-number-11ed920d5bfe14464467fd0445c7029902499f9f-15">15</a></td></tr></table></div></code></pre>
+<p>Now define the <code>BlogPost</code> document that contains the title, body and the date
+of creation:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac"
+            data-copy-element-id="64a0afa77111c7c2f1a93d3715ab19b06e8c56a9"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-1" class="line-number-anchor" /><a href="#line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="64a0afa77111c7c2f1a93d3715ab19b06e8c56a9"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-1" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-1">1</a></td><td class="code-line" rowspan="17"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>;
 
+<span class="hljs-keyword">use</span> <span class="hljs-title">DateTimeImmutable</span>;
+
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span>
 </span>{
-    <span class="hljs-keyword">private</span> $title;
-    <span class="hljs-keyword">private</span> $body;
-    <span class="hljs-keyword">private</span> $createdAt;
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(
+        public string $title = <span class="hljs-string">''</span>,
+        public string $body = <span class="hljs-string">''</span>,
+        public DateTimeImmutable $createdAt = new DateTimeImmutable<span class="hljs-params">()</span>,
+    )</span> </span>{
+    }
 
     <span class="hljs-comment">// ...</span>
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-2" class="line-number-anchor" /><a href="#line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-3" class="line-number-anchor" /><a href="#line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-4" class="line-number-anchor" /><a href="#line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-5" class="line-number-anchor" /><a href="#line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-6" class="line-number-anchor" /><a href="#line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-7" class="line-number-anchor" /><a href="#line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-8" class="line-number-anchor" /><a href="#line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-9" class="line-number-anchor" /><a href="#line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-10" class="line-number-anchor" /><a href="#line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-11" class="line-number-anchor" /><a href="#line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-12" class="line-number-anchor" /><a href="#line-number-a125bbac51a13e8d33e6e95c780a4fa5ce16c4ac-12">12</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-2" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-3" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-4" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-5" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-6" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-7" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-8" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-9" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-10" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-11" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-12" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-13" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-14" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-15" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-16" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-17" class="line-number-anchor" /><a href="#line-number-64a0afa77111c7c2f1a93d3715ab19b06e8c56a9-17">17</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="persistent-models" name="persistent-models"></a><h2 class="section-header"><a href="#persistent-models">Persistent Models<i class="fas fa-link"></i></a></h2>
-<p>To make the above classes persistent, all we need to do is provide Doctrine with some mapping
-information so that it knows how to consume the objects and persist them to the database.</p>
+<p>To make the above classes persistent, we need to provide Doctrine with some
+mapping information so that it knows how to consume the objects and persist
+them to the database.</p>
 <p>You can provide your mapping information in Annotations or XML:</p>
 <div class="configuration-block jsactive clearfix"><ul class="simple"><li><em>PHP</em><div class="highlight-php"><pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="42c119643e00b60977d3f607ea1e30292ddfe4f8"
+            data-copy-element-id="07d2a47084e6cd35cbd60bd58098eae758f89427"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="42c119643e00b60977d3f607ea1e30292ddfe4f8"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-1" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-1">1</a></td><td class="code-line" rowspan="38"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="07d2a47084e6cd35cbd60bd58098eae758f89427"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-1" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-1">1</a></td><td class="code-line" rowspan="48"><span class="hljs-meta">&lt;?php</span>
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">DateTimeImmutable</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Collections</span>\<span class="hljs-title">ArrayCollection</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Collections</span>\<span class="hljs-title">Collection</span>;
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span> <span class="hljs-title">as</span> <span class="hljs-title">ODM</span>;
 
 <span class="hljs-comment">#[ODM\Document]</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span>
 </span>{
-    <span class="hljs-comment">#[ODM\Id]</span>
-    <span class="hljs-keyword">private</span> $id;
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(
+        #[ODM\Id]
+        public ?string $id = null,
 
-    <span class="hljs-comment">#[ODM\Field(type: 'string')]</span>
-    <span class="hljs-keyword">private</span> $name;
+        #[ODM\Field<span class="hljs-params">(type: <span class="hljs-string">'string'</span>)</span>]
+        public string $name = <span class="hljs-string">''</span>,
 
-    <span class="hljs-comment">#[ODM\Field(type: 'string')]</span>
-    <span class="hljs-keyword">private</span> $email;
+        #[ODM\Field<span class="hljs-params">(type: <span class="hljs-string">'string'</span>)</span>]
+        public string $email = <span class="hljs-string">''</span>,
 
-    <span class="hljs-comment">#[ODM\ReferenceMany(targetDocument: BlogPost::class, cascade: 'all')]</span>
-    <span class="hljs-keyword">private</span> $posts = [];
+        #[ODM\ReferenceMany<span class="hljs-params">(targetDocument: BlogPost::class, cascade: <span class="hljs-string">'all'</span>)</span>]
+        public Collection $posts = new ArrayCollection<span class="hljs-params">()</span>,
+    )</span> </span>{
+    }
 
     <span class="hljs-comment">// ...</span>
 }
@@ -428,57 +455,70 @@ information so that it knows how to consume the objects and persist them to the 
 <span class="hljs-comment">#[ODM\Document]</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span>
 </span>{
-    <span class="hljs-comment">#[ODM\Id]</span>
-    <span class="hljs-keyword">private</span> $id;
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(
+        #[ODM\Id]
+        public ?string $id = null,
 
-    <span class="hljs-comment">#[ODM\Field(type: 'string')]</span>
-    <span class="hljs-keyword">private</span> $title;
+        #[ODM\Field<span class="hljs-params">(type: <span class="hljs-string">'string'</span>)</span>]
+        public string $title = <span class="hljs-string">''</span>,
 
-    <span class="hljs-comment">#[ODM\Field(type: 'string')]</span>
-    <span class="hljs-keyword">private</span> $body;
+        #[ODM\Field<span class="hljs-params">(type: <span class="hljs-string">'string'</span>)</span>]
+        public string $body = <span class="hljs-string">''</span>,
 
-    <span class="hljs-comment">#[ODM\Field(type: 'date')]</span>
-    <span class="hljs-keyword">private</span> $createdAt;
+        #[ODM\Field<span class="hljs-params">(type: <span class="hljs-string">'date_immutable'</span>)</span>]
+        public DateTimeImmutable $createdAt = new DateTimeImmutable<span class="hljs-params">()</span>,
+    )</span> </span>{
+    }
 
     <span class="hljs-comment">// ...</span>
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-2" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-3" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-4" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-5" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-6" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-7" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-8" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-9" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-10" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-11" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-12" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-13" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-14" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-15" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-16" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-17" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-18" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-19" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-20" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-21" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-21">21</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-22" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-22">22</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-23" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-23">23</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-24" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-24">24</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-25" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-25">25</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-26" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-26">26</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-27" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-27">27</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-28" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-28">28</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-29" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-29">29</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-30" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-30">30</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-31" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-31">31</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-32" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-32">32</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-33" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-33">33</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-34" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-34">34</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-35" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-35">35</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-36" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-36">36</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-37" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-37">37</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-38" class="line-number-anchor" /><a href="#line-number-42c119643e00b60977d3f607ea1e30292ddfe4f8-38">38</a></td></tr></table></div></code></pre></div></li><li><em>XML</em><div class="highlight-xml"><pre class="code-block-table"><code class="xml"><button
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-2" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-3" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-4" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-5" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-6" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-7" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-8" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-9" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-10" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-11" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-12" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-13" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-14" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-15" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-16" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-17" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-18" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-19" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-20" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-21" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-22" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-23" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-24" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-25" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-26" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-27" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-28" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-29" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-30" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-31" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-32" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-33" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-34" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-35" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-36" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-36">36</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-37" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-37">37</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-38" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-38">38</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-39" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-39">39</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-40" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-40">40</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-41" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-41">41</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-42" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-42">42</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-43" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-43">43</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-44" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-44">44</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-45" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-45">45</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-46" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-46">46</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-47" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-47">47</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-48" class="line-number-anchor" /><a href="#line-number-07d2a47084e6cd35cbd60bd58098eae758f89427-48">48</a></td></tr></table></div></code></pre></div></li><li><em>XML</em><div class="highlight-xml"><pre class="code-block-table"><code class="xml"><button
             type="button"
             class="copy-to-clipboard"
             data-copy-element-id="93f9dc0578fe433ff81a7400584104a9e359fb67"
@@ -540,6 +580,11 @@ information so that it knows how to consume the objects and persist them to the 
 <tr><td class="line-number noselect"><a name="line-number-93f9dc0578fe433ff81a7400584104a9e359fb67-27" class="line-number-anchor" /><a href="#line-number-93f9dc0578fe433ff81a7400584104a9e359fb67-27">27</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-93f9dc0578fe433ff81a7400584104a9e359fb67-28" class="line-number-anchor" /><a href="#line-number-93f9dc0578fe433ff81a7400584104a9e359fb67-28">28</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-93f9dc0578fe433ff81a7400584104a9e359fb67-29" class="line-number-anchor" /><a href="#line-number-93f9dc0578fe433ff81a7400584104a9e359fb67-29">29</a></td></tr></table></div></code></pre></div></li></ul></div>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>The <code>$id</code> property above is annotated with the <code>#[Id]</code> attribute, which
+makes it special. It will be use dby Doctrine to store the unique identifier
+of the document. If you do not provide a value for <code>$id</code>, Doctrine will
+automatically generate an <a href="https://www.php.net/manual/en/class.mongodb-bson-objectid.php">ObjectId</a> when you persist the document.</p>
+</td></tr></table></div>
 <p>That’s it, we have our models, and we can save and retrieve them. Now
 all we need to do is to properly instantiate the <code>DocumentManager</code>
 instance. Read more about setting up the Doctrine MongoDB ODM in the
@@ -547,128 +592,121 @@ instance. Read more about setting up the Doctrine MongoDB ODM in the
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="df7a82104d3a21c13133fafd819a207297c5a349"
+            data-copy-element-id="ab883548ee140a58f5828caa84f8ea5b8e9d5115"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="df7a82104d3a21c13133fafd819a207297c5a349"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-1" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-1">1</a></td><td class="code-line" rowspan="18"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="ab883548ee140a58f5828caa84f8ea5b8e9d5115"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-1" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-1">1</a></td><td class="code-line" rowspan="18"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Configuration</span>;
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">DocumentManager</span>;
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Driver</span>\<span class="hljs-title">AttributeDriver</span>;
 
-<span class="hljs-keyword">require_once</span>(<span class="hljs-string">'path/to/vendor/autoload.php'</span>);
+<span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span> . <span class="hljs-string">'/vendor/autoload.php'</span>;
 
 $config = <span class="hljs-keyword">new</span> Configuration();
-$config-&gt;setProxyDir(<span class="hljs-string">'/path/to/generate/proxies'</span>);
+$config-&gt;setProxyDir(<span class="hljs-keyword">__DIR__</span> . <span class="hljs-string">'/generated/proxies'</span>);
 $config-&gt;setProxyNamespace(<span class="hljs-string">'Proxies'</span>);
-$config-&gt;setHydratorDir(<span class="hljs-string">'/path/to/generate/hydrators'</span>);
+$config-&gt;setHydratorDir(<span class="hljs-keyword">__DIR__</span> . <span class="hljs-string">'/generated/hydrators'</span>);
 $config-&gt;setHydratorNamespace(<span class="hljs-string">'Hydrators'</span>);
-$config-&gt;setMetadataDriverImpl(AttributeDriver::create(<span class="hljs-string">'/path/to/document/classes'</span>));
+$config-&gt;setMetadataDriverImpl(AttributeDriver::create(<span class="hljs-keyword">__DIR__</span> . <span class="hljs-string">'/src'</span>));
 
-$dm = DocumentManager::create(<span class="hljs-keyword">null</span>, $config);
+$dm = DocumentManager::create(config: $config);
 
 spl_autoload_register($config-&gt;getProxyManagerConfiguration()-&gt;getProxyAutoloader());</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-2" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-3" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-4" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-5" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-6" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-7" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-8" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-9" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-10" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-11" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-12" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-13" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-14" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-15" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-16" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-17" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-df7a82104d3a21c13133fafd819a207297c5a349-18" class="line-number-anchor" /><a href="#line-number-df7a82104d3a21c13133fafd819a207297c5a349-18">18</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-2" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-3" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-4" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-5" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-6" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-7" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-8" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-9" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-10" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-11" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-12" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-13" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-14" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-15" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-16" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-17" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-18" class="line-number-anchor" /><a href="#line-number-ab883548ee140a58f5828caa84f8ea5b8e9d5115-18">18</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="usage" name="usage"></a><h2 class="section-header"><a href="#usage">Usage<i class="fas fa-link"></i></a></h2>
 <p>Here is how you would use your models now:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="55d8a82f14eaa5adb51a4c4d6a095b412789da43"
+            data-copy-element-id="c147b193fe3c9038437309bb188111329b8f1ef8"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="55d8a82f14eaa5adb51a4c4d6a095b412789da43"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-1" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-1">1</a></td><td class="code-line" rowspan="22"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="c147b193fe3c9038437309bb188111329b8f1ef8"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-1" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-1">1</a></td><td class="code-line" rowspan="24"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-comment">// ...</span>
 
 <span class="hljs-comment">// create user</span>
-$user = <span class="hljs-keyword">new</span> User();
-$user-&gt;setName(<span class="hljs-string">'Bulat S.'</span>);
-$user-&gt;setEmail(<span class="hljs-string">'email@example.com'</span>);
+$user = <span class="hljs-keyword">new</span> User(
+    name: <span class="hljs-string">'Bulat S.'</span>,
+    email: <span class="hljs-string">'email@example.com'</span>,
+);
 
-<span class="hljs-comment">// tell Doctrine 2 to save $user on the next flush()</span>
+<span class="hljs-comment">// tell Doctrine to save $user on the next flush()</span>
 $dm-&gt;persist($user);
 
 <span class="hljs-comment">// create blog post</span>
-$post = <span class="hljs-keyword">new</span> BlogPost();
-$post-&gt;setTitle(<span class="hljs-string">'My First Blog Post'</span>);
-$post-&gt;setBody(<span class="hljs-string">'MongoDB + Doctrine 2 ODM = awesomeness!'</span>);
-$post-&gt;setCreatedAt(<span class="hljs-keyword">new</span> DateTime());
+$post = <span class="hljs-keyword">new</span> BlogPost(
+    title: <span class="hljs-string">'My First Blog Post'</span>,
+    body: <span class="hljs-string">'MongoDB + Doctrine ODM = awesomeness!'</span>,
+);
 
-$user-&gt;addPost($post);
+<span class="hljs-comment">// link the blog post to the user</span>
+$user-&gt;posts-&gt;add($post);
 
 <span class="hljs-comment">// store everything to MongoDB</span>
 $dm-&gt;flush();</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-2" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-3" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-4" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-5" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-6" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-7" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-8" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-9" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-10" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-11" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-12" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-13" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-14" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-15" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-16" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-17" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-18" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-19" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-20" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-21" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-21">21</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-22" class="line-number-anchor" /><a href="#line-number-55d8a82f14eaa5adb51a4c4d6a095b412789da43-22">22</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-2" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-3" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-4" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-5" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-6" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-7" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-8" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-9" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-10" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-11" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-12" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-13" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-14" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-15" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-16" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-17" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-18" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-19" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-20" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-21" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-22" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-23" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c147b193fe3c9038437309bb188111329b8f1ef8-24" class="line-number-anchor" /><a href="#line-number-c147b193fe3c9038437309bb188111329b8f1ef8-24">24</a></td></tr></table></div></code></pre>
 <div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Note that you do not need to explicitly call persist on the <code>$post</code> because the operation
 will cascade on to the reference automatically.</p>
 </td></tr></table></div>
-<p>Now if you did everything correctly, you should have those two objects
-stored in MongoDB in correct collections and databases. You can use the
-<a href="http://github.com/jwage/php-mongodb-admin">php-mongodb-admin project, hosted on github</a> to look at your
-<code>BlogPost</code> collection, where you will see only one document:</p>
-<div class="console"><pre><code class="console">Array
-(
-    [_id] => 4bec5869fdc212081d000000
-    [title] => My First Blog Post
-    [body] => MongoDB + Doctrine 2 ODM = awesomeness!
-    [createdAt] => MongoDB\BSON\UTCDateTime Object
-        (
-            [sec] => 1273723200
-            [usec] => 0
-        )
-)</code></pre></div>
-<p>And the <code>User</code> collection would consist of the following:</p>
-<div class="console"><pre><code class="console">Array
-(
-    [_id] => 4bec5869fdc212081d010000
-    [name] => Bulat S.
-    [email] => email@example.com
-    [posts] => Array
-        (
-            [0] => Array
-                (
-                    [$ref] => blog_posts
-                    [$id] => 4bec5869fdc212081d000000
-                    [$db] => test_database
-                )
-        )
-)</code></pre></div>
+<p>After running this code, you should have those two objects stored in the
+collections User and BlogPost. You can use <a href="https://www.mongodb.com/products/tools/compass">MongoDB Compass</a> to inspect
+the contents of your database, where you will see this documents:</p>
+<div class="console"><pre><code class="console">// BlogPost collection
+{
+    _id: ObjectId("4bec5869fdc212081d000000"),
+    title: "My First Blog Post",
+    body: "MongoDB + Doctrine ODM = awesomeness!",
+    createdAt: Date("2010-05-13T18:00:00Z")
+}
+
+// User collection
+{
+    _id: ObjectId("4bec5869fdc212081d010000"),
+    name: "Bulat S.",
+    email: "email@example.com",
+    posts: [
+        DBRef("BlogPost", "4bec5869fdc212081d000000")
+    ],
+}</code></pre></div>
 <p>You can retrieve the user later by its identifier:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
@@ -701,20 +739,26 @@ $user = $dm-&gt;getRepository(User::class)-&gt;findOneBy([<span class="hljs-stri
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="f8dfbaaca6e3efd954f682d5f249e5829e0d933b"
+            data-copy-element-id="1fa6b7c70b597c640b6cd1ba150240859c62343f"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="f8dfbaaca6e3efd954f682d5f249e5829e0d933b"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-f8dfbaaca6e3efd954f682d5f249e5829e0d933b-1" class="line-number-anchor" /><a href="#line-number-f8dfbaaca6e3efd954f682d5f249e5829e0d933b-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="1fa6b7c70b597c640b6cd1ba150240859c62343f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-1fa6b7c70b597c640b6cd1ba150240859c62343f-1" class="line-number-anchor" /><a href="#line-number-1fa6b7c70b597c640b6cd1ba150240859c62343f-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-meta">&lt;?php</span>
 
-$posts = $dm-&gt;getPosts();
-<span class="hljs-keyword">foreach</span> ($posts <span class="hljs-keyword">as</span> $post) {
+<span class="hljs-keyword">foreach</span> ($user-&gt;posts <span class="hljs-keyword">as</span> $post) {
+    <span class="hljs-keyword">echo</span> $post-&gt;title;
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f8dfbaaca6e3efd954f682d5f249e5829e0d933b-2" class="line-number-anchor" /><a href="#line-number-f8dfbaaca6e3efd954f682d5f249e5829e0d933b-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f8dfbaaca6e3efd954f682d5f249e5829e0d933b-3" class="line-number-anchor" /><a href="#line-number-f8dfbaaca6e3efd954f682d5f249e5829e0d933b-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f8dfbaaca6e3efd954f682d5f249e5829e0d933b-4" class="line-number-anchor" /><a href="#line-number-f8dfbaaca6e3efd954f682d5f249e5829e0d933b-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f8dfbaaca6e3efd954f682d5f249e5829e0d933b-5" class="line-number-anchor" /><a href="#line-number-f8dfbaaca6e3efd954f682d5f249e5829e0d933b-5">5</a></td></tr></table></div></code></pre>
-<p>You will notice that working with objects is nothing magical and you only have access to the properties,
-getters and setters that you have defined yourself so the semantics are very clear. You can continue
-reading about the MongoDB in the <a href="../reference/introduction.html">Introduction to MongoDB Object Document Mapper</a>.</p>
+<tr><td class="line-number noselect"><a name="line-number-1fa6b7c70b597c640b6cd1ba150240859c62343f-2" class="line-number-anchor" /><a href="#line-number-1fa6b7c70b597c640b6cd1ba150240859c62343f-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1fa6b7c70b597c640b6cd1ba150240859c62343f-3" class="line-number-anchor" /><a href="#line-number-1fa6b7c70b597c640b6cd1ba150240859c62343f-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1fa6b7c70b597c640b6cd1ba150240859c62343f-4" class="line-number-anchor" /><a href="#line-number-1fa6b7c70b597c640b6cd1ba150240859c62343f-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1fa6b7c70b597c640b6cd1ba150240859c62343f-5" class="line-number-anchor" /><a href="#line-number-1fa6b7c70b597c640b6cd1ba150240859c62343f-5">5</a></td></tr></table></div></code></pre>
+<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>When retrieved from the database, <code>$user-&gt;posts</code> is an instance of
+<code>Doctrine\ODM\MongoDB\PersistentCollection</code>. This class lazy-loads the
+referenced documents from the database when you access them. It keeps track
+of changes to the collection and will automatically update the database when
+you call <code>flush()</code>.</p>
+</td></tr></table></div>
+<p>You will notice that working with objects is nothing magical and you only have
+access to the properties and methods that you have defined yourself. You can
+continue reading <a href="../reference/introduction.html">Introduction to MongoDB Object Document Mapper</a>.</p>
 
 </div>
 </div>
