@@ -447,93 +447,100 @@ implementation for all documents (unless overridden by the mapping):</p>
 <tr><td class="line-number noselect"><a name="line-number-700f04151979dedd6ee76ca274ac493ac9e9d13f-2" class="line-number-anchor" /><a href="#line-number-700f04151979dedd6ee76ca274ac493ac9e9d13f-2">2</a></td></tr></table></div></code></pre>
 </div>
 <div class="section"><a class="section-anchor" id="repositories-with-additional-dependencies" name="repositories-with-additional-dependencies"></a><h2 class="section-header"><a href="#repositories-with-additional-dependencies">Repositories with Additional Dependencies<i class="fas fa-link"></i></a></h2>
-<div class="alert note-admonition bg-light-yellow text-dark border"><table width="100%"><tr><td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td><td><p>Implementing your own RepositoryFactory is possible since version 1.0, but the
-<code>AbstractRepositoryFactory</code> class used in this example is only available since 1.2.</p>
-</td></tr></table></div>
 <p>By default, Doctrine assumes that it can instantiate your repositories in same manner
 as its default one:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="b753fa4da4b3b52fd48db9f65c36284f87814c47"
+            data-copy-element-id="c061dc9dc4d07f6215475a3419ed210257b42dc5"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="b753fa4da4b3b52fd48db9f65c36284f87814c47"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-1" class="line-number-anchor" /><a href="#line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="c061dc9dc4d07f6215475a3419ed210257b42dc5"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-1" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-1">1</a></td><td class="code-line" rowspan="17"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-keyword">namespace</span> <span class="hljs-title">Repositories</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">DocumentRepository</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">DocumentManager</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ClassMetadata</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">UnitOfWork</span>;
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">DocumentRepository</span>
 </span>{
     <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(DocumentManager $dm, UnitOfWork $uow, ClassMetadata $classMetadata)</span>
     </span>{
-        <span class="hljs-comment">/* constructor is inherited from DocumentRepository */</span>
-        <span class="hljs-comment">/* ... */</span>
+        <span class="hljs-comment">// The constructor arguments are inherited from DocumentRepository</span>
+        <span class="hljs-keyword">parent</span>::__construct($dm, $uow, $classMetadata);
     }
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-2" class="line-number-anchor" /><a href="#line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-3" class="line-number-anchor" /><a href="#line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-4" class="line-number-anchor" /><a href="#line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-5" class="line-number-anchor" /><a href="#line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-6" class="line-number-anchor" /><a href="#line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-7" class="line-number-anchor" /><a href="#line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-8" class="line-number-anchor" /><a href="#line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-9" class="line-number-anchor" /><a href="#line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-10" class="line-number-anchor" /><a href="#line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-11" class="line-number-anchor" /><a href="#line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-12" class="line-number-anchor" /><a href="#line-number-b753fa4da4b3b52fd48db9f65c36284f87814c47-12">12</a></td></tr></table></div></code></pre>
-<p>In order to change the way Doctrine instantiates repositories, you will need to implement your own
-<a href="https://github.com/doctrine/mongodb-odm/blob/2.2.x/lib/Doctrine/ODM/MongoDB/Repository/RepositoryFactory.php">RepositoryFactory</a></p>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-2" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-3" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-4" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-5" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-6" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-7" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-8" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-9" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-10" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-11" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-12" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-13" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-14" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-15" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-16" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-17" class="line-number-anchor" /><a href="#line-number-c061dc9dc4d07f6215475a3419ed210257b42dc5-17">17</a></td></tr></table></div></code></pre>
+<p>In order to change the way Doctrine instantiates repositories, you will need to
+implement your own <a href="https://github.com/doctrine/mongodb-odm/blob/2.9.x/lib/Doctrine/ODM/MongoDB/Repository/RepositoryFactory.php">RepositoryFactory</a></p>
+<p>In the following example, we create a custom repository factory to pass Symfony's
+event dispatcher to the repository constructor.</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="1ada621e38d34489a26d5b0d268a05a2a1780995"
+            data-copy-element-id="ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="1ada621e38d34489a26d5b0d268a05a2a1780995"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-1" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-1">1</a></td><td class="code-line" rowspan="24"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-1" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-1">1</a></td><td class="code-line" rowspan="23"><span class="hljs-meta">&lt;?php</span>
 
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">DocumentRepository</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">DocumentManager</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ClassMetadata</span>;
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Repository</span>\<span class="hljs-title">AbstractRepositoryFactory</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">UnitOfWork</span>;
 <span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">EventDispatcher</span>\<span class="hljs-title">EventDispatcherInterface</span>;
 
 <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">YourRepositoryFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractRepositoryFactory</span>
 </span>{
-    <span class="hljs-keyword">private</span> $eventDispatcher;
-
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(EventDispatcherInterface $eventDispatcher)</span>
-    </span>{
-        <span class="hljs-keyword">$this</span>-&gt;eventDispatcher = $eventDispatcher;
-    }
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(
+        private EventDispatcherInterface $eventDispatcher
+    )</span> </span>{}
 
     <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">instantiateRepository</span><span class="hljs-params">(string $repositoryClassName, DocumentManager $documentManager, ClassMetadata $metadata)</span>
     </span>{
-        <span class="hljs-keyword">switch</span> ($repositoryClassName) {
-            <span class="hljs-keyword">case</span> UserRepository::class:
-                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> UserRepository(<span class="hljs-keyword">$this</span>-&gt;eventDispatcher, $documentManager, $metadata);
-            <span class="hljs-keyword">default</span>:
-                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> $repositoryClassName($documentManager, $documentManager-&gt;getUnitOfWork(), $metadata);
-        }
+        <span class="hljs-keyword">return</span> match ($repositoryClassName) {
+            UserRepository::class =&gt; <span class="hljs-keyword">new</span> UserRepository(<span class="hljs-keyword">$this</span>-&gt;eventDispatcher, $documentManager, $metadata),
+            <span class="hljs-keyword">default</span>               =&gt; <span class="hljs-keyword">new</span> $repositoryClassName($documentManager, $documentManager-&gt;getUnitOfWork(), $metadata),
+        };
     }
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-2" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-3" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-4" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-5" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-6" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-7" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-8" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-9" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-10" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-11" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-12" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-13" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-14" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-15" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-16" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-17" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-18" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-19" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-20" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-21" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-21">21</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-22" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-22">22</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-23" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-23">23</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-24" class="line-number-anchor" /><a href="#line-number-1ada621e38d34489a26d5b0d268a05a2a1780995-24">24</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-2" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-3" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-4" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-5" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-6" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-7" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-8" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-9" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-10" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-11" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-12" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-13" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-14" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-15" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-16" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-17" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-18" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-19" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-20" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-21" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-22" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-23" class="line-number-anchor" /><a href="#line-number-ade24d71aad50a60ffa0c7d80d3bff2101b5c2b0-23">23</a></td></tr></table></div></code></pre>
 <p>The factory class must then be registered in the <code>Configuration</code>:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
