@@ -184,6 +184,27 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="/2024/07/09/doctrine-core-team-meetup.html">Doctrine Core Team Meetup in Bonn, Germany</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on <date>July 9, 2024</date>
+                            by
+                                    <a href="mailto:kontakt@beberlei.de">Benjamin Eberlei</a>
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>We are organizing another Doctrine Core Team Meetup in Bonn, Germany from Tuesday,
+8.10.2024 to Thursday, 10.10.2024 at the offices of one of our
+sponsors Tideways GmbH.</p>
+<p>The goal is to get the current team together, discuss and work on Doctrine DBAL, ORM and ODM.</p>
+<p>We thank all of our GitHub and OpenCollective sponsors for making this possible.</p>
+        </div>
+    </article>
+    <article>
+        <header>
             <h2><a href="/2024/02/03/doctrine-orm-3-and-dbal-4-released.html">Doctrine ORM 3 and DBAL 4 Released</a></h2>
         </header>
 
@@ -786,119 +807,6 @@ annotation support.</p>
 <pre><code class="language-php">&lt;?php
 $config-&gt;setSchemaIgnoreClasses([$fqcn]);
 $config-&gt;getSchemaIgnoreClasses();</code></pre>
-        </div>
-    </article>
-    <article>
-        <header>
-            <h2><a href="/2021/12/04/mongodb-odm-2.3.html">New Release: Doctrine MongoDB ODM 2.3 with Attributes, JSON Schema Validation, and more</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on <date>December 4, 2021</date>
-                            by
-                                    <a href="mailto:ion.bazan@gmail.com">Ion Bazan</a>
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>We have released a new minor version 2.3 of Doctrine MongoDB ODM, the first version
-with support for using PHP 8 Attributes as a new driver for mapping documents
-and several other changes. <a href="https://github.com/doctrine/mongodb-odm/releases/tag/2.3.0">See all changes and contributors in the
-Changelog</a> on GitHub.</p>
-<h2>Attributes Mapping Driver</h2>
-<p>The following code example shows many of the mappings that are re-using
-the annotation classes for familiarity:</p>
-<pre><code class="language-php">use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-use Doctrine\ODM\MongoDB\Types\Type;
-
-#[MongoDB\Document(repositoryClass: PostRepository::class)]
-class Post
-{
-    #[MongoDB\Id]
-    private string $id;
-
-    #[MongoDB\Field(type: Type::BOOLEAN)]
-    private bool $published = false;
-
-    #[MongoDB\Field(type: Types::COLLECTION)]
-    private array $text = [];
-
-    #[MongoDB\ReferenceOne(targetDocument: User::class)]
-    public $author;
-
-    #[MongoDB\ReferenceMany(targetDocument: Tag::class)]
-    public Collection $tags;
-}</code></pre>
-<p>You may want to use <a href="https://getrector.org/">Rector</a> with <code>DoctrineSetList::DOCTRINE_ODM_23</code> set
-to convert all your annotation mappings to attributes in seconds!</p>
-<h2>JSON Schema Validation</h2>
-<p>MongoDB ≥ 3.6 offers the capability to validate documents during
-insertions and updates through a JSON schema associated with the collection.
-<a href="https://docs.mongodb.com/manual/core/schema-validation/">See MongoDB documentation</a>.</p>
-<p>Doctrine MongoDB ODM now provides a way to take advantage of this functionality thanks to the new
-<a href="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/reference/annotations-reference.html#validation"><code>#[Validation]</code></a> mapping.</p>
-<pre><code class="language-php">use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
-
-#[MongoDB\Document]
-#[MongoDB\Validation(
-    validator: SchemaValidated::VALIDATOR,
-    action: ClassMetadata::SCHEMA_VALIDATION_ACTION_WARN
-)]
-class SchemaValidated
-{
-    public const VALIDATOR = &lt;&lt;&lt;'EOT'
-{
-    "$jsonSchema": {
-        "required": ["name"],
-        "properties": {
-            "name": {
-                "bsonType": "string",
-                "description": "must be a string and is required"
-            }
-        }
-    },
-    "$or": [
-        { "phone": { "$type": "string" } },
-        { "email": { "$regex": { "$regularExpression" : { "pattern": "@mongodb\\.com$", "options": "" } } } },
-        { "status": { "$in": [ "Unknown", "Incomplete" ] } }
-    ]
-}
-EOT;
-}
-</code></pre>
-<p>Once defined, those options will be added to the collection after running
-the <code>odm:schema:create</code> or <code>odm:schema:update</code> command.</p>
-<h2>Psalmified APIs</h2>
-<p>In-code documentation has been immensely improved to make sure static analysis tools and IDEs know
-about the right document classes returned from <code>DocumentManager</code>,
-<code>ClassMetadata</code>, and other public APIs. This includes generics support
-for your own repositories extending <code>DocumentRepository</code>.</p>
-<pre><code class="language-php">use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
-use App\Document\User;
-
-/**
- * @template-extends DocumentRepository&lt;User&gt;
- */
-class UserRepository extends DocumentRepository
-{
-}</code></pre>
-<h2>Deprecations</h2>
-<p>Doctrine MongoDB ODM 2.3 introduces several minor deprecations:</p>
-<ul>
-<li>The <code>Doctrine\ODM\MongoDB\Proxy\Resolver\ClassNameResolver</code> interface has been deprecated in favor
-of the <code>Doctrine\Persistence\Mapping\ProxyClassNameResolver</code> interface</li>
-<li>Annotation classes no longer extend <code>Doctrine\Common\Annotations\Annotation</code> class</li>
-<li>Annotation arguments switched to <code>@NamedArgumentConstructor</code> for Attribute compatibility</li>
-<li><code>@Inheritance</code> annotation has been removed as it was never used</li>
-<li>Document Namespace Aliases (<code>'MyBundle:User</code>) - use fully qualified class names instead (<code>User::class</code>)</li>
-</ul>
-<p>Read more in our <a href="https://github.com/doctrine/mongodb-odm/blob/2.3.x/UPGRADE-2.3.md">upgrading</a> document. </p>
-<h2>Coding Standard Support</h2>
-<p>Doctrine MongoDB ODM 2.3 now supports and fully validates against Doctrine Coding
-Standard version 9.0+. This greatly improves automatic pull request checks as
-all new violations in a PR get caught and inlined into the PR as comments.</p>
         </div>
     </article>
 
