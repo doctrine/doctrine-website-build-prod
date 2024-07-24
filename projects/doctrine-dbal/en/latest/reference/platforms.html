@@ -406,29 +406,58 @@ can be found as follows:</p>
 database vendor and version best. Otherwise it is not guaranteed
 that the compatibility in terms of SQL dialect and feature support
 between Doctrine DBAL and the database server will always be given.</p>
-<p>If you want to overwrite parts of your platform you can do so when
-creating a connection. There is a <code>platform</code> option you can pass
-an instance of the platform you want the connection to use:</p>
+<p>If you want to overwrite parts of your platform you can do so by
+using a middleware:</p>
 <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="cedf09b27033a49c9c3b82f84cd06bd942cb28a7"
+            data-copy-element-id="a99bcb7b8c7a1970ed5bcf644e82b4af88381979"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="cedf09b27033a49c9c3b82f84cd06bd942cb28a7"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-1" class="line-number-anchor" /><a href="#line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">&lt;?php</span>
-$myPlatform = <span class="hljs-keyword">new</span> MyPlatform();
-$options = [
-    <span class="hljs-string">'driver'</span> =&gt; <span class="hljs-string">'pdo_sqlite'</span>,
-    <span class="hljs-string">'path'</span> =&gt; <span class="hljs-string">'database.sqlite'</span>,
-    <span class="hljs-string">'platform'</span> =&gt; $myPlatform,
-];
-$conn = DriverManager::getConnection($options);</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-2" class="line-number-anchor" /><a href="#line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-3" class="line-number-anchor" /><a href="#line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-4" class="line-number-anchor" /><a href="#line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-5" class="line-number-anchor" /><a href="#line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-6" class="line-number-anchor" /><a href="#line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-7" class="line-number-anchor" /><a href="#line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-8" class="line-number-anchor" /><a href="#line-number-cedf09b27033a49c9c3b82f84cd06bd942cb28a7-8">8</a></td></tr></table></div></code></pre>
+        ><i class="fas fa-copy"></i></button><div id="a99bcb7b8c7a1970ed5bcf644e82b4af88381979"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-1" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-1">1</a></td><td class="code-line" rowspan="23"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomSQLitePlatform</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SqlitePlatform</span> </span>{}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomDriver</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractDriverMiddleware</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getDatabasePlatform</span><span class="hljs-params">(ServerVersionProvider $versionProvider)</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> CustomSQLitePlatform();
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomMiddleware</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Driver</span>\<span class="hljs-title">Middleware</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">wrap</span><span class="hljs-params">(Driver $driver)</span>: <span class="hljs-title">Driver</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> CustomDriver($driver);
+    }
+}
+
+$config = <span class="hljs-keyword">new</span> Doctrine\DBAL\Configuration();
+$config-&gt;setMiddlewares([<span class="hljs-keyword">new</span> CustomMiddleware()]);
+
+$connection = DriverManager::getConnection($params, $config);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-2" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-3" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-4" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-5" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-6" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-7" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-8" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-9" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-10" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-11" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-12" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-13" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-14" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-15" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-16" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-17" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-18" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-19" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-20" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-21" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-22" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-23" class="line-number-anchor" /><a href="#line-number-a99bcb7b8c7a1970ed5bcf644e82b4af88381979-23">23</a></td></tr></table></div></code></pre>
 <p>This way you can optimize your schema or generated SQL code with
 features that might not be portable for instance, however are
 required for your special needs. This can include using triggers or
