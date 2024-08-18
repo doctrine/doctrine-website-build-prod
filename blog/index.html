@@ -187,6 +187,36 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="/2024/08/16/the-skeletons-are-now-out-of-the-closet.html">The skeletons are now out of the closet - So long, Skeleton-Mapper</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on <date>August 16, 2024</date>
+                            by
+                                    <a href="mailto:claudio@doctrine-project.org">Claudio Zizza</a>
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>While Doctrine ORM and DBAL have a main focus in our daily development, a deeper look
+into their dependencies show, that Doctrine has much more projects at hand than just the
+database-related ones. Some projects even weren't created for ORM or DBAL, just like
+our Skeleton-Mapper.</p>
+<p>The <a href="https://github.com/doctrine/skeleton-mapper">Skeleton-Mapper project</a> won't be maintained anymore because of
+its lack of usage nowadays and is now an archived repository. The Doctrine Skeleton-Mapper
+was an object mapper where you are responsible for implementing the object mapping of the
+persistence operations. This means you write plain old PHP code for the data repositories,
+object repositories, object hydrators and object persisters. A lot of freedom but also a lot
+of work for a developer, including its maintenance for us.</p>
+<p>Some projects grow and others become obsolete after some time, which are 9 years in
+the case of our Skeleton-Mapper. We also want to express our gratitude to
+<a href="https://github.com/doctrine/skeleton-mapper/graphs/contributors">the contributors</a>
+and maintainers who kept this project alive for so long. Thank you.</p>
+        </div>
+    </article>
+    <article>
+        <header>
             <h2><a href="/2024/07/09/doctrine-core-team-meetup.html">Doctrine Core Team Meetup 2024 in Bonn, Germany</a></h2>
         </header>
 
@@ -675,141 +705,6 @@ which is <a href="https://github.com/doctrine/dbal/releases/tag/3.3.0">3.3.0</a>
 <li><a href="https://www.doctrine-project.org/2021/03/29/dbal-2.13.html">New Release: Doctrine DBAL 2.13 with Deprecations and Forward Compatibility</a></li>
 <li><a href="https://www.doctrine-project.org/2021/04/19/dbal-2.13.1-3.1.0.html">New Release: Doctrine DBAL 2.13.1 and 3.1.0 with important Forward Compatibility fix</a></li>
 </ul>
-        </div>
-    </article>
-    <article>
-        <header>
-            <h2><a href="/2022/01/11/orm-2.11.html">New Release: Doctrine ORM 2.11 with Enums, Virtual Columns, Read-Only Properties, Nested Attributes and more</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on <date>January 11, 2022</date>
-                            by
-                                    <a href="mailto:kontakt@beberlei.de">Benjamin Eberlei</a>
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>We have released a new minor version 2.11 of Doctrine ORM with several improvements
-and new features.</p>
-<p><a href="https://github.com/doctrine/orm/releases/tag/2.11.0">See all changes and contributors in the
-Changelog</a> on Github.</p>
-<p>This blog post gives an overview over all the new features and improvements
-that are user facing. Please see the changelog and UPGRADE notes for new
-deprecations.</p>
-<h2>PHP 8.1 Enum Support</h2>
-<p>With PHP 8.1 the language has first class support for enumerations and Doctrine
-ORM 2.11 supports the mapping of database values to <a href="https://www.php.net/manual/en/language.enumerations.backed.php">Backed
-Enums</a>.</p>
-<p>The support is not integrated on DBAL Type level, but using a new mapping option
-called <code>enumType</code> on column/field declaration level:</p>
-<pre><code class="language-php">enum Suit: string {
-    case Hearts = 'H';
-    case Diamonds = 'D';
-    case Clubs = 'C';
-    case Spades = 'S';
-}
-
-#[Entity]
-class Card
-{
-    /** ... */
-
-    #[Column(type: 'string', enumType: Suit::class)]
-    public $suit;
-}</code></pre>
-<h2>Virtual and Generated Columns</h2>
-<p>There has been constant demand for this feature for a long time, to add support
-for columns that are not insertable/updatable and might have their value
-updated on the database side.</p>
-<p>We have worked along the lines of Java Persistence API support of <code>insertable</code>,
-<code>updatable</code> and <code>generated</code> options for field mappings.</p>
-<p>There are two major use cases for this:</p>
-<ol>
-<li>Map a column several times, for example with join columns:</li>
-</ol>
-<pre><code class="language-php">#[Entity]
-class User
-{
-     #[ManyToOne(targetEntity: Country:class), JoinColumn(name: "country_code", referencedColumnName: "country_code")]
-     public $country;
-
-     #[Column(type: "string", name: "country_code", insertable: false, updatable: false)]
-     public $countryCode;
-}</code></pre>
-<ol start="2">
-<li>Columns updated by the database</li>
-</ol>
-<pre><code class="language-php">#[Entity]
-class Article
-{
-    #[Column(type: "datetime",
-        columnDefinition: "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
-        insertable: false,
-        updatable: false,
-        generated: "ALWAYS")]
-    public $created;
-}</code></pre>
-<h2>Support for Readonly Properties</h2>
-<p>Another PHP 8.1 feature is the new readonly keyword that prevents the value of
-a property to be written again after it has been initialized in the constructor
-of an object.</p>
-<p>With ORM 2.11 the support now works as you would expect with no additional
-mapping options necessary:</p>
-<pre><code class="language-php">#[Entity, Table(name: 'author')]
-class Author
-{
-    #[Column, Id, GeneratedValue]
-    private readonly int $id;
-
-    #[Column]
-    private readonly string $name;
-}</code></pre>
-<h2>AssociationOverrides and AttributeOverrides in Attribute Driver</h2>
-<p>The new <code>AttributeDriver</code> for PHP 8 did not support the equivalent mapping
-options for association and attribute overrides that are available for XML and
-Annotation mapping, because in PHP 8.0 it was not possible to nest complex
-attributes. </p>
-<p>With the support now available in PHP 8.1 we have added these attributes.</p>
-<pre><code class="language-php">&lt;?php
-use Doctrine\ORM\Mapping\AssociationOverride;
-use Doctrine\ORM\Mapping\AssociationOverrides;
-use Doctrine\ORM\Mapping\AttributeOverride;
-use Doctrine\ORM\Mapping\AttributeOverrides;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-
-#[AssociationOverrides([
-    new AssociationOverride(
-        name: "groups",
-        joinTable: new JoinTable(
-            name: "ddc964_users_admingroups",
-        ),
-        joinColumns: [new JoinColumn(name: "adminuser_id")],
-        inverseJoinColumns: [new JoinColumn(name: "admingroup_id")]
-    )
-])]
-#[AttributeOverrides([
-    new AttributeOverride(
-        name: "id",
-        column: new Column(name: "guest_id", type: "integer", length: 140)
-    )])]
-class DDC964Admin extends DDC964User
-{
-}</code></pre>
-<p>For PHP 8.0 we have already moved <code>Index</code> and <code>JoinColumn</code> mappings to the top
-level to avoid nesting and decided not to allow nesting for these to mimic
-annotation support.</p>
-<h2>Allow arithmetic expressions within IN operator</h2>
-<p>It is now possible to use arithmetic expressions or functions inside the IN operator:</p>
-<pre><code class="language-sql">SELECT u FROM User u WHERE u.id IN (1 + 1, FOO(u.id))</code></pre>
-<h2>Ignore entity classes in schema tool</h2>
-<p>You can now specify Entity FQCNs to ignore during schema tool creation and comparison.
-<code>SchemaTool</code> will then skip these (e.g. when comparing schemas).</p>
-<pre><code class="language-php">&lt;?php
-$config-&gt;setSchemaIgnoreClasses([$fqcn]);
-$config-&gt;getSchemaIgnoreClasses();</code></pre>
         </div>
     </article>
 
