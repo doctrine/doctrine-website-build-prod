@@ -200,8 +200,8 @@
 
                         
 
-            <div class="toc-section">
-<h2 class="toc-header">Tutorials</h2><div class="toc">
+            <div class="toc">
+            <p class="caption">Tutorials</p>
     <ul class="menu-level">
     <li class="toc-item">
     <a href="../tutorials/getting-started.html#getting-started-with-doctrine">Getting Started with Doctrine</a>
@@ -432,9 +432,8 @@
                     </ul>
 </li>
     </ul>
-</div>
-</div><div class="toc-section">
-<h2 class="toc-header">Reference</h2><div class="toc">
+</div><div class="toc">
+            <p class="caption">Reference</p>
     <ul class="menu-level">
     <li class="toc-item">
     <a href="architecture.html#architecture">Architecture</a>
@@ -1461,6 +1460,11 @@
 
         <ul class="section-level-2">
             <li class="toc-item">
+    <a href="#partial-hydration-syntax">Partial Hydration Syntax</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="#new-operator-syntax">&quot;NEW&quot; Operator Syntax</a>
 
 
@@ -1798,7 +1802,13 @@
             <li class="toc-item">
     <a href="query-builder.html#expr-classes">Expr* classes</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="query-builder.html#binding-parameters-to-placeholders">Binding Parameters to Placeholders</a>
 
+
+</li>
+                    </ul>
 </li>
                     </ul>
 </li>
@@ -1882,6 +1892,11 @@
 
 </li>
                     </ul>
+</li>
+    <li class="toc-item">
+    <a href="partial-hydration.html#partial-hydration">Partial Hydration</a>
+
+
 </li>
     <li class="toc-item">
     <a href="attributes-reference.html#attributes-reference">Attributes Reference</a>
@@ -2858,9 +2873,8 @@
                     </ul>
 </li>
     </ul>
-</div>
-</div><div class="toc-section">
-<h2 class="toc-header">Cookbook</h2><div class="toc">
+</div><div class="toc">
+            <p class="caption">Cookbook</p>
     <ul class="menu-level">
     <li class="toc-item">
     <a href="../cookbook/aggregate-fields.html#aggregate-fields">Aggregate Fields</a>
@@ -2971,6 +2985,11 @@
 </li>
             <li class="toc-item">
     <a href="../cookbook/dql-user-defined-functions.html#date-add">Date Add</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/dql-user-defined-functions.html#typed-functions">Typed functions</a>
 
 
 </li>
@@ -3146,7 +3165,6 @@
                     </ul>
 </li>
     </ul>
-</div>
 </div>
     
 
@@ -4137,6 +4155,35 @@ aggregation (GROUP BY)</li>
         </tbody>
     </table>
 </div>
+            <div class="section" id="partial-hydration-syntax">
+            <h4 class="section-header ">
+    <a href="#partial-hydration-syntax">
+        Partial Hydration Syntax
+        <i class="fas fa-link"></i>
+    </a>
+</h4>
+            
+    <p>By default when you run a DQL query in Doctrine and select only a
+subset of the fields for a given entity, you do not receive objects
+back. Instead, you receive only arrays as a flat rectangular result
+set, similar to how you would if you were just using SQL directly
+and joining some data.</p>
+
+            
+    <p>If you want to select a partial number of fields for hydration entity in
+the context of array hydration and joins you can use the <code>partial</code> DQL keyword:</p>
+
+            <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="014f86bcdc8ecb17604a2104425ef68f8fa1f2c5"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="014f86bcdc8ecb17604a2104425ef68f8fa1f2c5"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-014f86bcdc8ecb17604a2104425ef68f8fa1f2c5-1" class="line-number-anchor" /><a href="#line-number-014f86bcdc8ecb17604a2104425ef68f8fa1f2c5-1">1</a></td><td class="code-line" rowspan="3"><span class="hljs-meta">&lt;?php</span>
+$query = $em-&gt;createQuery(<span class="hljs-string">'SELECT partial u.{id, username}, partial a.{id, name} FROM CmsUser u JOIN u.articles a'</span>);
+$users = $query-&gt;getArrayResult(); <span class="hljs-comment">// array of partially loaded CmsUser and CmsArticle fields</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-014f86bcdc8ecb17604a2104425ef68f8fa1f2c5-2" class="line-number-anchor" /><a href="#line-number-014f86bcdc8ecb17604a2104425ef68f8fa1f2c5-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-014f86bcdc8ecb17604a2104425ef68f8fa1f2c5-3" class="line-number-anchor" /><a href="#line-number-014f86bcdc8ecb17604a2104425ef68f8fa1f2c5-3">3</a></td></tr></table></div></code></pre>
+    </div>
             <div class="section" id="new-operator-syntax">
             <h4 class="section-header ">
     <a href="#new-operator-syntax">
@@ -4203,7 +4250,60 @@ $users = $query-&gt;getResult(); <span class="hljs-comment">// array of Customer
 <tr><td class="line-number noselect"><a name="line-number-0b39b3d1f02814cf3667626101fb338bafb5f2ff-2" class="line-number-anchor" /><a href="#line-number-0b39b3d1f02814cf3667626101fb338bafb5f2ff-2">2</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-0b39b3d1f02814cf3667626101fb338bafb5f2ff-3" class="line-number-anchor" /><a href="#line-number-0b39b3d1f02814cf3667626101fb338bafb5f2ff-3">3</a></td></tr></table></div></code></pre>
             
-    <p>Note that you can only pass scalar expressions to the constructor.</p>
+    <p>You can also nest several DTO :</p>
+
+            <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="2842f1c397c917efb8b5a1a5da38a3363f04084f"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="2842f1c397c917efb8b5a1a5da38a3363f04084f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-1" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-1">1</a></td><td class="code-line" rowspan="17"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomerDTO</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(string $name, string $email, AddressDTO $address, string|null $value = null)</span>
+    </span>{
+        <span class="hljs-comment">// Bind values to the object properties.</span>
+    }
+}
+	
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AddressDTO</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(string $street, string $city, string $zip)</span>
+    </span>{
+        <span class="hljs-comment">// Bind values to the object properties.</span>
+    }
+}
+	</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-2" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-3" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-4" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-5" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-6" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-7" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-8" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-9" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-10" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-11" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-12" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-13" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-14" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-15" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-16" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-17" class="line-number-anchor" /><a href="#line-number-2842f1c397c917efb8b5a1a5da38a3363f04084f-17">17</a></td></tr></table></div></code></pre>
+            <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="ecb4bb5a0508d563d23ddc5751dcb4f8b1807168"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="ecb4bb5a0508d563d23ddc5751dcb4f8b1807168"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ecb4bb5a0508d563d23ddc5751dcb4f8b1807168-1" class="line-number-anchor" /><a href="#line-number-ecb4bb5a0508d563d23ddc5751dcb4f8b1807168-1">1</a></td><td class="code-line" rowspan="4"><span class="hljs-meta">&lt;?php</span>
+$query = $em-&gt;createQuery(<span class="hljs-string">'SELECT NEW CustomerDTO(c.name, e.email, NEW AddressDTO(a.street, a.city, a.zip)) FROM Customer c JOIN c.email e JOIN c.address a'</span>);
+$users = $query-&gt;getResult(); <span class="hljs-comment">// array of CustomerDTO</span>
+	</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ecb4bb5a0508d563d23ddc5751dcb4f8b1807168-2" class="line-number-anchor" /><a href="#line-number-ecb4bb5a0508d563d23ddc5751dcb4f8b1807168-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ecb4bb5a0508d563d23ddc5751dcb4f8b1807168-3" class="line-number-anchor" /><a href="#line-number-ecb4bb5a0508d563d23ddc5751dcb4f8b1807168-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ecb4bb5a0508d563d23ddc5751dcb4f8b1807168-4" class="line-number-anchor" /><a href="#line-number-ecb4bb5a0508d563d23ddc5751dcb4f8b1807168-4">4</a></td></tr></table></div></code></pre>
+            
+    <p>Note that you can only pass scalar expressions or other Data Transfer Objects to the constructor.</p>
 
     </div>
     </div>
@@ -5972,15 +6072,19 @@ IndexBy                                    ::= <span class="hljs-string">"INDEX"
             <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="945bba31b5539aada7b7406b44703c3034d7f371"
+            data-copy-element-id="30164c01dc6555da4ca2afe0d056fc051fb76f5f"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="945bba31b5539aada7b7406b44703c3034d7f371"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-945bba31b5539aada7b7406b44703c3034d7f371-1" class="line-number-anchor" /><a href="#line-number-945bba31b5539aada7b7406b44703c3034d7f371-1">1</a></td><td class="code-line" rowspan="4">SelectExpression        ::= (IdentificationVariable | ScalarExpression | AggregateExpression | FunctionDeclaration | <span class="hljs-string">"("</span> Subselect <span class="hljs-string">")"</span> | CaseExpression | NewObjectExpression) [[<span class="hljs-string">"AS"</span>] [<span class="hljs-string">"HIDDEN"</span>] AliasResultVariable]
+        ><i class="fas fa-copy"></i></button><div id="30164c01dc6555da4ca2afe0d056fc051fb76f5f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-30164c01dc6555da4ca2afe0d056fc051fb76f5f-1" class="line-number-anchor" /><a href="#line-number-30164c01dc6555da4ca2afe0d056fc051fb76f5f-1">1</a></td><td class="code-line" rowspan="6">SelectExpression        ::= (IdentificationVariable | ScalarExpression | AggregateExpression | FunctionDeclaration | PartialObjectExpression | <span class="hljs-string">"("</span> Subselect <span class="hljs-string">")"</span> | CaseExpression | NewObjectExpression) [[<span class="hljs-string">"AS"</span>] [<span class="hljs-string">"HIDDEN"</span>] AliasResultVariable]
 SimpleSelectExpression  ::= (StateFieldPathExpression | IdentificationVariable | FunctionDeclaration | AggregateExpression | <span class="hljs-string">"("</span> Subselect <span class="hljs-string">")"</span> | ScalarExpression) [[<span class="hljs-string">"AS"</span>] AliasResultVariable]
+PartialObjectExpression ::= <span class="hljs-string">"PARTIAL"</span> IdentificationVariable <span class="hljs-string">"."</span> PartialFieldSet
+PartialFieldSet         ::= <span class="hljs-string">"{"</span> SimpleStateField {<span class="hljs-string">","</span> SimpleStateField}* <span class="hljs-string">"}"</span>
 NewObjectExpression     ::= <span class="hljs-string">"NEW"</span> AbstractSchemaName <span class="hljs-string">"("</span> NewObjectArg {<span class="hljs-string">","</span> NewObjectArg}* <span class="hljs-string">")"</span>
-NewObjectArg            ::= ScalarExpression | <span class="hljs-string">"("</span> Subselect <span class="hljs-string">")"</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-945bba31b5539aada7b7406b44703c3034d7f371-2" class="line-number-anchor" /><a href="#line-number-945bba31b5539aada7b7406b44703c3034d7f371-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-945bba31b5539aada7b7406b44703c3034d7f371-3" class="line-number-anchor" /><a href="#line-number-945bba31b5539aada7b7406b44703c3034d7f371-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-945bba31b5539aada7b7406b44703c3034d7f371-4" class="line-number-anchor" /><a href="#line-number-945bba31b5539aada7b7406b44703c3034d7f371-4">4</a></td></tr></table></div></code></pre>
+NewObjectArg            ::= ScalarExpression | <span class="hljs-string">"("</span> Subselect <span class="hljs-string">")"</span> | NewObjectExpression</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-30164c01dc6555da4ca2afe0d056fc051fb76f5f-2" class="line-number-anchor" /><a href="#line-number-30164c01dc6555da4ca2afe0d056fc051fb76f5f-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-30164c01dc6555da4ca2afe0d056fc051fb76f5f-3" class="line-number-anchor" /><a href="#line-number-30164c01dc6555da4ca2afe0d056fc051fb76f5f-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-30164c01dc6555da4ca2afe0d056fc051fb76f5f-4" class="line-number-anchor" /><a href="#line-number-30164c01dc6555da4ca2afe0d056fc051fb76f5f-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-30164c01dc6555da4ca2afe0d056fc051fb76f5f-5" class="line-number-anchor" /><a href="#line-number-30164c01dc6555da4ca2afe0d056fc051fb76f5f-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-30164c01dc6555da4ca2afe0d056fc051fb76f5f-6" class="line-number-anchor" /><a href="#line-number-30164c01dc6555da4ca2afe0d056fc051fb76f5f-6">6</a></td></tr></table></div></code></pre>
     </div>
             <div class="section" id="conditional-expressions">
             <h3 class="section-header ">

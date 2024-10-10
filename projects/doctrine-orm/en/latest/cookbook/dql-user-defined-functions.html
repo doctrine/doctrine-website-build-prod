@@ -200,8 +200,8 @@
 
                         
 
-            <div class="toc-section">
-<h2 class="toc-header">Tutorials</h2><div class="toc">
+            <div class="toc">
+            <p class="caption">Tutorials</p>
     <ul class="menu-level">
     <li class="toc-item">
     <a href="../tutorials/getting-started.html#getting-started-with-doctrine">Getting Started with Doctrine</a>
@@ -432,9 +432,8 @@
                     </ul>
 </li>
     </ul>
-</div>
-</div><div class="toc-section">
-<h2 class="toc-header">Reference</h2><div class="toc">
+</div><div class="toc">
+            <p class="caption">Reference</p>
     <ul class="menu-level">
     <li class="toc-item">
     <a href="../reference/architecture.html#architecture">Architecture</a>
@@ -1461,6 +1460,11 @@
 
         <ul class="section-level-2">
             <li class="toc-item">
+    <a href="../reference/dql-doctrine-query-language.html#partial-hydration-syntax">Partial Hydration Syntax</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="../reference/dql-doctrine-query-language.html#new-operator-syntax">&quot;NEW&quot; Operator Syntax</a>
 
 
@@ -1798,7 +1802,13 @@
             <li class="toc-item">
     <a href="../reference/query-builder.html#expr-classes">Expr* classes</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="../reference/query-builder.html#binding-parameters-to-placeholders">Binding Parameters to Placeholders</a>
 
+
+</li>
+                    </ul>
 </li>
                     </ul>
 </li>
@@ -1882,6 +1892,11 @@
 
 </li>
                     </ul>
+</li>
+    <li class="toc-item">
+    <a href="../reference/partial-hydration.html#partial-hydration">Partial Hydration</a>
+
+
 </li>
     <li class="toc-item">
     <a href="../reference/attributes-reference.html#attributes-reference">Attributes Reference</a>
@@ -2858,9 +2873,8 @@
                     </ul>
 </li>
     </ul>
-</div>
-</div><div class="toc-section">
-<h2 class="toc-header">Cookbook</h2><div class="toc">
+</div><div class="toc">
+            <p class="caption">Cookbook</p>
     <ul class="menu-level">
     <li class="toc-item">
     <a href="aggregate-fields.html#aggregate-fields">Aggregate Fields</a>
@@ -2971,6 +2985,11 @@
 </li>
             <li class="toc-item">
     <a href="#date-add">Date Add</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#typed-functions">Typed functions</a>
 
 
 </li>
@@ -3146,7 +3165,6 @@
                     </ul>
 </li>
     </ul>
-</div>
 </div>
     
 
@@ -3649,6 +3667,56 @@ vendors SQL parser to show us further errors in the parsing
 process, for example if the Unit would not be one of the supported
 values by MySql.</p>
 
+    </div>
+            <div class="section" id="typed-functions">
+            <h2 class="section-header ">
+    <a href="#typed-functions">
+        Typed functions
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>By default, result of custom functions is fetched as-is from the database driver.
+If you want to be sure that the type is always the same, then your custom function needs to 
+implement <code>Doctrine\ORM\Query\AST\TypedExpression</code>. Then, the result is wired
+through <code>Doctrine\DBAL\Types\Type::convertToPhpValue()</code> of the <code>Type</code> returned in <code>getReturnType()</code>.</p>
+
+            <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-1" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-1">1</a></td><td class="code-line" rowspan="16"><span class="hljs-meta">&lt;?php</span>
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Types</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Query</span>\<span class="hljs-title">AST</span>\<span class="hljs-title">Functions</span>\<span class="hljs-title">FunctionNode</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Query</span>\<span class="hljs-title">AST</span>\<span class="hljs-title">TypedExpression</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DateDiff</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FunctionNode</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">TypedExpression</span>
+</span>{
+    <span class="hljs-comment">// ...</span>
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getReturnType</span><span class="hljs-params">()</span>: <span class="hljs-title">Type</span>
+    </span>{
+        <span class="hljs-keyword">return</span> Type::getType(Types::INTEGER);
+    }
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-2" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-3" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-4" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-5" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-6" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-7" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-8" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-9" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-10" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-11" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-12" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-13" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-14" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-15" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-16" class="line-number-anchor" /><a href="#line-number-eae5d58e4362b2eaf1d7ceac54d10c0b37c78bca-16">16</a></td></tr></table></div></code></pre>
     </div>
             <div class="section" id="conclusion">
             <h2 class="section-header ">
