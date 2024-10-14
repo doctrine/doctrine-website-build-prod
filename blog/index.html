@@ -187,6 +187,129 @@
             <main role="main" class="container-wrapper container">
                         <article>
         <header>
+            <h2><a href="/2024/10/14/doctrine-core-team-meetup-2024.html">Doctrine Core Team Meetup, ORM 2.19.8, 2.20.0, 3.3.0 Releases, DBAL 4.2.0</a></h2>
+        </header>
+
+        <p class="lead">
+            Posted on <date>October 14, 2024</date>
+                            by
+                                    <a href="mailto:kontakt@beberlei.de">Benjamin Eberlei</a>
+                                    </p>
+
+        <hr />
+
+        <div>
+            <p>Last week, we meet with the Doctrine ORM and MongoDB Core Teams for 3 days in
+Bonn, Germany. A few releases followed immediately from that, including some
+deprecation reversals and a discussion of our upcoming roadmap.</p>
+<ul>
+<li><a href="https://github.com/doctrine/orm/releases/tag/3.3.0">Doctrine ORM 3.3.0</a></li>
+<li><a href="https://github.com/doctrine/orm/releases/tag/2.20.0">Doctrine ORM 2.20.0</a></li>
+<li><a href="https://github.com/doctrine/orm/releases/tag/2.19.8">Doctrine ORM 2.19.8</a></li>
+<li><a href="https://github.com/doctrine/dbal/releases/tag/4.2.0">Doctrine DBAL 4.2.0</a></li>
+<li><a href="https://github.com/doctrine/migrations/releases/tag/3.8.2">Doctrine Migrations 3.8.2</a></li>
+</ul>
+<p>We want to thank all our sponsors on
+<a href="https://opencollective.com/doctrine">OpenCollective</a> and
+<a href="https://github.com/sponsors/doctrine">GitHub</a> for contributing towards making
+this in-person team meetup possible. If you are not a sponsor of Doctrine already,
+<a href="https://www.doctrine-project.org/sponsorship.html">please consider becoming one</a>.</p>
+<h2>Undeprecation of PARTIAL Object Hydration</h2>
+<p>Starting with ORM 3.3.0 you can use <code>SELECT PARTIAL</code> DQL syntax again and with
+ORM 2.20 you will not get a deprecation message for using that anymore. If your
+application uses partial objects with DQL, you can migrate from 2.20 to 3.3.0
+now without having to change their use. Partial objects have exactly the same
+behavior (and downsides) in version 3 and 2.</p>
+<p>Why the change? It was a long time plan to remove partial objects and their
+hydration, because of the many edge cases they produced. This plan was in
+effect and shipped for 3.0 - 3.2, where the syntax and feature was completely
+removed. In discussion with our users we found a lot of use-cases and ideas
+that are powerful with partial objects, but were firm on our goal to remove
+partial objects. </p>
+<p>This all changes with PHP 8.4 and its lazy object feature. With this feature we
+will be able to implement partial objects transparently to PHP. That means it
+will not be necessary to know if an object is a proxy, a partial object, or a
+full object. Whenever a property that is not available is accessed, Doctrine
+can load it.</p>
+<p>We hope to add this behavior to ORM 3.4 in the next months.</p>
+<h2>Support for PHP 8.4 and Property Hooks</h2>
+<p>Doctrine supports PHP 8.4 starting with ORM 2.20.0 and 3.3.0, DBAL 4 and 3.</p>
+<p>There are caveats though. You cannot use property hooks in entities yet. This
+is because we need to rework internally how we read and write property values
+(<code>ReflectionProperty::setValue()</code> vs <code>setRawValue()</code> and <code>ReflectionProperty::getValue()</code>
+and <code>getRawValue()</code>). For now, if you try to create a property hook on an entity,
+Doctrine will throw an exception. We plan to address this with an upcoming ORM
+3.4 release, hopefully before PHP 8.4 is released itself, otherwise shortly
+after.</p>
+<p>For MongoDB ODM, PHP 8.4 support depends on a to-be-completed migration from
+ProxyManager to <code>symfony/var-exporter</code>. </p>
+<h2>Lazy Objects and PHP 8.4 requirement in ORM 4</h2>
+<p>The lazy objects RFC in PHP 8.4 changes everything for the better in Doctrine
+ORM internally. This is why we decided that ORM 4 will be mainly a decision
+about exclusively using lazy objects and therefore will require PHP 8.4.</p>
+<h2>Support for ENUM Database types</h2>
+<p>DBAL 4.2 now supports a new Enum type that is mainly useful for introspection
+of database schemas that contain enums. All values of the enum are parsed out
+of the type and are available to the schema abstraction layer.</p>
+<p>Although we do not recommend the enum type in MySQL/MariaDB due to its quirky
+implementation details, you can also use this type to directly map columns to
+enums in the database via the ORM as of 3.3.0:</p>
+<pre><code>class Subscription
+{
+    #[Column(type: "enum", options: ['values' =&gt; ['future', 'active, 'cancelled', 'expired']))]
+    public string $state = 'future';
+}</code></pre>
+<p>You can also map Enums directly to MySQL enums and let Doctrine auto-detect all the configuration:</p>
+<pre><code>class Subscription
+{
+    #[Column(type: Types::ENUM)]
+    public State $state = State::FUTURE;
+}
+enum State : string
+{
+    case FUTURE = 'future';
+    case ACTIVE = 'active';
+    case CANCELLED = 'cancelled';
+    case EXPIRED = 'expired';
+}</code></pre>
+<p>We have also discussed at length how we can make types parameterized, which
+will further improve Doctrine Schema introspection and comparisons with
+non-default types.</p>
+<h2>Query Cache and Pagination Variables</h2>
+<p>If you have used <code>setFirstResult()</code> and <code>setMaxResults()</code> with DQL queries then up
+until 2.20.x of Doctrine, each combination of first result and max results lead
+to their own DQL query parsing cache entry. This could easily balloon the query
+cache size out of control.</p>
+<p>Starting with 2.20, the DQL parser is now running in a two-step process, where
+the first step generates the cacheable result and the second step amends the
+cached result with the LIMIT query part (or other database equivalent).</p>
+<p>This is a bigger internal change, and we hope that we thought of all the edge
+cases, but it might be possible that especially in combination with the
+Paginator abstraction and collection fetch joins, there are some cases
+where this change could lead to breaks on upgrading to 2.20 from 2.19.</p>
+<h2>DQL: Nested DTOs and Named Arguments</h2>
+<p>Starting with ORM 3.3 you can now create nested DTOs with the <code>NEW</code> syntax and
+furthermore, use a short named arguments syntax to populate the constructor of
+a DTO. This feature was contributed by GitHub user
+<a href="https://github.com/eltharin">eltharin</a> over the last few months and builds
+upon previous work.</p>
+<h2>Migrations: Fixing a decade old schema comparison bug with PostgreSQL</h2>
+<p>When you used Doctrine Migrations with the ORM the down migration included a
+statement to drop the public schema for the better part of a decade.</p>
+<p>This bug has finally been fixed and you won't see this drop schema statement in
+newly created migrations for PostgreSQL anymore.</p>
+<h2>Psalm and PHPStan going forward</h2>
+<p>After a long discussion we have decided to only use one static analysis tool
+and Doctrine projects will use PHPStan going forward. For now
+Psalm checks will be removed from repositories over the next weeks.</p>
+<p>This is mainly because PHPStan has outpaced Psalm in depth and quality in the
+last few years and it feels unlikely that Psalm can point to a problem that
+PHPStan did not detect before. If in the future Psalm catches up to PHPStan we
+may reconsider adding it.</p>
+        </div>
+    </article>
+    <article>
+        <header>
             <h2><a href="/2024/08/16/the-skeletons-are-now-out-of-the-closet.html">The skeletons are now out of the closet - So long, Skeleton-Mapper</a></h2>
         </header>
 
@@ -665,46 +788,6 @@ issues, prepare for new PHP releases and general cleanups of the codebase.</p>
 <p>As such we hope to convince you to sponsor Doctrine through either our <a href="https://github.com/sponsors/doctrine/">Github
 Sponsors</a> or
 <a href="https://opencollective.com/doctrine">OpenCollective</a> directly.</p>
-        </div>
-    </article>
-    <article>
-        <header>
-            <h2><a href="/2022/01/22/sunsetting-dbal-2.html">Sunsetting Doctrine DBAL 2</a></h2>
-        </header>
-
-        <p class="lead">
-            Posted on <date>January 22, 2022</date>
-                            by
-                                    <a href="mailto:morozov@tut.by">Sergei Morozov</a>
-                                    </p>
-
-        <hr />
-
-        <div>
-            <p>Since the release of <a href="https://github.com/doctrine/dbal/releases/tag/3.0.0">Doctrine DBAL 3.0.0 </a> in November 2020,
-the 2.x release series effectively went into the maintenance mode. In the past year, we've been accepting mostly
-the following types of patches for DBAL 2:</p>
-<ol>
-<li>Development dependency updates</li>
-<li>Security fixes</li>
-<li>Improvements to compatibility with PHP 8.1</li>
-<li>Improvements in the upgrade path to DBAL 3</li>
-</ol>
-<p>Except for dependency updates, at the moment, there are no known issues in DBAL 2 that would fall into any of
-the above categories.</p>
-<p>Many projects that depend on Doctrine DBAL depend on it indirectly via Doctrine ORM which until
-<a href="https://github.com/doctrine/orm/releases/tag/2.10.0">release 2.10.0</a> didn't support DBAL 3.
-It was one of the blockers of the DBAL 3 adoption which is no longer the case.</p>
-<p>With all that said, the DBAL team announces the plan for sunsetting DBAL 2 in 6 months as of the ORM 2.10.0 release
-which is April 3, 2022. After that date, we plan to release DBAL 2 only to address security related
-and other critical issues for at most a year.</p>
-<p>All Doctrine DBAL users are encouraged to upgrade to the latest stable version
-which is <a href="https://github.com/doctrine/dbal/releases/tag/3.3.0">3.3.0</a> as of the time of this writing.</p>
-<p>For migrating from DBAL 2 to 3, see our two blog posts on DBAL 2.13 Forward Compatibility Layer:</p>
-<ul>
-<li><a href="https://www.doctrine-project.org/2021/03/29/dbal-2.13.html">New Release: Doctrine DBAL 2.13 with Deprecations and Forward Compatibility</a></li>
-<li><a href="https://www.doctrine-project.org/2021/04/19/dbal-2.13.1-3.1.0.html">New Release: Doctrine DBAL 2.13.1 and 3.1.0 with important Forward Compatibility fix</a></li>
-</ul>
         </div>
     </article>
 
