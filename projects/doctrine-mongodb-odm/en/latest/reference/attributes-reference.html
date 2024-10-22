@@ -855,6 +855,11 @@
 
 </li>
             <li class="toc-item">
+    <a href="#timeseries">#[TimeSeries]</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="#uniqueindex">#[UniqueIndex]</a>
 
 
@@ -1936,6 +1941,22 @@
 
 </li>
                     </ul>
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
+    <a href="../cookbook/time-series-data.html#storing-time-series-data">Storing Time Series Data</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="../cookbook/time-series-data.html#creating-the-model">Creating The Model</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/time-series-data.html#considerations">Considerations</a>
+
+
 </li>
                     </ul>
 </li>
@@ -3933,6 +3954,87 @@ for sharding the document collection.</p>
 <tr><td class="line-number noselect"><a name="line-number-31d35a44e2539e5f7818955b5b69da2c7199161e-6" class="line-number-anchor" /><a href="#line-number-31d35a44e2539e5f7818955b5b69da2c7199161e-6">6</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-31d35a44e2539e5f7818955b5b69da2c7199161e-7" class="line-number-anchor" /><a href="#line-number-31d35a44e2539e5f7818955b5b69da2c7199161e-7">7</a></td></tr>
 <tr><td class="line-number noselect"><a name="line-number-31d35a44e2539e5f7818955b5b69da2c7199161e-8" class="line-number-anchor" /><a href="#line-number-31d35a44e2539e5f7818955b5b69da2c7199161e-8">8</a></td></tr></table></div></code></pre>
+    </div>
+            <div class="section" id="timeseries">
+            <h2 class="section-header ">
+    <a href="#timeseries">
+        #[TimeSeries]
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>This attribute may be used at the class level to mark a collection as containing
+<a href="../cookbook/time-series-data.html">time-series data</a>.</p>
+
+            <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="d32cbbeb790f9da68800135d45f4ce3de60ab7e2"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="d32cbbeb790f9da68800135d45f4ce3de60ab7e2"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-1" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-1">1</a></td><td class="code-line" rowspan="20"><span class="hljs-meta">&lt;?php</span>
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">TimeSeries</span>\<span class="hljs-title">Granularity</span>;
+
+<span class="hljs-comment">#[Document]</span>
+<span class="hljs-comment">#[TimeSeries(timeField: 'time', metaField: 'metadata', granularity: Granularity::Seconds)]</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Measurements</span>
+</span>{
+    <span class="hljs-comment">#[Id]</span>
+    <span class="hljs-keyword">public</span> string $id;
+
+    <span class="hljs-comment">#[Field]</span>
+    <span class="hljs-keyword">public</span> DateTimeImmutable $time;
+
+    <span class="hljs-comment">#[EmbedOne(targetDocument: MeasurementMetadata)]</span>
+    <span class="hljs-keyword">public</span> MeasurementMetadata $metadata;
+
+    <span class="hljs-comment">#[Field]</span>
+    <span class="hljs-keyword">public</span> int $measurement;
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-2" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-3" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-4" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-5" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-6" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-7" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-8" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-9" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-10" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-11" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-12" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-13" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-14" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-15" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-16" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-17" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-18" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-19" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-20" class="line-number-anchor" /><a href="#line-number-d32cbbeb790f9da68800135d45f4ce3de60ab7e2-20">20</a></td></tr></table></div></code></pre>
+            
+    <p>The <code>timeField</code> attribute is required and denotes the field where the time of
+a time series entry is stored. The following optional attributes may be set:</p>
+
+            
+
+<ul>
+    <li class="dash"><code>metaField</code> -  The name of the field which contains metadata in each time
+series document. The field can be of any data type.</li>
+    <li class="dash"><code>granularity</code> - Set the granularity to the value that most closely matches
+the time between consecutive incoming timestamps. This allows MongoDB to
+optimize how data is stored. Note: this attribute cannot be combined with
+<code>bucketMaxSpanSeconds</code> and <code>bucketRoundingSeconds</code>.</li>
+    <li class="dash"><code>bucketMaxSpanSeconds</code> - Used with <code>bucketRoundingSeconds</code> as an
+alternative to <code>granularity</code>. Sets the maximum time between timestamps
+in the same bucket. Possible values are 1 - 31356000.</li>
+    <li class="dash"><code>bucketRoundingSeconds</code> - Used with <code>bucketMaxSpanSeconds</code>, must be set
+to the same value as <code>bucketMaxSpanSeconds</code>. When a document requires a
+new bucket, MongoDB rounds down the document&#039;s timestamp value by this
+interval to set the minimum time for the bucket.</li>
+    <li class="dash"><code>expireAfterSeconds</code> - Enables the automatic deletion of documents in a
+time series collection by specifying the number of seconds after which
+documents expire. MongoDB deletes these expired documents automatically.</li>
+</ul>
+
     </div>
             <div class="section" id="uniqueindex">
             <h2 class="section-header ">
