@@ -2109,7 +2109,7 @@
             
     <p>It is very easy to implement a simple keyword search engine with MongoDB. Because of
 its flexible schema less nature we can store the keywords we want to search through directly
-on the document. MongoDB is capable of indexing the embedded documents so the results are fast
+on the document. MongoDB is capable of indexing an array field, so the results are fast
 and scalable.</p>
 
             <div class="section" id="sample-model-product">
@@ -2126,9 +2126,9 @@ setup a document like the following with a <code>$keywords</code> property that 
             <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="d175c76b04222f81d11c762076a695b3a75dbd2f"
+            data-copy-element-id="0b279c1cc91101289c9692eace858562a9cf7246"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="d175c76b04222f81d11c762076a695b3a75dbd2f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-1" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-1">1</a></td><td class="code-line" rowspan="21"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="0b279c1cc91101289c9692eace858562a9cf7246"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-1" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-1">1</a></td><td class="code-line" rowspan="15"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-comment">#[Document]</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Product</span>
@@ -2139,36 +2139,24 @@ setup a document like the following with a <code>$keywords</code> property that 
     <span class="hljs-comment">#[Field(type: 'string')]</span>
     <span class="hljs-keyword">public</span> string $title;
 
-    <span class="hljs-comment">/** <span class="hljs-doctag">@var</span> Collection&lt;string&gt; */</span>
     <span class="hljs-comment">#[Field(type: 'collection')]</span>
     <span class="hljs-comment">#[Index]</span>
-    <span class="hljs-keyword">public</span> Collection $keywords;
-
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">()</span>
-    </span>{
-        <span class="hljs-keyword">$this</span>-&gt;keywords = <span class="hljs-keyword">new</span> ArrayCollection();
-    }
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">array</span> $keywords = [];
 }</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-2" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-3" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-4" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-5" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-6" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-7" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-8" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-9" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-10" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-11" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-12" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-13" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-14" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-15" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-16" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-17" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-18" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-19" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-20" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-21" class="line-number-anchor" /><a href="#line-number-d175c76b04222f81d11c762076a695b3a75dbd2f-21">21</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-2" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-3" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-4" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-5" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-6" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-7" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-8" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-9" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-10" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-11" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-12" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-13" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-14" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0b279c1cc91101289c9692eace858562a9cf7246-15" class="line-number-anchor" /><a href="#line-number-0b279c1cc91101289c9692eace858562a9cf7246-15">15</a></td></tr></table></div></code></pre>
     </div>
             <div class="section" id="working-with-keywords">
             <h2 class="section-header ">
@@ -2183,31 +2171,31 @@ setup a document like the following with a <code>$keywords</code> property that 
             <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="38789b1c17713b31486c71379344dd4c03f2555f"
+            data-copy-element-id="d693dfd841841f9441d623d61ecb3c6410c6d432"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="38789b1c17713b31486c71379344dd4c03f2555f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-38789b1c17713b31486c71379344dd4c03f2555f-1" class="line-number-anchor" /><a href="#line-number-38789b1c17713b31486c71379344dd4c03f2555f-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="d693dfd841841f9441d623d61ecb3c6410c6d432"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-1" class="line-number-anchor" /><a href="#line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">&lt;?php</span>
 
 $product = <span class="hljs-keyword">new</span> Product();
 $product-&gt;title = <span class="hljs-string">'Nike Air Jordan 2011'</span>;
-$product-&gt;keywords-&gt;add(<span class="hljs-string">'nike shoes'</span>);
-$product-&gt;keywords-&gt;add(<span class="hljs-string">'jordan shoes'</span>);
-$product-&gt;keywords-&gt;add(<span class="hljs-string">'air jordan'</span>);
-$product-&gt;keywords-&gt;add(<span class="hljs-string">'shoes'</span>);
-$product-&gt;keywords-&gt;add(<span class="hljs-string">'2011'</span>);
+$product-&gt;keywords[] = <span class="hljs-string">'nike shoes'</span>;
+$product-&gt;keywords[] = <span class="hljs-string">'jordan shoes'</span>;
+$product-&gt;keywords[] = <span class="hljs-string">'air jordan'</span>;
+$product-&gt;keywords[] = <span class="hljs-string">'shoes'</span>;
+$product-&gt;keywords[] = <span class="hljs-string">'2011'</span>;
 
 $dm-&gt;persist($product);
 $dm-&gt;flush();</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-38789b1c17713b31486c71379344dd4c03f2555f-2" class="line-number-anchor" /><a href="#line-number-38789b1c17713b31486c71379344dd4c03f2555f-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-38789b1c17713b31486c71379344dd4c03f2555f-3" class="line-number-anchor" /><a href="#line-number-38789b1c17713b31486c71379344dd4c03f2555f-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-38789b1c17713b31486c71379344dd4c03f2555f-4" class="line-number-anchor" /><a href="#line-number-38789b1c17713b31486c71379344dd4c03f2555f-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-38789b1c17713b31486c71379344dd4c03f2555f-5" class="line-number-anchor" /><a href="#line-number-38789b1c17713b31486c71379344dd4c03f2555f-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-38789b1c17713b31486c71379344dd4c03f2555f-6" class="line-number-anchor" /><a href="#line-number-38789b1c17713b31486c71379344dd4c03f2555f-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-38789b1c17713b31486c71379344dd4c03f2555f-7" class="line-number-anchor" /><a href="#line-number-38789b1c17713b31486c71379344dd4c03f2555f-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-38789b1c17713b31486c71379344dd4c03f2555f-8" class="line-number-anchor" /><a href="#line-number-38789b1c17713b31486c71379344dd4c03f2555f-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-38789b1c17713b31486c71379344dd4c03f2555f-9" class="line-number-anchor" /><a href="#line-number-38789b1c17713b31486c71379344dd4c03f2555f-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-38789b1c17713b31486c71379344dd4c03f2555f-10" class="line-number-anchor" /><a href="#line-number-38789b1c17713b31486c71379344dd4c03f2555f-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-38789b1c17713b31486c71379344dd4c03f2555f-11" class="line-number-anchor" /><a href="#line-number-38789b1c17713b31486c71379344dd4c03f2555f-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-38789b1c17713b31486c71379344dd4c03f2555f-12" class="line-number-anchor" /><a href="#line-number-38789b1c17713b31486c71379344dd4c03f2555f-12">12</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-2" class="line-number-anchor" /><a href="#line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-3" class="line-number-anchor" /><a href="#line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-4" class="line-number-anchor" /><a href="#line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-5" class="line-number-anchor" /><a href="#line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-6" class="line-number-anchor" /><a href="#line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-7" class="line-number-anchor" /><a href="#line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-8" class="line-number-anchor" /><a href="#line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-9" class="line-number-anchor" /><a href="#line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-10" class="line-number-anchor" /><a href="#line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-11" class="line-number-anchor" /><a href="#line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-12" class="line-number-anchor" /><a href="#line-number-d693dfd841841f9441d623d61ecb3c6410c6d432-12">12</a></td></tr></table></div></code></pre>
             
     <p>The above example populates the keywords manually but you could very easily write some code which
 automatically generates your keywords from a string built by the Product that may include the title,
