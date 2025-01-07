@@ -660,6 +660,11 @@
 
 </li>
             <li class="toc-item">
+    <a href="#number">number</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="#smallfloat">smallfloat</a>
 
 
@@ -793,28 +798,12 @@
 
         <ul class="section-level-2">
             <li class="toc-item">
-    <a href="#array">array</a>
-
-
-</li>
-            <li class="toc-item">
     <a href="#simple-array">simple_array</a>
 
 
 </li>
             <li class="toc-item">
     <a href="#json">json</a>
-
-
-</li>
-                    </ul>
-</li>
-            <li class="toc-item">
-    <a href="#object-types">Object types</a>
-
-        <ul class="section-level-2">
-            <li class="toc-item">
-    <a href="#object">object</a>
 
 
 </li>
@@ -1591,6 +1580,19 @@ applications.</p>
     </table>
 </div>
     </div>
+            <div class="section" id="number">
+            <h5 class="section-header ">
+    <a href="#number">
+        number
+        <i class="fas fa-link"></i>
+    </a>
+</h5>
+            
+    <p>Maps and converts numeric data with fixed-point precision. This type behaves like <code>decimal</code>,
+but maps to <code>BCMath\Number</code> value objects instead of strings. Requires PHP 8.4 or newer and
+the bcmath extension.</p>
+
+    </div>
             <div class="section" id="smallfloat">
             <h5 class="section-header ">
     <a href="#smallfloat">
@@ -2104,56 +2106,6 @@ in your domain, converting all the values back and forth from UTC.</p>
     <p>Types that map array data in different variations such as simple arrays,
 real arrays or JSON format arrays.</p>
 
-            <div class="section" id="array">
-            <h4 class="section-header ">
-    <a href="#array">
-        array
-        <i class="fas fa-link"></i>
-    </a>
-</h4>
-            
-    <p>Maps and converts array data based on PHP serialization.
-If you need to store an exact representation of your array data,
-you should consider using this type as it uses serialization
-to represent an exact copy of your array as string in the database.
-Values retrieved from the database are always converted to PHP&#039;s <code>array</code> type
-using deserialization or <code>null</code> if no data is present.</p>
-
-                        <div class="alert note-admonition bg-light-yellow text-dark border ">
-    <table width="100%">
-        <tbody>
-        <tr>
-            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
-            <td>
-                                                
-    <p>This type will always be mapped to the database vendor&#039;s <code>text</code> type
-internally as there is no way of storing a PHP array representation
-natively in the database.
-Furthermore this type requires an SQL column comment hint so that it can be
-reverse engineered from the database. Doctrine cannot map back this type
-properly on vendors not supporting column comments and will fall back to
-<code>text</code> type instead.</p>
-
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-                        <div class="alert warning-admonition bg-light-yellow text-dark border ">
-    <table width="100%">
-        <tbody>
-        <tr>
-            <td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td>
-            <td>
-                                                
-    <p>This type is deprecated since 3.4.0, use <a href="#json">json</a> instead.</p>
-
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-    </div>
             <div class="section" id="simple-array">
             <h4 class="section-header ">
     <a href="#simple-array">
@@ -2282,102 +2234,6 @@ which is also subject to change.</p>
 </div>
     </div>
     </div>
-            <div class="section" id="object-types">
-            <h3 class="section-header ">
-    <a href="#object-types">
-        Object types
-        <i class="fas fa-link"></i>
-    </a>
-</h3>
-            
-    <p>Types that map to objects such as POPOs.</p>
-
-            <div class="section" id="object">
-            <h4 class="section-header ">
-    <a href="#object">
-        object
-        <i class="fas fa-link"></i>
-    </a>
-</h4>
-            
-    <p>Maps and converts object data based on PHP serialization.
-If you need to store an exact representation of your object data,
-you should consider using this type as it uses serialization
-to represent an exact copy of your object as string in the database.
-Values retrieved from the database are always converted to PHP&#039;s <code>object</code> type
-using deserialization or <code>null</code> if no data is present.</p>
-
-                        <div class="alert note-admonition bg-light-yellow text-dark border ">
-    <table width="100%">
-        <tbody>
-        <tr>
-            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
-            <td>
-                                                
-    <p>This type will always be mapped to the database vendor&#039;s <code>text</code> type
-internally as there is no way of storing a PHP object representation
-natively in the database.
-Furthermore this type requires an SQL column comment hint so that it can be
-reverse engineered from the database. Doctrine cannot map back this type
-properly on vendors not supporting column comments and will fall back to
-<code>text</code> type instead.</p>
-
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-                        <div class="alert warning-admonition bg-light-yellow text-dark border ">
-    <table width="100%">
-        <tbody>
-        <tr>
-            <td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td>
-            <td>
-                                                
-    <p>While the built-in <code>text</code> type of MySQL and MariaDB can store binary data,
-<code>mysqldump</code> cannot properly export <code>text</code> fields containing binary data.
-This will cause creating and restoring of backups fail silently. A workaround is
-to <code>serialize()</code>/<code>unserialize()</code> and <code>base64_encode()</code>/<code>base64_decode()</code>
-PHP objects and store them into a <code>text</code> field manually.</p>
-
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-                        <div class="alert warning-admonition bg-light-yellow text-dark border ">
-    <table width="100%">
-        <tbody>
-        <tr>
-            <td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td>
-            <td>
-                                                
-    <p>Because the built-in <code>text</code> type of PostgreSQL does not support NULL bytes,
-the object type will cause deserialization errors on PostgreSQL. A workaround is
-to <code>serialize()</code>/<code>unserialize()</code> and <code>base64_encode()</code>/<code>base64_decode()</code> PHP objects and store
-them into a <code>text</code> field manually.</p>
-
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-                        <div class="alert warning-admonition bg-light-yellow text-dark border ">
-    <table width="100%">
-        <tbody>
-        <tr>
-            <td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td>
-            <td>
-                                                
-    <p>This type is deprecated since 3.4.0, use <a href="#json">json</a> instead.</p>
-
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-    </div>
-    </div>
     </div>
             <div class="section" id="mapping-matrix">
             <a id="mappingMatrix"></a>
@@ -2394,238 +2250,232 @@ type is mapped to the database and back to PHP.
 Please also notice the mapping specific footnotes for additional information.
 .. code-block:</p>
 
-            <div class="console"><pre><code class="console">+-------------------+---------------+-----------------------------------------------------------------------------------------------+
-| Doctrine          | PHP           | Database vendor                                                                               |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | Name                     | Version | Type                                                     |
-+===================+===============+==========================+=========+==========================================================+
-| **smallint**      | ``integer``   | **MySQL**                | *all*   | ``SMALLINT`` ``UNSIGNED`` [10]  ``AUTO_INCREMENT`` [11]  |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``SMALLINT``                                             |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **Oracle**               | *all*   | ``NUMBER(5)``                                            |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | *all*   | ``SMALLINT`` ``IDENTITY`` [11]                           |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQLite**               | *all*   | ``INTEGER`` [15]                                         |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **integer**       | ``integer``   | **MySQL**                | *all*   | ``INT`` ``UNSIGNED`` [10]  ``AUTO_INCREMENT`` [11]       |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``INT`` [12]                                             |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``SERIAL`` [11]                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **Oracle**               | *all*   | ``NUMBER(10)``                                           |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | *all*   | ``INT`` ``IDENTITY`` [11]                                |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQLite**               | *all*   | ``INTEGER`` [15]                                         |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **bigint**        | ``string``    | **MySQL**                | *all*   | ``BIGINT`` ``UNSIGNED`` [10]  ``AUTO_INCREMENT`` [11]    |
-|                   | [8]           +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``BIGINT`` [12]                                          |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``BIGSERIAL`` [11]                                       |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **Oracle**               | *all*   | ``NUMBER(20)``                                           |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | *all*   | ``BIGINT`` ``IDENTITY`` [11]                             |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQLite**               | *all*   | ``INTEGER`` [15]                                         |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **decimal** [7]   | ``string``    | **MySQL**                | *all*   | ``NUMERIC(p, s)`` ``UNSIGNED`` [10]                      |
-|                   | [9]           +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``NUMERIC(p, s)``                                        |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **Oracle**               |         |                                                          |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQL Server**           |         |                                                          |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **smallfloat**    | ``float``     | **MySQL**                | *all*   | ``FLOAT`` ``UNSIGNED`` [10]                              |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``REAL``                                                 |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **Oracle**               |         |                                                          |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQL Server**           |         |                                                          |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **float**         | ``float``     | **MySQL**                | *all*   | ``DOUBLE PRECISION`` ``UNSIGNED`` [10]                   |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``DOUBLE PRECISION``                                     |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **Oracle**               |         |                                                          |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQL Server**           |         |                                                          |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **string**        | ``string``    | **MySQL**                | *all*   | ``VARCHAR(n)`` [3]                                       |
-| [2]  [5]          |               +--------------------------+         |                                                          |
-|                   |               | **PostgreSQL**           |         |                                                          |
-|                   |               +--------------------------+         +----------------------------------------------------------+
-|                   |               | **SQLite**               |         |                                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **Oracle**               | *all*   | ``VARCHAR2(n)`` [3]                                      |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``CHAR(n)`` [4]                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | *all*   | ``NVARCHAR(n)`` [3]                                      |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``NCHAR(n)`` [4]                                         |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **ascii_string**  | ``string``    | **SQL Server**           |         | ``VARCHAR(n)``                                           |
-|                   |               |                          |         | ``CHAR(n)``                                              |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **text**          | ``string``    | **MySQL**                | *all*   | ``TINYTEXT`` [16]                                        |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``TEXT`` [17]                                            |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``MEDIUMTEXT`` [18]                                      |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``LONGTEXT`` [19]                                        |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``TEXT``                                                 |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **Oracle**               | *all*   | ``CLOB``                                                 |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | *all*   | ``VARCHAR(MAX)``                                         |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **guid**          | ``string``    | **MySQL**                | *all*   | ``CHAR(36)`` [1]                                         |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **Oracle**               |         |                                                          |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | *all*   | ``UNIQUEIDENTIFIER``                                     |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **PostgreSQL**           | *all*   | ``UUID``                                                 |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **binary**        | ``resource``  | **MySQL**                | *all*   | ``VARBINARY(n)`` [3]                                     |
-| [2]  [6]          |               +--------------------------+         |                                                          |
-|                   |               | **SQL Server**           |         +----------------------------------------------------------+
-|                   |               +--------------------------+         | ``BINARY(n)`` [4]                                        |
-|                   |               | **Oracle**               | *all*   | ``RAW(n)``                                               |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``BYTEA`` [15]                                           |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQLite**               | *all*   | ``BLOB`` [15]                                            |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **blob**          | ``resource``  | **MySQL**                | *all*   | ``TINYBLOB`` [16]                                        |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``BLOB`` [17]                                            |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``MEDIUMBLOB`` [18]                                      |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``LONGBLOB`` [19]                                        |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **Oracle**               | *all*   | ``BLOB``                                                 |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | *all*   | ``VARBINARY(MAX)``                                       |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``BYTEA``                                                |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **boolean**       | ``boolean``   | **MySQL**                | *all*   | ``TINYINT(1)``                                           |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``BOOLEAN``                                              |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | *all*   | ``BIT``                                                  |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **Oracle**               | *all*   | ``NUMBER(1)``                                            |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **date**          | ``\DateTime`` | **MySQL**                | *all*   | ``DATE``                                                 |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **PostgreSQL**           |         |                                                          |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **Oracle**               |         |                                                          |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-|                   |               +--------------------------+---------+                                                          |
-|                   |               | **SQL Server**           | "all"   |                                                          |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **datetime**      | ``\DateTime`` | **MySQL**                | *all*   | ``DATETIME`` [13]                                        |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | *all*   | ``DATETIME``                                             |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``TIMESTAMP(0) WITHOUT TIME ZONE``                       |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **Oracle**               | *all*   | ``TIMESTAMP(0)``                                         |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **datetimetz**    | ``\DateTime`` | **MySQL**                | *all*   | ``DATETIME``  [14]  [15]                                 |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-|                   |               +--------------------------+---------+                                                          |
-|                   |               | **SQL Server**           | "all"   |                                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``TIMESTAMP(0) WITH TIME ZONE``                          |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **Oracle**               |         |                                                          |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **time**          | ``\DateTime`` | **MySQL**                | *all*   | ``TIME``                                                 |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``TIME(0) WITHOUT TIME ZONE``                            |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **Oracle**               | *all*   | ``DATE`` [15]                                            |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | "all"   | ``TIME(0)``                                              |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **array** [1]     | ``array``     | **MySQL**                | *all*   | ``TINYTEXT`` [16]                                        |
-+-------------------+               |                          |         +----------------------------------------------------------+
-| **simple array**  |               |                          |         | ``TEXT`` [17]                                            |
-| [1]               |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``MEDIUMTEXT`` [18]                                      |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``LONGTEXT`` [19]                                        |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``TEXT``                                                 |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **Oracle**               | *all*   | ``CLOB``                                                 |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | *all*   | ``VARCHAR(MAX)``                                         |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **json**          | ``mixed``     | **MySQL**                | *all*   | ``JSON``                                                 |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``JSON`` [20]                                            |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``JSONB`` [21]                                           |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **Oracle**               | *all*   | ``CLOB`` [1]                                             |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | *all*   | ``VARCHAR(MAX)`` [1]                                     |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
-| **object** [1]    | ``object``    | **MySQL**                | *all*   | ``TINYTEXT`` [16]                                        |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``TEXT`` [17]                                            |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``MEDIUMTEXT`` [18]                                      |
-|                   |               |                          |         +----------------------------------------------------------+
-|                   |               |                          |         | ``LONGTEXT`` [19]                                        |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **PostgreSQL**           | *all*   | ``TEXT``                                                 |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **Oracle**               | *all*   | ``CLOB``                                                 |
-|                   |               +--------------------------+         |                                                          |
-|                   |               | **SQLite**               |         |                                                          |
-|                   |               +--------------------------+---------+----------------------------------------------------------+
-|                   |               | **SQL Server**           | *all*   | ``VARCHAR(MAX)``                                         |
-+-------------------+---------------+--------------------------+---------+----------------------------------------------------------+
+            <div class="console"><pre><code class="console">+-------------------+--------------------+-----------------------------------------------------------------------------------------------+
+| Doctrine          | PHP                | Database vendor                                                                               |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | Name                     | Version | Type                                                     |
++===================+====================+==========================+=========+==========================================================+
+| **smallint**      | ``integer``        | **MySQL**                | *all*   | ``SMALLINT`` ``UNSIGNED`` [10]  ``AUTO_INCREMENT`` [11]  |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``SMALLINT``                                             |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **Oracle**               | *all*   | ``NUMBER(5)``                                            |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQL Server**           | *all*   | ``SMALLINT`` ``IDENTITY`` [11]                           |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQLite**               | *all*   | ``INTEGER`` [15]                                         |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **integer**       | ``integer``        | **MySQL**                | *all*   | ``INT`` ``UNSIGNED`` [10]  ``AUTO_INCREMENT`` [11]       |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``INT`` [12]                                             |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``SERIAL`` [11]                                          |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **Oracle**               | *all*   | ``NUMBER(10)``                                           |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQL Server**           | *all*   | ``INT`` ``IDENTITY`` [11]                                |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQLite**               | *all*   | ``INTEGER`` [15]                                         |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **bigint**        | ``string`` [8]     | **MySQL**                | *all*   | ``BIGINT`` ``UNSIGNED`` [10]  ``AUTO_INCREMENT`` [11]    |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``BIGINT`` [12]                                          |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``BIGSERIAL`` [11]                                       |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **Oracle**               | *all*   | ``NUMBER(20)``                                           |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQL Server**           | *all*   | ``BIGINT`` ``IDENTITY`` [11]                             |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQLite**               | *all*   | ``INTEGER`` [15]                                         |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **decimal** [7]   | ``string`` [9]     | **MySQL**                | *all*   | ``NUMERIC(p, s)`` ``UNSIGNED`` [10]                      |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``NUMERIC(p, s)``                                        |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **Oracle**               |         |                                                          |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQL Server**           |         |                                                          |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **number** [7]    | ``\BCMath\Number`` | **MySQL**                | *all*   | ``NUMERIC(p, s)`` ``UNSIGNED`` [10]                      |
+|                   | [9]                +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``NUMERIC(p, s)``                                        |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **Oracle**               |         |                                                          |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQL Server**           |         |                                                          |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **smallfloat**    | ``float``          | **MySQL**                | *all*   | ``FLOAT`` ``UNSIGNED`` [10]                              |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``REAL``                                                 |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **Oracle**               |         |                                                          |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQL Server**           |         |                                                          |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **float**         | ``float``          | **MySQL**                | *all*   | ``DOUBLE PRECISION`` ``UNSIGNED`` [10]                   |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``DOUBLE PRECISION``                                     |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **Oracle**               |         |                                                          |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQL Server**           |         |                                                          |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **string**        | ``string``         | **MySQL**                | *all*   | ``VARCHAR(n)`` [3]                                       |
+| [2]  [5]          |                    +--------------------------+         |                                                          |
+|                   |                    | **PostgreSQL**           |         |                                                          |
+|                   |                    +--------------------------+         +----------------------------------------------------------+
+|                   |                    | **SQLite**               |         |                                                          |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **Oracle**               | *all*   | ``VARCHAR2(n)`` [3]                                      |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``CHAR(n)`` [4]                                          |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQL Server**           | *all*   | ``NVARCHAR(n)`` [3]                                      |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``NCHAR(n)`` [4]                                         |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **ascii_string**  | ``string``         | **SQL Server**           |         | ``VARCHAR(n)``                                           |
+|                   |                    |                          |         | ``CHAR(n)``                                              |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **text**          | ``string``         | **MySQL**                | *all*   | ``TINYTEXT`` [16]                                        |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``TEXT`` [17]                                            |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``MEDIUMTEXT`` [18]                                      |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``LONGTEXT`` [19]                                        |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``TEXT``                                                 |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **Oracle**               | *all*   | ``CLOB``                                                 |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQL Server**           | *all*   | ``VARCHAR(MAX)``                                         |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **guid**          | ``string``         | **MySQL**                | *all*   | ``CHAR(36)`` [1]                                         |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **Oracle**               |         |                                                          |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQL Server**           | *all*   | ``UNIQUEIDENTIFIER``                                     |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **PostgreSQL**           | *all*   | ``UUID``                                                 |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **binary**        | ``resource``       | **MySQL**                | *all*   | ``VARBINARY(n)`` [3]                                     |
+| [2]  [6]          |                    +--------------------------+         |                                                          |
+|                   |                    | **SQL Server**           |         +----------------------------------------------------------+
+|                   |                    +--------------------------+         | ``BINARY(n)`` [4]                                        |
+|                   |                    | **Oracle**               | *all*   | ``RAW(n)``                                               |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``BYTEA`` [15]                                           |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQLite**               | *all*   | ``BLOB`` [15]                                            |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **blob**          | ``resource``       | **MySQL**                | *all*   | ``TINYBLOB`` [16]                                        |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``BLOB`` [17]                                            |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``MEDIUMBLOB`` [18]                                      |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``LONGBLOB`` [19]                                        |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **Oracle**               | *all*   | ``BLOB``                                                 |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQL Server**           | *all*   | ``VARBINARY(MAX)``                                       |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``BYTEA``                                                |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **boolean**       | ``boolean``        | **MySQL**                | *all*   | ``TINYINT(1)``                                           |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``BOOLEAN``                                              |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQL Server**           | *all*   | ``BIT``                                                  |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **Oracle**               | *all*   | ``NUMBER(1)``                                            |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **date**          | ``\DateTime``      | **MySQL**                | *all*   | ``DATE``                                                 |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **PostgreSQL**           |         |                                                          |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **Oracle**               |         |                                                          |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
+|                   |                    +--------------------------+---------+                                                          |
+|                   |                    | **SQL Server**           | "all"   |                                                          |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **datetime**      | ``\DateTime``      | **MySQL**                | *all*   | ``DATETIME`` [13]                                        |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQL Server**           | *all*   | ``DATETIME``                                             |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``TIMESTAMP(0) WITHOUT TIME ZONE``                       |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **Oracle**               | *all*   | ``TIMESTAMP(0)``                                         |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **datetimetz**    | ``\DateTime``      | **MySQL**                | *all*   | ``DATETIME``  [14]  [15]                                 |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
+|                   |                    +--------------------------+---------+                                                          |
+|                   |                    | **SQL Server**           | "all"   |                                                          |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``TIMESTAMP(0) WITH TIME ZONE``                          |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **Oracle**               |         |                                                          |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **time**          | ``\DateTime``      | **MySQL**                | *all*   | ``TIME``                                                 |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``TIME(0) WITHOUT TIME ZONE``                            |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **Oracle**               | *all*   | ``DATE`` [15]                                            |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQL Server**           | "all"   | ``TIME(0)``                                              |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **simple array**  | ``array``          | **MySQL**                | *all*   | ``TINYTEXT`` [16]                                        |
+| [1]               |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``TEXT`` [17]                                            |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``MEDIUMTEXT`` [18]                                      |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``LONGTEXT`` [19]                                        |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``TEXT``                                                 |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **Oracle**               | *all*   | ``CLOB``                                                 |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQL Server**           | *all*   | ``VARCHAR(MAX)``                                         |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
+| **json**          | ``mixed``          | **MySQL**                | *all*   | ``JSON``                                                 |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **PostgreSQL**           | *all*   | ``JSON`` [20]                                            |
+|                   |                    |                          |         +----------------------------------------------------------+
+|                   |                    |                          |         | ``JSONB`` [21]                                           |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **Oracle**               | *all*   | ``CLOB`` [1]                                             |
+|                   |                    +--------------------------+         |                                                          |
+|                   |                    | **SQLite**               |         |                                                          |
+|                   |                    +--------------------------+---------+----------------------------------------------------------+
+|                   |                    | **SQL Server**           | *all*   | ``VARCHAR(MAX)`` [1]                                     |
++-------------------+--------------------+--------------------------+---------+----------------------------------------------------------+
 </code></pre></div>
             
     <p><strong>Notes</strong></p>
