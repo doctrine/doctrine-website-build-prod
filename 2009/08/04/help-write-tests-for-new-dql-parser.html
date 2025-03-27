@@ -42,8 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "As you all know, we&#039;re focusing most of our development time on Doctrine
-2.0 these days. To help spe"
+        "description": "As you all know, we&amp;#039;re focusing most of our development time on Doctrine 2.0 these days. To hel"
     }
     </script>
     <link
@@ -237,95 +236,152 @@
         <hr />
 
         <div>
-                <p>As you all know, we're focusing most of our development time on Doctrine
-2.0 these days. To help speed things up, we would like to ask for help
-writing tests from our users</p>
-<p>Recently I finished new <a href="http://trac.doctrine-project.org/browser/trunk/lib/Doctrine/ORM/Query/Parser.php">DQL parser for
-2.0</a>.
-Most of you may not be familiar with compiler's theory, but for those
-that are, it's a top-down recursive descent parser for a context-free
-grammar, usually known as LL(k).</p>
-<p>We mapped the entire supported DQL into a document, which is an <a href="https://en.wikipedia.org/wiki/Extended_Backus–Naur_Form">EBNF
-(Extended Backus-Naur
-Form)</a> , which
-is a meta-syntax notation to express context-free grammars. This one is
-quite simple to be readable by humans. Yes, we are humans if you raise
-the question! =)</p>
-<p>The header of our EBNF describes some terms and conventions, but here is
-a small subset of our grammar:</p>
-<pre><code>FromClause                        ::= "FROM" IdentificationVariableDeclaration {"," IdentificationVariableDeclaration}*
+                
+            
+                
+    <p>As you all know, we&#039;re focusing most of our development time on Doctrine 2.0 these days. To help speed things up, we would like to ask for help writing tests from our users</p>
+
+                
+    <p>Recently I finished new <a href="http://trac.doctrine-project.org/browser/trunk/lib/Doctrine/ORM/Query/Parser.php">DQL parser for 2.0</a>. Most of you may not be familiar with compiler&#039;s theory, but for those that are, it&#039;s a top-down recursive descent parser for a context-free grammar, usually known as LL(k).</p>
+
+                
+    <p>We mapped the entire supported DQL into a document, which is an <a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form">EBNF (Extended Backus-Naur Form)</a> , which is a meta-syntax notation to express context-free grammars. This one is quite simple to be readable by humans. Yes, we are humans if you raise the question! =)</p>
+
+                
+    <p>The header of our EBNF describes some terms and conventions, but here is a small subset of our grammar:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="6d6b57a5aff2041e41a1154924d5014d287eae05"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="6d6b57a5aff2041e41a1154924d5014d287eae05"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-6d6b57a5aff2041e41a1154924d5014d287eae05-1" class="line-number-anchor" /><a href="#line-number-6d6b57a5aff2041e41a1154924d5014d287eae05-1">1</a></td><td class="code-line" rowspan="6">FromClause                        ::= <span class="hljs-string">"FROM"</span> IdentificationVariableDeclaration {<span class="hljs-string">","</span> IdentificationVariableDeclaration}*
 IdentificationVariableDeclaration ::= RangeVariableDeclaration [IndexBy] {JoinVariableDeclaration}*
-RangeVariableDeclaration          ::= AbstractSchemaName ["AS"] AliasIdentificationVariable
+RangeVariableDeclaration          ::= AbstractSchemaName [<span class="hljs-string">"AS"</span>] AliasIdentificationVariable
 AbstractSchemaName                ::= identifier
-AliasIdentificationVariable       ::= identifier</code></pre>
-<p>It's not mentioned in this subset some pieces just for clarity.
-Identifier is a terminal (no grammar rule to follow after that) and is a
-string (ie. &quot;<code>name</code>&quot;, &quot;<code>email</code>&quot;).</p>
-<h1>What does this subset do?</h1>
-<p>It processes this pieces of DQL:</p>
-<pre><code>FROM User u
-FROM User AS u, u.Group g</code></pre>
-<h1>How does it do that?</h1>
-<p>Each piece of DQL is converted to a series of tokens. Some tokens are
-defined in our <a href="https://en.wikipedia.org/wiki/Symbol_table">Symbol Table</a>
-, which is then validated and correctly typed into the right token type.
-For example... when it finds the &quot;<code>FROM</code>&quot;, it'll return for us
-internally a token in an array format of:</p>
-<pre><code>array(
-    'value' =&gt; 'FROM',
-    'type' =&gt; Lexer::T_FROM,
-    'position' =&gt; 0
-)</code></pre>
-<p>Value is the actual string representation in DQL, type is the token type
-that was brought by symbol table and position is the position of this
-token in the DQL string.</p>
-<p>Then token is validated in the DQL parser; if it is expected the
-<code>T_FROM</code>, just match and go to next token, if not raise a syntax error.
-Imagine someone types this: &quot;<code>FROM User u, u.Group u</code>&quot;. It is not valid
-DQL, because alias &quot;<code>u</code>&quot; is being used twice. That is the task of
-another check, which inspects the requested DQL defined symbol table and
-reports for semantical errors. We removed the lexical errors since we
-use them as identifiers, so there is no lexical error checks in DQL. Not
-that it may open a hole in our structure, syntax and semantical checks
-do all that we need.</p>
-<h1>How can I help?</h1>
-<p>We currently have a single test that checks for DQL recognition. We need
-to expand it to cover as much situations as possible. If you follow the
-EBNF grammar rules, you'll see that for example, IN condition supports
-either a series of Literals (which can be strings, booleans, etc), an
-InputParameter or a subselect. We need some people with free time to
-cover all possible situations; I mean that we needs something like these
-queries:</p>
-<pre><code>SELECT u FROM CmsUser u WHERE u.id IN (1, 2)
+AliasIdentificationVariable       ::= identifier
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6d6b57a5aff2041e41a1154924d5014d287eae05-2" class="line-number-anchor" /><a href="#line-number-6d6b57a5aff2041e41a1154924d5014d287eae05-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6d6b57a5aff2041e41a1154924d5014d287eae05-3" class="line-number-anchor" /><a href="#line-number-6d6b57a5aff2041e41a1154924d5014d287eae05-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6d6b57a5aff2041e41a1154924d5014d287eae05-4" class="line-number-anchor" /><a href="#line-number-6d6b57a5aff2041e41a1154924d5014d287eae05-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6d6b57a5aff2041e41a1154924d5014d287eae05-5" class="line-number-anchor" /><a href="#line-number-6d6b57a5aff2041e41a1154924d5014d287eae05-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6d6b57a5aff2041e41a1154924d5014d287eae05-6" class="line-number-anchor" /><a href="#line-number-6d6b57a5aff2041e41a1154924d5014d287eae05-6">6</a></td></tr></table></div></code></pre>
+                
+    <p>It&#039;s not mentioned in this subset some pieces just for clarity. Identifier is a terminal (no grammar rule to follow after that) and is a string (ie. &quot;<code>name</code>&quot;, &quot;<code>email</code>&quot;).</p>
 
-SELECT u FROM CmsUser u WHERE u.id IN (?0)
+                <h1 class="section-header ">
+    <a href="#what-does-this-subset-do">
+        What does this subset do?
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>It processes this pieces of DQL:</p>
 
-SELECT u FROM CmsUser u WHERE u.name IN ('guilhermeblanco', 'jwage', 'romanb')
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="ff7941d425ca7e9b86083f4f15b482e486501f33"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="ff7941d425ca7e9b86083f4f15b482e486501f33"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ff7941d425ca7e9b86083f4f15b482e486501f33-1" class="line-number-anchor" /><a href="#line-number-ff7941d425ca7e9b86083f4f15b482e486501f33-1">1</a></td><td class="code-line" rowspan="3">FROM User u
+FROM User <span class="hljs-keyword">AS</span> u, u.Group g
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ff7941d425ca7e9b86083f4f15b482e486501f33-2" class="line-number-anchor" /><a href="#line-number-ff7941d425ca7e9b86083f4f15b482e486501f33-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ff7941d425ca7e9b86083f4f15b482e486501f33-3" class="line-number-anchor" /><a href="#line-number-ff7941d425ca7e9b86083f4f15b482e486501f33-3">3</a></td></tr></table></div></code></pre>
+                <h1 class="section-header ">
+    <a href="#how-does-it-do-that">
+        How does it do that?
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Each piece of DQL is converted to a series of tokens. Some tokens are defined in our <a href="https://en.wikipedia.org/wiki/Symbol_table">Symbol Table</a> , which is then validated and correctly typed into the right token type. For example... when it finds the &quot;<code>FROM</code>&quot;, it&#039;ll return for us internally a token in an array format of:</p>
 
-SELECT u FROM CmsUser u WHERE u.id IN (SELECT u2.id FROM CmsUser u2)</code></pre>
-<p>By doing (sometimes) stupid queries and complex queries, we cover all
-possibilities and then we can finally consider that we have a good
-coverage in our DQL support.</p>
-<p>If you load the
-<a href="http://trac.doctrine-project.org/browser/trunk/tests/Doctrine/Tests/ORM/Query/LanguageRecognitionTest.php">LanguageRecognitionTest</a>
-, you'll find that we have already builtin 2 methods to help you
-asserting DQL support: <code>assertValidDql</code> and <code>assertInvalidDql</code>. Just
-follow the EBNF, pick defined models under <a href="http://trac.doctrine-project.org/browser/trunk/tests/Doctrine/Tests/Models/CMS">Models/CMS
-folder</a>
-and start writing tests.</p>
-<h1>Running tests</h1>
-<p>It is not hard to execute new test suite. Once you have
-<a href="https://phpunit.de">PHPUnit</a> and <a href="https://xdebug.org">XDebug</a> installed,
-go to tests folder of trunk, create the directory <code>_coverage</code> (CHMOD
-0777) and execute:</p>
-<pre><code>phpunit --coverage-html=./_coverage Doctrine_Tests_AllTests</code></pre>
-<p>Then you'll have coverage too, which means it'll be even better to see
-where it's missing tests in suite.</p>
-<p>Once you write your tests, create a ticket in our trac and then upload
-the patched file there. We'll review your tests and commit them.</p>
-<p>To generate a patch file, just type:
-<code>svn diff &gt; /path/to/path/file.diff</code> I hope you enjoy new structure and
-contribute with lots of tests!</p>
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="3d37baa0b0ab51dd8cfade15a1b249d15a117f13"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="3d37baa0b0ab51dd8cfade15a1b249d15a117f13"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-3d37baa0b0ab51dd8cfade15a1b249d15a117f13-1" class="line-number-anchor" /><a href="#line-number-3d37baa0b0ab51dd8cfade15a1b249d15a117f13-1">1</a></td><td class="code-line" rowspan="6"><span class="hljs-keyword">array</span>(
+    <span class="hljs-string">'value'</span> =&gt; <span class="hljs-string">'FROM'</span>,
+    <span class="hljs-string">'type'</span> =&gt; Lexer::T_FROM,
+    <span class="hljs-string">'position'</span> =&gt; <span class="hljs-number">0</span>
+)
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d37baa0b0ab51dd8cfade15a1b249d15a117f13-2" class="line-number-anchor" /><a href="#line-number-3d37baa0b0ab51dd8cfade15a1b249d15a117f13-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d37baa0b0ab51dd8cfade15a1b249d15a117f13-3" class="line-number-anchor" /><a href="#line-number-3d37baa0b0ab51dd8cfade15a1b249d15a117f13-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d37baa0b0ab51dd8cfade15a1b249d15a117f13-4" class="line-number-anchor" /><a href="#line-number-3d37baa0b0ab51dd8cfade15a1b249d15a117f13-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d37baa0b0ab51dd8cfade15a1b249d15a117f13-5" class="line-number-anchor" /><a href="#line-number-3d37baa0b0ab51dd8cfade15a1b249d15a117f13-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d37baa0b0ab51dd8cfade15a1b249d15a117f13-6" class="line-number-anchor" /><a href="#line-number-3d37baa0b0ab51dd8cfade15a1b249d15a117f13-6">6</a></td></tr></table></div></code></pre>
+                
+    <p>Value is the actual string representation in DQL, type is the token type that was brought by symbol table and position is the position of this token in the DQL string.</p>
+
+                
+    <p>Then token is validated in the DQL parser; if it is expected the <code>T_FROM</code>, just match and go to next token, if not raise a syntax error. Imagine someone types this: &quot;<code>FROM User u, u.Group u</code>&quot;. It is not valid DQL, because alias &quot;<code>u</code>&quot; is being used twice. That is the task of another check, which inspects the requested DQL defined symbol table and reports for semantical errors. We removed the lexical errors since we use them as identifiers, so there is no lexical error checks in DQL. Not that it may open a hole in our structure, syntax and semantical checks do all that we need.</p>
+
+                <h1 class="section-header ">
+    <a href="#how-can-i-help">
+        How can I help?
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>We currently have a single test that checks for DQL recognition. We need to expand it to cover as much situations as possible. If you follow the EBNF grammar rules, you&#039;ll see that for example, IN condition supports either a series of Literals (which can be strings, booleans, etc), an InputParameter or a subselect. We need some people with free time to cover all possible situations; I mean that we needs something like these queries:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-1" class="line-number-anchor" /><a href="#line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-1">1</a></td><td class="code-line" rowspan="8">SELECT u FROM CmsUser u WHERE u.id IN (<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)
+
+SELECT u FROM CmsUser u WHERE u.id IN (?<span class="hljs-number">0</span>)
+
+SELECT u FROM CmsUser u WHERE u.name IN (<span class="hljs-string">'guilhermeblanco'</span>, <span class="hljs-string">'jwage'</span>, <span class="hljs-string">'romanb'</span>)
+
+SELECT u FROM CmsUser u WHERE u.id IN (SELECT u2.id FROM CmsUser u2)
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-2" class="line-number-anchor" /><a href="#line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-3" class="line-number-anchor" /><a href="#line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-4" class="line-number-anchor" /><a href="#line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-5" class="line-number-anchor" /><a href="#line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-6" class="line-number-anchor" /><a href="#line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-7" class="line-number-anchor" /><a href="#line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-8" class="line-number-anchor" /><a href="#line-number-19fa0b9cf75a88be2a56abcfaacf0a7bcdd701f2-8">8</a></td></tr></table></div></code></pre>
+                
+    <p>By doing (sometimes) stupid queries and complex queries, we cover all possibilities and then we can finally consider that we have a good coverage in our DQL support.</p>
+
+                
+    <p>If you load the <a href="http://trac.doctrine-project.org/browser/trunk/tests/Doctrine/Tests/ORM/Query/LanguageRecognitionTest.php">LanguageRecognitionTest</a> , you&#039;ll find that we have already builtin 2 methods to help you asserting DQL support: <code>assertValidDql</code> and <code>assertInvalidDql</code>. Just follow the EBNF, pick defined models under <a href="http://trac.doctrine-project.org/browser/trunk/tests/Doctrine/Tests/Models/CMS">Models/CMS folder</a> and start writing tests.</p>
+
+                <h1 class="section-header ">
+    <a href="#running-tests">
+        Running tests
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>It is not hard to execute new test suite. Once you have <a href="https://phpunit.de">PHPUnit</a> and <a href="https://xdebug.org">XDebug</a> installed, go to tests folder of trunk, create the directory <code>_coverage</code> (CHMOD 0777) and execute:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="ef6b8892288acc8becaa64a9ccc691068549a2fa"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="ef6b8892288acc8becaa64a9ccc691068549a2fa"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ef6b8892288acc8becaa64a9ccc691068549a2fa-1" class="line-number-anchor" /><a href="#line-number-ef6b8892288acc8becaa64a9ccc691068549a2fa-1">1</a></td><td class="code-line" rowspan="2">phpunit --coverage-html=./_coverage Doctrine_Tests_AllTests
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ef6b8892288acc8becaa64a9ccc691068549a2fa-2" class="line-number-anchor" /><a href="#line-number-ef6b8892288acc8becaa64a9ccc691068549a2fa-2">2</a></td></tr></table></div></code></pre>
+                
+    <p>Then you&#039;ll have coverage too, which means it&#039;ll be even better to see where it&#039;s missing tests in suite.</p>
+
+                
+    <p>Once you write your tests, create a ticket in our trac and then upload the patched file there. We&#039;ll review your tests and commit them.</p>
+
+                
+    <p>To generate a patch file, just type: <code>svn diff &gt; /path/to/path/file.diff</code> I hope you enjoy new structure and contribute with lots of tests!</p>
+
+        
+    
         </div>
     </article>
     </main>

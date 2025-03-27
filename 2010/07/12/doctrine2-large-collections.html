@@ -42,8 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "If you access a collection of Entity A pointing to Entity B, Doctrine2
-always initializes the comple"
+        "description": "If you access a collection of Entity A pointing to Entity B, Doctrine2 always initializes the comple"
     }
     </script>
     <link
@@ -237,73 +236,114 @@ always initializes the comple"
         <hr />
 
         <div>
-                <p>If you access a collection of Entity A pointing to Entity B, Doctrine2
-always initializes the complete collection for you. For small
-collections up to around 100 entities this won't be a problem, however
-as soon as collections get (much) bigger than this you can get into
-serious trouble.</p>
-<p>By default Doctrine2 can only optimize adding new entities to a
-collection for you. This operation does not initialize the collection.
-This will only get you bigger collections though, reading them is still
-a pain.</p>
-<p>We already got requests from several development teams for better
-functionality in this regard and we are planning to add a solution to
-this problem that is not constraining your domain model with technical
-blurp. However this solution is currently on our schedule for the 2.1
-release of Doctrine only.</p>
-<p>Until then I wrote a very little extension for Doctrine2 that allows you
-to work with large collections. It has two methods that compute the
-following data for any given <code>PersistentCollection</code>:</p>
-<ul>
-<li>Total Number of Elements in the Collection</li>
-<li>A slice of entities from the collection using a sql limit (or
-alternative)</li>
-</ul>
-<p>You can get this extension from the <a href="https://github.com/beberlei/DoctrineExtensions">DoctrineExtensions Github
-repository</a>.</p>
-<h1>Working with a LargeCollection</h1>
-<p>The <code>LargeCollection</code> class is a handler to work with large
-PersistentCollections. You can instantiate it by passing an
-<code>EntityManager</code> instance:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-use DoctrineExtensions\LargeCollections\LargeCollection;
+                
+            
+                
+    <p>If you access a collection of Entity A pointing to Entity B, Doctrine2 always initializes the complete collection for you. For small collections up to around 100 entities this won&#039;t be a problem, however as soon as collections get (much) bigger than this you can get into serious trouble.</p>
 
-$lc = new LargeCollection($em);
+                
+    <p>By default Doctrine2 can only optimize adding new entities to a collection for you. This operation does not initialize the collection. This will only get you bigger collections though, reading them is still a pain.</p>
+
+                
+    <p>We already got requests from several development teams for better functionality in this regard and we are planning to add a solution to this problem that is not constraining your domain model with technical blurp. However this solution is currently on our schedule for the 2.1 release of Doctrine only.</p>
+
+                
+    <p>Until then I wrote a very little extension for Doctrine2 that allows you to work with large collections. It has two methods that compute the following data for any given <code>PersistentCollection</code>:</p>
+
+                
+
+<ul>
+    <li class="dash">Total Number of Elements in the Collection</li>
+    <li class="dash">A slice of entities from the collection using a sql limit (or alternative)</li>
+</ul>
+
+                
+    <p>You can get this extension from the <a href="https://github.com/beberlei/DoctrineExtensions">DoctrineExtensions Github repository</a>.</p>
+
+                <h1 class="section-header ">
+    <a href="#working-with-a-largecollection">
+        Working with a LargeCollection
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>The <code>LargeCollection</code> class is a handler to work with large PersistentCollections. You can instantiate it by passing an <code>EntityManager</code> instance:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="2d4be611d584dda936ac05e2919027e7c58fc2f5"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="2d4be611d584dda936ac05e2919027e7c58fc2f5"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-1" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-1">1</a></td><td class="code-line" rowspan="14"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">use</span> <span class="hljs-title">DoctrineExtensions</span>\<span class="hljs-title">LargeCollections</span>\<span class="hljs-title">LargeCollection</span>;
+
+$lc = <span class="hljs-keyword">new</span> LargeCollection($em);
 
 **NOTE**
 
 LargeCollection only works with instances of
 ``PersistentCollection``, not with other implementations of the
-``Doctrine\Common\Collections\Collection`` interface. That means
-that you can only pass collections to it, whose owning entities
-have been persisted before or are retrieved from the
-EntityManager.</code></pre>
-<p>You can compute the total number of elements in a given collection by
-passing it to the count method:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$size = $lc-&gt;count($article-&gt;getComments());</code></pre>
-<p>You can retrieve a slice of entities from the collection by calling:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$slice = $lc-&gt;getSliceQuery($article-&gt;getComments(), $limit = 30);</code></pre>
-<p>As you can see this is very simple to use, but also missing some bits:</p>
+``Doctrine\Common\Collections\Collection`` <span class="hljs-class"><span class="hljs-keyword">interface</span>. <span class="hljs-title">That</span> <span class="hljs-title">means</span>
+<span class="hljs-title">that</span> <span class="hljs-title">you</span> <span class="hljs-title">can</span> <span class="hljs-title">only</span> <span class="hljs-title">pass</span> <span class="hljs-title">collections</span> <span class="hljs-title">to</span> <span class="hljs-title">it</span>, <span class="hljs-title">whose</span> <span class="hljs-title">owning</span> <span class="hljs-title">entities</span>
+<span class="hljs-title">have</span> <span class="hljs-title">been</span> <span class="hljs-title">persisted</span> <span class="hljs-title">before</span> <span class="hljs-title">or</span> <span class="hljs-title">are</span> <span class="hljs-title">retrieved</span> <span class="hljs-title">from</span> <span class="hljs-title">the</span>
+<span class="hljs-title">EntityManager</span>.
+</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-2" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-3" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-4" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-5" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-6" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-7" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-8" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-9" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-10" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-11" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-12" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-13" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-14" class="line-number-anchor" /><a href="#line-number-2d4be611d584dda936ac05e2919027e7c58fc2f5-14">14</a></td></tr></table></div></code></pre>
+                
+    <p>You can compute the total number of elements in a given collection by passing it to the count method:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="327d03b9e4c4964e906bdc319d3c086487d3846e"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="327d03b9e4c4964e906bdc319d3c086487d3846e"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-327d03b9e4c4964e906bdc319d3c086487d3846e-1" class="line-number-anchor" /><a href="#line-number-327d03b9e4c4964e906bdc319d3c086487d3846e-1">1</a></td><td class="code-line" rowspan="3"><span class="hljs-meta">&lt;?php</span>
+$size = $lc-&gt;count($article-&gt;getComments());
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-327d03b9e4c4964e906bdc319d3c086487d3846e-2" class="line-number-anchor" /><a href="#line-number-327d03b9e4c4964e906bdc319d3c086487d3846e-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-327d03b9e4c4964e906bdc319d3c086487d3846e-3" class="line-number-anchor" /><a href="#line-number-327d03b9e4c4964e906bdc319d3c086487d3846e-3">3</a></td></tr></table></div></code></pre>
+                
+    <p>You can retrieve a slice of entities from the collection by calling:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="e6bf86be333616ca8c7c4ef5189f43061521eeee"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="e6bf86be333616ca8c7c4ef5189f43061521eeee"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-e6bf86be333616ca8c7c4ef5189f43061521eeee-1" class="line-number-anchor" /><a href="#line-number-e6bf86be333616ca8c7c4ef5189f43061521eeee-1">1</a></td><td class="code-line" rowspan="3"><span class="hljs-meta">&lt;?php</span>
+$slice = $lc-&gt;getSliceQuery($article-&gt;getComments(), $limit = <span class="hljs-number">30</span>);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e6bf86be333616ca8c7c4ef5189f43061521eeee-2" class="line-number-anchor" /><a href="#line-number-e6bf86be333616ca8c7c4ef5189f43061521eeee-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e6bf86be333616ca8c7c4ef5189f43061521eeee-3" class="line-number-anchor" /><a href="#line-number-e6bf86be333616ca8c7c4ef5189f43061521eeee-3">3</a></td></tr></table></div></code></pre>
+                
+    <p>As you can see this is very simple to use, but also missing some bits:</p>
+
+                
+
 <ul>
-<li>In your domain models you sometimes don't want to return the
-<code>Collections</code> instance but call <code>toArray()</code> to encapsulate the
-Collections API inside the Entity. For this two new methods are
-required to access to the persistent collections from the inside of
-an entity.</li>
-<li>The <code>remove</code>, <code>removeElement</code>, <code>contains</code> and <code>containsKey</code> methods
-could also be added to the large collection handler, making direct
-calls to the underlying UnitOfWork API.</li>
-<li>A method that returns an <code>IterableResult</code> for any given collection.
-This would allow to iterate the complete collection on a row-by-row
-basis, which would eliminate possible max memory problems compared
-to the complete hydration of a collection.</li>
-<li>Methods link()/unlink() like described in
-<a href="https://github.com/doctrine/orm/issues/1892">DDC-128</a></li>
+    <li class="dash">In your domain models you sometimes don&#039;t want to return the <code>Collections</code> instance but call <code>toArray()</code> to encapsulate the Collections API inside the Entity. For this two new methods are required to access to the persistent collections from the inside of an entity.</li>
+    <li class="dash">The <code>remove</code>, <code>removeElement</code>, <code>contains</code> and <code>containsKey</code> methods could also be added to the large collection handler, making direct calls to the underlying UnitOfWork API.</li>
+    <li class="dash">A method that returns an <code>IterableResult</code> for any given collection. This would allow to iterate the complete collection on a row-by-row basis, which would eliminate possible max memory problems compared to the complete hydration of a collection.</li>
+    <li class="dash">Methods link()/unlink() like described in <a href="https://github.com/doctrine/orm/issues/1892">DDC-128</a></li>
 </ul>
-<p>I hope I got your attention and maybe someone has an interest in
-extending the LargeCollection a little bit more.</p>
+
+                
+    <p>I hope I got your attention and maybe someone has an interest in extending the LargeCollection a little bit more.</p>
+
+        
+    
         </div>
     </article>
     </main>

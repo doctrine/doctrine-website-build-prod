@@ -42,8 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "We have released a new minor version 2.11 of Doctrine ORM with several improvements
-and new features"
+        "description": "We have released a new minor version 2.11 of Doctrine ORM with several improvements and new features"
     }
     </script>
     <link
@@ -237,125 +236,291 @@ and new features"
         <hr />
 
         <div>
-                <p>We have released a new minor version 2.11 of Doctrine ORM with several improvements
-and new features.</p>
-<p><a href="https://github.com/doctrine/orm/releases/tag/2.11.0">See all changes and contributors in the
-Changelog</a> on Github.</p>
-<p>This blog post gives an overview over all the new features and improvements
-that are user facing. Please see the changelog and UPGRADE notes for new
-deprecations.</p>
-<h2>PHP 8.1 Enum Support</h2>
-<p>With PHP 8.1 the language has first class support for enumerations and Doctrine
-ORM 2.11 supports the mapping of database values to <a href="https://www.php.net/manual/en/language.enumerations.backed.php">Backed
-Enums</a>.</p>
-<p>The support is not integrated on DBAL Type level, but using a new mapping option
-called <code>enumType</code> on column/field declaration level:</p>
-<pre><code class="language-php">enum Suit: string {
-    case Hearts = 'H';
-    case Diamonds = 'D';
-    case Clubs = 'C';
-    case Spades = 'S';
+                
+            
+                
+    <p>We have released a new minor version 2.11 of Doctrine ORM with several improvements and new features.</p>
+
+                
+    <p><a href="https://github.com/doctrine/orm/releases/tag/2.11.0">See all changes and contributors in the Changelog</a> on Github.</p>
+
+                
+    <p>This blog post gives an overview over all the new features and improvements that are user facing. Please see the changelog and UPGRADE notes for new deprecations.</p>
+
+                <h2 class="section-header ">
+    <a href="#php-8-1-enum-support">
+        PHP 8.1 Enum Support
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>With PHP 8.1 the language has first class support for enumerations and Doctrine ORM 2.11 supports the mapping of database values to <a href="https://www.php.net/manual/en/language.enumerations.backed.php">Backed Enums</a>.</p>
+
+                
+    <p>The support is not integrated on DBAL Type level, but using a new mapping option called <code>enumType</code> on column/field declaration level:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="fa410e9ead5f8c90ab06e34cdf87de10f04156a2"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="fa410e9ead5f8c90ab06e34cdf87de10f04156a2"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-1" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-1">1</a></td><td class="code-line" rowspan="16">enum Suit: string {
+    <span class="hljs-keyword">case</span> Hearts = <span class="hljs-string">'H'</span>;
+    <span class="hljs-keyword">case</span> Diamonds = <span class="hljs-string">'D'</span>;
+    <span class="hljs-keyword">case</span> Clubs = <span class="hljs-string">'C'</span>;
+    <span class="hljs-keyword">case</span> Spades = <span class="hljs-string">'S'</span>;
 }
 
-#[Entity]
-class Card
-{
-    /** ... */
+<span class="hljs-comment">#[Entity]</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Card</span>
+</span>{
+    <span class="hljs-comment">/** ... */</span>
 
-    #[Column(type: 'string', enumType: Suit::class)]
-    public $suit;
-}</code></pre>
-<h2>Virtual and Generated Columns</h2>
-<p>There has been constant demand for this feature for a long time, to add support
-for columns that are not insertable/updatable and might have their value
-updated on the database side.</p>
-<p>We have worked along the lines of Java Persistence API support of <code>insertable</code>,
-<code>updatable</code> and <code>generated</code> options for field mappings.</p>
-<p>There are two major use cases for this:</p>
+    <span class="hljs-comment">#[Column(type: 'string', enumType: Suit::class)]</span>
+    <span class="hljs-keyword">public</span> $suit;
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-2" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-3" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-4" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-5" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-6" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-7" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-8" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-9" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-10" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-11" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-12" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-13" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-14" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-15" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-16" class="line-number-anchor" /><a href="#line-number-fa410e9ead5f8c90ab06e34cdf87de10f04156a2-16">16</a></td></tr></table></div></code></pre>
+                <h2 class="section-header ">
+    <a href="#virtual-and-generated-columns">
+        Virtual and Generated Columns
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>There has been constant demand for this feature for a long time, to add support for columns that are not insertable/updatable and might have their value updated on the database side.</p>
+
+                
+    <p>We have worked along the lines of Java Persistence API support of <code>insertable</code>, <code>updatable</code> and <code>generated</code> options for field mappings.</p>
+
+                
+    <p>There are two major use cases for this:</p>
+
+                
+    
 <ol>
-<li>Map a column several times, for example with join columns:</li>
+    <li>Map a column several times, for example with join columns:</li>
 </ol>
-<pre><code class="language-php">#[Entity]
-class User
-{
-     #[ManyToOne(targetEntity: Country:class), JoinColumn(name: "country_code", referencedColumnName: "country_code")]
-     public $country;
 
-     #[Column(type: "string", name: "country_code", insertable: false, updatable: false)]
-     public $countryCode;
-}</code></pre>
-<ol start="2">
-<li>Columns updated by the database</li>
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="288dd34749cfdb7fd21ba43f00db37939bce857e"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="288dd34749cfdb7fd21ba43f00db37939bce857e"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-1" class="line-number-anchor" /><a href="#line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-1">1</a></td><td class="code-line" rowspan="10"><span class="hljs-comment">#[Entity]</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span>
+</span>{
+     <span class="hljs-comment">#[ManyToOne(targetEntity: Country:class), JoinColumn(name: "country_code", referencedColumnName: "country_code")]</span>
+     <span class="hljs-keyword">public</span> $country;
+
+     <span class="hljs-comment">#[Column(type: "string", name: "country_code", insertable: false, updatable: false)]</span>
+     <span class="hljs-keyword">public</span> $countryCode;
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-2" class="line-number-anchor" /><a href="#line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-3" class="line-number-anchor" /><a href="#line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-4" class="line-number-anchor" /><a href="#line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-5" class="line-number-anchor" /><a href="#line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-6" class="line-number-anchor" /><a href="#line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-7" class="line-number-anchor" /><a href="#line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-8" class="line-number-anchor" /><a href="#line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-9" class="line-number-anchor" /><a href="#line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-10" class="line-number-anchor" /><a href="#line-number-288dd34749cfdb7fd21ba43f00db37939bce857e-10">10</a></td></tr></table></div></code></pre>
+                
+    
+<ol>
+    <li>Columns updated by the database</li>
 </ol>
-<pre><code class="language-php">#[Entity]
-class Article
-{
-    #[Column(type: "datetime",
-        columnDefinition: "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
-        insertable: false,
-        updatable: false,
-        generated: "ALWAYS")]
-    public $created;
-}</code></pre>
-<h2>Support for Readonly Properties</h2>
-<p>Another PHP 8.1 feature is the new readonly keyword that prevents the value of
-a property to be written again after it has been initialized in the constructor
-of an object.</p>
-<p>With ORM 2.11 the support now works as you would expect with no additional
-mapping options necessary:</p>
-<pre><code class="language-php">#[Entity, Table(name: 'author')]
-class Author
-{
-    #[Column, Id, GeneratedValue]
-    private readonly int $id;
 
-    #[Column]
-    private readonly string $name;
-}</code></pre>
-<h2>AssociationOverrides and AttributeOverrides in Attribute Driver</h2>
-<p>The new <code>AttributeDriver</code> for PHP 8 did not support the equivalent mapping
-options for association and attribute overrides that are available for XML and
-Annotation mapping, because in PHP 8.0 it was not possible to nest complex
-attributes. </p>
-<p>With the support now available in PHP 8.1 we have added these attributes.</p>
-<pre><code class="language-php">&lt;?php
-use Doctrine\ORM\Mapping\AssociationOverride;
-use Doctrine\ORM\Mapping\AssociationOverrides;
-use Doctrine\ORM\Mapping\AttributeOverride;
-use Doctrine\ORM\Mapping\AttributeOverrides;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-1" class="line-number-anchor" /><a href="#line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-1">1</a></td><td class="code-line" rowspan="11"><span class="hljs-comment">#[Entity]</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Article</span>
+</span>{
+    <span class="hljs-comment">#[Column(type: "datetime",</span>
+        columnDefinition: <span class="hljs-string">"TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"</span>,
+        insertable: <span class="hljs-keyword">false</span>,
+        updatable: <span class="hljs-keyword">false</span>,
+        generated: <span class="hljs-string">"ALWAYS"</span>)]
+    <span class="hljs-keyword">public</span> $created;
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-2" class="line-number-anchor" /><a href="#line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-3" class="line-number-anchor" /><a href="#line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-4" class="line-number-anchor" /><a href="#line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-5" class="line-number-anchor" /><a href="#line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-6" class="line-number-anchor" /><a href="#line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-7" class="line-number-anchor" /><a href="#line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-8" class="line-number-anchor" /><a href="#line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-9" class="line-number-anchor" /><a href="#line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-10" class="line-number-anchor" /><a href="#line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-11" class="line-number-anchor" /><a href="#line-number-2ed9fecb0c13a1c4250eb5c6dcbcf3a4c4107335-11">11</a></td></tr></table></div></code></pre>
+                <h2 class="section-header ">
+    <a href="#support-for-readonly-properties">
+        Support for Readonly Properties
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>Another PHP 8.1 feature is the new readonly keyword that prevents the value of a property to be written again after it has been initialized in the constructor of an object.</p>
 
-#[AssociationOverrides([
-    new AssociationOverride(
-        name: "groups",
-        joinTable: new JoinTable(
-            name: "ddc964_users_admingroups",
+                
+    <p>With ORM 2.11 the support now works as you would expect with no additional mapping options necessary:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="15f4c5fb3e7db41783dd4fe46e527aecf8ceb846"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="15f4c5fb3e7db41783dd4fe46e527aecf8ceb846"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-1" class="line-number-anchor" /><a href="#line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-1">1</a></td><td class="code-line" rowspan="10"><span class="hljs-comment">#[Entity, Table(name: 'author')]</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Author</span>
+</span>{
+    <span class="hljs-comment">#[Column, Id, GeneratedValue]</span>
+    <span class="hljs-keyword">private</span> readonly int $id;
+
+    <span class="hljs-comment">#[Column]</span>
+    <span class="hljs-keyword">private</span> readonly string $name;
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-2" class="line-number-anchor" /><a href="#line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-3" class="line-number-anchor" /><a href="#line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-4" class="line-number-anchor" /><a href="#line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-5" class="line-number-anchor" /><a href="#line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-6" class="line-number-anchor" /><a href="#line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-7" class="line-number-anchor" /><a href="#line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-8" class="line-number-anchor" /><a href="#line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-9" class="line-number-anchor" /><a href="#line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-10" class="line-number-anchor" /><a href="#line-number-15f4c5fb3e7db41783dd4fe46e527aecf8ceb846-10">10</a></td></tr></table></div></code></pre>
+                <h2 class="section-header ">
+    <a href="#associationoverrides-and-attributeoverrides-in-attribute-driver">
+        AssociationOverrides and AttributeOverrides in Attribute Driver
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>The new <code>AttributeDriver</code> for PHP 8 did not support the equivalent mapping options for association and attribute overrides that are available for XML and Annotation mapping, because in PHP 8.0 it was not possible to nest complex attributes.</p>
+
+                
+    <p>With the support now available in PHP 8.1 we have added these attributes.</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="cf83c38da3d282ca5a33bc3162d2916d23097cfb"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="cf83c38da3d282ca5a33bc3162d2916d23097cfb"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-1" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-1">1</a></td><td class="code-line" rowspan="27"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">AssociationOverride</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">AssociationOverrides</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">AttributeOverride</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">AttributeOverrides</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Column</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Entity</span>;
+
+<span class="hljs-comment">#[AssociationOverrides([</span>
+    <span class="hljs-keyword">new</span> AssociationOverride(
+        name: <span class="hljs-string">"groups"</span>,
+        joinTable: <span class="hljs-keyword">new</span> JoinTable(
+            name: <span class="hljs-string">"ddc964_users_admingroups"</span>,
         ),
-        joinColumns: [new JoinColumn(name: "adminuser_id")],
-        inverseJoinColumns: [new JoinColumn(name: "admingroup_id")]
+        joinColumns: [<span class="hljs-keyword">new</span> JoinColumn(name: <span class="hljs-string">"adminuser_id"</span>)],
+        inverseJoinColumns: [<span class="hljs-keyword">new</span> JoinColumn(name: <span class="hljs-string">"admingroup_id"</span>)]
     )
 ])]
-#[AttributeOverrides([
-    new AttributeOverride(
-        name: "id",
-        column: new Column(name: "guest_id", type: "integer", length: 140)
+<span class="hljs-comment">#[AttributeOverrides([</span>
+    <span class="hljs-keyword">new</span> AttributeOverride(
+        name: <span class="hljs-string">"id"</span>,
+        column: <span class="hljs-keyword">new</span> Column(name: <span class="hljs-string">"guest_id"</span>, type: <span class="hljs-string">"integer"</span>, length: <span class="hljs-number">140</span>)
     )])]
-class DDC964Admin extends DDC964User
-{
-}</code></pre>
-<p>For PHP 8.0 we have already moved <code>Index</code> and <code>JoinColumn</code> mappings to the top
-level to avoid nesting and decided not to allow nesting for these to mimic
-annotation support.</p>
-<h2>Allow arithmetic expressions within IN operator</h2>
-<p>It is now possible to use arithmetic expressions or functions inside the IN operator:</p>
-<pre><code class="language-sql">SELECT u FROM User u WHERE u.id IN (1 + 1, FOO(u.id))</code></pre>
-<h2>Ignore entity classes in schema tool</h2>
-<p>You can now specify Entity FQCNs to ignore during schema tool creation and comparison.
-<code>SchemaTool</code> will then skip these (e.g. when comparing schemas).</p>
-<pre><code class="language-php">&lt;?php
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DDC964Admin</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">DDC964User</span>
+</span>{
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-2" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-3" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-4" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-5" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-6" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-7" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-8" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-9" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-10" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-11" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-12" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-13" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-14" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-15" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-16" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-17" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-18" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-19" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-20" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-21" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-22" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-23" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-24" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-25" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-26" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-27" class="line-number-anchor" /><a href="#line-number-cf83c38da3d282ca5a33bc3162d2916d23097cfb-27">27</a></td></tr></table></div></code></pre>
+                
+    <p>For PHP 8.0 we have already moved <code>Index</code> and <code>JoinColumn</code> mappings to the top level to avoid nesting and decided not to allow nesting for these to mimic annotation support.</p>
+
+                <h2 class="section-header ">
+    <a href="#allow-arithmetic-expressions-within-in-operator">
+        Allow arithmetic expressions within IN operator
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>It is now possible to use arithmetic expressions or functions inside the IN operator:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="af37d052d5d50328dcda42fddde59cca502f907a"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="af37d052d5d50328dcda42fddde59cca502f907a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-af37d052d5d50328dcda42fddde59cca502f907a-1" class="line-number-anchor" /><a href="#line-number-af37d052d5d50328dcda42fddde59cca502f907a-1">1</a></td><td class="code-line" rowspan="2">SELECT u FROM User u WHERE u.id IN (<span class="hljs-number">1</span> + <span class="hljs-number">1</span>, FOO(u.id))
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-af37d052d5d50328dcda42fddde59cca502f907a-2" class="line-number-anchor" /><a href="#line-number-af37d052d5d50328dcda42fddde59cca502f907a-2">2</a></td></tr></table></div></code></pre>
+                <h2 class="section-header ">
+    <a href="#ignore-entity-classes-in-schema-tool">
+        Ignore entity classes in schema tool
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>You can now specify Entity FQCNs to ignore during schema tool creation and comparison. <code>SchemaTool</code> will then skip these (e.g. when comparing schemas).</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="c079cdabaa8e0b360c664b33a83f5f7b93990673"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="c079cdabaa8e0b360c664b33a83f5f7b93990673"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-c079cdabaa8e0b360c664b33a83f5f7b93990673-1" class="line-number-anchor" /><a href="#line-number-c079cdabaa8e0b360c664b33a83f5f7b93990673-1">1</a></td><td class="code-line" rowspan="4"><span class="hljs-meta">&lt;?php</span>
 $config-&gt;setSchemaIgnoreClasses([$fqcn]);
-$config-&gt;getSchemaIgnoreClasses();</code></pre>
+$config-&gt;getSchemaIgnoreClasses();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c079cdabaa8e0b360c664b33a83f5f7b93990673-2" class="line-number-anchor" /><a href="#line-number-c079cdabaa8e0b360c664b33a83f5f7b93990673-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c079cdabaa8e0b360c664b33a83f5f7b93990673-3" class="line-number-anchor" /><a href="#line-number-c079cdabaa8e0b360c664b33a83f5f7b93990673-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c079cdabaa8e0b360c664b33a83f5f7b93990673-4" class="line-number-anchor" /><a href="#line-number-c079cdabaa8e0b360c664b33a83f5f7b93990673-4">4</a></td></tr></table></div></code></pre>
+        
+    
         </div>
     </article>
     </main>

@@ -42,8 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "You will often come across the requirement to display aggregate values
-of data that can be computed "
+        "description": "You will often come across the requirement to display aggregate values of data that can be computed "
     }
     </script>
     <link
@@ -237,291 +236,566 @@ of data that can be computed "
         <hr />
 
         <div>
-                <p>You will often come across the requirement to display aggregate values
-of data that can be computed by using the MIN, MAX, COUNT or SUM SQL
-functions. For any ORM this is a tricky issue traditionally. Doctrine 2
-offers several ways to get access to these values and this article will
-describe all of them from different perspectives.</p>
-<p>You will see that aggregate fields can become very explicit features in
-your domain model and how this potentially complex business rules can be
-easily tested.</p>
-<h1>An example model</h1>
-<p>Say you want to model a bank account and all their entries. Entries into
-the account can either be of positive or negative money values. Each
-account has a credit limit and the account is never allowed to have a
-balance below that value.</p>
-<p>For simplicity we live in a world were money is composed of integers
-only. Also we omit the receiver/sender name, stated reason for transfer
-and the execution date. These all would have to be added on the <code>Entry</code>
-object.</p>
-<p>Our entities look like:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-namespace Bank\Entities;
+                
+            
+                
+    <p>You will often come across the requirement to display aggregate values of data that can be computed by using the MIN, MAX, COUNT or SUM SQL functions. For any ORM this is a tricky issue traditionally. Doctrine 2 offers several ways to get access to these values and this article will describe all of them from different perspectives.</p>
 
-/**
- * @Entity
- */
-class Account
-{
-    /** @Id @GeneratedValue @Column(type="integer") */
-    private $id;
+                
+    <p>You will see that aggregate fields can become very explicit features in your domain model and how this potentially complex business rules can be easily tested.</p>
 
-    /** @Column(type="string", unique=true) */
-    private $no;
+                <h1 class="section-header ">
+    <a href="#an-example-model">
+        An example model
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Say you want to model a bank account and all their entries. Entries into the account can either be of positive or negative money values. Each account has a credit limit and the account is never allowed to have a balance below that value.</p>
 
-    /**
-     * @OneToMany(targetEntity="Entry", mappedBy="entries", cascade={"persist"})
-     */
-    private $entries;
+                
+    <p>For simplicity we live in a world were money is composed of integers only. Also we omit the receiver/sender name, stated reason for transfer and the execution date. These all would have to be added on the <code>Entry</code> object.</p>
 
-    /**
-     * @Column(type="integer")
-     */
-    private $maxCredit = 0;
+                
+    <p>Our entities look like:</p>
 
-    public function __construct($no, $maxCredit = 0)
-    {
-        $this-&gt;no = $no;
-        $this-&gt;maxCredit = $maxCredit;
-        $this-&gt;entries = new \Doctrine\Common\Collections\ArrayCollection();
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="7304fb39bfaea895add9babf576a59e78f1405b0"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="7304fb39bfaea895add9babf576a59e78f1405b0"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-1" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-1">1</a></td><td class="code-line" rowspan="63"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">Bank</span>\<span class="hljs-title">Entities</span>;
+
+<span class="hljs-comment">/**
+ * <span class="hljs-doctag">@Entity</span>
+ */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Account</span>
+</span>{
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Id</span> <span class="hljs-doctag">@GeneratedValue</span> <span class="hljs-doctag">@Column</span>(type="integer") */</span>
+    <span class="hljs-keyword">private</span> $id;
+
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Column</span>(type="string", unique=true) */</span>
+    <span class="hljs-keyword">private</span> $no;
+
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@OneToMany</span>(targetEntity="Entry", mappedBy="entries", cascade={"persist"})
+     */</span>
+    <span class="hljs-keyword">private</span> $entries;
+
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="integer")
+     */</span>
+    <span class="hljs-keyword">private</span> $maxCredit = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">($no, $maxCredit = <span class="hljs-number">0</span>)</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;no = $no;
+        <span class="hljs-keyword">$this</span>-&gt;maxCredit = $maxCredit;
+        <span class="hljs-keyword">$this</span>-&gt;entries = <span class="hljs-keyword">new</span> \Doctrine\Common\Collections\ArrayCollection();
     }
 }
 
-/**
- * @Entity
- */
-class Entry
-{
-    /** @Id @GeneratedValue @Column(type="integer") */
-    private $id;
+<span class="hljs-comment">/**
+ * <span class="hljs-doctag">@Entity</span>
+ */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Entry</span>
+</span>{
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Id</span> <span class="hljs-doctag">@GeneratedValue</span> <span class="hljs-doctag">@Column</span>(type="integer") */</span>
+    <span class="hljs-keyword">private</span> $id;
 
-    /**
-     * @ManyToOne(targetEntity="Account", inversedBy="entries")
-     */
-    private $account;
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@ManyToOne</span>(targetEntity="Account", inversedBy="entries")
+     */</span>
+    <span class="hljs-keyword">private</span> $account;
 
-    /**
-     * @Column(type="integer")
-     */
-    private $amount;
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="integer")
+     */</span>
+    <span class="hljs-keyword">private</span> $amount;
 
-    public function __construct($account, $amount)
-    {
-        $this-&gt;account = $account;
-        $this-&gt;amount = $amount;
-        // more stuff here, from/to whom, stated reason, execution date and such
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">($account, $amount)</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;account = $account;
+        <span class="hljs-keyword">$this</span>-&gt;amount = $amount;
+        <span class="hljs-comment">// more stuff here, from/to whom, stated reason, execution date and such</span>
     }
 
-    public function getAmount()
-    {
-        return $this-&gt;amount;
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAmount</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;amount;
     }
-}</code></pre>
-<h1>Using DQL</h1>
-<p>The Doctrine Query Language allows you to select for aggregate values
-computed from fields of your Domain Model. You can select the current
-balance of your account by calling:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$dql = "SELECT SUM(e.amount) AS balance FROM Bank\Entities\Entry e " .
-       "WHERE e.account = ?1";
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-2" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-3" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-4" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-5" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-6" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-7" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-8" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-9" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-10" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-11" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-12" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-13" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-14" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-15" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-16" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-17" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-18" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-19" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-20" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-21" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-22" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-23" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-24" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-25" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-26" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-27" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-28" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-29" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-30" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-31" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-32" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-33" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-34" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-35" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-36" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-36">36</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-37" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-37">37</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-38" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-38">38</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-39" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-39">39</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-40" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-40">40</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-41" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-41">41</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-42" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-42">42</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-43" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-43">43</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-44" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-44">44</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-45" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-45">45</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-46" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-46">46</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-47" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-47">47</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-48" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-48">48</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-49" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-49">49</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-50" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-50">50</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-51" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-51">51</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-52" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-52">52</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-53" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-53">53</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-54" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-54">54</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-55" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-55">55</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-56" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-56">56</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-57" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-57">57</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-58" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-58">58</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-59" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-59">59</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-60" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-60">60</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-61" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-61">61</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-62" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-62">62</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7304fb39bfaea895add9babf576a59e78f1405b0-63" class="line-number-anchor" /><a href="#line-number-7304fb39bfaea895add9babf576a59e78f1405b0-63">63</a></td></tr></table></div></code></pre>
+                <h1 class="section-header ">
+    <a href="#using-dql">
+        Using DQL
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>The Doctrine Query Language allows you to select for aggregate values computed from fields of your Domain Model. You can select the current balance of your account by calling:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="4274aa551df1a2acab985aeca828ad3f85e7ed61"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="4274aa551df1a2acab985aeca828ad3f85e7ed61"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-1" class="line-number-anchor" /><a href="#line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-1">1</a></td><td class="code-line" rowspan="7"><span class="hljs-meta">&lt;?php</span>
+$dql = <span class="hljs-string">"SELECT SUM(e.amount) AS balance FROM Bank\Entities\Entry e "</span> .
+       <span class="hljs-string">"WHERE e.account = ?1"</span>;
 $balance = $em-&gt;createQuery($dql)
-              -&gt;setParameter(1, $myAccountId)
-              -&gt;getSingleScalarResult();</code></pre>
-<p>The <code>$em</code> variable in this (and forthcoming) example holds the Doctrine
-<code>EntityManager</code>. We create a query for the SUM of all amounts (negative
-amounts are withdraws) and retrieve them as a single scalar result,
-essentially return only the first column of the first row.</p>
-<p>This approach is simple and powerful, however it has a serious drawback.
-We have to execute a specific query for the balance whenever we need it.</p>
-<p>To implement a powerful domain model we would rather have access to the
-balance from our <code>Account</code> entity during all times (even if the Account
-was not persisted in the database before!).</p>
-<p>Also an additional requirement is the max credit per <code>Account</code> rule.</p>
-<p>We cannot reliably enforce this rule in our <code>Account</code> entity with the
-DQL retrieval of the balance. There are many different ways to retrieve
-accounts. We cannot guarantee that we can execute the aggregation query
-for all these use-cases, let alone that a userland programmer checks
-this balance against newly added entries.</p>
-<h1>Using your Domain Model</h1>
-<p><code>Account</code> and all the <code>Entry</code> instances are connected through a
-collection, which means we can compute this value at runtime:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class Account
-{
-    // .. previous code
-    public function getBalance()
-    {
-        $balance = 0;
-        foreach ($this-&gt;entries AS $entry) {
+              -&gt;setParameter(<span class="hljs-number">1</span>, $myAccountId)
+              -&gt;getSingleScalarResult();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-2" class="line-number-anchor" /><a href="#line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-3" class="line-number-anchor" /><a href="#line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-4" class="line-number-anchor" /><a href="#line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-5" class="line-number-anchor" /><a href="#line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-6" class="line-number-anchor" /><a href="#line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-7" class="line-number-anchor" /><a href="#line-number-4274aa551df1a2acab985aeca828ad3f85e7ed61-7">7</a></td></tr></table></div></code></pre>
+                
+    <p>The <code>$em</code> variable in this (and forthcoming) example holds the Doctrine <code>EntityManager</code>. We create a query for the SUM of all amounts (negative amounts are withdraws) and retrieve them as a single scalar result, essentially return only the first column of the first row.</p>
+
+                
+    <p>This approach is simple and powerful, however it has a serious drawback. We have to execute a specific query for the balance whenever we need it.</p>
+
+                
+    <p>To implement a powerful domain model we would rather have access to the balance from our <code>Account</code> entity during all times (even if the Account was not persisted in the database before!).</p>
+
+                
+    <p>Also an additional requirement is the max credit per <code>Account</code> rule.</p>
+
+                
+    <p>We cannot reliably enforce this rule in our <code>Account</code> entity with the DQL retrieval of the balance. There are many different ways to retrieve accounts. We cannot guarantee that we can execute the aggregation query for all these use-cases, let alone that a userland programmer checks this balance against newly added entries.</p>
+
+                <h1 class="section-header ">
+    <a href="#using-your-domain-model">
+        Using your Domain Model
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p><code>Account</code> and all the <code>Entry</code> instances are connected through a collection, which means we can compute this value at runtime:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="58c76059539779feeb8682d015bc6d748240e15b"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="58c76059539779feeb8682d015bc6d748240e15b"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-1" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-1">1</a></td><td class="code-line" rowspan="14"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Account</span>
+</span>{
+    <span class="hljs-comment">// .. previous code</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getBalance</span><span class="hljs-params">()</span>
+    </span>{
+        $balance = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;entries <span class="hljs-keyword">AS</span> $entry) {
             $balance += $entry-&gt;getAmount();
         }
-        return $balance;
+        <span class="hljs-keyword">return</span> $balance;
     }
-}</code></pre>
-<p>Now we can always call <code>Account::getBalance()</code> to access the current
-account balance.</p>
-<p>To enforce the max credit rule we have to implement the &quot;Aggregate Root&quot;
-pattern as described in Eric Evans book on Domain Driven Design.
-Described with one sentence, an aggregate root controls the instance
-creation, access and manipulation of its children.</p>
-<p>In our case we want to enforce that new entries can only added to the
-<code>Account</code> by using a designated method. The <code>Account</code> is the aggregate
-root of this relation. We can also enforce the correctness of the
-bi-directional <code>Account</code> \&lt;-> <code>Entry</code> relation with this method:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class Account
-{
-    public function addEntry($amount)
-    {
-        $this-&gt;assertAcceptEntryAllowed($amount);
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-2" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-3" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-4" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-5" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-6" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-7" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-8" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-9" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-10" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-11" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-12" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-13" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-58c76059539779feeb8682d015bc6d748240e15b-14" class="line-number-anchor" /><a href="#line-number-58c76059539779feeb8682d015bc6d748240e15b-14">14</a></td></tr></table></div></code></pre>
+                
+    <p>Now we can always call <code>Account::getBalance()</code> to access the current account balance.</p>
 
-        $e = new Entry($this, $amount);
-        $this-&gt;entries[] = $e;
-        return $e;
+                
+    <p>To enforce the max credit rule we have to implement the &quot;Aggregate Root&quot; pattern as described in Eric Evans book on Domain Driven Design. Described with one sentence, an aggregate root controls the instance creation, access and manipulation of its children.</p>
+
+                
+    <p>In our case we want to enforce that new entries can only added to the <code>Account</code> by using a designated method. The <code>Account</code> is the aggregate root of this relation. We can also enforce the correctness of the bi-directional <code>Account</code> &lt;-&gt; <code>Entry</code> relation with this method:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="767f6279c2f91547073af1fb2670c959225cddb4"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="767f6279c2f91547073af1fb2670c959225cddb4"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-1" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-1">1</a></td><td class="code-line" rowspan="13"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Account</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addEntry</span><span class="hljs-params">($amount)</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;assertAcceptEntryAllowed($amount);
+
+        $e = <span class="hljs-keyword">new</span> Entry(<span class="hljs-keyword">$this</span>, $amount);
+        <span class="hljs-keyword">$this</span>-&gt;entries[] = $e;
+        <span class="hljs-keyword">return</span> $e;
     }
-}</code></pre>
-<p>Now look at the following test-code for our entities:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class AccountTest extends \PHPUnit_Framework_TestCase
-{
-    public function testAddEntry()
-    {
-        $account = new Account("123456", $maxCredit = 200);
-        $this-&gt;assertEquals(0, $account-&gt;getBalance());
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-2" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-3" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-4" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-5" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-6" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-7" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-8" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-9" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-10" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-11" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-12" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-767f6279c2f91547073af1fb2670c959225cddb4-13" class="line-number-anchor" /><a href="#line-number-767f6279c2f91547073af1fb2670c959225cddb4-13">13</a></td></tr></table></div></code></pre>
+                
+    <p>Now look at the following test-code for our entities:</p>
 
-        $account-&gt;addEntry(500);
-        $this-&gt;assertEquals(500, $account-&gt;getBalance());
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-1" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-1">1</a></td><td class="code-line" rowspan="24"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AccountTest</span> <span class="hljs-keyword">extends</span> \<span class="hljs-title">PHPUnit_Framework_TestCase</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">testAddEntry</span><span class="hljs-params">()</span>
+    </span>{
+        $account = <span class="hljs-keyword">new</span> Account(<span class="hljs-string">"123456"</span>, $maxCredit = <span class="hljs-number">200</span>);
+        <span class="hljs-keyword">$this</span>-&gt;assertEquals(<span class="hljs-number">0</span>, $account-&gt;getBalance());
 
-        $account-&gt;addEntry(-700);
-        $this-&gt;assertEquals(-200, $account-&gt;getBalance());
+        $account-&gt;addEntry(<span class="hljs-number">500</span>);
+        <span class="hljs-keyword">$this</span>-&gt;assertEquals(<span class="hljs-number">500</span>, $account-&gt;getBalance());
+
+        $account-&gt;addEntry(<span class="hljs-number">-700</span>);
+        <span class="hljs-keyword">$this</span>-&gt;assertEquals(<span class="hljs-number">-200</span>, $account-&gt;getBalance());
     }
 
-    public function testExceedMaxLimit()
-    {
-        $account = new Account("123456", $maxCredit = 200);
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">testExceedMaxLimit</span><span class="hljs-params">()</span>
+    </span>{
+        $account = <span class="hljs-keyword">new</span> Account(<span class="hljs-string">"123456"</span>, $maxCredit = <span class="hljs-number">200</span>);
 
-        $this-&gt;setExpectedException("Exception");
-        $account-&gt;addEntry(-1000);
+        <span class="hljs-keyword">$this</span>-&gt;setExpectedException(<span class="hljs-string">"Exception"</span>);
+        $account-&gt;addEntry(<span class="hljs-number">-1000</span>);
     }
-}</code></pre>
-<p>To enforce our rule we can now implement the assertion in
-<code>Account::addEntry</code>:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class Account
-{
-    private function assertAcceptEntryAllowed($amount)
-    {
-        $futureBalance = $this-&gt;getBalance() + $amount;
-        $allowedMinimalBalance = ($this-&gt;maxCredit * -1);
-        if ($futureBalance &lt; $allowedMinimalBalance) {
-            throw new Exception("Credit Limit exceeded, entry is not allowed!");
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-2" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-3" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-4" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-5" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-6" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-7" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-8" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-9" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-10" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-11" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-12" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-13" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-14" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-15" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-16" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-17" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-18" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-19" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-20" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-21" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-22" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-23" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-24" class="line-number-anchor" /><a href="#line-number-3d323c624ac3ee5ffe89b548b3d7cf6211c46bb1-24">24</a></td></tr></table></div></code></pre>
+                
+    <p>To enforce our rule we can now implement the assertion in <code>Account::addEntry</code>:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="ec9ce1621c1dbb9c454f116f2afd638d501316dc"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="ec9ce1621c1dbb9c454f116f2afd638d501316dc"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-1" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-1">1</a></td><td class="code-line" rowspan="13"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Account</span>
+</span>{
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">assertAcceptEntryAllowed</span><span class="hljs-params">($amount)</span>
+    </span>{
+        $futureBalance = <span class="hljs-keyword">$this</span>-&gt;getBalance() + $amount;
+        $allowedMinimalBalance = (<span class="hljs-keyword">$this</span>-&gt;maxCredit * <span class="hljs-number">-1</span>);
+        <span class="hljs-keyword">if</span> ($futureBalance &lt; $allowedMinimalBalance) {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(<span class="hljs-string">"Credit Limit exceeded, entry is not allowed!"</span>);
         }
     }
-}</code></pre>
-<p>We haven't talked to the entity manager for persistence of our account
-example before. You can call <code>EntityManager::persist($account)</code> and then
-<code>EntityManager::flush()</code> at any point to save the account to the
-database. All the nested <code>Entry</code> objects are automatically flushed to
-the database also.</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$account = new Account("123456", 200);
-$account-&gt;addEntry(500);
-$account-&gt;addEntry(-200);
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-2" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-3" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-4" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-5" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-6" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-7" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-8" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-9" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-10" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-11" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-12" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-13" class="line-number-anchor" /><a href="#line-number-ec9ce1621c1dbb9c454f116f2afd638d501316dc-13">13</a></td></tr></table></div></code></pre>
+                
+    <p>We haven&#039;t talked to the entity manager for persistence of our account example before. You can call <code>EntityManager::persist($account)</code> and then <code>EntityManager::flush()</code> at any point to save the account to the database. All the nested <code>Entry</code> objects are automatically flushed to the database also.</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="d47c80f0490498621e2b7bd57c95be988ea975c0"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="d47c80f0490498621e2b7bd57c95be988ea975c0"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-1" class="line-number-anchor" /><a href="#line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-1">1</a></td><td class="code-line" rowspan="7"><span class="hljs-meta">&lt;?php</span>
+$account = <span class="hljs-keyword">new</span> Account(<span class="hljs-string">"123456"</span>, <span class="hljs-number">200</span>);
+$account-&gt;addEntry(<span class="hljs-number">500</span>);
+$account-&gt;addEntry(<span class="hljs-number">-200</span>);
 $em-&gt;persist($account);
-$em-&gt;flush();</code></pre>
-<p>The current implementation has a considerable drawback. To get the
-balance, we have to initialize the complete <code>Account::$entries</code>
-collection, possibly a very large one. This can considerably hurt the
-performance of your application.</p>
-<h1>Using an Aggregate Field</h1>
-<p>To overcome the previously mentioned issue (initializing the whole
-entries collection) we want to add an aggregate field called &quot;balance&quot;
-on the Account and adjust the code in <code>Account::getBalance()</code> and
-<code>Account:addEntry()</code>:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class Account
-{
-    /**
-     * @Column(type="integer")
-     */
-    private $balance = 0;
+$em-&gt;flush();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-2" class="line-number-anchor" /><a href="#line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-3" class="line-number-anchor" /><a href="#line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-4" class="line-number-anchor" /><a href="#line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-5" class="line-number-anchor" /><a href="#line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-6" class="line-number-anchor" /><a href="#line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-7" class="line-number-anchor" /><a href="#line-number-d47c80f0490498621e2b7bd57c95be988ea975c0-7">7</a></td></tr></table></div></code></pre>
+                
+    <p>The current implementation has a considerable drawback. To get the balance, we have to initialize the complete <code>Account::$entries</code> collection, possibly a very large one. This can considerably hurt the performance of your application.</p>
 
-    public function getBalance()
-    {
-        return $this-&gt;balance;
+                <h1 class="section-header ">
+    <a href="#using-an-aggregate-field">
+        Using an Aggregate Field
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>To overcome the previously mentioned issue (initializing the whole entries collection) we want to add an aggregate field called &quot;balance&quot; on the Account and adjust the code in <code>Account::getBalance()</code> and <code>Account:addEntry()</code>:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="9b833374bb42f34a848cb75ac3dbb18245843742"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="9b833374bb42f34a848cb75ac3dbb18245843742"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-1" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-1">1</a></td><td class="code-line" rowspan="24"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Account</span>
+</span>{
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="integer")
+     */</span>
+    <span class="hljs-keyword">private</span> $balance = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getBalance</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;balance;
     }
 
-    public function addEntry($amount)
-    {
-        $this-&gt;assertAcceptEntryAllowed($amount);
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addEntry</span><span class="hljs-params">($amount)</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;assertAcceptEntryAllowed($amount);
 
-        $e = new Entry($this, $amount);
-        $this-&gt;entries[] = $e;
-        $this-&gt;balance += $amount;
-        return $e;
+        $e = <span class="hljs-keyword">new</span> Entry(<span class="hljs-keyword">$this</span>, $amount);
+        <span class="hljs-keyword">$this</span>-&gt;entries[] = $e;
+        <span class="hljs-keyword">$this</span>-&gt;balance += $amount;
+        <span class="hljs-keyword">return</span> $e;
     }
-}</code></pre>
-<p>This is a very simple change, but all the tests still pass. Our account
-entities return the correct balance. Now calling the
-<code>Account::getBalance()</code> method will not occour the overhead of loading
-all entries anymore. Adding a new Entry to the <code>Account::$entities</code> will
-also not initialize the collection internally.</p>
-<p>Adding a new entry is therefore very performant and explictly hooked
-into the domain model. It will only update the account with the current
-balance and insert the new entry into the database.</p>
-<h1>Tackling Race Conditions with Aggregate Fields</h1>
-<p>Whenever you denormalize your database schema race-conditions can
-potentially lead to inconsistent state. See this example:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-// The Account $accId has a balance of 0 and a max credit limit of 200:
-// request 1 account
-$account1 = $em-&gt;find('Bank\Entities\Account', $accId);
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-2" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-3" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-4" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-5" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-6" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-7" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-8" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-9" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-10" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-11" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-12" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-13" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-14" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-15" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-16" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-17" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-18" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-19" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-20" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-21" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-22" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-23" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-9b833374bb42f34a848cb75ac3dbb18245843742-24" class="line-number-anchor" /><a href="#line-number-9b833374bb42f34a848cb75ac3dbb18245843742-24">24</a></td></tr></table></div></code></pre>
+                
+    <p>This is a very simple change, but all the tests still pass. Our account entities return the correct balance. Now calling the <code>Account::getBalance()</code> method will not occour the overhead of loading all entries anymore. Adding a new Entry to the <code>Account::$entities</code> will also not initialize the collection internally.</p>
 
-// request 2 account
-$account2 = $em-&gt;find('Bank\Entities\Account', $accId);
+                
+    <p>Adding a new entry is therefore very performant and explictly hooked into the domain model. It will only update the account with the current balance and insert the new entry into the database.</p>
 
-$account1-&gt;addEntry(-200);
-$account2-&gt;addEntry(-200);
+                <h1 class="section-header ">
+    <a href="#tackling-race-conditions-with-aggregate-fields">
+        Tackling Race Conditions with Aggregate Fields
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Whenever you denormalize your database schema race-conditions can potentially lead to inconsistent state. See this example:</p>
 
-// now request 1 and 2 both flush the changes.</code></pre>
-<p>The aggregate field <code>Account::$balance</code> is now -200, however the SUM
-over all entries amounts yields -400. A violation of our max credit
-rule.</p>
-<p>You can use both optimistic or pessimistic locking to save-guard your
-aggregate fields against this kind of race-conditions. Reading Eric
-Evans DDD carefully he mentions that the &quot;Aggregate Root&quot; (Account in
-our example) needs a locking mechanism.</p>
-<p>Optimistic locking is as easy as adding a version column:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class Amount
-{
-    /** @Column(type="integer") @Version */
-    private $version;
-}</code></pre>
-<p>The previous example would then throw an exception in the face of
-whatever request saves the entity last (and would create the
-inconsistent state).</p>
-<p>Pessimmistic locking requires an additional flag set on the
-<code>EntityManager::find()</code> call, enabling write locking directly in the
-database using a FOR UPDATE.</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-use Doctrine\DBAL\LockMode;
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="69752bf11c558d31694504641562c7b1e7d371ea"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="69752bf11c558d31694504641562c7b1e7d371ea"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-1" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-1">1</a></td><td class="code-line" rowspan="13"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// The Account $accId has a balance of 0 and a max credit limit of 200:</span>
+<span class="hljs-comment">// request 1 account</span>
+$account1 = $em-&gt;find(<span class="hljs-string">'Bank\Entities\Account'</span>, $accId);
 
-$account = $em-&gt;find('Bank\Entities\Account', $accId, LockMode::PESSIMISTIC_READ);</code></pre>
-<h1>Keeping Updates and Deletes in Sync</h1>
-<p>The example shown in this article does not allow changes to the value in
-<code>Entry</code>, which considerably simplifies the effort to keep
-<code>Account::$balance</code> in sync. If your use-case allows fields to be
-updated or related entities to be removed you have to encapsulate this
-logic in your &quot;Aggregate Root&quot; entity and adjust the aggregate field
-accordingly.</p>
-<h1>Conclusion</h1>
-<p>This article described how to obtain aggregate values using DQL or your
-domain model. It showed how you can easily add an aggregate field that
-offers serious performance benefits over iterating all the related
-objects that make up an aggregate value. Finally I showed how you can
-ensure that your aggregate fields do not get out of sync due to
-race-conditions and concurrent access.</p>
+<span class="hljs-comment">// request 2 account</span>
+$account2 = $em-&gt;find(<span class="hljs-string">'Bank\Entities\Account'</span>, $accId);
+
+$account1-&gt;addEntry(<span class="hljs-number">-200</span>);
+$account2-&gt;addEntry(<span class="hljs-number">-200</span>);
+
+<span class="hljs-comment">// now request 1 and 2 both flush the changes.</span>
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-2" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-3" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-4" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-5" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-6" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-7" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-8" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-9" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-10" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-11" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-12" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69752bf11c558d31694504641562c7b1e7d371ea-13" class="line-number-anchor" /><a href="#line-number-69752bf11c558d31694504641562c7b1e7d371ea-13">13</a></td></tr></table></div></code></pre>
+                
+    <p>The aggregate field <code>Account::$balance</code> is now -200, however the SUM over all entries amounts yields -400. A violation of our max credit rule.</p>
+
+                
+    <p>You can use both optimistic or pessimistic locking to save-guard your aggregate fields against this kind of race-conditions. Reading Eric Evans DDD carefully he mentions that the &quot;Aggregate Root&quot; (Account in our example) needs a locking mechanism.</p>
+
+                
+    <p>Optimistic locking is as easy as adding a version column:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="db235af31caec881274acaa72373be9969ca726d"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="db235af31caec881274acaa72373be9969ca726d"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-db235af31caec881274acaa72373be9969ca726d-1" class="line-number-anchor" /><a href="#line-number-db235af31caec881274acaa72373be9969ca726d-1">1</a></td><td class="code-line" rowspan="7"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Amount</span>
+</span>{
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Column</span>(type="integer") <span class="hljs-doctag">@Version</span> */</span>
+    <span class="hljs-keyword">private</span> $version;
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-db235af31caec881274acaa72373be9969ca726d-2" class="line-number-anchor" /><a href="#line-number-db235af31caec881274acaa72373be9969ca726d-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-db235af31caec881274acaa72373be9969ca726d-3" class="line-number-anchor" /><a href="#line-number-db235af31caec881274acaa72373be9969ca726d-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-db235af31caec881274acaa72373be9969ca726d-4" class="line-number-anchor" /><a href="#line-number-db235af31caec881274acaa72373be9969ca726d-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-db235af31caec881274acaa72373be9969ca726d-5" class="line-number-anchor" /><a href="#line-number-db235af31caec881274acaa72373be9969ca726d-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-db235af31caec881274acaa72373be9969ca726d-6" class="line-number-anchor" /><a href="#line-number-db235af31caec881274acaa72373be9969ca726d-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-db235af31caec881274acaa72373be9969ca726d-7" class="line-number-anchor" /><a href="#line-number-db235af31caec881274acaa72373be9969ca726d-7">7</a></td></tr></table></div></code></pre>
+                
+    <p>The previous example would then throw an exception in the face of whatever request saves the entity last (and would create the inconsistent state).</p>
+
+                
+    <p>Pessimmistic locking requires an additional flag set on the <code>EntityManager::find()</code> call, enabling write locking directly in the database using a FOR UPDATE.</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="109f3a8c4df1feeb5e341dde1b264deb0fabd1b4"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="109f3a8c4df1feeb5e341dde1b264deb0fabd1b4"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-109f3a8c4df1feeb5e341dde1b264deb0fabd1b4-1" class="line-number-anchor" /><a href="#line-number-109f3a8c4df1feeb5e341dde1b264deb0fabd1b4-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">LockMode</span>;
+
+$account = $em-&gt;find(<span class="hljs-string">'Bank\Entities\Account'</span>, $accId, LockMode::PESSIMISTIC_READ);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-109f3a8c4df1feeb5e341dde1b264deb0fabd1b4-2" class="line-number-anchor" /><a href="#line-number-109f3a8c4df1feeb5e341dde1b264deb0fabd1b4-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-109f3a8c4df1feeb5e341dde1b264deb0fabd1b4-3" class="line-number-anchor" /><a href="#line-number-109f3a8c4df1feeb5e341dde1b264deb0fabd1b4-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-109f3a8c4df1feeb5e341dde1b264deb0fabd1b4-4" class="line-number-anchor" /><a href="#line-number-109f3a8c4df1feeb5e341dde1b264deb0fabd1b4-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-109f3a8c4df1feeb5e341dde1b264deb0fabd1b4-5" class="line-number-anchor" /><a href="#line-number-109f3a8c4df1feeb5e341dde1b264deb0fabd1b4-5">5</a></td></tr></table></div></code></pre>
+                <h1 class="section-header ">
+    <a href="#keeping-updates-and-deletes-in-sync">
+        Keeping Updates and Deletes in Sync
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>The example shown in this article does not allow changes to the value in <code>Entry</code>, which considerably simplifies the effort to keep <code>Account::$balance</code> in sync. If your use-case allows fields to be updated or related entities to be removed you have to encapsulate this logic in your &quot;Aggregate Root&quot; entity and adjust the aggregate field accordingly.</p>
+
+                <h1 class="section-header ">
+    <a href="#conclusion">
+        Conclusion
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>This article described how to obtain aggregate values using DQL or your domain model. It showed how you can easily add an aggregate field that offers serious performance benefits over iterating all the related objects that make up an aggregate value. Finally I showed how you can ensure that your aggregate fields do not get out of sync due to race-conditions and concurrent access.</p>
+
+        
+    
         </div>
     </article>
     </main>

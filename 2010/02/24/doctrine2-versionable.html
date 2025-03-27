@@ -42,8 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "NOTE This blog entry relates to an outdated Doctrine 2 Alpha
-:   version. Please see the documentati"
+        "description": "NOTE This blog entry relates to an outdated Doctrine 2 Alpha :   version. Please see the documentati"
     }
     </script>
     <link
@@ -237,235 +236,404 @@
         <hr />
 
         <div>
-                <p><strong>NOTE</strong> This blog entry relates to an outdated Doctrine 2 Alpha
-:   version. Please see the documentation for the most up to date
-behavior. A test-implementation for this behavior is on
-github.com/beberlei/DoctrineExtensions</p>
-<p>My previous post on behaviors in Doctrine 2 generated quite some
-discussion about the difference on behaviours that are re-usable across
-models and the trivial specific implementations I have shown.</p>
-<p>In this post I will show a re-usable versionable (audit-log) behavior.
-For this we will need the following ingredients:</p>
+                
+            
+                
+    <p><strong>NOTE</strong> This blog entry relates to an outdated Doctrine 2 Alpha :   version. Please see the documentation for the most up to date behavior. A test-implementation for this behavior is on github.com/beberlei/DoctrineExtensions</p>
+
+                
+    <p>My previous post on behaviors in Doctrine 2 generated quite some discussion about the difference on behaviours that are re-usable across models and the trivial specific implementations I have shown.</p>
+
+                
+    <p>In this post I will show a re-usable versionable (audit-log) behavior. For this we will need the following ingredients:</p>
+
+                
+
 <ul>
-<li>An interface <code>DoctrineExtensions\Versionable\Versionable</code></li>
-<li>A class <code>DoctrineExtensions\Versionable\VersionManager</code></li>
-<li>An event listener <code>DoctrineExtensions\Versionable\VersionListener</code></li>
-<li>
-<p>A generic entity <code>DoctrineExtensions\Versionable\ResourceVersion</code></p>
+    <li class="dash">An interface <code>DoctrineExtensions\Versionable\Versionable</code></li>
+    <li class="dash">A class <code>DoctrineExtensions\Versionable\VersionManager</code></li>
+    <li class="dash">An event listener <code>DoctrineExtensions\Versionable\VersionListener</code></li>
+    <li class="dash">
+    <p>A generic entity <code>DoctrineExtensions\Versionable\ResourceVersion</code></p>
 <blockquote>
-<p><strong>NOTE</strong> The Event API is currently in the central focus of our
-efforts so the API shown here may change before the first Beta
-release.</p>
-</blockquote>
-</li>
+    <p><strong>NOTE</strong> The Event API is currently in the central focus of our efforts so the API shown here may change before the first Beta release.</p>
+</blockquote></li>
 </ul>
-<p>The workflow is as follows, each Entity that is supposed to be
-versionable has to implement the interface <code>Versionable</code> which looks
-like this:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-namespace DoctrineExtensions\Versionable;
 
-interface Versionable
-{
-    /**
-     * @return int
-     */
-    public function getCurrentVersion();
+                
+    <p>The workflow is as follows, each Entity that is supposed to be versionable has to implement the interface <code>Versionable</code> which looks like this:</p>
 
-    /**
-     * @return array
-     */
-    public function getVersionedData();
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="6b05d564a4546a208197909b15fe2037b30c7015"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="6b05d564a4546a208197909b15fe2037b30c7015"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-1" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-1">1</a></td><td class="code-line" rowspan="21"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">DoctrineExtensions</span>\<span class="hljs-title">Versionable</span>;
 
-    /**
-     * @return int
-     */
-    public function getResourceId();
-}</code></pre>
-<p>Whenever an entity is persisted or updated the state that is persisted
-will also be logged in an audit table. The state is returned with an
-array of key value pairs in the <code>getVersionedData()</code> and the current
-version has to be the value of the @Version column of the entity.</p>
-<p>To sum up, the requirements of an entity that can be a <code>Versionable</code> in
-this simple implementation:</p>
+<span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Versionable</span>
+</span>{
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@return</span> int
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getCurrentVersion</span><span class="hljs-params">()</span></span>;
+
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@return</span> array
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getVersionedData</span><span class="hljs-params">()</span></span>;
+
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@return</span> int
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getResourceId</span><span class="hljs-params">()</span></span>;
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-2" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-3" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-4" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-5" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-6" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-7" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-8" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-9" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-10" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-11" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-12" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-13" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-14" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-15" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-16" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-17" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-18" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-19" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-20" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6b05d564a4546a208197909b15fe2037b30c7015-21" class="line-number-anchor" /><a href="#line-number-6b05d564a4546a208197909b15fe2037b30c7015-21">21</a></td></tr></table></div></code></pre>
+                
+    <p>Whenever an entity is persisted or updated the state that is persisted will also be logged in an audit table. The state is returned with an array of key value pairs in the <code>getVersionedData()</code> and the current version has to be the value of the @Version column of the entity.</p>
+
+                
+    <p>To sum up, the requirements of an entity that can be a <code>Versionable</code> in this simple implementation:</p>
+
+                
+
 <ul>
-<li>Single Integer Primary Key.</li>
-<li>Has to be versioned with an integer column.</li>
+    <li class="dash">Single Integer Primary Key.</li>
+    <li class="dash">Has to be versioned with an integer column.</li>
 </ul>
-<p>How does such versioned data look like? The generic resource version
-entity looks like this. Its a Doctrine Entity, but in a domain model its
-an immutable value object. It should not be changed after creation.</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-namespace DoctrineExtensions\Versionable;
 
-class ResourceVersion
-{
-    /** @Id @Column(type="integer") */
-    private $id;
+                
+    <p>How does such versioned data look like? The generic resource version entity looks like this. Its a Doctrine Entity, but in a domain model its an immutable value object. It should not be changed after creation.</p>
 
-    /** @Column(type="string") */
-    private $resourceName;
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="15a107b07c3ab69697dc577737fd6a16d640c573"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="15a107b07c3ab69697dc577737fd6a16d640c573"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-1" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-1">1</a></td><td class="code-line" rowspan="36"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">DoctrineExtensions</span>\<span class="hljs-title">Versionable</span>;
 
-    /** @Column(type="integer") */
-    private $resourceId;
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ResourceVersion</span>
+</span>{
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Id</span> <span class="hljs-doctag">@Column</span>(type="integer") */</span>
+    <span class="hljs-keyword">private</span> $id;
 
-    /** @Column(type="array") */
-    private $versionedData;
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Column</span>(type="string") */</span>
+    <span class="hljs-keyword">private</span> $resourceName;
 
-    /**
-     * @Column(type="integer") */
-    private $version;
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Column</span>(type="integer") */</span>
+    <span class="hljs-keyword">private</span> $resourceId;
 
-    /** @Column(type="datetime") */
-    private $snapshotDate;
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Column</span>(type="array") */</span>
+    <span class="hljs-keyword">private</span> $versionedData;
 
-    public function __construct(Versionable $resource)
-    {
-        $this-&gt;resourceName = get_class($resource);
-        $this-&gt;resourceId = $resource-&gt;getResourceId();
-        $this-&gt;versionedData = $resource-&gt;getVersionedData();
-        $this-&gt;version = $resource-&gt;getCurrentVersion();
-        $this-&gt;snapshotDate = new \DateTime("now");
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="integer") */</span>
+    <span class="hljs-keyword">private</span> $version;
+
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Column</span>(type="datetime") */</span>
+    <span class="hljs-keyword">private</span> $snapshotDate;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(Versionable $resource)</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;resourceName = get_class($resource);
+        <span class="hljs-keyword">$this</span>-&gt;resourceId = $resource-&gt;getResourceId();
+        <span class="hljs-keyword">$this</span>-&gt;versionedData = $resource-&gt;getVersionedData();
+        <span class="hljs-keyword">$this</span>-&gt;version = $resource-&gt;getCurrentVersion();
+        <span class="hljs-keyword">$this</span>-&gt;snapshotDate = <span class="hljs-keyword">new</span> \DateTime(<span class="hljs-string">"now"</span>);
     }
 
-    // getters
-}</code></pre>
-<p>Now we need to solve the problem of generating the <code>ResourceVersion</code>
-whenever an <code>Versionable</code> entity is persisted or updated. This can be
-done by using the <a href="https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/events.html">Doctrine EventManager
-API</a>.
-We will implement the <code>EventSubscriber</code> interface and hook into the
-&quot;onFlush&quot; event.</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-namespace DoctrineExtensions\Versionable;
+    <span class="hljs-comment">// getters</span>
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-2" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-3" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-4" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-5" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-6" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-7" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-8" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-9" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-10" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-11" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-12" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-13" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-14" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-15" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-16" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-17" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-18" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-19" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-20" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-21" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-22" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-23" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-24" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-25" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-26" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-27" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-28" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-29" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-30" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-31" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-32" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-33" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-34" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-35" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15a107b07c3ab69697dc577737fd6a16d640c573-36" class="line-number-anchor" /><a href="#line-number-15a107b07c3ab69697dc577737fd6a16d640c573-36">36</a></td></tr></table></div></code></pre>
+                
+    <p>Now we need to solve the problem of generating the <code>ResourceVersion</code> whenever an <code>Versionable</code> entity is persisted or updated. This can be done by using the <a href="https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/events.html">Doctrine EventManager API</a>. We will implement the <code>EventSubscriber</code> interface and hook into the &quot;onFlush&quot; event.</p>
 
-use Doctrine\Common\EventSubscriber,
-    Doctrine\ORM\Events,
-    Doctrine\ORM\Event\OnFlushEventArgs,
-    Doctrine\ORM\EntityManager;
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="71f566c32f8b87a21ce15c3e83e825858ce46bc4"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="71f566c32f8b87a21ce15c3e83e825858ce46bc4"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-1" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-1">1</a></td><td class="code-line" rowspan="43"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">DoctrineExtensions</span>\<span class="hljs-title">Versionable</span>;
 
-class VersionListener implements EventSubscriber
-{
-    public function getSubscribedEvents()
-    {
-        return array(Events::onFlush);
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">EventSubscriber</span>,
+    <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Events</span>,
+    <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Event</span>\<span class="hljs-title">OnFlushEventArgs</span>,
+    <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">EntityManager</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VersionListener</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">EventSubscriber</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSubscribedEvents</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">array</span>(Events::onFlush);
     }
 
-    public function onFlush(OnFlushEventArgs $args)
-    {
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onFlush</span><span class="hljs-params">(OnFlushEventArgs $args)</span>
+    </span>{
         $em = $args-&gt;getEntityManager();
         $uow = $em-&gt;getUnitOfWork();
 
-        foreach ($uow-&gt;getScheduledEntityInsertions() AS $entity) {
-            if ($entity instanceof Versionable) {
-                $this-&gt;_makeSnapshot($entity);
+        <span class="hljs-keyword">foreach</span> ($uow-&gt;getScheduledEntityInsertions() <span class="hljs-keyword">AS</span> $entity) {
+            <span class="hljs-keyword">if</span> ($entity <span class="hljs-keyword">instanceof</span> Versionable) {
+                <span class="hljs-keyword">$this</span>-&gt;_makeSnapshot($entity);
             }
         }
 
-        foreach ($uow-&gt;getScheduledEntityUpdates() AS $entity) {
-            if ($entity instanceof Versionable) {
-                $this-&gt;_makeSnapshot($entity);
+        <span class="hljs-keyword">foreach</span> ($uow-&gt;getScheduledEntityUpdates() <span class="hljs-keyword">AS</span> $entity) {
+            <span class="hljs-keyword">if</span> ($entity <span class="hljs-keyword">instanceof</span> Versionable) {
+                <span class="hljs-keyword">$this</span>-&gt;_makeSnapshot($entity);
             }
         }
     }
 
-    private function _makeSnapshot($entity)
-    {
-        $resourceVersion = new ResourceVersion($entity);
-        $class = $this-&gt;_em-&gt;getClassMetadata(get_class($resourceVersion));
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_makeSnapshot</span><span class="hljs-params">($entity)</span>
+    </span>{
+        $resourceVersion = <span class="hljs-keyword">new</span> ResourceVersion($entity);
+        $class = <span class="hljs-keyword">$this</span>-&gt;_em-&gt;getClassMetadata(get_class($resourceVersion));
 
-        $this-&gt;_em-&gt;persist( $resourceVersion );
-        $this-&gt;_em-&gt;getUnitOfWork()-&gt;computeChangeSet($class, $resourceVersion);
+        <span class="hljs-keyword">$this</span>-&gt;_em-&gt;persist( $resourceVersion );
+        <span class="hljs-keyword">$this</span>-&gt;_em-&gt;getUnitOfWork()-&gt;computeChangeSet($class, $resourceVersion);
     }
-}</code></pre>
-<p>How do we hook this <code>VersionListener</code> into the EntityManager? We will
-wrap the VersionManager around it that handles registration and offers
-some convenience methods to retrieve the versions of a resource.</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-namespace DoctrineExtensions\Versionable;
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-2" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-3" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-4" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-5" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-6" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-7" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-8" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-9" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-10" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-11" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-12" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-13" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-14" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-15" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-16" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-17" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-18" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-19" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-20" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-21" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-22" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-23" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-24" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-25" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-26" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-27" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-28" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-29" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-30" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-31" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-32" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-33" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-34" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-35" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-36" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-36">36</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-37" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-37">37</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-38" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-38">38</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-39" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-39">39</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-40" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-40">40</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-41" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-41">41</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-42" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-42">42</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-43" class="line-number-anchor" /><a href="#line-number-71f566c32f8b87a21ce15c3e83e825858ce46bc4-43">43</a></td></tr></table></div></code></pre>
+                
+    <p>How do we hook this <code>VersionListener</code> into the EntityManager? We will wrap the VersionManager around it that handles registration and offers some convenience methods to retrieve the versions of a resource.</p>
 
-use Doctrine\ORM\EntityManager;
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="7f154a39cae2df271497f4a7f7909815a9f4919a"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="7f154a39cae2df271497f4a7f7909815a9f4919a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-1" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-1">1</a></td><td class="code-line" rowspan="29"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">DoctrineExtensions</span>\<span class="hljs-title">Versionable</span>;
 
-class VersionManager
-{
-    private $_em;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">EntityManager</span>;
 
-    public function __construct(EntityManager $em)
-    {
-        $this-&gt;_em = $em;
-        $this-&gt;_em-&gt;getEventManager()-&gt;addEventSubscriber(
-            new VersionListener()
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VersionManager</span>
+</span>{
+    <span class="hljs-keyword">private</span> $_em;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(EntityManager $em)</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;_em = $em;
+        <span class="hljs-keyword">$this</span>-&gt;_em-&gt;getEventManager()-&gt;addEventSubscriber(
+            <span class="hljs-keyword">new</span> VersionListener()
         );
     }
 
-    public function getVersions(Versionable $resource)
-    {
-        $query = $this-&gt;_em-&gt;createQuery(
-            "SELECT v FROM DoctrineExtensions\Versionable\ResourceVersion v INDEX BY v.version ".
-            "WHERE v.resourceName = ?1 AND v.resourceId = ?2 ORDER BY v.version DESC");
-        $query-&gt;setParameter(1, get_class($resource));
-        $query-&gt;setParameter(2, $resource-&gt;getResourceId());
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getVersions</span><span class="hljs-params">(Versionable $resource)</span>
+    </span>{
+        $query = <span class="hljs-keyword">$this</span>-&gt;_em-&gt;createQuery(
+            <span class="hljs-string">"SELECT v FROM DoctrineExtensions\Versionable\ResourceVersion v INDEX BY v.version "</span>.
+            <span class="hljs-string">"WHERE v.resourceName = ?1 AND v.resourceId = ?2 ORDER BY v.version DESC"</span>);
+        $query-&gt;setParameter(<span class="hljs-number">1</span>, get_class($resource));
+        $query-&gt;setParameter(<span class="hljs-number">2</span>, $resource-&gt;getResourceId());
 
-        return $query-&gt;getResult();
+        <span class="hljs-keyword">return</span> $query-&gt;getResult();
     }
-}</code></pre>
-<p>Now using this to retrieve all the versions of a given entity that is
-versionable you would go and:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-// $em EntityManager, $blogPost my Blog Post
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-2" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-3" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-4" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-5" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-6" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-7" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-8" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-9" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-10" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-11" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-12" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-13" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-14" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-15" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-16" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-17" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-18" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-19" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-20" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-21" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-22" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-23" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-24" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-25" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-26" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-27" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-28" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-29" class="line-number-anchor" /><a href="#line-number-7f154a39cae2df271497f4a7f7909815a9f4919a-29">29</a></td></tr></table></div></code></pre>
+                
+    <p>Now using this to retrieve all the versions of a given entity that is versionable you would go and:</p>
 
-$versionManager = new VersionManager($em);
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="4f11dea5efe013d6e846088a03eaabfcc573f695"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="4f11dea5efe013d6e846088a03eaabfcc573f695"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-1" class="line-number-anchor" /><a href="#line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// $em EntityManager, $blogPost my Blog Post</span>
+
+$versionManager = <span class="hljs-keyword">new</span> VersionManager($em);
 $versions = $versionManager-&gt;getVersions($blogPost);
 
-echo "Old Title: ".$versions[$oldVersionNum]-&gt;getVersionedData('title');
+<span class="hljs-keyword">echo</span> <span class="hljs-string">"Old Title: "</span>.$versions[$oldVersionNum]-&gt;getVersionedData(<span class="hljs-string">'title'</span>);
 
-// Create a new version
-$blogPost-&gt;setTitle("My very new title");
-$em-&gt;flush();</code></pre>
-<p>This is a first example of how to use the powerful Doctrine 2 Event API.
-It is certainly not easy to use, as you need to understand the inner
-workings of the UnitOfWork and the different steps it is in during the
-flush process. However you can generate huge benefits in reusability.</p>
-<p>The versionable behaviour could be extended by the following features:</p>
+<span class="hljs-comment">// Create a new version</span>
+$blogPost-&gt;setTitle(<span class="hljs-string">"My very new title"</span>);
+$em-&gt;flush();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-2" class="line-number-anchor" /><a href="#line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-3" class="line-number-anchor" /><a href="#line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-4" class="line-number-anchor" /><a href="#line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-5" class="line-number-anchor" /><a href="#line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-6" class="line-number-anchor" /><a href="#line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-7" class="line-number-anchor" /><a href="#line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-8" class="line-number-anchor" /><a href="#line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-9" class="line-number-anchor" /><a href="#line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-10" class="line-number-anchor" /><a href="#line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-11" class="line-number-anchor" /><a href="#line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-12" class="line-number-anchor" /><a href="#line-number-4f11dea5efe013d6e846088a03eaabfcc573f695-12">12</a></td></tr></table></div></code></pre>
+                
+    <p>This is a first example of how to use the powerful Doctrine 2 Event API. It is certainly not easy to use, as you need to understand the inner workings of the UnitOfWork and the different steps it is in during the flush process. However you can generate huge benefits in reusability.</p>
+
+                
+    <p>The versionable behaviour could be extended by the following features:</p>
+
+                
+
 <ul>
-<li>Create a new interface <code>Revertable</code> that extends <code>Versionable</code> and
-add a method <code>revert(Revertable $resource, $toVersion)</code> to the
-<code>VersionManager</code> that handles the retrieval, invoking of revert and
-such.</li>
-<li>Create a new interface Diffable with a method diff(\$aVersion,
-\$bVersion) and new method diff(Diffable \$resource, \$aId, \$bId)
-to the VersionManager that handles the delegation of a difference
-computation between two versions to the Diffable implementor.</li>
+    <li class="dash">Create a new interface <code>Revertable</code> that extends <code>Versionable</code> and add a method <code>revert(Revertable $resource, $toVersion)</code> to the <code>VersionManager</code> that handles the retrieval, invoking of revert and such.</li>
+    <li class="dash">Create a new interface Diffable with a method diff($aVersion, $bVersion) and new method diff(Diffable $resource, $aId, $bId) to the VersionManager that handles the delegation of a difference computation between two versions to the Diffable implementor.</li>
 </ul>
-<p>Another approach would be not to save the complete state of an entity
-during the flush operation, but only the fields that changed. This is
-generally called an <em>AuditLog</em>. We could add an <code>Auditable</code> interface
-much in the same manner than the <code>Versionable</code> and retrieve the
-ChangeSets of each entity during flush using the following event
-listener:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class AuditListener implements EventSubscriber
-{
-    public function getSubscribedEvents()
-    {
-        return array(Events::onFlush);
+
+                
+    <p>Another approach would be not to save the complete state of an entity during the flush operation, but only the fields that changed. This is generally called an <em>AuditLog</em>. We could add an <code>Auditable</code> interface much in the same manner than the <code>Versionable</code> and retrieve the ChangeSets of each entity during flush using the following event listener:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="45937ed26824e356987257d37b65bf9329ef2926"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="45937ed26824e356987257d37b65bf9329ef2926"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-1" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-1">1</a></td><td class="code-line" rowspan="39"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AuditListener</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">EventSubscriber</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSubscribedEvents</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">array</span>(Events::onFlush);
     }
 
-    public function onFlush(OnFlushEventArgs $args)
-    {
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onFlush</span><span class="hljs-params">(OnFlushEventArgs $args)</span>
+    </span>{
         $em = $args-&gt;getEntityManager();
         $uow = $em-&gt;getUnitOfWork();
 
-        $changeDate = new DateTime("now");
-        $class = $em-&gt;getClassMetadata('DoctrineExtensions\Auditable\AuditEntry');
+        $changeDate = <span class="hljs-keyword">new</span> DateTime(<span class="hljs-string">"now"</span>);
+        $class = $em-&gt;getClassMetadata(<span class="hljs-string">'DoctrineExtensions\Auditable\AuditEntry'</span>);
 
-        foreach ($uow-&gt;getScheduledEntityUpdates() AS $entity) {
-            if ($entity instanceof Auditable) {
+        <span class="hljs-keyword">foreach</span> ($uow-&gt;getScheduledEntityUpdates() <span class="hljs-keyword">AS</span> $entity) {
+            <span class="hljs-keyword">if</span> ($entity <span class="hljs-keyword">instanceof</span> Auditable) {
                 $changeSet = $uow-&gt;getEntityChangeSet($entity);
 
-                foreach ($changeSet AS $field =&gt; $vals) {
-                    list($oldValue, $newValue) = $vals;
-                    $audit = new AuditEntry(
+                <span class="hljs-keyword">foreach</span> ($changeSet <span class="hljs-keyword">AS</span> $field =&gt; $vals) {
+                    <span class="hljs-keyword">list</span>($oldValue, $newValue) = $vals;
+                    $audit = <span class="hljs-keyword">new</span> AuditEntry(
                         $entity-&gt;getResourceName(),
                         $entity-&gt;getId(),
                         $oldValue,
@@ -480,9 +648,51 @@ class AuditListener implements EventSubscriber
             }
         }
     }
-}</code></pre>
-<p>This approach can also be re-used or combined with several similiar
-behaviours, like Taggable, Blamable, Commentable.</p>
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-2" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-3" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-4" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-5" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-6" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-7" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-8" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-9" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-10" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-11" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-12" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-13" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-14" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-15" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-16" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-17" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-18" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-19" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-20" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-21" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-22" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-23" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-24" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-25" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-26" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-27" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-28" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-29" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-30" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-31" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-32" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-33" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-34" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-35" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-36" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-36">36</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-37" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-37">37</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-38" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-38">38</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45937ed26824e356987257d37b65bf9329ef2926-39" class="line-number-anchor" /><a href="#line-number-45937ed26824e356987257d37b65bf9329ef2926-39">39</a></td></tr></table></div></code></pre>
+                
+    <p>This approach can also be re-used or combined with several similiar behaviours, like Taggable, Blamable, Commentable.</p>
+
+        
+    
         </div>
     </article>
     </main>

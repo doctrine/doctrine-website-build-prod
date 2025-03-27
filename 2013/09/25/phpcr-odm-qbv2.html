@@ -43,7 +43,9 @@
             }
         },
         "description": "managed to merge the new query builder.
-I developed the original query builder about 9 months ago - "
+
+                
+    I developed the original query builder"
     }
     </script>
     <link
@@ -237,135 +239,260 @@ I developed the original query builder about 9 months ago - "
         <hr />
 
         <div>
-                <p>managed to merge the new query builder.</p>
-<p>I developed the original query builder about 9 months ago - it was one
-of my first contributions to the PHPCR-ODM doctrine project. It was
-heavily based on the ORM query builder and the consensus being that we
-should make the ODM as intuitive as possible for existing ORM users.</p>
-<p>Abstracting PHPCR to fit the existing interface worked up until a point,
-we could implement the <em>basic</em> functionality of the ORM Query Builder
-exactly, things started to come undone when we looked at implementing
-joins.</p>
-<p>I had added the joins in the API but didn't get around to implementing
-them, the methods just threw &quot;not implemented&quot; exceptions. Later, when
-we wanted to implement them, it wasn't so simple. Infact, upon closer
-inspection, many of the things available in the PHPCR API's Query Object
-Model interface were not covered by the model of the query builder we
-had chosen, in short, it was not fit for purpose. I expounded this on
-the following wiki page:</p>
+                
+            
+                
+    <p>managed to merge the new query builder.</p>
+
+                
+    <p>I developed the original query builder about 9 months ago - it was one of my first contributions to the PHPCR-ODM doctrine project. It was heavily based on the ORM query builder and the consensus being that we should make the ODM as intuitive as possible for existing ORM users.</p>
+
+                
+    <p>Abstracting PHPCR to fit the existing interface worked up until a point, we could implement the <em>basic</em> functionality of the ORM Query Builder exactly, things started to come undone when we looked at implementing joins.</p>
+
+                
+    <p>I had added the joins in the API but didn&#039;t get around to implementing them, the methods just threw &quot;not implemented&quot; exceptions. Later, when we wanted to implement them, it wasn&#039;t so simple. Infact, upon closer inspection, many of the things available in the PHPCR API&#039;s Query Object Model interface were not covered by the model of the query builder we had chosen, in short, it was not fit for purpose. I expounded this on the following wiki page:</p>
+
+                
+
 <ul>
-<li><a href="https://github.com/symfony-cmf/symfony-cmf/wiki/Query-Builder-v2">https://github.com/symfony-cmf/symfony-cmf/wiki/Query-Builder-v2</a></li>
+    <li class="dash"><a href="https://github.com/symfony-cmf/symfony-cmf/wiki/Query-Builder-v2">https://github.com/symfony-cmf/symfony-cmf/wiki/Query-Builder-v2</a></li>
 </ul>
-<p>As detailed in the above linked page, it seemed to me that either we
-implemented a 2 part factory heavy query builder or a fluent node based
-query builder. The node based design won. However, at the time I never
-imagined it would take so long to write! So nearly 2 months later here
-we are.</p>
-<p>Some features of the new query builder</p>
+
+                
+    <p>As detailed in the above linked page, it seemed to me that either we implemented a 2 part factory heavy query builder or a fluent node based query builder. The node based design won. However, at the time I never imagined it would take so long to write! So nearly 2 months later here we are.</p>
+
+                
+    <p>Some features of the new query builder</p>
+
+                
+
 <ul>
-<li>Can fully express the PHPCR QOM (Query Object Model).</li>
-<li>Features a fluent interface.</li>
-<li>Strict validation and helpful exception messages.</li>
-<li>Less verbose than the PHPCR QOM model.</li>
+    <li class="dash">Can fully express the PHPCR QOM (Query Object Model).</li>
+    <li class="dash">Features a fluent interface.</li>
+    <li class="dash">Strict validation and helpful exception messages.</li>
+    <li class="dash">Less verbose than the PHPCR QOM model.</li>
 </ul>
-<p>Lets compare a PHPCR QOM query with its new query builder counterpart:</p>
-<p>The following two examples are equivalent and both select a blog posts
-with node name &quot;My Post Title&quot; having the ODM class &quot;BlogPost&quot;. We order
-the result set first by publishing date and then by title.</p>
-<p>Using the PHPCR QOM:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
+
+                
+    <p>Lets compare a PHPCR QOM query with its new query builder counterpart:</p>
+
+                
+    <p>The following two examples are equivalent and both select a blog posts with node name &quot;My Post Title&quot; having the ODM class &quot;BlogPost&quot;. We order the result set first by publishing date and then by title.</p>
+
+                
+    <p>Using the PHPCR QOM:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-1" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-1">1</a></td><td class="code-line" rowspan="25"><span class="hljs-meta">&lt;?php</span>
 $q = $qom-&gt;createQuery(
-    // SourceInterface (from)
-    $qom-&gt;selector('nt:unstructured', 'p')
+    <span class="hljs-comment">// SourceInterface (from)</span>
+    $qom-&gt;selector(<span class="hljs-string">'nt:unstructured'</span>, <span class="hljs-string">'p'</span>)
     $qom-&gt;andConstraint(
         $qom-&gt;comparison(
-            $qom-&gt;propertyValue('p', 'phpcr:class'),
-            $qom-&gt;bindVariableValue('phpcr_class'),
+            $qom-&gt;propertyValue(<span class="hljs-string">'p'</span>, <span class="hljs-string">'phpcr:class'</span>),
+            $qom-&gt;bindVariableValue(<span class="hljs-string">'phpcr_class'</span>),
             QueryObjectModelInterface::JCR_OPERATOR_EQUAL_TO
         ),
         $qom-&gt;comparison(
-            $qom-&gt;nodeLocalName('p'),
-            $qom-&gt;bindVariableValue('post_title'),
+            $qom-&gt;nodeLocalName(<span class="hljs-string">'p'</span>),
+            $qom-&gt;bindVariableValue(<span class="hljs-string">'post_title'</span>),
             QueryObjectModelInterface::JCR_OPERATOR_EQUAL_TO
         ),
-        array(
-            $qom-&gt;ascending($qom-&gt;propertyValue('published_on', 'p'))
-            $qom-&gt;ascending($qom-&gt;propertyValue('title', 'p'))
+        <span class="hljs-keyword">array</span>(
+            $qom-&gt;ascending($qom-&gt;propertyValue(<span class="hljs-string">'published_on'</span>, <span class="hljs-string">'p'</span>))
+            $qom-&gt;ascending($qom-&gt;propertyValue(<span class="hljs-string">'title'</span>, <span class="hljs-string">'p'</span>))
         )
     )
 );
-$q-&gt;bindValue('phpcr_class', 'Blog\Post');
-$q-&gt;bindValue('post_title', 'My Post Title');
-$res = $q-&gt;execute();</code></pre>
-<p>Using the new PHPCR-ODM query builder:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
+$q-&gt;bindValue(<span class="hljs-string">'phpcr_class'</span>, <span class="hljs-string">'Blog\Post'</span>);
+$q-&gt;bindValue(<span class="hljs-string">'post_title'</span>, <span class="hljs-string">'My Post Title'</span>);
+$res = $q-&gt;execute();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-2" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-3" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-4" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-5" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-6" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-7" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-8" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-9" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-10" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-11" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-12" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-13" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-14" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-15" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-16" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-17" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-18" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-19" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-20" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-21" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-22" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-23" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-24" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-25" class="line-number-anchor" /><a href="#line-number-71781ec1f168020fb7f26d0f71d09e7c0b6d2ebb-25">25</a></td></tr></table></div></code></pre>
+                
+    <p>Using the new PHPCR-ODM query builder:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="0bec24f10ab72dae8c625e5246eba7cffc612748"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="0bec24f10ab72dae8c625e5246eba7cffc612748"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-1" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-1">1</a></td><td class="code-line" rowspan="14"><span class="hljs-meta">&lt;?php</span>
 $q = $documentManager-&gt;createQueryBuilder()
-    -&gt;fromDocument('Blog\Post', 'p')
+    -&gt;fromDocument(<span class="hljs-string">'Blog\Post'</span>, <span class="hljs-string">'p'</span>)
     -&gt;where()
-        -&gt;eq()-&gt;field('p.title')-&gt;parameter('post_title')-&gt;end()
+        -&gt;eq()-&gt;field(<span class="hljs-string">'p.title'</span>)-&gt;parameter(<span class="hljs-string">'post_title'</span>)-&gt;end()
     -&gt;end()
     -&gt;orderBy()
-        -&gt;asc()-&gt;field('p.published_on')-&gt;end()
-        -&gt;asc()-&gt;field('p.title')-&gt;end()
+        -&gt;asc()-&gt;field(<span class="hljs-string">'p.published_on'</span>)-&gt;end()
+        -&gt;asc()-&gt;field(<span class="hljs-string">'p.title'</span>)-&gt;end()
     -&gt;end()
-    -&gt;setParameter('post_title', 'My Post Title')
+    -&gt;setParameter(<span class="hljs-string">'post_title'</span>, <span class="hljs-string">'My Post Title'</span>)
     -&gt;getQuery();
-$res = $q-&gt;execute();</code></pre>
-<p>Whilst the two examples above are equivalent it should be noted that we
-are being slightly unfair to the PHPCR QOM as we are forced to add the
-<code>phpcr:class</code> constraint, which is a PHPCR-ODMism. Despite this, the new
-API is clearly less verbose and, I hope, more intelligible.</p>
-<p>The API allows chaining together operands:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
+$res = $q-&gt;execute();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-2" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-3" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-4" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-5" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-6" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-7" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-8" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-9" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-10" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-11" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-12" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-13" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-14" class="line-number-anchor" /><a href="#line-number-0bec24f10ab72dae8c625e5246eba7cffc612748-14">14</a></td></tr></table></div></code></pre>
+                
+    <p>Whilst the two examples above are equivalent it should be noted that we are being slightly unfair to the PHPCR QOM as we are forced to add the <code>phpcr:class</code> constraint, which is a PHPCR-ODMism. Despite this, the new API is clearly less verbose and, I hope, more intelligible.</p>
+
+                
+    <p>The API allows chaining together operands:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="36264faac9ba22653affcbc7d30da3ba62191c38"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="36264faac9ba22653affcbc7d30da3ba62191c38"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-1" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-1">1</a></td><td class="code-line" rowspan="16"><span class="hljs-meta">&lt;?php</span>
 $qb = $documentManager-&gt;createQueryBuilder();
 $qb
     -&gt;from()
-        -&gt;document('Blog\Post', 'p')
+        -&gt;document(<span class="hljs-string">'Blog\Post'</span>, <span class="hljs-string">'p'</span>)
     -&gt;end()
     -&gt;where()
         -&gt;andX()
             -&gt;orX()
-                -&gt;eq()-&gt;upperCase()-&gt;field('p.username')-&gt;end()-&gt;literal('DANTLEECH')-&gt;end()
-                -&gt;eq()-&gt;field('c.initials')-&gt;literal('dtl')-&gt;end()
+                -&gt;eq()-&gt;upperCase()-&gt;field(<span class="hljs-string">'p.username'</span>)-&gt;end()-&gt;literal(<span class="hljs-string">'DANTLEECH'</span>)-&gt;end()
+                -&gt;eq()-&gt;field(<span class="hljs-string">'c.initials'</span>)-&gt;literal(<span class="hljs-string">'dtl'</span>)-&gt;end()
             -&gt;end()
-            -&gt;lte()-&gt;field('p.published_on')-&gt;literal('2013-09-14')-&gt;end()
+            -&gt;lte()-&gt;field(<span class="hljs-string">'p.published_on'</span>)-&gt;literal(<span class="hljs-string">'2013-09-14'</span>)-&gt;end()
         -&gt;end()
-    -&gt;end();</code></pre>
-<p>The API also allows you to break the query into multiple statements:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$qb-&gt;from()-&gt;document('Blog\Post', 'p');
-$qb-&gt;where()-&gt;eq()-&gt;field('p.title')-&gt;literal('Foobar');
-$qb-&gt;orderBy()-&gt;asc()-&gt;field('p.title');</code></pre>
-<p>And to add extra criteria to an existing query builder instance (useful
-if the query builder is instantiated and initialized by a vendor
-library):</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class MyExtension
-{
-    public function modifyQuery(QueryBuilder $qb)
-    {
-        $qb-&gt;andWhere()-&gt;field('f.site_id')-&gt;literal(1);
-    }
-}</code></pre>
-<p>As a bonus, the nature of the API also allows us to easily add multiple
-constraints to <code>andX</code> and <code>orX</code> operator nodes, something not easily
-done with the native PHPCR builder:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$qb-&gt;fromDocument('Blog\Post', 'p');
+    -&gt;end();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-2" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-3" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-4" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-5" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-6" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-7" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-8" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-9" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-10" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-11" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-12" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-13" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-14" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-15" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36264faac9ba22653affcbc7d30da3ba62191c38-16" class="line-number-anchor" /><a href="#line-number-36264faac9ba22653affcbc7d30da3ba62191c38-16">16</a></td></tr></table></div></code></pre>
+                
+    <p>The API also allows you to break the query into multiple statements:</p>
 
-// we can add one or many constraints to an "andX" node...
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="3aa1eccda30858691a6c29599e6422640e415195"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="3aa1eccda30858691a6c29599e6422640e415195"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-3aa1eccda30858691a6c29599e6422640e415195-1" class="line-number-anchor" /><a href="#line-number-3aa1eccda30858691a6c29599e6422640e415195-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-meta">&lt;?php</span>
+$qb-&gt;from()-&gt;document(<span class="hljs-string">'Blog\Post'</span>, <span class="hljs-string">'p'</span>);
+$qb-&gt;where()-&gt;eq()-&gt;field(<span class="hljs-string">'p.title'</span>)-&gt;literal(<span class="hljs-string">'Foobar'</span>);
+$qb-&gt;orderBy()-&gt;asc()-&gt;field(<span class="hljs-string">'p.title'</span>);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3aa1eccda30858691a6c29599e6422640e415195-2" class="line-number-anchor" /><a href="#line-number-3aa1eccda30858691a6c29599e6422640e415195-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3aa1eccda30858691a6c29599e6422640e415195-3" class="line-number-anchor" /><a href="#line-number-3aa1eccda30858691a6c29599e6422640e415195-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3aa1eccda30858691a6c29599e6422640e415195-4" class="line-number-anchor" /><a href="#line-number-3aa1eccda30858691a6c29599e6422640e415195-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3aa1eccda30858691a6c29599e6422640e415195-5" class="line-number-anchor" /><a href="#line-number-3aa1eccda30858691a6c29599e6422640e415195-5">5</a></td></tr></table></div></code></pre>
+                
+    <p>And to add extra criteria to an existing query builder instance (useful if the query builder is instantiated and initialized by a vendor library):</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="de82d0b2b4f82f4f90f9b54f70f1572820350158"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="de82d0b2b4f82f4f90f9b54f70f1572820350158"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-1" class="line-number-anchor" /><a href="#line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-1">1</a></td><td class="code-line" rowspan="9"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyExtension</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">modifyQuery</span><span class="hljs-params">(QueryBuilder $qb)</span>
+    </span>{
+        $qb-&gt;andWhere()-&gt;field(<span class="hljs-string">'f.site_id'</span>)-&gt;literal(<span class="hljs-number">1</span>);
+    }
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-2" class="line-number-anchor" /><a href="#line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-3" class="line-number-anchor" /><a href="#line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-4" class="line-number-anchor" /><a href="#line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-5" class="line-number-anchor" /><a href="#line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-6" class="line-number-anchor" /><a href="#line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-7" class="line-number-anchor" /><a href="#line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-8" class="line-number-anchor" /><a href="#line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-9" class="line-number-anchor" /><a href="#line-number-de82d0b2b4f82f4f90f9b54f70f1572820350158-9">9</a></td></tr></table></div></code></pre>
+                
+    <p>As a bonus, the nature of the API also allows us to easily add multiple constraints to <code>andX</code> and <code>orX</code> operator nodes, something not easily done with the native PHPCR builder:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="69487286f3e59ef121682280194946e4d107ccc7"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="69487286f3e59ef121682280194946e4d107ccc7"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-69487286f3e59ef121682280194946e4d107ccc7-1" class="line-number-anchor" /><a href="#line-number-69487286f3e59ef121682280194946e4d107ccc7-1">1</a></td><td class="code-line" rowspan="9"><span class="hljs-meta">&lt;?php</span>
+$qb-&gt;fromDocument(<span class="hljs-string">'Blog\Post'</span>, <span class="hljs-string">'p'</span>);
+
+<span class="hljs-comment">// we can add one or many constraints to an "andX" node...</span>
 $qb-&gt;where()-&gt;andX()
-    -&gt;fieldIsset('p.username')
-    -&gt;gt()-&gt;field('p.rank')-&gt;literal(50)-&gt;end()
-    -&gt;eq()-&gt;fueld('p.title')-&gt;literal('This is a title');</code></pre>
-<p>The documentation is now online and is made up of both a guide and a
-reference:</p>
+    -&gt;fieldIsset(<span class="hljs-string">'p.username'</span>)
+    -&gt;gt()-&gt;field(<span class="hljs-string">'p.rank'</span>)-&gt;literal(<span class="hljs-number">50</span>)-&gt;end()
+    -&gt;eq()-&gt;fueld(<span class="hljs-string">'p.title'</span>)-&gt;literal(<span class="hljs-string">'This is a title'</span>);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69487286f3e59ef121682280194946e4d107ccc7-2" class="line-number-anchor" /><a href="#line-number-69487286f3e59ef121682280194946e4d107ccc7-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69487286f3e59ef121682280194946e4d107ccc7-3" class="line-number-anchor" /><a href="#line-number-69487286f3e59ef121682280194946e4d107ccc7-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69487286f3e59ef121682280194946e4d107ccc7-4" class="line-number-anchor" /><a href="#line-number-69487286f3e59ef121682280194946e4d107ccc7-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69487286f3e59ef121682280194946e4d107ccc7-5" class="line-number-anchor" /><a href="#line-number-69487286f3e59ef121682280194946e4d107ccc7-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69487286f3e59ef121682280194946e4d107ccc7-6" class="line-number-anchor" /><a href="#line-number-69487286f3e59ef121682280194946e4d107ccc7-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69487286f3e59ef121682280194946e4d107ccc7-7" class="line-number-anchor" /><a href="#line-number-69487286f3e59ef121682280194946e4d107ccc7-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69487286f3e59ef121682280194946e4d107ccc7-8" class="line-number-anchor" /><a href="#line-number-69487286f3e59ef121682280194946e4d107ccc7-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-69487286f3e59ef121682280194946e4d107ccc7-9" class="line-number-anchor" /><a href="#line-number-69487286f3e59ef121682280194946e4d107ccc7-9">9</a></td></tr></table></div></code></pre>
+                
+    <p>The documentation is now online and is made up of both a guide and a reference:</p>
+
+                
+
 <ul>
-<li>Guide:
-<a href="http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder.html">http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder.html</a></li>
-<li>Reference:
-<a href="http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder-reference.html">http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder-reference.html</a></li>
+    <li class="dash">Guide: <a href="http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder.html">http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder.html</a></li>
+    <li class="dash">Reference: <a href="http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder-reference.html">http://docs.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/reference/query-builder-reference.html</a></li>
 </ul>
+
+        
+    
         </div>
     </article>
     </main>

@@ -43,8 +43,11 @@
             }
         },
         "description": "Cross Database Joins
-In Doctrine, joining data across databases is not technically
-&amp;quot;supported&amp;q"
+        
+    
+
+                
+    In Doctrine, joining data across databases "
     }
     </script>
     <link
@@ -238,41 +241,73 @@ In Doctrine, joining data across databases is not technically
         <hr />
 
         <div>
-                <h1>Cross Database Joins</h1>
-<p>In Doctrine, joining data across databases is not technically
-&quot;supported&quot; by a designed feature, but you can make it work by tricking
-Doctrine a little bit.</p>
-<p>In this article I'll show you how you can setup a database schema that
-specifies relationships across two databases and then issue a query
-which joins data from these two databases.</p>
-<p>I used the Doctrine sandbox to prepare this test so if you want to try
-it, you can use it too.</p>
-<h1>Database Connections</h1>
-<p>First lets setup our two database connections we'll use to query from.
-Modify the <code>config.php</code> file included with the sandbox and replace the
-default single connection with the following code.</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-Doctrine_Manager::connection('mysql://root@localhost/doctrine_test1', 'doctrine_test1');
-Doctrine_Manager::connection('mysql://root@localhost/doctrine_test2', 'doctrine_test2');</code></pre>
-<h1>Schema</h1>
-<p>Now lets define our YAML schema file that we'll use to run our tests
-against. You can modify the <code>config/doctrine/schema.yml</code> file and
-include the following YAML.</p>
-<pre><code>[yml]
+                
+            
+                <h1 class="section-header ">
+    <a href="#cross-database-joins">
+        Cross Database Joins
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>In Doctrine, joining data across databases is not technically &quot;supported&quot; by a designed feature, but you can make it work by tricking Doctrine a little bit.</p>
+
+                
+    <p>In this article I&#039;ll show you how you can setup a database schema that specifies relationships across two databases and then issue a query which joins data from these two databases.</p>
+
+                
+    <p>I used the Doctrine sandbox to prepare this test so if you want to try it, you can use it too.</p>
+
+                <h1 class="section-header ">
+    <a href="#database-connections">
+        Database Connections
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>First lets setup our two database connections we&#039;ll use to query from. Modify the <code>config.php</code> file included with the sandbox and replace the default single connection with the following code.</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="7dca595b3ca57317ff0959a11a0b4fbd81137f48"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="7dca595b3ca57317ff0959a11a0b4fbd81137f48"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-7dca595b3ca57317ff0959a11a0b4fbd81137f48-1" class="line-number-anchor" /><a href="#line-number-7dca595b3ca57317ff0959a11a0b4fbd81137f48-1">1</a></td><td class="code-line" rowspan="4"><span class="hljs-meta">&lt;?php</span>
+Doctrine_Manager::connection(<span class="hljs-string">'mysql://root@localhost/doctrine_test1'</span>, <span class="hljs-string">'doctrine_test1'</span>);
+Doctrine_Manager::connection(<span class="hljs-string">'mysql://root@localhost/doctrine_test2'</span>, <span class="hljs-string">'doctrine_test2'</span>);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7dca595b3ca57317ff0959a11a0b4fbd81137f48-2" class="line-number-anchor" /><a href="#line-number-7dca595b3ca57317ff0959a11a0b4fbd81137f48-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7dca595b3ca57317ff0959a11a0b4fbd81137f48-3" class="line-number-anchor" /><a href="#line-number-7dca595b3ca57317ff0959a11a0b4fbd81137f48-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-7dca595b3ca57317ff0959a11a0b4fbd81137f48-4" class="line-number-anchor" /><a href="#line-number-7dca595b3ca57317ff0959a11a0b4fbd81137f48-4">4</a></td></tr></table></div></code></pre>
+                <h1 class="section-header ">
+    <a href="#schema">
+        Schema
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Now lets define our YAML schema file that we&#039;ll use to run our tests against. You can modify the <code>config/doctrine/schema.yml</code> file and include the following YAML.</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="b3b36d2cf36c299649bf9510943982b3a76f943f"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="b3b36d2cf36c299649bf9510943982b3a76f943f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-1" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-1">1</a></td><td class="code-line" rowspan="26">[yml]
 User:
   tableName: doctrine_test1.user
   connection: doctrine_test1
   columns:
-    username: string(255)
-    password: string(255)
+    username: string(<span class="hljs-number">255</span>)
+    password: string(<span class="hljs-number">255</span>)
 
 Profile:
   tableName: doctrine_test2.profile
   connection: doctrine_test2
   columns:
     user_id: integer
-    first_name: string(255)
-    last_name: string(255)
+    first_name: string(<span class="hljs-number">255</span>)
+    last_name: string(<span class="hljs-number">255</span>)
   relations:
     User:
       foreignType: one
@@ -282,87 +317,216 @@ Profile:
 name of the database. Currently, Doctrine does not generate the SQL
 that includes the database name. It only includes the table name,
 but we can trick Doctrine by simply specifying the
-``database_name.table_name`` as the table name.</code></pre>
-<h1>Test Data Fixtures</h1>
-<p>In the <code>data/fixtures</code> directory create a <code>data.yml</code> file and paste the
-following fixtures inside so we can have some data in each database to
-run our tests against.</p>
-<pre><code>[yml]
+``database_name.table_name`` <span class="hljs-keyword">as</span> the table name.
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-2" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-3" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-4" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-5" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-6" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-7" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-8" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-9" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-10" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-11" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-12" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-13" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-14" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-15" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-16" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-17" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-18" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-19" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-20" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-21" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-22" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-23" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-24" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-25" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-26" class="line-number-anchor" /><a href="#line-number-b3b36d2cf36c299649bf9510943982b3a76f943f-26">26</a></td></tr></table></div></code></pre>
+                <h1 class="section-header ">
+    <a href="#test-data-fixtures">
+        Test Data Fixtures
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>In the <code>data/fixtures</code> directory create a <code>data.yml</code> file and paste the following fixtures inside so we can have some data in each database to run our tests against.</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="eee2c6d68759e0f377e7741129069d2ec5041105"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="eee2c6d68759e0f377e7741129069d2ec5041105"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-eee2c6d68759e0f377e7741129069d2ec5041105-1" class="line-number-anchor" /><a href="#line-number-eee2c6d68759e0f377e7741129069d2ec5041105-1">1</a></td><td class="code-line" rowspan="9">[yml]
 User:
   jwage:
     username: jwage
     password: changeme
     Profile:
-      first_name: string(255)
-      last_name: string(255)</code></pre>
-<h1>Build the Database</h1>
-<p>Now lets build our database and import the data fixtures from above.
-This can be easily done by running the following from the Doctrine
-command line interface.</p>
-<pre><code>$ php doctrine build-all-reload</code></pre>
-<h1>Run the Test</h1>
-<p>Now we have our models created, we have our database created and we have
-our test fixtures loaded in to the database. Now it is time to run some
-sample code and see what we get!</p>
-<p>First lets write our <code>Doctrine_Query</code> and look at the generated SQL.
-Paste the following code in to index.php and lets execute it!</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$q = Doctrine::getTable('User')
-  -&gt;createQuery('u')
-  -&gt;leftJoin('u.Profile p');
+      first_name: string(<span class="hljs-number">255</span>)
+      last_name: string(<span class="hljs-number">255</span>)
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eee2c6d68759e0f377e7741129069d2ec5041105-2" class="line-number-anchor" /><a href="#line-number-eee2c6d68759e0f377e7741129069d2ec5041105-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eee2c6d68759e0f377e7741129069d2ec5041105-3" class="line-number-anchor" /><a href="#line-number-eee2c6d68759e0f377e7741129069d2ec5041105-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eee2c6d68759e0f377e7741129069d2ec5041105-4" class="line-number-anchor" /><a href="#line-number-eee2c6d68759e0f377e7741129069d2ec5041105-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eee2c6d68759e0f377e7741129069d2ec5041105-5" class="line-number-anchor" /><a href="#line-number-eee2c6d68759e0f377e7741129069d2ec5041105-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eee2c6d68759e0f377e7741129069d2ec5041105-6" class="line-number-anchor" /><a href="#line-number-eee2c6d68759e0f377e7741129069d2ec5041105-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eee2c6d68759e0f377e7741129069d2ec5041105-7" class="line-number-anchor" /><a href="#line-number-eee2c6d68759e0f377e7741129069d2ec5041105-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eee2c6d68759e0f377e7741129069d2ec5041105-8" class="line-number-anchor" /><a href="#line-number-eee2c6d68759e0f377e7741129069d2ec5041105-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eee2c6d68759e0f377e7741129069d2ec5041105-9" class="line-number-anchor" /><a href="#line-number-eee2c6d68759e0f377e7741129069d2ec5041105-9">9</a></td></tr></table></div></code></pre>
+                <h1 class="section-header ">
+    <a href="#build-the-database">
+        Build the Database
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Now lets build our database and import the data fixtures from above. This can be easily done by running the following from the Doctrine command line interface.</p>
 
-echo $q-&gt;getSql();</code></pre>
-<p>The above code would output the following SQL query.</p>
-<pre><code>[sql]
-SELECT d.id AS d__id, d.username AS d__username, d.password AS d__password, d2.id AS d2__id, d2.user_id AS d2__user_id, d2.first_name AS d2__first_name, d2.last_name AS d2__last_name FROM doctrine_test1.user d LEFT JOIN doctrine_test2.profile d2 ON d.id = d2.user_id
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="1567187d906d301ef2a1d12a99dbcbfdfeea9e64"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="1567187d906d301ef2a1d12a99dbcbfdfeea9e64"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-1567187d906d301ef2a1d12a99dbcbfdfeea9e64-1" class="line-number-anchor" /><a href="#line-number-1567187d906d301ef2a1d12a99dbcbfdfeea9e64-1">1</a></td><td class="code-line" rowspan="2">$ php doctrine build-all-reload
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1567187d906d301ef2a1d12a99dbcbfdfeea9e64-2" class="line-number-anchor" /><a href="#line-number-1567187d906d301ef2a1d12a99dbcbfdfeea9e64-2">2</a></td></tr></table></div></code></pre>
+                <h1 class="section-header ">
+    <a href="#run-the-test">
+        Run the Test
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Now we have our models created, we have our database created and we have our test fixtures loaded in to the database. Now it is time to run some sample code and see what we get!</p>
 
-**NOTE** Notice how in the above SQL that is generated it include
-the database name and the table name. So now the query is able to
-join across databases if your RDBMS supports it.</code></pre>
-<p>Now lets execute the above query and look at the results.</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$q = Doctrine::getTable('User')
-  -&gt;createQuery('u')
-  -&gt;leftJoin('u.Profile p');
+                
+    <p>First lets write our <code>Doctrine_Query</code> and look at the generated SQL. Paste the following code in to index.php and lets execute it!</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="6fbf638d1cc741ce27bead5cf490ff081bbbbadd"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="6fbf638d1cc741ce27bead5cf490ff081bbbbadd"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-1" class="line-number-anchor" /><a href="#line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-1">1</a></td><td class="code-line" rowspan="7"><span class="hljs-meta">&lt;?php</span>
+$q = Doctrine::getTable(<span class="hljs-string">'User'</span>)
+  -&gt;createQuery(<span class="hljs-string">'u'</span>)
+  -&gt;leftJoin(<span class="hljs-string">'u.Profile p'</span>);
+
+<span class="hljs-keyword">echo</span> $q-&gt;getSql();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-2" class="line-number-anchor" /><a href="#line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-3" class="line-number-anchor" /><a href="#line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-4" class="line-number-anchor" /><a href="#line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-5" class="line-number-anchor" /><a href="#line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-6" class="line-number-anchor" /><a href="#line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-7" class="line-number-anchor" /><a href="#line-number-6fbf638d1cc741ce27bead5cf490ff081bbbbadd-7">7</a></td></tr></table></div></code></pre>
+                
+    <p>The above code would output the following SQL query.</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="64f18568e2e8c42edf73b10a0697cfd12f87912f"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="64f18568e2e8c42edf73b10a0697cfd12f87912f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-1" class="line-number-anchor" /><a href="#line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-1">1</a></td><td class="code-line" rowspan="7">[sql]
+SELECT d.id <span class="hljs-keyword">AS</span> d__id, d.username <span class="hljs-keyword">AS</span> d__username, d.password <span class="hljs-keyword">AS</span> d__password, d2.id <span class="hljs-keyword">AS</span> d2__id, d2.user_id <span class="hljs-keyword">AS</span> d2__user_id, d2.first_name <span class="hljs-keyword">AS</span> d2__first_name, d2.last_name <span class="hljs-keyword">AS</span> d2__last_name FROM doctrine_test1.user d LEFT JOIN doctrine_test2.profile d2 ON d.id = d2.user_id
+
+**NOTE** Notice how in the above SQL that is generated it <span class="hljs-keyword">include</span>
+the database name <span class="hljs-keyword">and</span> the table name. So now the query is able to
+join across databases <span class="hljs-keyword">if</span> your RDBMS supports it.
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-2" class="line-number-anchor" /><a href="#line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-3" class="line-number-anchor" /><a href="#line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-4" class="line-number-anchor" /><a href="#line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-5" class="line-number-anchor" /><a href="#line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-6" class="line-number-anchor" /><a href="#line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-7" class="line-number-anchor" /><a href="#line-number-64f18568e2e8c42edf73b10a0697cfd12f87912f-7">7</a></td></tr></table></div></code></pre>
+                
+    <p>Now lets execute the above query and look at the results.</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="d12ce783ef8df54d6659ca584b1655751d441850"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="d12ce783ef8df54d6659ca584b1655751d441850"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-d12ce783ef8df54d6659ca584b1655751d441850-1" class="line-number-anchor" /><a href="#line-number-d12ce783ef8df54d6659ca584b1655751d441850-1">1</a></td><td class="code-line" rowspan="9"><span class="hljs-meta">&lt;?php</span>
+$q = Doctrine::getTable(<span class="hljs-string">'User'</span>)
+  -&gt;createQuery(<span class="hljs-string">'u'</span>)
+  -&gt;leftJoin(<span class="hljs-string">'u.Profile p'</span>);
 
 $users = $q-&gt;fetchArray();
 
-print_r($users);</code></pre>
-<p>The above would output just exactly what you'd expect.</p>
-<pre><code>Array
+print_r($users);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d12ce783ef8df54d6659ca584b1655751d441850-2" class="line-number-anchor" /><a href="#line-number-d12ce783ef8df54d6659ca584b1655751d441850-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d12ce783ef8df54d6659ca584b1655751d441850-3" class="line-number-anchor" /><a href="#line-number-d12ce783ef8df54d6659ca584b1655751d441850-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d12ce783ef8df54d6659ca584b1655751d441850-4" class="line-number-anchor" /><a href="#line-number-d12ce783ef8df54d6659ca584b1655751d441850-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d12ce783ef8df54d6659ca584b1655751d441850-5" class="line-number-anchor" /><a href="#line-number-d12ce783ef8df54d6659ca584b1655751d441850-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d12ce783ef8df54d6659ca584b1655751d441850-6" class="line-number-anchor" /><a href="#line-number-d12ce783ef8df54d6659ca584b1655751d441850-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d12ce783ef8df54d6659ca584b1655751d441850-7" class="line-number-anchor" /><a href="#line-number-d12ce783ef8df54d6659ca584b1655751d441850-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d12ce783ef8df54d6659ca584b1655751d441850-8" class="line-number-anchor" /><a href="#line-number-d12ce783ef8df54d6659ca584b1655751d441850-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-d12ce783ef8df54d6659ca584b1655751d441850-9" class="line-number-anchor" /><a href="#line-number-d12ce783ef8df54d6659ca584b1655751d441850-9">9</a></td></tr></table></div></code></pre>
+                
+    <p>The above would output just exactly what you&#039;d expect.</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="3549ff5c51fb224cc216fd2942d8513dd2048b2a"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="3549ff5c51fb224cc216fd2942d8513dd2048b2a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-1" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-1">1</a></td><td class="code-line" rowspan="19"><span class="hljs-keyword">Array</span>
 (
-    [0] =&gt; Array
+    [<span class="hljs-number">0</span>] =&gt; <span class="hljs-keyword">Array</span>
         (
-            [id] =&gt; 1
+            [id] =&gt; <span class="hljs-number">1</span>
             [username] =&gt; jwage
             [password] =&gt; changeme
-            [Profile] =&gt; Array
+            [Profile] =&gt; <span class="hljs-keyword">Array</span>
                 (
-                    [id] =&gt; 1
-                    [user_id] =&gt; 1
-                    [first_name] =&gt; string(255)
-                    [last_name] =&gt; string(255)
+                    [id] =&gt; <span class="hljs-number">1</span>
+                    [user_id] =&gt; <span class="hljs-number">1</span>
+                    [first_name] =&gt; string(<span class="hljs-number">255</span>)
+                    [last_name] =&gt; string(<span class="hljs-number">255</span>)
                 )
 
         )
 
-)</code></pre>
-<p>The data from the <code>User</code> model came from one database, and the data from
-the <code>Profile</code> model came from the other database.</p>
-<blockquote>
-<p><strong>NOTE</strong> This will only work if your database supports foreign keys
-and joins across databases. I know MySQL does support this but I am
-unsure about others. This same method can be used to query for data
-across PostgreSQL schemas too.</p>
+)
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-2" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-3" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-4" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-5" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-6" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-7" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-8" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-9" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-10" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-11" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-12" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-13" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-14" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-15" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-16" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-17" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-18" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-19" class="line-number-anchor" /><a href="#line-number-3549ff5c51fb224cc216fd2942d8513dd2048b2a-19">19</a></td></tr></table></div></code></pre>
+                
+    <p>The data from the <code>User</code> model came from one database, and the data from the <code>Profile</code> model came from the other database.</p>
+
+                <blockquote>
+    <p><strong>NOTE</strong> This will only work if your database supports foreign keys and joins across databases. I know MySQL does support this but I am unsure about others. This same method can be used to query for data across PostgreSQL schemas too.</p>
 </blockquote>
-<p>That is it! Joining data from across different databases is no problem
-in Doctrine.</p>
-<blockquote>
-<p><strong>CAUTION</strong> This is not a designed feature of Doctrine and you may
-experience edge cases that may not work as you'd expect. This is just
-useful if you need to join data across databases and if you experience
-edge cases you can work around them in your project.</p>
+                
+    <p>That is it! Joining data from across different databases is no problem in Doctrine.</p>
+
+                <blockquote>
+    <p><strong>CAUTION</strong> This is not a designed feature of Doctrine and you may experience edge cases that may not work as you&#039;d expect. This is just useful if you need to join data across databases and if you experience edge cases you can work around them in your project.</p>
 </blockquote>
+        
+    
         </div>
     </article>
     </main>

@@ -42,8 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "NOTE This blog entry relates to an outdated Doctrine 2 Alpha
-:   version. Please see the documentati"
+        "description": "NOTE This blog entry relates to an outdated Doctrine 2 Alpha :   version. Please see the documentati"
     }
     </script>
     <link
@@ -237,329 +236,649 @@
         <hr />
 
         <div>
-                <p><strong>NOTE</strong> This blog entry relates to an outdated Doctrine 2 Alpha
-:   version. Please see the documentation for the most up to date
-behavior.</p>
-<p>One of the most common fallacies out there about Doctrine 2 abandoning
-Behaviours is that developers now have to implement fancy logic to
-re-implement them yourself. Doctrine 2's approach to completly separate
-ORM from your domain classes allows to build behaviours in a very clean,
-unobstrusive and simple object-oriented way. This article shows you how
-to implement some of the Doctrine 1 behaviours in your Doctrine 2 code.
-For this I will rewrite the Doctrine 1.x manuals examples for each
-Behaviour.</p>
-<p>This example uses Annotations as example, yet this of course works with
-YAML and XML mappings. Additionally Doctrine 2 allows constructors to
-have required arguments as of a commit of the last week. This allows for
-some pretty slick enforcements in user-land code as you will see in this
-post.</p>
-<h1>Straightforward combination of &quot;Behaviours&quot;</h1>
-<p>All the code listed below is somehwat more verbose than the Doctrine 1
-code, however much more bound to the domain of your model and very
-straightforward. There is no magic involved and you will fully
-understand what will be happening in each of the behaviours. The best of
-all, although not a simple trick, you will be able to combine ALL
-behaviours in one model class and still be completly on top of their
-inner workings.</p>
-<h1>Timestampable</h1>
-<p>Timestampable is a behaviour that requires you to hook into the
-pre-update event which is called whenever an entity is updated:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-/**
- * @Id
- * @HasLifecycleCallbacks
- */
-class BlogPost
-{
-    /**
-     * @Column(type="DateTime")
-     */
-    private $created;
+                
+            
+                
+    <p><strong>NOTE</strong> This blog entry relates to an outdated Doctrine 2 Alpha :   version. Please see the documentation for the most up to date behavior.</p>
 
-    /**
-     * @Column(type="DateTime")
-     */
-    private $updated;
+                
+    <p>One of the most common fallacies out there about Doctrine 2 abandoning Behaviours is that developers now have to implement fancy logic to re-implement them yourself. Doctrine 2&#039;s approach to completly separate ORM from your domain classes allows to build behaviours in a very clean, unobstrusive and simple object-oriented way. This article shows you how to implement some of the Doctrine 1 behaviours in your Doctrine 2 code. For this I will rewrite the Doctrine 1.x manuals examples for each Behaviour.</p>
 
-    public function __construct()
-    {
-        // constructor is never called by Doctrine
-        $this-&gt;created = $this-&gt;updated = new DateTime("now");
+                
+    <p>This example uses Annotations as example, yet this of course works with YAML and XML mappings. Additionally Doctrine 2 allows constructors to have required arguments as of a commit of the last week. This allows for some pretty slick enforcements in user-land code as you will see in this post.</p>
+
+                <h1 class="section-header ">
+    <a href="#straightforward-combination-of-behaviours">
+        Straightforward combination of &quot;Behaviours&quot;
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>All the code listed below is somehwat more verbose than the Doctrine 1 code, however much more bound to the domain of your model and very straightforward. There is no magic involved and you will fully understand what will be happening in each of the behaviours. The best of all, although not a simple trick, you will be able to combine ALL behaviours in one model class and still be completly on top of their inner workings.</p>
+
+                <h1 class="section-header ">
+    <a href="#timestampable">
+        Timestampable
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Timestampable is a behaviour that requires you to hook into the pre-update event which is called whenever an entity is updated:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="71d5fb7b5ed208c81fbed2c9d5e6871515710268"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="71d5fb7b5ed208c81fbed2c9d5e6871515710268"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-1" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-1">1</a></td><td class="code-line" rowspan="32"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">/**
+ * <span class="hljs-doctag">@Id</span>
+ * <span class="hljs-doctag">@HasLifecycleCallbacks</span>
+ */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span>
+</span>{
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="DateTime")
+     */</span>
+    <span class="hljs-keyword">private</span> $created;
+
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="DateTime")
+     */</span>
+    <span class="hljs-keyword">private</span> $updated;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-comment">// constructor is never called by Doctrine</span>
+        <span class="hljs-keyword">$this</span>-&gt;created = <span class="hljs-keyword">$this</span>-&gt;updated = <span class="hljs-keyword">new</span> DateTime(<span class="hljs-string">"now"</span>);
     }
 
-    /**
-     * @PreUpdate
-     */
-    public function updated()
-    {
-        $this-&gt;updated = new DateTime("now");
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@PreUpdate</span>
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updated</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;updated = <span class="hljs-keyword">new</span> DateTime(<span class="hljs-string">"now"</span>);
     }
-}</code></pre>
-<h1>Sluggable</h1>
-<p>The sluggable behaviour is trivial to implement in Doctrine 2:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class BlogPost
-{
-    /** @Column(type="string") */
-    private $slug;
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-2" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-3" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-4" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-5" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-6" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-7" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-8" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-9" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-10" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-11" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-12" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-13" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-14" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-15" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-16" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-17" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-18" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-19" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-20" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-21" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-22" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-23" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-24" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-25" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-26" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-27" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-28" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-29" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-30" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-31" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-32" class="line-number-anchor" /><a href="#line-number-71d5fb7b5ed208c81fbed2c9d5e6871515710268-32">32</a></td></tr></table></div></code></pre>
+                <h1 class="section-header ">
+    <a href="#sluggable">
+        Sluggable
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>The sluggable behaviour is trivial to implement in Doctrine 2:</p>
 
-    /** @Column(type="string") */
-    private $title;
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="fb19185be6a0053d79af2228b9d1fe6c8964690c"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="fb19185be6a0053d79af2228b9d1fe6c8964690c"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-1" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-1">1</a></td><td class="code-line" rowspan="26"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span>
+</span>{
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Column</span>(type="string") */</span>
+    <span class="hljs-keyword">private</span> $slug;
 
-    public function setTitle($title)
-    {
-        if ($this-&gt;slug == null) {
-            $this-&gt;slug = MyStringHelper::slugize($title);
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Column</span>(type="string") */</span>
+    <span class="hljs-keyword">private</span> $title;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setTitle</span><span class="hljs-params">($title)</span>
+    </span>{
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;slug == <span class="hljs-keyword">null</span>) {
+            <span class="hljs-keyword">$this</span>-&gt;slug = MyStringHelper::slugize($title);
         }
-        $this-&gt;title = $title;
+        <span class="hljs-keyword">$this</span>-&gt;title = $title;
     }
 
-    /**
+    <span class="hljs-comment">/**
      * Put this method in if your slug should be "editable"
-     */
-    public function setSlug($slug)
-    {
-        $this-&gt;slug = $slug;
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setSlug</span><span class="hljs-params">($slug)</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;slug = $slug;
     }
-}</code></pre>
-<p>See how its much more explicit in your code how and why the slug is
-generated.</p>
-<h1>NestedSet</h1>
-<p>This is one of the more complex behaviours in Doctrine 1 and it won't be
-necessarily more easy in Doctrine 2. However as this is an important
-feature we will provide an implementation as a <code>DoctrineExtensions</code>
-namespaced package that will be maintained by Doctrine Devs.</p>
-<h1>Searchable</h1>
-<p>There is currently no plan to port the Searchable behaviour to Doctrine
-2, but the possibility to instantiate objects using <em>new</em> allows a very
-simple integration of a Doctrine 2 model with Apache Solr or Lucene with
-a little wrapper that re-creates detached instances from this powerful
-search engines.</p>
-<p>For example using
-<a href="http://ezcomponents.org/docs/api/trunk/introduction_Search.html">ezcSearch</a>
-we can make our BlogPost accessible for Solr:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class BlogPost implements ezcBasePersistable, ezcSearchDefinitionProvider
-{
-    public function getState()
-    {
-        return array(
-            'id' =&gt; $this-&gt;id,
-            'title' =&gt; $this-&gt;title,
-            'body' =&gt; $this-&gt;body,
-            'slug' =&gt; $this-&gt;slug,
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-2" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-3" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-4" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-5" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-6" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-7" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-8" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-9" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-10" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-11" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-12" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-13" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-14" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-15" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-16" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-17" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-18" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-19" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-20" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-21" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-22" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-23" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-24" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-25" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-26" class="line-number-anchor" /><a href="#line-number-fb19185be6a0053d79af2228b9d1fe6c8964690c-26">26</a></td></tr></table></div></code></pre>
+                
+    <p>See how its much more explicit in your code how and why the slug is generated.</p>
+
+                <h1 class="section-header ">
+    <a href="#nestedset">
+        NestedSet
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>This is one of the more complex behaviours in Doctrine 1 and it won&#039;t be necessarily more easy in Doctrine 2. However as this is an important feature we will provide an implementation as a <code>DoctrineExtensions</code> namespaced package that will be maintained by Doctrine Devs.</p>
+
+                <h1 class="section-header ">
+    <a href="#searchable">
+        Searchable
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>There is currently no plan to port the Searchable behaviour to Doctrine 2, but the possibility to instantiate objects using <em>new</em> allows a very simple integration of a Doctrine 2 model with Apache Solr or Lucene with a little wrapper that re-creates detached instances from this powerful search engines.</p>
+
+                
+    <p>For example using <a href="http://ezcomponents.org/docs/api/trunk/introduction_Search.html">ezcSearch</a> we can make our BlogPost accessible for Solr:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="2c955d36a7b3ecd0dc57b1297cfc26d91c88624f"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="2c955d36a7b3ecd0dc57b1297cfc26d91c88624f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-1" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-1">1</a></td><td class="code-line" rowspan="27"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ezcBasePersistable</span>, <span class="hljs-title">ezcSearchDefinitionProvider</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getState</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">array</span>(
+            <span class="hljs-string">'id'</span> =&gt; <span class="hljs-keyword">$this</span>-&gt;id,
+            <span class="hljs-string">'title'</span> =&gt; <span class="hljs-keyword">$this</span>-&gt;title,
+            <span class="hljs-string">'body'</span> =&gt; <span class="hljs-keyword">$this</span>-&gt;body,
+            <span class="hljs-string">'slug'</span> =&gt; <span class="hljs-keyword">$this</span>-&gt;slug,
         );
     }
 
-    public function setState($state)
-    {
-        foreach ($state AS $k =&gt; $v) {
-            $this-&gt;$k = $v;
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setState</span><span class="hljs-params">($state)</span>
+    </span>{
+        <span class="hljs-keyword">foreach</span> ($state <span class="hljs-keyword">AS</span> $k =&gt; $v) {
+            <span class="hljs-keyword">$this</span>-&gt;$k = $v;
         }
     }
 
-    static public function getDefinition()
-    {
-        // define search schema
-        return $def;
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getDefinition</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-comment">// define search schema</span>
+        <span class="hljs-keyword">return</span> $def;
     }
-}</code></pre>
-<p>ezcSearch can then index a blog post whenever it is changed by hooking
-an EventListener into the Doctrine <code>PreUpdate</code> Event:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class EzcSearchListener
-{
-    private $_searchSession;
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-2" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-3" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-4" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-5" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-6" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-7" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-8" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-9" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-10" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-11" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-12" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-13" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-14" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-15" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-16" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-17" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-18" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-19" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-20" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-21" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-22" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-23" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-24" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-25" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-26" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-27" class="line-number-anchor" /><a href="#line-number-2c955d36a7b3ecd0dc57b1297cfc26d91c88624f-27">27</a></td></tr></table></div></code></pre>
+                
+    <p>ezcSearch can then index a blog post whenever it is changed by hooking an EventListener into the Doctrine <code>PreUpdate</code> Event:</p>
 
-    public function __construct(ezcSearchSession $searchSession)
-    {
-        $this-&gt;_searchSession = $searchSession;
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="e89249a55c5486824e766d2d637f5a7604d567cc"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="e89249a55c5486824e766d2d637f5a7604d567cc"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-1" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-1">1</a></td><td class="code-line" rowspan="18"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EzcSearchListener</span>
+</span>{
+    <span class="hljs-keyword">private</span> $_searchSession;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(ezcSearchSession $searchSession)</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;_searchSession = $searchSession;
     }
 
-    public function preUpdate(LifecycleEventArgs $args)
-    {
-        if ($args-&gt;getEntity() instanceof ezcBasePersistable) {
-            $this-&gt;_searchSession-&gt;index($args-&gt;getEntity());
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">preUpdate</span><span class="hljs-params">(LifecycleEventArgs $args)</span>
+    </span>{
+        <span class="hljs-keyword">if</span> ($args-&gt;getEntity() <span class="hljs-keyword">instanceof</span> ezcBasePersistable) {
+            <span class="hljs-keyword">$this</span>-&gt;_searchSession-&gt;index($args-&gt;getEntity());
         }
     }
-}</code></pre>
-<p>You can now hook this event into Doctrine's EntityManager:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$searchListener = new EzcSearchListener(...);
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-2" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-3" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-4" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-5" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-6" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-7" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-8" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-9" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-10" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-11" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-12" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-13" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-14" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-15" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-16" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-17" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-e89249a55c5486824e766d2d637f5a7604d567cc-18" class="line-number-anchor" /><a href="#line-number-e89249a55c5486824e766d2d637f5a7604d567cc-18">18</a></td></tr></table></div></code></pre>
+                
+    <p>You can now hook this event into Doctrine&#039;s EntityManager:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="ac9cbd7fa7380f59156165076540581244af33f9"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="ac9cbd7fa7380f59156165076540581244af33f9"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ac9cbd7fa7380f59156165076540581244af33f9-1" class="line-number-anchor" /><a href="#line-number-ac9cbd7fa7380f59156165076540581244af33f9-1">1</a></td><td class="code-line" rowspan="6"><span class="hljs-meta">&lt;?php</span>
+$searchListener = <span class="hljs-keyword">new</span> EzcSearchListener(...);
 $em-&gt;getEventManager()-&gt;addEventListener(
-    array(Doctrine\ORM\Events::preUpdate), $searchListener
-);</code></pre>
-<p>Now when you search for your entities you get returned <code>BlogPost</code>
-instances from ezcSearchs Solr interface:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-// initialize a pre-configured query
-$q = $session-&gt;createFindQuery( 'BlogPost' );
-$searchWord = 'test';
+    <span class="hljs-keyword">array</span>(Doctrine\ORM\Events::preUpdate), $searchListener
+);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ac9cbd7fa7380f59156165076540581244af33f9-2" class="line-number-anchor" /><a href="#line-number-ac9cbd7fa7380f59156165076540581244af33f9-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ac9cbd7fa7380f59156165076540581244af33f9-3" class="line-number-anchor" /><a href="#line-number-ac9cbd7fa7380f59156165076540581244af33f9-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ac9cbd7fa7380f59156165076540581244af33f9-4" class="line-number-anchor" /><a href="#line-number-ac9cbd7fa7380f59156165076540581244af33f9-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ac9cbd7fa7380f59156165076540581244af33f9-5" class="line-number-anchor" /><a href="#line-number-ac9cbd7fa7380f59156165076540581244af33f9-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ac9cbd7fa7380f59156165076540581244af33f9-6" class="line-number-anchor" /><a href="#line-number-ac9cbd7fa7380f59156165076540581244af33f9-6">6</a></td></tr></table></div></code></pre>
+                
+    <p>Now when you search for your entities you get returned <code>BlogPost</code> instances from ezcSearchs Solr interface:</p>
 
-// where either body or title contains thr $searchWord
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="c89b46532268e31c9f34ab766e1ac1e5a253c92f"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="c89b46532268e31c9f34ab766e1ac1e5a253c92f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-1" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-1">1</a></td><td class="code-line" rowspan="14"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// initialize a pre-configured query</span>
+$q = $session-&gt;createFindQuery( <span class="hljs-string">'BlogPost'</span> );
+$searchWord = <span class="hljs-string">'test'</span>;
+
+<span class="hljs-comment">// where either body or title contains thr $searchWord</span>
 $q-&gt;where(
     $q-&gt;lOr(
-        $q-&gt;eq( 'body', $searchWord ),
-        $q-&gt;eq( 'title', $searchWord )
+        $q-&gt;eq( <span class="hljs-string">'body'</span>, $searchWord ),
+        $q-&gt;eq( <span class="hljs-string">'title'</span>, $searchWord )
     )
 );
-$searchedBlogPosts = $session-&gt;find( $q );</code></pre>
-<p>These instances are detached from the EntityManager when they get
-returned from ezcSearch and can be merged back into the persistence
-context:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$searchedBlogPosts[0]-&gt;setTitle("ChangeFoo");
-$em-&gt;merge($searchedBlogPosts[0]);</code></pre>
-<p>Read about Merging, Detached instances and other cool stuff of Doctrines
-object model in the <a href="https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#merging-entities">Working with
-Objects</a>
-chapter of the manual.</p>
-<h1>Versionable</h1>
-<p>By default Doctrine 2 comes with a way to set a <em>version</em> column that is
-automatically incremented on each update. Using the event system it is
-easy to use this information to implement a versionable audit-log
-behaviour. The required code is more verbose than the simple
-configuration of Doctrine 1, however there is much less magic involved
-and you can implement this behaviour in a way that is trivial to
-understand for someone new looking at your code:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-/**
- * @Entity
- * @HasLifeCycleCallbacks
- * @generatedValue(strategy="AUTO")
- */
-class BlogPost
-{
-    /**
-     * @Id
-     * @Column(type="integer")
-     */
-    private $id;
+$searchedBlogPosts = $session-&gt;find( $q );
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-2" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-3" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-4" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-5" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-6" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-7" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-8" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-9" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-10" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-11" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-12" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-13" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-14" class="line-number-anchor" /><a href="#line-number-c89b46532268e31c9f34ab766e1ac1e5a253c92f-14">14</a></td></tr></table></div></code></pre>
+                
+    <p>These instances are detached from the EntityManager when they get returned from ezcSearch and can be merged back into the persistence context:</p>
 
-    /**
-     * @Column(type="string")
-     */
-    private $title;
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="91c6fbffafaea24682da3a349f24b35360902537"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="91c6fbffafaea24682da3a349f24b35360902537"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-91c6fbffafaea24682da3a349f24b35360902537-1" class="line-number-anchor" /><a href="#line-number-91c6fbffafaea24682da3a349f24b35360902537-1">1</a></td><td class="code-line" rowspan="4"><span class="hljs-meta">&lt;?php</span>
+$searchedBlogPosts[<span class="hljs-number">0</span>]-&gt;setTitle(<span class="hljs-string">"ChangeFoo"</span>);
+$em-&gt;merge($searchedBlogPosts[<span class="hljs-number">0</span>]);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-91c6fbffafaea24682da3a349f24b35360902537-2" class="line-number-anchor" /><a href="#line-number-91c6fbffafaea24682da3a349f24b35360902537-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-91c6fbffafaea24682da3a349f24b35360902537-3" class="line-number-anchor" /><a href="#line-number-91c6fbffafaea24682da3a349f24b35360902537-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-91c6fbffafaea24682da3a349f24b35360902537-4" class="line-number-anchor" /><a href="#line-number-91c6fbffafaea24682da3a349f24b35360902537-4">4</a></td></tr></table></div></code></pre>
+                
+    <p>Read about Merging, Detached instances and other cool stuff of Doctrines object model in the <a href="https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/working-with-objects.html#merging-entities">Working with Objects</a> chapter of the manual.</p>
 
-    /**
-     * @Column(type="text")
-     */
-    private $body;
+                <h1 class="section-header ">
+    <a href="#versionable">
+        Versionable
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>By default Doctrine 2 comes with a way to set a <em>version</em> column that is automatically incremented on each update. Using the event system it is easy to use this information to implement a versionable audit-log behaviour. The required code is more verbose than the simple configuration of Doctrine 1, however there is much less magic involved and you can implement this behaviour in a way that is trivial to understand for someone new looking at your code:</p>
 
-    /**
-     * @Column(type="integer")
-     * @version
-     */
-    private $version;
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="a0548321de4546389f6ba7f80aa48f8577e7ad75"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="a0548321de4546389f6ba7f80aa48f8577e7ad75"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-1" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-1">1</a></td><td class="code-line" rowspan="87"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">/**
+ * <span class="hljs-doctag">@Entity</span>
+ * <span class="hljs-doctag">@HasLifeCycleCallbacks</span>
+ * <span class="hljs-doctag">@generatedValue</span>(strategy="AUTO")
+ */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span>
+</span>{
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Id</span>
+     * <span class="hljs-doctag">@Column</span>(type="integer")
+     */</span>
+    <span class="hljs-keyword">private</span> $id;
 
-    /**
-     * @OneToMany(targetEntity="BlogPostVersion", mappedBy="post")
-     */
-    private $auditLog = array();
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="string")
+     */</span>
+    <span class="hljs-keyword">private</span> $title;
 
-    /**
-     * @PrePersist
-     * @PreUpdate
-     */
-    public function logVersion()
-    {
-        $this-&gt;auditLog[] = new BlogPostVersion($this);
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="text")
+     */</span>
+    <span class="hljs-keyword">private</span> $body;
+
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="integer")
+     * <span class="hljs-doctag">@version</span>
+     */</span>
+    <span class="hljs-keyword">private</span> $version;
+
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@OneToMany</span>(targetEntity="BlogPostVersion", mappedBy="post")
+     */</span>
+    <span class="hljs-keyword">private</span> $auditLog = <span class="hljs-keyword">array</span>();
+
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@PrePersist</span>
+     * <span class="hljs-doctag">@PreUpdate</span>
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">logVersion</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;auditLog[] = <span class="hljs-keyword">new</span> BlogPostVersion(<span class="hljs-keyword">$this</span>);
     }
-    // getters
+    <span class="hljs-comment">// getters</span>
 }
 
-/**
- * @Entity
- */
-class BlogPostVersion
-{
-    /**
-     * @Id
-     * @Column(type="integer")
-     * @generatedValue(strategy="AUTO")
-     */
-    private $id;
+<span class="hljs-comment">/**
+ * <span class="hljs-doctag">@Entity</span>
+ */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPostVersion</span>
+</span>{
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Id</span>
+     * <span class="hljs-doctag">@Column</span>(type="integer")
+     * <span class="hljs-doctag">@generatedValue</span>(strategy="AUTO")
+     */</span>
+    <span class="hljs-keyword">private</span> $id;
 
-    /**
-     * @Column(type="string")
-     */
-    private $title;
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="string")
+     */</span>
+    <span class="hljs-keyword">private</span> $title;
 
-    /**
-     * @Column(type="text")
-     */
-    private $body;
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="text")
+     */</span>
+    <span class="hljs-keyword">private</span> $body;
 
-    /**
-     * @Column(type="integer")
-     */
-    private $version;
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="integer")
+     */</span>
+    <span class="hljs-keyword">private</span> $version;
 
-    /**
-     * @ManyToOne(targetEntity="BlogPost")
-     */
-    private $post;
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@ManyToOne</span>(targetEntity="BlogPost")
+     */</span>
+    <span class="hljs-keyword">private</span> $post;
 
-    public function __construct(BlogPost $post)
-    {
-        $this-&gt;post = $post;
-        $this-&gt;title = $post-&gt;getTitle();
-        $this-&gt;body = $post-&gt;getBody();
-        $this-&gt;version = $post-&gt;getCurrentVersion();
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(BlogPost $post)</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;post = $post;
+        <span class="hljs-keyword">$this</span>-&gt;title = $post-&gt;getTitle();
+        <span class="hljs-keyword">$this</span>-&gt;body = $post-&gt;getBody();
+        <span class="hljs-keyword">$this</span>-&gt;version = $post-&gt;getCurrentVersion();
     }
-}</code></pre>
-<h1>I18N</h1>
-<p>Multi-Language content is an important topic and can be implemented in
-Doctrine 2, since its just a fancy name for a One-To-Many relation.
-However currently Doctrine 2 does not allow to persist keys by name,
-which makes a OneToMany implementation a bit more intensive then it
-could be. We plan to implement primitive value collections however which
-would simplify any attempt to implement nested structured content, that
-is not an entity by itself.</p>
-<h1>Soft Delete</h1>
-<p>We won't support soft-delete at all. If you want to implement a
-soft-delete alike behaviour its probably a good idea to look into the
-State pattern instead.</p>
-<h1>Blameable</h1>
-<p>Implementing this behaviour is just a matter of adding two fields
-<em>createdByUserId</em> and <em>modifiedByUserId</em> fields and setting them
-whenever one of your relevant fields change by hooking into setter
-methods:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-/**
- * @Entity
- */
-class BlogPost
-{
-    /**
-     * @Column(type="string")
-     */
-    private $title;
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-2" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-3" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-4" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-5" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-6" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-7" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-8" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-9" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-10" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-11" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-12" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-13" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-14" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-15" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-16" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-17" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-18" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-19" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-20" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-21" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-22" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-23" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-24" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-25" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-26" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-27" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-28" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-29" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-30" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-31" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-32" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-33" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-34" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-35" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-36" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-36">36</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-37" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-37">37</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-38" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-38">38</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-39" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-39">39</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-40" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-40">40</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-41" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-41">41</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-42" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-42">42</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-43" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-43">43</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-44" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-44">44</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-45" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-45">45</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-46" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-46">46</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-47" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-47">47</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-48" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-48">48</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-49" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-49">49</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-50" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-50">50</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-51" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-51">51</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-52" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-52">52</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-53" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-53">53</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-54" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-54">54</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-55" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-55">55</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-56" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-56">56</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-57" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-57">57</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-58" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-58">58</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-59" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-59">59</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-60" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-60">60</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-61" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-61">61</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-62" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-62">62</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-63" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-63">63</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-64" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-64">64</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-65" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-65">65</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-66" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-66">66</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-67" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-67">67</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-68" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-68">68</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-69" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-69">69</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-70" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-70">70</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-71" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-71">71</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-72" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-72">72</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-73" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-73">73</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-74" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-74">74</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-75" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-75">75</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-76" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-76">76</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-77" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-77">77</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-78" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-78">78</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-79" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-79">79</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-80" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-80">80</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-81" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-81">81</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-82" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-82">82</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-83" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-83">83</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-84" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-84">84</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-85" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-85">85</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-86" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-86">86</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-87" class="line-number-anchor" /><a href="#line-number-a0548321de4546389f6ba7f80aa48f8577e7ad75-87">87</a></td></tr></table></div></code></pre>
+                <h1 class="section-header ">
+    <a href="#i18n">
+        I18N
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Multi-Language content is an important topic and can be implemented in Doctrine 2, since its just a fancy name for a One-To-Many relation. However currently Doctrine 2 does not allow to persist keys by name, which makes a OneToMany implementation a bit more intensive then it could be. We plan to implement primitive value collections however which would simplify any attempt to implement nested structured content, that is not an entity by itself.</p>
 
-    /**
-     * @Column(type="integer")
-     */
-    private $modifiedByUserId;
+                <h1 class="section-header ">
+    <a href="#soft-delete">
+        Soft Delete
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>We won&#039;t support soft-delete at all. If you want to implement a soft-delete alike behaviour its probably a good idea to look into the State pattern instead.</p>
 
-    public function updateBlogPost($title, ..., User $user)
-    {
-        $this-&gt;title = $title;
-        $this-&gt;modifiedByUserId = $user-&gt;getId();
+                <h1 class="section-header ">
+    <a href="#blameable">
+        Blameable
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Implementing this behaviour is just a matter of adding two fields <em>createdByUserId</em> and <em>modifiedByUserId</em> fields and setting them whenever one of your relevant fields change by hooking into setter methods:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="1912edb8fa1e77bcaa26c4c283f23a1f897ebca4"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="1912edb8fa1e77bcaa26c4c283f23a1f897ebca4"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-1" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-1">1</a></td><td class="code-line" rowspan="23"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">/**
+ * <span class="hljs-doctag">@Entity</span>
+ */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span>
+</span>{
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="string")
+     */</span>
+    <span class="hljs-keyword">private</span> $title;
+
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Column</span>(type="integer")
+     */</span>
+    <span class="hljs-keyword">private</span> $modifiedByUserId;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateBlogPost</span><span class="hljs-params">($title, ..., User $user)</span>
+    </span>{
+        <span class="hljs-keyword">$this</span>-&gt;title = $title;
+        <span class="hljs-keyword">$this</span>-&gt;modifiedByUserId = $user-&gt;getId();
     }
-}</code></pre>
-<h1>Sortable</h1>
-<p>Same as I18N, we are planning to support persistence of collection keys
-in the Doctrine 2 Core. This would allow to sort collections by using
-the possibilities of the <code>Doctrine\Common\Collections\Collection</code>
-interface.</p>
-<h1>Conclusion</h1>
-<p>Although slightly more complex than Doctrine 1s simple configuration
-options, most &quot;behaviours&quot; are still way easy to implement in Doctrine</p>
-<ol start="2">
-<li>The additional benefit of this straightforward approach: <em>You can
-combine behaviours in any way, inside your domain model, without having
-to wonder how the magic works together, you are completly on top of it.</em></li>
-</ol>
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-2" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-3" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-4" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-5" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-6" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-7" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-8" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-9" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-10" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-11" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-12" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-13" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-14" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-15" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-16" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-17" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-18" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-19" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-20" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-21" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-22" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-23" class="line-number-anchor" /><a href="#line-number-1912edb8fa1e77bcaa26c4c283f23a1f897ebca4-23">23</a></td></tr></table></div></code></pre>
+                <h1 class="section-header ">
+    <a href="#sortable">
+        Sortable
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Same as I18N, we are planning to support persistence of collection keys in the Doctrine 2 Core. This would allow to sort collections by using the possibilities of the <code>Doctrine\Common\Collections\Collection</code> interface.</p>
+
+                <h1 class="section-header ">
+    <a href="#conclusion">
+        Conclusion
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Although slightly more complex than Doctrine 1s simple configuration options, most &quot;behaviours&quot; are still way easy to implement in Doctrine 2. The additional benefit of this straightforward approach: <em>You can combine behaviours in any way, inside your domain model, without having to wonder how the magic works together, you are completly on top of it.</em></p>
+
+        
+    
         </div>
     </article>
     </main>

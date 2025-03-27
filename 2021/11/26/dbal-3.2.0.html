@@ -236,86 +236,249 @@
         <hr />
 
         <div>
-                <p>We are happy to announce the immediate availability of Doctrine DBAL 3.2.0. As most of the minor releases, this one
-focuses on new features, improvements and deprecations of the old APIs. Here are some details on the most significant
-features and improvements:</p>
-<h2>Platform-aware schema comparison (<a href="https://github.com/doctrine/dbal/pull/4746">#4746</a>)</h2>
-<p>Up until this release, the logic of comparing database schemas had a major design flaw: it took into account only the
-abstract schema definitions without taking the target platform into account.</p>
-<p>This flaw would lead to multiple issues which shared the same root cause: the two definitions could be considered
-different by the DBAL, but they would produce the same DDL.</p>
-<p>For instance, consider the two column definitions:</p>
-<pre><code class="language-php">// old schema
-$column1 = new Column('contents', Type::getType('text'));
+                
+            
+                
+    <p>We are happy to announce the immediate availability of Doctrine DBAL 3.2.0. As most of the minor releases, this one focuses on new features, improvements and deprecations of the old APIs. Here are some details on the most significant features and improvements:</p>
 
-// new schema
-$column2 = new Column('contents', Type::getType('text'), ['default' =&gt; 'Hello, world!']);</code></pre>
-<p>If we compared them with the comparator, we'd get a diff:</p>
-<pre><code class="language-php">$comparator = new Comparator();
+                <h2 class="section-header ">
+    <a href="#platform-aware-schema-comparison">
+        Platform-aware schema comparison (<a href="https://github.com/doctrine/dbal/pull/4746">#4746</a>)
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>Up until this release, the logic of comparing database schemas had a major design flaw: it took into account only the abstract schema definitions without taking the target platform into account.</p>
+
+                
+    <p>This flaw would lead to multiple issues which shared the same root cause: the two definitions could be considered different by the DBAL, but they would produce the same DDL.</p>
+
+                
+    <p>For instance, consider the two column definitions:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="2a2bf0a57ca277769621d34bc07fa84474e62d66"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="2a2bf0a57ca277769621d34bc07fa84474e62d66"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-2a2bf0a57ca277769621d34bc07fa84474e62d66-1" class="line-number-anchor" /><a href="#line-number-2a2bf0a57ca277769621d34bc07fa84474e62d66-1">1</a></td><td class="code-line" rowspan="6"><span class="hljs-comment">// old schema</span>
+$column1 = <span class="hljs-keyword">new</span> Column(<span class="hljs-string">'contents'</span>, Type::getType(<span class="hljs-string">'text'</span>));
+
+<span class="hljs-comment">// new schema</span>
+$column2 = <span class="hljs-keyword">new</span> Column(<span class="hljs-string">'contents'</span>, Type::getType(<span class="hljs-string">'text'</span>), [<span class="hljs-string">'default'</span> =&gt; <span class="hljs-string">'Hello, world!'</span>]);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2a2bf0a57ca277769621d34bc07fa84474e62d66-2" class="line-number-anchor" /><a href="#line-number-2a2bf0a57ca277769621d34bc07fa84474e62d66-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2a2bf0a57ca277769621d34bc07fa84474e62d66-3" class="line-number-anchor" /><a href="#line-number-2a2bf0a57ca277769621d34bc07fa84474e62d66-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2a2bf0a57ca277769621d34bc07fa84474e62d66-4" class="line-number-anchor" /><a href="#line-number-2a2bf0a57ca277769621d34bc07fa84474e62d66-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2a2bf0a57ca277769621d34bc07fa84474e62d66-5" class="line-number-anchor" /><a href="#line-number-2a2bf0a57ca277769621d34bc07fa84474e62d66-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2a2bf0a57ca277769621d34bc07fa84474e62d66-6" class="line-number-anchor" /><a href="#line-number-2a2bf0a57ca277769621d34bc07fa84474e62d66-6">6</a></td></tr></table></div></code></pre>
+                
+    <p>If we compared them with the comparator, we&#039;d get a diff:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="71ee5f3c80987cc0b9113e1ffe416100480302f9"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="71ee5f3c80987cc0b9113e1ffe416100480302f9"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-1" class="line-number-anchor" /><a href="#line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-1">1</a></td><td class="code-line" rowspan="7">$comparator = <span class="hljs-keyword">new</span> Comparator();
 $comparator-&gt;diffColumn($column1, $column2);
-// array(1) {
-//   [0] =&gt;
-//   string(7) "default"
-// }</code></pre>
-<p>This might be valid for the platforms that support the <code>DEFAULT</code>  constraint on <code>TEXT</code> columns but isn't valid for those
-that don't support it (e.g. MySQL). Regardless of the diff, both definitions would produce the same DDL on MySQL:</p>
-<pre><code class="language-sql">contents LONGTEXT NOT NULL</code></pre>
-<p>An attempt to migrate the old schema to the new one would produce a false-positive diff but applying it wouldn't result
-in any schema changes.</p>
-<p>A false-negative diff was also possible. Consider these following example:</p>
-<pre><code class="language-php">// old schema
-$column1 = new Column('settings', Type::getType('json'));
+<span class="hljs-comment">// array(1) {</span>
+<span class="hljs-comment">//   [0] =&gt;</span>
+<span class="hljs-comment">//   string(7) "default"</span>
+<span class="hljs-comment">// }</span>
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-2" class="line-number-anchor" /><a href="#line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-3" class="line-number-anchor" /><a href="#line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-4" class="line-number-anchor" /><a href="#line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-5" class="line-number-anchor" /><a href="#line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-6" class="line-number-anchor" /><a href="#line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-7" class="line-number-anchor" /><a href="#line-number-71ee5f3c80987cc0b9113e1ffe416100480302f9-7">7</a></td></tr></table></div></code></pre>
+                
+    <p>This might be valid for the platforms that support the <code>DEFAULT</code>  constraint on <code>TEXT</code> columns but isn&#039;t valid for those that don&#039;t support it (e.g. MySQL). Regardless of the diff, both definitions would produce the same DDL on MySQL:</p>
 
-// new schema
-$column2 = new Column('settings', Type::getType('json'), ['length' =&gt; 16777215]);</code></pre>
-<p>Comparison of the above column definitions should have triggered a diff on MySQL and migrate the underlying column
-from <code>TEXT</code> to <code>MEDIUMTEXT</code> but it didn't, because the DBAL would ignore the length of the <code>TEXT</code> columns.</p>
-<p>Apart from that, the DBAL would compare only a subset of the definitions, so some column options as the character set
-and collation weren't taken into account during comparison at all.</p>
-<h3>The new approach</h3>
-<p>Instead of comparing abstract definitions on a per-property basis, the new implementation compares the DDL that is generated from both definitions for the target database platform. If the definitions produce the same DDL, they are considered equal. According to the tests and the number of resolved issues, this approach should be more accurate and less error-prone.</p>
-<p>Implementing this approach was impossible without introducing a new API which rendered the existing API obsolete.</p>
-<p>Prior to DBAL <code>3.2.0</code>, the schema comparator could be only instantiated directly via the <code>new</code> keyword:</p>
-<pre><code class="language-php">$comparator = new Comparator();</code></pre>
-<p>Instantiated like this, the comparator doesn't have a notion of the target database platform and cannot perform the comparison properly. That is why, this way of instantiation is deprecated in favor of instantiating the comparator by the schema manager:</p>
-<pre><code class="language-php">$schemaManager = $connection-&gt;createSchemaManager();
-$comparator = $schemaManager-&gt;createComparator();</code></pre>
-<p>This way, the schema manager can instantiate a platform-specific comparator and provide it with the necessary context (e.g. the default collation used by the database).</p>
-<p>While the old API is still available, it is recommended to use the new API for more accurate comparison.</p>
-<h2>Support for <code>psr/cache</code> (<a href="https://github.com/doctrine/dbal/pull/4620">#4620</a>)</h2>
-<p>Since the Doctrine Cache library is being sunset, the new DBAL release introduced the ability to use a PSR-6 compatible implementation for result caching.</p>
-<p>While both the <code>doctrine/cache</code> and <code>psr/cache</code> APIs will be supported until the next major DBAL release, we recommend users to switch to a PSR-6 compatible implementation in their projects.</p>
-<h2>Support for <code>psr/log</code> (<a href="https://github.com/doctrine/dbal/pull/4967">#4967</a>)</h2>
-<p>The <code>SQLLogger</code> interface was designed long ago and has certain limitations: there is no way to log messages at different logger levels and it is really challenging to extend the logger functionality without introducing breaking API changes.</p>
-<p>The new DBAL release introduces a new middleware that can delegate logging to a PSR-3 compatible implementation.</p>
-<p>Note that the new logger won't produce the messages identical to the ones produced by the old one. If you have any processes built around analysing log messages, you may need to make some changes before adopting the new API.</p>
-<h2>Always cache the full result (<a href="https://github.com/doctrine/dbal/pull/5003">#5003</a>)</h2>
-<p>The implementation of the result cache prior to DBAL 3.2.0 would store the result set in the cache only once it was fetched completely. It led to the following issues:</p>
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="2ac967cfd2f51b45a9e97bc52a6a8bde9602ba65"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="2ac967cfd2f51b45a9e97bc52a6a8bde9602ba65"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-2ac967cfd2f51b45a9e97bc52a6a8bde9602ba65-1" class="line-number-anchor" /><a href="#line-number-2ac967cfd2f51b45a9e97bc52a6a8bde9602ba65-1">1</a></td><td class="code-line" rowspan="2">contents LONGTEXT NOT <span class="hljs-keyword">NULL</span>
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-2ac967cfd2f51b45a9e97bc52a6a8bde9602ba65-2" class="line-number-anchor" /><a href="#line-number-2ac967cfd2f51b45a9e97bc52a6a8bde9602ba65-2">2</a></td></tr></table></div></code></pre>
+                
+    <p>An attempt to migrate the old schema to the new one would produce a false-positive diff but applying it wouldn&#039;t result in any schema changes.</p>
+
+                
+    <p>A false-negative diff was also possible. Consider these following example:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="b71556095d340c68af703c2634cdb8892f24e89c"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="b71556095d340c68af703c2634cdb8892f24e89c"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-b71556095d340c68af703c2634cdb8892f24e89c-1" class="line-number-anchor" /><a href="#line-number-b71556095d340c68af703c2634cdb8892f24e89c-1">1</a></td><td class="code-line" rowspan="6"><span class="hljs-comment">// old schema</span>
+$column1 = <span class="hljs-keyword">new</span> Column(<span class="hljs-string">'settings'</span>, Type::getType(<span class="hljs-string">'json'</span>));
+
+<span class="hljs-comment">// new schema</span>
+$column2 = <span class="hljs-keyword">new</span> Column(<span class="hljs-string">'settings'</span>, Type::getType(<span class="hljs-string">'json'</span>), [<span class="hljs-string">'length'</span> =&gt; <span class="hljs-number">16777215</span>]);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b71556095d340c68af703c2634cdb8892f24e89c-2" class="line-number-anchor" /><a href="#line-number-b71556095d340c68af703c2634cdb8892f24e89c-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b71556095d340c68af703c2634cdb8892f24e89c-3" class="line-number-anchor" /><a href="#line-number-b71556095d340c68af703c2634cdb8892f24e89c-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b71556095d340c68af703c2634cdb8892f24e89c-4" class="line-number-anchor" /><a href="#line-number-b71556095d340c68af703c2634cdb8892f24e89c-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b71556095d340c68af703c2634cdb8892f24e89c-5" class="line-number-anchor" /><a href="#line-number-b71556095d340c68af703c2634cdb8892f24e89c-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b71556095d340c68af703c2634cdb8892f24e89c-6" class="line-number-anchor" /><a href="#line-number-b71556095d340c68af703c2634cdb8892f24e89c-6">6</a></td></tr></table></div></code></pre>
+                
+    <p>Comparison of the above column definitions should have triggered a diff on MySQL and migrate the underlying column from <code>TEXT</code> to <code>MEDIUMTEXT</code> but it didn&#039;t, because the DBAL would ignore the length of the <code>TEXT</code> columns.</p>
+
+                
+    <p>Apart from that, the DBAL would compare only a subset of the definitions, so some column options as the character set and collation weren&#039;t taken into account during comparison at all.</p>
+
+                <h3 class="section-header ">
+    <a href="#the-new-approach">
+        The new approach
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+                
+    <p>Instead of comparing abstract definitions on a per-property basis, the new implementation compares the DDL that is generated from both definitions for the target database platform. If the definitions produce the same DDL, they are considered equal. According to the tests and the number of resolved issues, this approach should be more accurate and less error-prone.</p>
+
+                
+    <p>Implementing this approach was impossible without introducing a new API which rendered the existing API obsolete.</p>
+
+                
+    <p>Prior to DBAL <code>3.2.0</code>, the schema comparator could be only instantiated directly via the <code>new</code> keyword:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="08846d346f967e38df46e68c374f272ea65da5ef"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="08846d346f967e38df46e68c374f272ea65da5ef"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-08846d346f967e38df46e68c374f272ea65da5ef-1" class="line-number-anchor" /><a href="#line-number-08846d346f967e38df46e68c374f272ea65da5ef-1">1</a></td><td class="code-line" rowspan="2">$comparator = <span class="hljs-keyword">new</span> Comparator();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-08846d346f967e38df46e68c374f272ea65da5ef-2" class="line-number-anchor" /><a href="#line-number-08846d346f967e38df46e68c374f272ea65da5ef-2">2</a></td></tr></table></div></code></pre>
+                
+    <p>Instantiated like this, the comparator doesn&#039;t have a notion of the target database platform and cannot perform the comparison properly. That is why, this way of instantiation is deprecated in favor of instantiating the comparator by the schema manager:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="acc5b4b18d05e0f023b5746feba783261cc843f2"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="acc5b4b18d05e0f023b5746feba783261cc843f2"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-acc5b4b18d05e0f023b5746feba783261cc843f2-1" class="line-number-anchor" /><a href="#line-number-acc5b4b18d05e0f023b5746feba783261cc843f2-1">1</a></td><td class="code-line" rowspan="3">$schemaManager = $connection-&gt;createSchemaManager();
+$comparator = $schemaManager-&gt;createComparator();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-acc5b4b18d05e0f023b5746feba783261cc843f2-2" class="line-number-anchor" /><a href="#line-number-acc5b4b18d05e0f023b5746feba783261cc843f2-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-acc5b4b18d05e0f023b5746feba783261cc843f2-3" class="line-number-anchor" /><a href="#line-number-acc5b4b18d05e0f023b5746feba783261cc843f2-3">3</a></td></tr></table></div></code></pre>
+                
+    <p>This way, the schema manager can instantiate a platform-specific comparator and provide it with the necessary context (e.g. the default collation used by the database).</p>
+
+                
+    <p>While the old API is still available, it is recommended to use the new API for more accurate comparison.</p>
+
+                <h2 class="section-header ">
+    <a href="#support-for">
+        Support for <code>psr/cache</code> (<a href="https://github.com/doctrine/dbal/pull/4620">#4620</a>)
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>Since the Doctrine Cache library is being sunset, the new DBAL release introduced the ability to use a PSR-6 compatible implementation for result caching.</p>
+
+                
+    <p>While both the <code>doctrine/cache</code> and <code>psr/cache</code> APIs will be supported until the next major DBAL release, we recommend users to switch to a PSR-6 compatible implementation in their projects.</p>
+
+                <h2 class="section-header ">
+    <a href="#support-for">
+        Support for <code>psr/log</code> (<a href="https://github.com/doctrine/dbal/pull/4967">#4967</a>)
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>The <code>SQLLogger</code> interface was designed long ago and has certain limitations: there is no way to log messages at different logger levels and it is really challenging to extend the logger functionality without introducing breaking API changes.</p>
+
+                
+    <p>The new DBAL release introduces a new middleware that can delegate logging to a PSR-3 compatible implementation.</p>
+
+                
+    <p>Note that the new logger won&#039;t produce the messages identical to the ones produced by the old one. If you have any processes built around analysing log messages, you may need to make some changes before adopting the new API.</p>
+
+                <h2 class="section-header ">
+    <a href="#always-cache-the-full-result">
+        Always cache the full result (<a href="https://github.com/doctrine/dbal/pull/5003">#5003</a>)
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>The implementation of the result cache prior to DBAL 3.2.0 would store the result set in the cache only once it was fetched completely. It led to the following issues:</p>
+
+                
+    
 <ol>
-<li>If the result isn't yet cached and its consumer didn't fetch it completely, the query would be executed again.</li>
-<li>In case of a cache miss, the DBAL would <code>get()</code> the cache entry twice: once to fetch the data and once to merge the just fetched result with other results that may be stored in the cache.</li>
+    <li>If the result isn&#039;t yet cached and its consumer didn&#039;t fetch it completely, the query would be executed again.</li>
+    <li>In case of a cache miss, the DBAL would <code>get()</code> the cache entry twice: once to fetch the data and once to merge the just fetched result with other results that may be stored in the cache.</li>
 </ol>
-<p>The new implementation stores the results in the cache right after they were fetched. It simplifies the caching layer significantly and makes its behavior more straightforward.</p>
-<h2>Add events for Transaction begin/commit/rollback (<a href="https://github.com/doctrine/dbal/pull/4622">#4622</a>)</h2>
-<p>The new DBAL version introduces three more transaction-related events:</p>
+
+                
+    <p>The new implementation stores the results in the cache right after they were fetched. It simplifies the caching layer significantly and makes its behavior more straightforward.</p>
+
+                <h2 class="section-header ">
+    <a href="#add-events-for-transaction-begin-commit-rollback">
+        Add events for Transaction begin/commit/rollback (<a href="https://github.com/doctrine/dbal/pull/4622">#4622</a>)
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>The new DBAL version introduces three more transaction-related events:</p>
+
+                
+
 <ul>
-<li><code>onTransactionBegin</code>,</li>
-<li><code>onTransactionCommit</code>,</li>
-<li><code>onTransactionRollBack</code>.</li>
+    <li class="dash"><code>onTransactionBegin</code>,</li>
+    <li class="dash"><code>onTransactionCommit</code>,</li>
+    <li class="dash"><code>onTransactionRollBack</code>.</li>
 </ul>
-<p>Subscribing to those might be helpful if the application logic integrates the database transaction flow with the business logic implemented outside the database. For instance, in the filesystem.</p>
-<h2>Basic exception handling in IBM DB2 and SQL Server drivers (<a href="https://github.com/doctrine/dbal/pull/4929">#4929</a>, <a href="https://github.com/doctrine/dbal/pull/4928">#4928</a>)</h2>
-<p>The DBAL provides a mechanism that converts driver-specific error codes to portable error-specific exceptions. For instance an attempt to insert <code>NULL</code> into a column that has a <code>NOT NULL</code> constraint applied will result in error with the code <code>1566</code> on MySQL and in <code>ORA-01400</code> on Oracle. The DBAL will convert these two errors to a portable <code>NotNullConstraintViolationException</code>.</p>
-<p>Historically, the DBAL drivers based on the <code>ibm_db2</code>, <code>sqlsrv</code> and <code>pdo_sqlsrv</code> extensions did not support this feature and would thow a generic <code>DriverException</code>.</p>
-<p>As of DBAL 3.2.0, this feature is supported by all bundled drivers.</p>
-<h2>Improved <code>AbstractPlatform::getLengthExpression()</code> (<a href="https://github.com/doctrine/dbal/pull/4855">#4855</a>)</h2>
-<p>Although the <code>LENGTH</code> expression was implemented for all supported database platforms, the different implementations didn't have consistent semantics:</p>
+
+                
+    <p>Subscribing to those might be helpful if the application logic integrates the database transaction flow with the business logic implemented outside the database. For instance, in the filesystem.</p>
+
+                <h2 class="section-header ">
+    <a href="#basic-exception-handling-in-ibm-db2-and-sql-server-drivers">
+        Basic exception handling in IBM DB2 and SQL Server drivers (<a href="https://github.com/doctrine/dbal/pull/4929">#4929</a>, <a href="https://github.com/doctrine/dbal/pull/4928">#4928</a>)
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>The DBAL provides a mechanism that converts driver-specific error codes to portable error-specific exceptions. For instance an attempt to insert <code>NULL</code> into a column that has a <code>NOT NULL</code> constraint applied will result in error with the code <code>1566</code> on MySQL and in <code>ORA-01400</code> on Oracle. The DBAL will convert these two errors to a portable <code>NotNullConstraintViolationException</code>.</p>
+
+                
+    <p>Historically, the DBAL drivers based on the <code>ibm_db2</code>, <code>sqlsrv</code> and <code>pdo_sqlsrv</code> extensions did not support this feature and would thow a generic <code>DriverException</code>.</p>
+
+                
+    <p>As of DBAL 3.2.0, this feature is supported by all bundled drivers.</p>
+
+                <h2 class="section-header ">
+    <a href="#improved">
+        Improved <code>AbstractPlatform::getLengthExpression()</code> (<a href="https://github.com/doctrine/dbal/pull/4855">#4855</a>)
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+                
+    <p>Although the <code>LENGTH</code> expression was implemented for all supported database platforms, the different implementations didn&#039;t have consistent semantics:</p>
+
+                
+    
 <ol>
-<li>Most implementations would return the length in characters (Unicode code points), which is the most expected behavior.</li>
-<li>The implementations for MySQL and IBM DB2 would return the number of bytes. It worked fine for the strings that consisted only of the ANSI characters, but an attempt to use it with a wider range of characters would produce an unexpected result. For instance, the length of the string  <code>'Привет, мир!'</code> might be reported as <code>19</code> instead of <code>12</code>.</li>
+    <li>Most implementations would return the length in characters (Unicode code points), which is the most expected behavior.</li>
+    <li>The implementations for MySQL and IBM DB2 would return the number of bytes. It worked fine for the strings that consisted only of the ANSI characters, but an attempt to use it with a wider range of characters would produce an unexpected result. For instance, the length of the string  <code>&#039;Привет, мир!&#039;</code> might be reported as <code>19</code> instead of <code>12</code>.</li>
 </ol>
-<p>As of DBAL 3.2.0, all platforms return the length in Unicode points according to the character set used by the database connection. Note, SQL Server supports UTF-8 only as of SQL Server 2019.</p>
-<p>You can find more details in the <a href="https://github.com/doctrine/dbal/releases/tag/3.2.0">release notes</a>.</p>
+
+                
+    <p>As of DBAL 3.2.0, all platforms return the length in Unicode points according to the character set used by the database connection. Note, SQL Server supports UTF-8 only as of SQL Server 2019.</p>
+
+                
+    <p>You can find more details in the <a href="https://github.com/doctrine/dbal/releases/tag/3.2.0">release notes</a>.</p>
+
+        
+    
         </div>
     </article>
     </main>

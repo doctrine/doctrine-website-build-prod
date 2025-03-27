@@ -42,8 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "We have released a new major version of Doctrine DBAL, version 3.0.0. This new
-major version comes a"
+        "description": "We have released a new major version of Doctrine DBAL, version 3.0.0. This new major version comes a"
     }
     </script>
     <link
@@ -237,91 +236,146 @@ major version comes a"
         <hr />
 
         <div>
-                <p>We have released a new major version of Doctrine DBAL, version 3.0.0. This new
-major version comes almost 10 years after DBAL 2.0 was released on December
-2010, then coupled into the ORM 2.0.</p>
-<p>Today Doctrine DBAL is released independent of the ORM, thanks to Composer and
-sees its new major version before the ORM.</p>
-<p>This release was made possible foremost by
-<a href="https://twitter.com/srgmrzv">Sergei Morozov</a>, our primary DBAL maintainer, who has
-spent countless hours working on the package since 2016. Thank you!</p>
-<p>See the <a href="https://github.com/doctrine/dbal/releases/tag/3.0.0">Release Notes</a>
-for a detailed list of changes.</p>
-<p>This blog post covers a few of the major changes in a bit more detail to give
-you an idea of what DBAL 3.0 looks like.</p>
-<h3>Decouple DBAL from PDO</h3>
-<p>The major theme of DBAL 3.0 is the decoupling from PDO. Instead of copying the
-API verbatim like DBAL 2.0 did, DBAL 3.0 grows it into a better, more usable
-direction.</p>
-<p>We extract all fetch-methods from the <code>Statement</code> class and moved them to a new
-<code>Result</code> class that is returned from <code>Statement::execute</code>.</p>
-<p>Old code:</p>
-<pre><code class="language-php">$statement = $connection-&gt;prepare('SELECT * FROM tbl WHERE col = ?');
-$statement-&gt;bindParam(1, $value);
+                
+            
+                
+    <p>We have released a new major version of Doctrine DBAL, version 3.0.0. This new major version comes almost 10 years after DBAL 2.0 was released on December 2010, then coupled into the ORM 2.0.</p>
+
+                
+    <p>Today Doctrine DBAL is released independent of the ORM, thanks to Composer and sees its new major version before the ORM.</p>
+
+                
+    <p>This release was made possible foremost by <a href="https://twitter.com/srgmrzv">Sergei Morozov</a>, our primary DBAL maintainer, who has spent countless hours working on the package since 2016. Thank you!</p>
+
+                
+    <p>See the <a href="https://github.com/doctrine/dbal/releases/tag/3.0.0">Release Notes</a> for a detailed list of changes.</p>
+
+                
+    <p>This blog post covers a few of the major changes in a bit more detail to give you an idea of what DBAL 3.0 looks like.</p>
+
+                <h3 class="section-header ">
+    <a href="#decouple-dbal-from-pdo">
+        Decouple DBAL from PDO
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+                
+    <p>The major theme of DBAL 3.0 is the decoupling from PDO. Instead of copying the API verbatim like DBAL 2.0 did, DBAL 3.0 grows it into a better, more usable direction.</p>
+
+                
+    <p>We extract all fetch-methods from the <code>Statement</code> class and moved them to a new <code>Result</code> class that is returned from <code>Statement::execute</code>.</p>
+
+                
+    <p>Old code:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="79a8c0dc7eb367c8f35b030408f0688e1b56bcb9"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="79a8c0dc7eb367c8f35b030408f0688e1b56bcb9"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-1" class="line-number-anchor" /><a href="#line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-1">1</a></td><td class="code-line" rowspan="7">$statement = $connection-&gt;prepare(<span class="hljs-string">'SELECT * FROM tbl WHERE col = ?'</span>);
+$statement-&gt;bindParam(<span class="hljs-number">1</span>, $value);
 $statement-&gt;execute();
 
-while ($row = $statement-&gt;fetch()) {
-}</code></pre>
-<p>New Code:</p>
-<pre><code class="language-php">$statement = $connection-&gt;prepare('SELECT * FROM tbl WHERE col = ?');
-$statement-&gt;bindParam(1, $value);
+<span class="hljs-keyword">while</span> ($row = $statement-&gt;fetch()) {
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-2" class="line-number-anchor" /><a href="#line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-3" class="line-number-anchor" /><a href="#line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-4" class="line-number-anchor" /><a href="#line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-5" class="line-number-anchor" /><a href="#line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-6" class="line-number-anchor" /><a href="#line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-7" class="line-number-anchor" /><a href="#line-number-79a8c0dc7eb367c8f35b030408f0688e1b56bcb9-7">7</a></td></tr></table></div></code></pre>
+                
+    <p>New Code:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="26a25d5829ccf36d6e3ef08c3d0b320065a5a74b"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="26a25d5829ccf36d6e3ef08c3d0b320065a5a74b"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-1" class="line-number-anchor" /><a href="#line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-1">1</a></td><td class="code-line" rowspan="7">$statement = $connection-&gt;prepare(<span class="hljs-string">'SELECT * FROM tbl WHERE col = ?'</span>);
+$statement-&gt;bindParam(<span class="hljs-number">1</span>, $value);
 $result = $statement-&gt;execute();
 
-while ($row = $result-&gt;fetchAssociative()) {
-}</code></pre>
-<p>The Result Fetching API was improved to use more human-readable names:</p>
-<pre><code class="language-php">// Old
+<span class="hljs-keyword">while</span> ($row = $result-&gt;fetchAssociative()) {
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-2" class="line-number-anchor" /><a href="#line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-3" class="line-number-anchor" /><a href="#line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-4" class="line-number-anchor" /><a href="#line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-5" class="line-number-anchor" /><a href="#line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-6" class="line-number-anchor" /><a href="#line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-7" class="line-number-anchor" /><a href="#line-number-26a25d5829ccf36d6e3ef08c3d0b320065a5a74b-7">7</a></td></tr></table></div></code></pre>
+                
+    <p>The Result Fetching API was improved to use more human-readable names:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="97f8e4745e0501fc2a3c3a481268ba0b77b8a035"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="97f8e4745e0501fc2a3c3a481268ba0b77b8a035"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-1" class="line-number-anchor" /><a href="#line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-comment">// Old</span>
 $stmt-&gt;fetch();
 $stmt-&gt;fetch(PDO::FETCH_ARRAY);
 $stmt-&gt;fetchColumn();
 $stmt-&gt;fetchAll();
 
-// New
+<span class="hljs-comment">// New</span>
 $stmt-&gt;fetchAssociative();
 $stmt-&gt;fetchNumeric();
 $stmt-&gt;fetchOne();
-$stmt-&gt;fetchAllAssociative();</code></pre>
-<p>Many more changes have been made on the public API and also for the internals,
-but these are the most visible ones.</p>
-<h3>Upgrading to DBAL 3 from 2</h3>
-<p>DBAL 3 is a real new major release with significant changes to the public API. Depending
-on your codebase a migration could require non-trivial work. However we do not intend
-to leave you hanging with DBAL 2 and a future migration:</p>
+$stmt-&gt;fetchAllAssociative();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-2" class="line-number-anchor" /><a href="#line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-3" class="line-number-anchor" /><a href="#line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-4" class="line-number-anchor" /><a href="#line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-5" class="line-number-anchor" /><a href="#line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-6" class="line-number-anchor" /><a href="#line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-7" class="line-number-anchor" /><a href="#line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-8" class="line-number-anchor" /><a href="#line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-9" class="line-number-anchor" /><a href="#line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-10" class="line-number-anchor" /><a href="#line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-11" class="line-number-anchor" /><a href="#line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-12" class="line-number-anchor" /><a href="#line-number-97f8e4745e0501fc2a3c3a481268ba0b77b8a035-12">12</a></td></tr></table></div></code></pre>
+                
+    <p>Many more changes have been made on the public API and also for the internals, but these are the most visible ones.</p>
+
+                <h3 class="section-header ">
+    <a href="#upgrading-to-dbal-3-from-2">
+        Upgrading to DBAL 3 from 2
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+                
+    <p>DBAL 3 is a real new major release with significant changes to the public API. Depending on your codebase a migration could require non-trivial work. However we do not intend to leave you hanging with DBAL 2 and a future migration:</p>
+
+                
+    
 <ol>
-<li>
-<p>We intend to support DBAL 2.12 a while longer, including support for the
-upcoming PHP 8.0, so that there is no rush for you to upgrade to DBAL 3.</p>
-</li>
-<li>
-<p>DBAL 2.12 already includes forwards compatible API changes for all the new APIs,
-so that you can migrate your code step by step to the new APIs already.</p>
-</li>
-<li>
-<p>Deprecated methods in DBAL 2.12 are tagged with the <code>@deprecated</code> doc-block
-and static analysis tools such as Psalm, PHPStan and Phan can already help
-you detect using or calling this deprecated code in your application.</p>
-</li>
-<li>
-<p>We intend to release another version of DBAL 2 which includes
-optional triggering of deprecation messages at runtime similar to how Symfony
-deals with deprecations.</p>
-</li>
+    <li>We intend to support DBAL 2.12 a while longer, including support for the upcoming PHP 8.0, so that there is no rush for you to upgrade to DBAL 3.</li>
+    <li>DBAL 2.12 already includes forwards compatible API changes for all the new APIs, so that you can migrate your code step by step to the new APIs already.</li>
+    <li>Deprecated methods in DBAL 2.12 are tagged with the <code>@deprecated</code> doc-block and static analysis tools such as Psalm, PHPStan and Phan can already help you detect using or calling this deprecated code in your application.</li>
+    <li>We intend to release another version of DBAL 2 which includes optional triggering of deprecation messages at runtime similar to how Symfony deals with deprecations.</li>
 </ol>
-<p>As you can see, with these approaches it will be possible for you to smoothly migrate
-your application from DBAL 2 to 3.</p>
-<p>As a note to libraries and frameworks that need to support multiple versions of
-Doctrine DBAL: We recommend you start out with DBAL 2.12 and migrate all usages
-of deprecated APIs to their newer counterparts. Then once you have managed
-this, you can allow 3.0 and try to get your code working with both versions.
-Unfortunately this may not be possible for all cases, because we could not
-provide replacement APIs for everything and some features have been dropped
-between DBAL 2 and 3.</p>
-<h3>Outlook</h3>
-<p>DBAL 3 is a huge first step towards a modern database abstraction layer,
-independent from the legacy of PHP and PDO API design. In the future we plan to
-improve DBAL in other ways that we haven't gotten around yet, such as more API
-modernization, increased safety with use of strict scalar types in the code
-base, better error handling and more.</p>
+
+                
+    <p>As you can see, with these approaches it will be possible for you to smoothly migrate your application from DBAL 2 to 3.</p>
+
+                
+    <p>As a note to libraries and frameworks that need to support multiple versions of Doctrine DBAL: We recommend you start out with DBAL 2.12 and migrate all usages of deprecated APIs to their newer counterparts. Then once you have managed this, you can allow 3.0 and try to get your code working with both versions. Unfortunately this may not be possible for all cases, because we could not provide replacement APIs for everything and some features have been dropped between DBAL 2 and 3.</p>
+
+                <h3 class="section-header ">
+    <a href="#outlook">
+        Outlook
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+                
+    <p>DBAL 3 is a huge first step towards a modern database abstraction layer, independent from the legacy of PHP and PDO API design. In the future we plan to improve DBAL in other ways that we haven&#039;t gotten around yet, such as more API modernization, increased safety with use of strict scalar types in the code base, better error handling and more.</p>
+
+        
+    
         </div>
     </article>
     </main>

@@ -42,8 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "Today I will teach you how to write a simple Doctrine behavior. You will
-learn some of the basics of"
+        "description": "Today I will teach you how to write a simple Doctrine behavior. You will learn some of the basics of"
     }
     </script>
     <link
@@ -237,81 +236,156 @@ learn some of the basics of"
         <hr />
 
         <div>
-                <p>Today I will teach you how to write a simple Doctrine behavior. You will
-learn some of the basics of creating a behavior and you will gain some
-pretty cool functionality for your relationships.</p>
-<p>We will write a behavior called <code>RelationDql</code> which allows you to add
-default query parts that are automatically added to your queries when
-you reference the specified relationships. So first we will get started
-by looking at an example schema we can apply this to.</p>
-<p>Here is an example schema where we have a <code>Site</code>, <code>BlogPost</code> and <code>Tag</code>
-model:</p>
-<pre><code>[yml]
+                
+            
+                
+    <p>Today I will teach you how to write a simple Doctrine behavior. You will learn some of the basics of creating a behavior and you will gain some pretty cool functionality for your relationships.</p>
+
+                
+    <p>We will write a behavior called <code>RelationDql</code> which allows you to add default query parts that are automatically added to your queries when you reference the specified relationships. So first we will get started by looking at an example schema we can apply this to.</p>
+
+                
+    <p>Here is an example schema where we have a <code>Site</code>, <code>BlogPost</code> and <code>Tag</code> model:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="5eba27ae679b1bc4369de2f491bbd241d7ac0bdd"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="5eba27ae679b1bc4369de2f491bbd241d7ac0bdd"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-1" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-1">1</a></td><td class="code-line" rowspan="37">[yml]
 Site:
   columns:
-    name: string(255)
+    name: string(<span class="hljs-number">255</span>)
 
 BlogPost:
   actAs: [Timestampable]
   columns:
-    title: "string(255)"
+    title: <span class="hljs-string">"string(255)"</span>
     body: clob
     site_id: integer
   relations:
     Site:
       foreignAlias: BlogPosts
     Tags:
-      class: Tag
-      refClass: BlogPostTag
-      foreignAlias: BlogPosts
+      <span class="hljs-class"><span class="hljs-keyword">class</span>: <span class="hljs-title">Tag</span>
+      <span class="hljs-title">refClass</span>: <span class="hljs-title">BlogPostTag</span>
+      <span class="hljs-title">foreignAlias</span>: <span class="hljs-title">BlogPosts</span>
 
-Tag:
-  columns:
-    name: string(255)
+<span class="hljs-title">Tag</span>:
+  <span class="hljs-title">columns</span>:
+    <span class="hljs-title">name</span>: <span class="hljs-title">string</span>(255)
 
-BlogPostTag:
-  columns:
-    blog_post_id:
-      type: integer
-      primary: true
-    tag_id:
-      type: integer
-      primary: true
-  relations:
-    BlogPost:
-      foreignAlias: BlogPostTags
-    Tag:
-      foreignAlias: BlogPostTags</code></pre>
-<p>This is a fairly simple schema as you can see, but what if we want to
-have a relationship on the <code>Site</code> model to retrieve the latest five
-<code>BlogPost</code> records or order the <code>Tags</code> relationship alphabetically by
-default?</p>
-<p>Lets modify our schema to take into account a new behavior that we will
-write in the next step. First modify the <code>Site</code> model and a relationship
-named <code>LatestBlogPosts</code>:</p>
-<pre><code>[yml]
+<span class="hljs-title">BlogPostTag</span>:
+  <span class="hljs-title">columns</span>:
+    <span class="hljs-title">blog_post_id</span>:
+      <span class="hljs-title">type</span>: <span class="hljs-title">integer</span>
+      <span class="hljs-title">primary</span>: <span class="hljs-title">true</span>
+    <span class="hljs-title">tag_id</span>:
+      <span class="hljs-title">type</span>: <span class="hljs-title">integer</span>
+      <span class="hljs-title">primary</span>: <span class="hljs-title">true</span>
+  <span class="hljs-title">relations</span>:
+    <span class="hljs-title">BlogPost</span>:
+      <span class="hljs-title">foreignAlias</span>: <span class="hljs-title">BlogPostTags</span>
+    <span class="hljs-title">Tag</span>:
+      <span class="hljs-title">foreignAlias</span>: <span class="hljs-title">BlogPostTags</span>
+</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-2" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-3" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-4" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-5" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-6" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-7" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-8" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-9" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-10" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-11" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-12" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-13" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-14" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-15" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-16" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-17" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-18" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-19" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-20" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-21" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-22" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-23" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-24" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-25" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-26" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-27" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-28" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-29" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-30" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-31" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-32" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-33" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-34" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-35" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-36" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-36">36</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-37" class="line-number-anchor" /><a href="#line-number-5eba27ae679b1bc4369de2f491bbd241d7ac0bdd-37">37</a></td></tr></table></div></code></pre>
+                
+    <p>This is a fairly simple schema as you can see, but what if we want to have a relationship on the <code>Site</code> model to retrieve the latest five <code>BlogPost</code> records or order the <code>Tags</code> relationship alphabetically by default?</p>
+
+                
+    <p>Lets modify our schema to take into account a new behavior that we will write in the next step. First modify the <code>Site</code> model and a relationship named <code>LatestBlogPosts</code>:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="15430f4e49d4147a6e7b6ee0272058799d0be45b"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="15430f4e49d4147a6e7b6ee0272058799d0be45b"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-1" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-1">1</a></td><td class="code-line" rowspan="21">[yml]
 Site:
   actAs:
     RelationDql:
       relations:
         LatestBlogPosts:
           orderBy: %s.created_at DESC
-          limit: 5
+          limit: <span class="hljs-number">5</span>
   columns:
-    name: string(255)
+    name: string(<span class="hljs-number">255</span>)
   relations:
     LatestBlogPosts:
-      autoComplete: false
-      class: BlogPost
-      local: id
-      foreign: site_id
+      autoComplete: <span class="hljs-keyword">false</span>
+      <span class="hljs-class"><span class="hljs-keyword">class</span>: <span class="hljs-title">BlogPost</span>
+      <span class="hljs-title">local</span>: <span class="hljs-title">id</span>
+      <span class="hljs-title">foreign</span>: <span class="hljs-title">site_id</span>
 
-**TIP** The ``autoComplete`` option is set to ``false`` so that the
-relationship is not reflected and added to the opposite end,
-``BlogPost`` automatically.</code></pre>
-<p>Now lets modify the <code>BlogPost</code> model to change the <code>Tags</code> relationship
-so that it is ordered alphabetically by name by default:</p>
-<pre><code>[yml]
+**<span class="hljs-title">TIP</span>** <span class="hljs-title">The</span> ``<span class="hljs-title">autoComplete</span>`` <span class="hljs-title">option</span> <span class="hljs-title">is</span> <span class="hljs-title">set</span> <span class="hljs-title">to</span> ``<span class="hljs-title">false</span>`` <span class="hljs-title">so</span> <span class="hljs-title">that</span> <span class="hljs-title">the</span>
+<span class="hljs-title">relationship</span> <span class="hljs-title">is</span> <span class="hljs-title">not</span> <span class="hljs-title">reflected</span> <span class="hljs-title">and</span> <span class="hljs-title">added</span> <span class="hljs-title">to</span> <span class="hljs-title">the</span> <span class="hljs-title">opposite</span> <span class="hljs-title">end</span>,
+``<span class="hljs-title">BlogPost</span>`` <span class="hljs-title">automatically</span>.
+</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-2" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-3" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-4" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-5" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-6" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-7" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-8" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-9" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-10" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-11" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-12" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-13" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-14" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-15" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-16" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-17" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-18" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-19" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-20" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-21" class="line-number-anchor" /><a href="#line-number-15430f4e49d4147a6e7b6ee0272058799d0be45b-21">21</a></td></tr></table></div></code></pre>
+                
+    <p>Now lets modify the <code>BlogPost</code> model to change the <code>Tags</code> relationship so that it is ordered alphabetically by name by default:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="aa0c076cca45de856ec0b17b54d55884f3224d4b"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="aa0c076cca45de856ec0b17b54d55884f3224d4b"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-1" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-1">1</a></td><td class="code-line" rowspan="25">[yml]
 BlogPost:
   actAs:
     Timestampable:
@@ -320,85 +394,137 @@ BlogPost:
         Tags:
           orderBy: %s.name ASC
   columns:
-    title: "string(255)"
+    title: <span class="hljs-string">"string(255)"</span>
     body: clob
     site_id: integer
   relations:
     Site:
       foreignAlias: BlogPosts
     Tags:
-      class: Tag
-      refClass: BlogPostTag
-      foreignAlias: BlogPosts
+      <span class="hljs-class"><span class="hljs-keyword">class</span>: <span class="hljs-title">Tag</span>
+      <span class="hljs-title">refClass</span>: <span class="hljs-title">BlogPostTag</span>
+      <span class="hljs-title">foreignAlias</span>: <span class="hljs-title">BlogPosts</span>
 
-**TIP** The ``relations`` array is an array of changes to make to
-the DQL query. The key can be any valid function on the
-``Doctrine_Query`` API and the value is of course the parameter to
-pass to the function.</code></pre>
-<p>Now that we have our schemas modified to take into account the new
-<code>RelationDql</code> behavior we need to actually write the code:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class RelationDql extends Doctrine_Template
-{
-  protected $_options = array();
+**<span class="hljs-title">TIP</span>** <span class="hljs-title">The</span> ``<span class="hljs-title">relations</span>`` <span class="hljs-title">array</span> <span class="hljs-title">is</span> <span class="hljs-title">an</span> <span class="hljs-title">array</span> <span class="hljs-title">of</span> <span class="hljs-title">changes</span> <span class="hljs-title">to</span> <span class="hljs-title">make</span> <span class="hljs-title">to</span>
+<span class="hljs-title">the</span> <span class="hljs-title">DQL</span> <span class="hljs-title">query</span>. <span class="hljs-title">The</span> <span class="hljs-title">key</span> <span class="hljs-title">can</span> <span class="hljs-title">be</span> <span class="hljs-title">any</span> <span class="hljs-title">valid</span> <span class="hljs-title">function</span> <span class="hljs-title">on</span> <span class="hljs-title">the</span>
+``<span class="hljs-title">Doctrine_Query</span>`` <span class="hljs-title">API</span> <span class="hljs-title">and</span> <span class="hljs-title">the</span> <span class="hljs-title">value</span> <span class="hljs-title">is</span> <span class="hljs-title">of</span> <span class="hljs-title">course</span> <span class="hljs-title">the</span> <span class="hljs-title">parameter</span> <span class="hljs-title">to</span>
+<span class="hljs-title">pass</span> <span class="hljs-title">to</span> <span class="hljs-title">the</span> <span class="hljs-title">function</span>.
+</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-2" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-3" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-4" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-5" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-6" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-7" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-8" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-9" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-10" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-11" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-12" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-13" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-14" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-15" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-16" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-17" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-18" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-19" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-20" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-21" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-22" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-23" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-24" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-25" class="line-number-anchor" /><a href="#line-number-aa0c076cca45de856ec0b17b54d55884f3224d4b-25">25</a></td></tr></table></div></code></pre>
+                
+    <p>Now that we have our schemas modified to take into account the new <code>RelationDql</code> behavior we need to actually write the code:</p>
 
-  public function __construct($options)
-  {
-    $this-&gt;_options = $options;
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="c115ec3d4a09a025af4958d43d747aff5e45d0ca"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="c115ec3d4a09a025af4958d43d747aff5e45d0ca"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-1" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-1">1</a></td><td class="code-line" rowspan="16"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RelationDql</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Doctrine_Template</span>
+</span>{
+  <span class="hljs-keyword">protected</span> $_options = <span class="hljs-keyword">array</span>();
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">($options)</span>
+  </span>{
+    <span class="hljs-keyword">$this</span>-&gt;_options = $options;
   }
 
-  public function setTableDefinition()
-  {
-    $this-&gt;_table-&gt;addRecordListener(new RelationDqlListener($this-&gt;_options));
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setTableDefinition</span><span class="hljs-params">()</span>
+  </span>{
+    <span class="hljs-keyword">$this</span>-&gt;_table-&gt;addRecordListener(<span class="hljs-keyword">new</span> RelationDqlListener(<span class="hljs-keyword">$this</span>-&gt;_options));
   }
-}</code></pre>
-<p>The template is very simple. It only attaches a record listener to the
-invoking table. Their is where most of the magic happens. So now lets
-define the <code>RelationDqlListener</code> class:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class RelationDqlListener extends Doctrine_Record_Listener
-{
-  protected $_options = array('relations' =&gt; array());
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-2" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-3" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-4" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-5" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-6" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-7" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-8" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-9" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-10" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-11" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-12" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-13" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-14" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-15" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-16" class="line-number-anchor" /><a href="#line-number-c115ec3d4a09a025af4958d43d747aff5e45d0ca-16">16</a></td></tr></table></div></code></pre>
+                
+    <p>The template is very simple. It only attaches a record listener to the invoking table. Their is where most of the magic happens. So now lets define the <code>RelationDqlListener</code> class:</p>
 
-  public function __construct($options)
-  {
-    $this-&gt;_options = $options;
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="3f07ad66e05abd451217e6b0c62f98ac2f68125e"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="3f07ad66e05abd451217e6b0c62f98ac2f68125e"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-1" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-1">1</a></td><td class="code-line" rowspan="59"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RelationDqlListener</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Doctrine_Record_Listener</span>
+</span>{
+  <span class="hljs-keyword">protected</span> $_options = <span class="hljs-keyword">array</span>(<span class="hljs-string">'relations'</span> =&gt; <span class="hljs-keyword">array</span>());
+
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">($options)</span>
+  </span>{
+    <span class="hljs-keyword">$this</span>-&gt;_options = $options;
   }
 
-  public function preDqlSelect(Doctrine_Event $event)
-  {
+  <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">preDqlSelect</span><span class="hljs-params">(Doctrine_Event $event)</span>
+  </span>{
     $query = $event-&gt;getQuery();
 
-    if (empty($this-&gt;_options['relations']))
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">empty</span>(<span class="hljs-keyword">$this</span>-&gt;_options[<span class="hljs-string">'relations'</span>]))
     {
-      throw new Doctrine_Exception(
-        'You must specify at least one relationship to add DQL to'
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Doctrine_Exception(
+        <span class="hljs-string">'You must specify at least one relationship to add DQL to'</span>
       );
     }
 
-    $relations = $this-&gt;_options['relations'];
+    $relations = <span class="hljs-keyword">$this</span>-&gt;_options[<span class="hljs-string">'relations'</span>];
 
-    $components = $this-&gt;_getDqlCallbackComponents($query);
-    foreach ($components as $alias =&gt; $component)
+    $components = <span class="hljs-keyword">$this</span>-&gt;_getDqlCallbackComponents($query);
+    <span class="hljs-keyword">foreach</span> ($components <span class="hljs-keyword">as</span> $alias =&gt; $component)
     {
-      if (isset($component['relation']) &amp;&amp; isset($relations[$component['relation']-&gt;getAlias()]))
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>($component[<span class="hljs-string">'relation'</span>]) &amp;&amp; <span class="hljs-keyword">isset</span>($relations[$component[<span class="hljs-string">'relation'</span>]-&gt;getAlias()]))
       {
-        $dqls = $relations[$component['relation']-&gt;getAlias()];
-        foreach ($dqls as $func =&gt; $dql)
+        $dqls = $relations[$component[<span class="hljs-string">'relation'</span>]-&gt;getAlias()];
+        <span class="hljs-keyword">foreach</span> ($dqls <span class="hljs-keyword">as</span> $func =&gt; $dql)
         {
-          $dql = str_replace('%s', $alias, $dql);
+          $dql = str_replace(<span class="hljs-string">'%s'</span>, $alias, $dql);
           $query-&gt;$func($dql);
         }
-        unset($relations[$component['relation']-&gt;getAlias()]);
+        <span class="hljs-keyword">unset</span>($relations[$component[<span class="hljs-string">'relation'</span>]-&gt;getAlias()]);
       }
     }
   }
 
-  protected function _getDqlCallbackComponents($query)
-  {
+  <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_getDqlCallbackComponents</span><span class="hljs-params">($query)</span>
+  </span>{
       $params = $query-&gt;getParams();
-      $componentsBefore = array();
-      if ($query-&gt;isSubquery()) {
+      $componentsBefore = <span class="hljs-keyword">array</span>();
+      <span class="hljs-keyword">if</span> ($query-&gt;isSubquery()) {
           $componentsBefore = $query-&gt;getQueryComponents();
       }
 
@@ -406,48 +532,169 @@ class RelationDqlListener extends Doctrine_Record_Listener
       $copy-&gt;getSqlQuery($params);
       $componentsAfter = $copy-&gt;getQueryComponents();
 
-      if ($componentsBefore !== $componentsAfter) {
-          return array_diff($componentsAfter, $componentsBefore);
-      } else {
-          return $componentsAfter;
+      <span class="hljs-keyword">if</span> ($componentsBefore !== $componentsAfter) {
+          <span class="hljs-keyword">return</span> array_diff($componentsAfter, $componentsBefore);
+      } <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">return</span> $componentsAfter;
       }
   }
-}</code></pre>
-<p>So now we have the behavior defined so lets look at some example DQL
-queries and the SQL that is outputted:</p>
-<blockquote>
-<p><strong>TIP</strong> Remember, in order for the dql callbacks to be executed we
-must enable an attribute first.</p>
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-2" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-3" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-4" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-5" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-6" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-7" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-8" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-9" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-10" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-11" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-12" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-13" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-14" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-15" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-16" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-17" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-18" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-19" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-20" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-21" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-22" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-23" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-24" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-25" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-26" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-27" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-28" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-29" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-30" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-31" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-32" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-33" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-34" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-35" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-36" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-36">36</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-37" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-37">37</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-38" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-38">38</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-39" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-39">39</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-40" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-40">40</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-41" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-41">41</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-42" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-42">42</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-43" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-43">43</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-44" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-44">44</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-45" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-45">45</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-46" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-46">46</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-47" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-47">47</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-48" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-48">48</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-49" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-49">49</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-50" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-50">50</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-51" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-51">51</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-52" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-52">52</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-53" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-53">53</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-54" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-54">54</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-55" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-55">55</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-56" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-56">56</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-57" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-57">57</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-58" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-58">58</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-59" class="line-number-anchor" /><a href="#line-number-3f07ad66e05abd451217e6b0c62f98ac2f68125e-59">59</a></td></tr></table></div></code></pre>
+                
+    <p>So now we have the behavior defined so lets look at some example DQL queries and the SQL that is outputted:</p>
+
+                <blockquote>
+    <p><strong>TIP</strong> Remember, in order for the dql callbacks to be executed we must enable an attribute first.</p>
 </blockquote>
-<pre><code class="language-{.sourceCode">&lt;?php
-    $manager-&gt;setAttribute('use_dql_callbacks', true);</code></pre>
-<pre><code class="language-{.sourceCode">&lt;?php
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="df86ae3851b80c3fdad9d63c8305b18695c3989d"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="df86ae3851b80c3fdad9d63c8305b18695c3989d"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-df86ae3851b80c3fdad9d63c8305b18695c3989d-1" class="line-number-anchor" /><a href="#line-number-df86ae3851b80c3fdad9d63c8305b18695c3989d-1">1</a></td><td class="code-line" rowspan="3"><span class="hljs-meta">&lt;?php</span>
+    $manager-&gt;setAttribute(<span class="hljs-string">'use_dql_callbacks'</span>, <span class="hljs-keyword">true</span>);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-df86ae3851b80c3fdad9d63c8305b18695c3989d-2" class="line-number-anchor" /><a href="#line-number-df86ae3851b80c3fdad9d63c8305b18695c3989d-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-df86ae3851b80c3fdad9d63c8305b18695c3989d-3" class="line-number-anchor" /><a href="#line-number-df86ae3851b80c3fdad9d63c8305b18695c3989d-3">3</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="cb71f1d6c670996b3aca88095c55649bd4308abd"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="cb71f1d6c670996b3aca88095c55649bd4308abd"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-1" class="line-number-anchor" /><a href="#line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">&lt;?php</span>
 $q = Doctrine_Query::create()
-  -&gt;select('s.name, p.title, p.created_at')
-  -&gt;from('Site s')
-  -&gt;leftJoin('s.LatestBlogPosts p');
+  -&gt;select(<span class="hljs-string">'s.name, p.title, p.created_at'</span>)
+  -&gt;from(<span class="hljs-string">'Site s'</span>)
+  -&gt;leftJoin(<span class="hljs-string">'s.LatestBlogPosts p'</span>);
 
-echo $q-&gt;getSql();</code></pre>
-<p>The above would output the following SQL:</p>
-<pre><code>[sql]
-SELECT s.id AS s__id, s.name AS s__name, b.id AS b__id, b.title AS b__title, b.created_at AS b__created_at FROM site s LEFT JOIN blog_post b ON s.id = b.site_id ORDER BY b.created_at DESC LIMIT 5
+<span class="hljs-keyword">echo</span> $q-&gt;getSql();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-2" class="line-number-anchor" /><a href="#line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-3" class="line-number-anchor" /><a href="#line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-4" class="line-number-anchor" /><a href="#line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-5" class="line-number-anchor" /><a href="#line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-6" class="line-number-anchor" /><a href="#line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-7" class="line-number-anchor" /><a href="#line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-8" class="line-number-anchor" /><a href="#line-number-cb71f1d6c670996b3aca88095c55649bd4308abd-8">8</a></td></tr></table></div></code></pre>
+                
+    <p>The above would output the following SQL:</p>
 
-**NOTE** Notice how the ``ORDER BY`` and ``LIMIT`` were added to
-the query.</code></pre>
-<p>Now lets look at an example that involves the <code>BlogPost</code> tags:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="03a73d13e1058ba35f76e6dd34d18a127e1fbe62"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="03a73d13e1058ba35f76e6dd34d18a127e1fbe62"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-03a73d13e1058ba35f76e6dd34d18a127e1fbe62-1" class="line-number-anchor" /><a href="#line-number-03a73d13e1058ba35f76e6dd34d18a127e1fbe62-1">1</a></td><td class="code-line" rowspan="6">[sql]
+SELECT s.id <span class="hljs-keyword">AS</span> s__id, s.name <span class="hljs-keyword">AS</span> s__name, b.id <span class="hljs-keyword">AS</span> b__id, b.title <span class="hljs-keyword">AS</span> b__title, b.created_at <span class="hljs-keyword">AS</span> b__created_at FROM site s LEFT JOIN blog_post b ON s.id = b.site_id ORDER BY b.created_at DESC LIMIT <span class="hljs-number">5</span>
+
+**NOTE** Notice how the ``ORDER BY`` <span class="hljs-keyword">and</span> ``LIMIT`` were added to
+the query.
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03a73d13e1058ba35f76e6dd34d18a127e1fbe62-2" class="line-number-anchor" /><a href="#line-number-03a73d13e1058ba35f76e6dd34d18a127e1fbe62-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03a73d13e1058ba35f76e6dd34d18a127e1fbe62-3" class="line-number-anchor" /><a href="#line-number-03a73d13e1058ba35f76e6dd34d18a127e1fbe62-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03a73d13e1058ba35f76e6dd34d18a127e1fbe62-4" class="line-number-anchor" /><a href="#line-number-03a73d13e1058ba35f76e6dd34d18a127e1fbe62-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03a73d13e1058ba35f76e6dd34d18a127e1fbe62-5" class="line-number-anchor" /><a href="#line-number-03a73d13e1058ba35f76e6dd34d18a127e1fbe62-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-03a73d13e1058ba35f76e6dd34d18a127e1fbe62-6" class="line-number-anchor" /><a href="#line-number-03a73d13e1058ba35f76e6dd34d18a127e1fbe62-6">6</a></td></tr></table></div></code></pre>
+                
+    <p>Now lets look at an example that involves the <code>BlogPost</code> tags:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="548907a5bc543bae6f023cad4f3477d407e49a95"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="548907a5bc543bae6f023cad4f3477d407e49a95"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-548907a5bc543bae6f023cad4f3477d407e49a95-1" class="line-number-anchor" /><a href="#line-number-548907a5bc543bae6f023cad4f3477d407e49a95-1">1</a></td><td class="code-line" rowspan="7"><span class="hljs-meta">&lt;?php</span>
 $q = Doctrine_Query::create()
-  -&gt;from('BlogPost p')
-  -&gt;leftJoin('p.Tags t');
+  -&gt;from(<span class="hljs-string">'BlogPost p'</span>)
+  -&gt;leftJoin(<span class="hljs-string">'p.Tags t'</span>);
 
-echo $q-&gt;getSql();</code></pre>
-<p>The above would output the following SQL query:</p>
-<pre><code>[sql]
-SELECT b.id AS b__id, b.title AS b__title, b.body AS b__body, b.site_id AS b__site_id, b.created_at AS b__created_at, b.updated_at AS b__updated_at, t.id AS t__id, t.name AS t__name FROM blog_post b LEFT JOIN blog_post_tag b2 ON b.id = b2.blog_post_id LEFT JOIN tag t ON t.id = b2.tag_id ORDER BY t.name ASC</code></pre>
-<p>As you can see the <code>ORDER BY</code> clause to order the related tags by <code>name</code>
-was added for us.</p>
-<p>Pretty cool huh? You can use this in your projects to make your
-relationships a little nicer.</p>
+<span class="hljs-keyword">echo</span> $q-&gt;getSql();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-548907a5bc543bae6f023cad4f3477d407e49a95-2" class="line-number-anchor" /><a href="#line-number-548907a5bc543bae6f023cad4f3477d407e49a95-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-548907a5bc543bae6f023cad4f3477d407e49a95-3" class="line-number-anchor" /><a href="#line-number-548907a5bc543bae6f023cad4f3477d407e49a95-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-548907a5bc543bae6f023cad4f3477d407e49a95-4" class="line-number-anchor" /><a href="#line-number-548907a5bc543bae6f023cad4f3477d407e49a95-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-548907a5bc543bae6f023cad4f3477d407e49a95-5" class="line-number-anchor" /><a href="#line-number-548907a5bc543bae6f023cad4f3477d407e49a95-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-548907a5bc543bae6f023cad4f3477d407e49a95-6" class="line-number-anchor" /><a href="#line-number-548907a5bc543bae6f023cad4f3477d407e49a95-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-548907a5bc543bae6f023cad4f3477d407e49a95-7" class="line-number-anchor" /><a href="#line-number-548907a5bc543bae6f023cad4f3477d407e49a95-7">7</a></td></tr></table></div></code></pre>
+                
+    <p>The above would output the following SQL query:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="342b4e270c96af12b66b099f87735f47c426bf8b"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="342b4e270c96af12b66b099f87735f47c426bf8b"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-342b4e270c96af12b66b099f87735f47c426bf8b-1" class="line-number-anchor" /><a href="#line-number-342b4e270c96af12b66b099f87735f47c426bf8b-1">1</a></td><td class="code-line" rowspan="3">[sql]
+SELECT b.id <span class="hljs-keyword">AS</span> b__id, b.title <span class="hljs-keyword">AS</span> b__title, b.body <span class="hljs-keyword">AS</span> b__body, b.site_id <span class="hljs-keyword">AS</span> b__site_id, b.created_at <span class="hljs-keyword">AS</span> b__created_at, b.updated_at <span class="hljs-keyword">AS</span> b__updated_at, t.id <span class="hljs-keyword">AS</span> t__id, t.name <span class="hljs-keyword">AS</span> t__name FROM blog_post b LEFT JOIN blog_post_tag b2 ON b.id = b2.blog_post_id LEFT JOIN tag t ON t.id = b2.tag_id ORDER BY t.name ASC
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-342b4e270c96af12b66b099f87735f47c426bf8b-2" class="line-number-anchor" /><a href="#line-number-342b4e270c96af12b66b099f87735f47c426bf8b-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-342b4e270c96af12b66b099f87735f47c426bf8b-3" class="line-number-anchor" /><a href="#line-number-342b4e270c96af12b66b099f87735f47c426bf8b-3">3</a></td></tr></table></div></code></pre>
+                
+    <p>As you can see the <code>ORDER BY</code> clause to order the related tags by <code>name</code> was added for us.</p>
+
+                
+    <p>Pretty cool huh? You can use this in your projects to make your relationships a little nicer.</p>
+
+        
+    
         </div>
     </article>
     </main>

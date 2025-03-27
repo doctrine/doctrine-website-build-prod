@@ -42,8 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "By default DQL supports a limited subset of all the vendor-specific SQL
-functions common between all"
+        "description": "By default DQL supports a limited subset of all the vendor-specific SQL functions common between all"
     }
     </script>
     <link
@@ -237,187 +236,308 @@ functions common between all"
         <hr />
 
         <div>
-                <p>By default DQL supports a limited subset of all the vendor-specific SQL
-functions common between all the vendors. However in many cases once you
-have decided on a specific database vendor, you will never change it
-during the life of your project. This decision for a specific vendor
-potentially allows you to make use of powerful SQL features that are
-unique to the vendor.</p>
-<blockquote>
-<p><strong>Note</strong></p>
-<p>It is worth to mention that Doctrine 2 also allows you to handwrite
-your SQL instead of extending the DQL parser, which is sort of an
-advanced extension point. You can map arbitrary SQL to your objects
-and gain access to vendor specific functionalities using the
-<code>EntityManager#createNativeQuery()</code> API.</p>
+                
+            
+                
+    <p>By default DQL supports a limited subset of all the vendor-specific SQL functions common between all the vendors. However in many cases once you have decided on a specific database vendor, you will never change it during the life of your project. This decision for a specific vendor potentially allows you to make use of powerful SQL features that are unique to the vendor.</p>
+
+                <blockquote>
+    <p><strong>Note</strong></p>
+
+    <p>It is worth to mention that Doctrine 2 also allows you to handwrite your SQL instead of extending the DQL parser, which is sort of an advanced extension point. You can map arbitrary SQL to your objects and gain access to vendor specific functionalities using the <code>EntityManager#createNativeQuery()</code> API.</p>
 </blockquote>
-<p>The DQL Parser has hooks to register functions that can then be used in
-your DQL queries and transformed into SQL, allowing to extend Doctrines
-Query capabilities to the vendors strength. This post explains the
-Used-Defined Functions API (UDF) of the Dql Parser and shows some
-examples to give you some hints how you would extend DQL.</p>
-<p>There are three types of functions in DQL, those that return a numerical
-value, those that return a string and those that return a Date. Your
-custom method has to be registered as either one of those. The return
-type information is used by the DQL parser to check possible syntax
-errors during the parsing process, for example using a string function
-return value in a math expression.</p>
-<h1>Registering your own DQL functions</h1>
-<p>You can register your functions adding them to the ORM configuration:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$config = new \Doctrine\ORM\Configuration();
+                
+    <p>The DQL Parser has hooks to register functions that can then be used in your DQL queries and transformed into SQL, allowing to extend Doctrines Query capabilities to the vendors strength. This post explains the Used-Defined Functions API (UDF) of the Dql Parser and shows some examples to give you some hints how you would extend DQL.</p>
+
+                
+    <p>There are three types of functions in DQL, those that return a numerical value, those that return a string and those that return a Date. Your custom method has to be registered as either one of those. The return type information is used by the DQL parser to check possible syntax errors during the parsing process, for example using a string function return value in a math expression.</p>
+
+                <h1 class="section-header ">
+    <a href="#registering-your-own-dql-functions">
+        Registering your own DQL functions
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>You can register your functions adding them to the ORM configuration:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="bf7c2d343162489df7f0abb2584ca4ce23f97d09"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="bf7c2d343162489df7f0abb2584ca4ce23f97d09"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-1" class="line-number-anchor" /><a href="#line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">&lt;?php</span>
+$config = <span class="hljs-keyword">new</span> \Doctrine\ORM\Configuration();
 $config-&gt;addCustomStringFunction($name, $class);
 $config-&gt;addCustomNumericFunction($name, $class);
 $config-&gt;addCustomDatetimeFunction($name, $class);
 
-$em = EntityManager::create($dbParams, $config);</code></pre>
-<p>The <code>$name</code> is the name the function will be referred to in the DQL
-query. <code>$class</code> is a string of a class-name which has to extend
-<code>Doctrine\ORM\Query\Node\FunctionNode</code>. This is a class that offers all
-the necessary API and methods to implement a UDF.</p>
-<p>In this post we will implement some MySql specific Date calculation
-methods, which are quite handy in my opinion:</p>
-<h1>Date Diff</h1>
-<p><a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_datediff">Mysql's DateDiff
-function</a>
-takes two dates as argument and calculates the difference in days with
-<code>date1-date2</code>.</p>
-<p>The DQL parser is a top-down recursive descent parser to generate the
-Abstract-Syntax Tree (AST) and uses a TreeWalker approach to generate
-the appropriate SQL from the AST. This makes reading the
-Parser/TreeWalker code managable in a finite amount of time.</p>
-<p>The <code>FunctionNode</code> class I referred to earlier requires you to implement
-two methods, one for the parsing process (obviously) called <code>parse</code> and
-one for the TreeWalker process called <code>getSql()</code>. I show you the code
-for the DateDiff method and discuss it step by step:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-/**
+$em = EntityManager::create($dbParams, $config);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-2" class="line-number-anchor" /><a href="#line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-3" class="line-number-anchor" /><a href="#line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-4" class="line-number-anchor" /><a href="#line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-5" class="line-number-anchor" /><a href="#line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-6" class="line-number-anchor" /><a href="#line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-7" class="line-number-anchor" /><a href="#line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-8" class="line-number-anchor" /><a href="#line-number-bf7c2d343162489df7f0abb2584ca4ce23f97d09-8">8</a></td></tr></table></div></code></pre>
+                
+    <p>The <code>$name</code> is the name the function will be referred to in the DQL query. <code>$class</code> is a string of a class-name which has to extend <code>Doctrine\ORM\Query\Node\FunctionNode</code>. This is a class that offers all the necessary API and methods to implement a UDF.</p>
+
+                
+    <p>In this post we will implement some MySql specific Date calculation methods, which are quite handy in my opinion:</p>
+
+                <h1 class="section-header ">
+    <a href="#date-diff">
+        Date Diff
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p><a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_datediff">Mysql&#039;s DateDiff function</a> takes two dates as argument and calculates the difference in days with <code>date1-date2</code>.</p>
+
+                
+    <p>The DQL parser is a top-down recursive descent parser to generate the Abstract-Syntax Tree (AST) and uses a TreeWalker approach to generate the appropriate SQL from the AST. This makes reading the Parser/TreeWalker code managable in a finite amount of time.</p>
+
+                
+    <p>The <code>FunctionNode</code> class I referred to earlier requires you to implement two methods, one for the parsing process (obviously) called <code>parse</code> and one for the TreeWalker process called <code>getSql()</code>. I show you the code for the DateDiff method and discuss it step by step:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="215df19ecf486234483624e7041b33d0c53f2a4e"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="215df19ecf486234483624e7041b33d0c53f2a4e"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-1" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-1">1</a></td><td class="code-line" rowspan="29"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">/**
  * DateDiffFunction ::= "DATEDIFF" "(" ArithmeticPrimary "," ArithmeticPrimary ")"
- */
-class DateDiff extends FunctionNode
-{
-    // (1)
-    public $firstDateExpression = null;
-    public $secondDateExpression = null;
+ */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DateDiff</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FunctionNode</span>
+</span>{
+    <span class="hljs-comment">// (1)</span>
+    <span class="hljs-keyword">public</span> $firstDateExpression = <span class="hljs-keyword">null</span>;
+    <span class="hljs-keyword">public</span> $secondDateExpression = <span class="hljs-keyword">null</span>;
 
-    public function parse(\Doctrine\ORM\Query\Parser $parser)
-    {
-        $parser-&gt;match(Lexer::T_IDENTIFIER); // (2)
-        $parser-&gt;match(Lexer::T_OPEN_PARENTHESIS); // (3)
-        $this-&gt;firstDateExpression = $parser-&gt;ArithmeticPrimary(); // (4)
-        $parser-&gt;match(Lexer::T_COMMA); // (5)
-        $this-&gt;secondDateExpression = $parser-&gt;ArithmeticPrimary(); // (6)
-        $parser-&gt;match(Lexer::T_CLOSE_PARENTHESIS); // (3)
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parse</span><span class="hljs-params">(\Doctrine\ORM\Query\Parser $parser)</span>
+    </span>{
+        $parser-&gt;match(Lexer::T_IDENTIFIER); <span class="hljs-comment">// (2)</span>
+        $parser-&gt;match(Lexer::T_OPEN_PARENTHESIS); <span class="hljs-comment">// (3)</span>
+        <span class="hljs-keyword">$this</span>-&gt;firstDateExpression = $parser-&gt;ArithmeticPrimary(); <span class="hljs-comment">// (4)</span>
+        $parser-&gt;match(Lexer::T_COMMA); <span class="hljs-comment">// (5)</span>
+        <span class="hljs-keyword">$this</span>-&gt;secondDateExpression = $parser-&gt;ArithmeticPrimary(); <span class="hljs-comment">// (6)</span>
+        $parser-&gt;match(Lexer::T_CLOSE_PARENTHESIS); <span class="hljs-comment">// (3)</span>
     }
 
-    public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
-    {
-        return 'DATEDIFF(' .
-            $this-&gt;firstDateExpression-&gt;dispatch($sqlWalker) . ', ' .
-            $this-&gt;secondDateExpression-&gt;dispatch($sqlWalker) .
-        ')'; // (7)
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSql</span><span class="hljs-params">(\Doctrine\ORM\Query\SqlWalker $sqlWalker)</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-string">'DATEDIFF('</span> .
+            <span class="hljs-keyword">$this</span>-&gt;firstDateExpression-&gt;dispatch($sqlWalker) . <span class="hljs-string">', '</span> .
+            <span class="hljs-keyword">$this</span>-&gt;secondDateExpression-&gt;dispatch($sqlWalker) .
+        <span class="hljs-string">')'</span>; <span class="hljs-comment">// (7)</span>
     }
-}</code></pre>
-<p>The Parsing process of the DATEDIFF function is going to find two
-expressions the date1 and the date2 values, whose AST Node
-representations will be saved in the variables of the DateDiff
-FunctionNode instance at (1).</p>
-<p>The parse() method has to cut the function call &quot;DATEDIFF&quot; and its
-argument into pieces. Since the parser detects the function using a
-lookahead the T_IDENTIFIER of the function name has to be taken from
-the stack (2), followed by a detection of the arguments in (4)-(6). The
-opening and closing parenthesis have to be detected also. This happens
-during the Parsing process and leads to the generation of a DateDiff
-FunctionNode somewhere in the AST of the dql statement.</p>
-<p>The <code>ArithmeticPrimary</code> method call is the most common denominator of
-valid EBNF tokens taken from the <a href="https://www.doctrine-project.org/documentation/manual/2_0/en/dql-doctrine-query-language#ebnf">DQL EBNF
-grammer</a>
-that matches our requirements for valid input into the DateDiff Dql
-function. Picking the right tokens for your methods is a tricky
-business, but the EBNF grammer is pretty helpful finding it, as is
-looking at the Parser source code.</p>
-<p>Now in the TreeWalker process we have to pick up this node and generate
-SQL from it, which apprently is quite easy looking at the code in (7).
-Since we don't know which type of AST Node the first and second Date
-expression are we are just dispatching them back to the SQL Walker to
-generate SQL from and then wrap our DATEDIFF function call around this
-output.</p>
-<p>Now registering this DateDiff FunctionNode with the ORM using:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$config = new \Doctrine\ORM\Configuration();
-$config-&gt;addCustomStringFunction('DATEDIFF', 'DoctrineExtensions\Query\MySql\DateDiff');</code></pre>
-<p>We can do fancy stuff like:</p>
-<pre><code>[sql]
-SELECT p FROM DoctrineExtensions\Query\BlogPost p WHERE DATEDIFF(CURRENT_TIME(), p.created) &lt; 7</code></pre>
-<h1>Date Add</h1>
-<p>Often useful it the ability to do some simple date calculations in your
-DQL query using <a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-add">MySql's DATE_ADD
-function</a>.</p>
-<p>I'll skip the bla and show the code for this function:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-/**
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-2" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-3" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-4" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-5" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-6" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-7" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-8" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-9" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-10" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-11" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-12" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-13" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-14" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-15" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-16" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-17" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-18" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-19" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-20" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-21" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-22" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-23" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-24" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-25" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-26" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-27" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-28" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-215df19ecf486234483624e7041b33d0c53f2a4e-29" class="line-number-anchor" /><a href="#line-number-215df19ecf486234483624e7041b33d0c53f2a4e-29">29</a></td></tr></table></div></code></pre>
+                
+    <p>The Parsing process of the DATEDIFF function is going to find two expressions the date1 and the date2 values, whose AST Node representations will be saved in the variables of the DateDiff FunctionNode instance at (1).</p>
+
+                
+    <p>The parse() method has to cut the function call &quot;DATEDIFF&quot; and its argument into pieces. Since the parser detects the function using a lookahead the T_IDENTIFIER of the function name has to be taken from the stack (2), followed by a detection of the arguments in (4)-(6). The opening and closing parenthesis have to be detected also. This happens during the Parsing process and leads to the generation of a DateDiff FunctionNode somewhere in the AST of the dql statement.</p>
+
+                
+    <p>The <code>ArithmeticPrimary</code> method call is the most common denominator of valid EBNF tokens taken from the <a href="https://www.doctrine-project.org/documentation/manual/2_0/en/dql-doctrine-query-language#ebnf">DQL EBNF grammer</a> that matches our requirements for valid input into the DateDiff Dql function. Picking the right tokens for your methods is a tricky business, but the EBNF grammer is pretty helpful finding it, as is looking at the Parser source code.</p>
+
+                
+    <p>Now in the TreeWalker process we have to pick up this node and generate SQL from it, which apprently is quite easy looking at the code in (7). Since we don&#039;t know which type of AST Node the first and second Date expression are we are just dispatching them back to the SQL Walker to generate SQL from and then wrap our DATEDIFF function call around this output.</p>
+
+                
+    <p>Now registering this DateDiff FunctionNode with the ORM using:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="8a87cd9bc918261056c351fa9947fbf9cbe89803"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="8a87cd9bc918261056c351fa9947fbf9cbe89803"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-8a87cd9bc918261056c351fa9947fbf9cbe89803-1" class="line-number-anchor" /><a href="#line-number-8a87cd9bc918261056c351fa9947fbf9cbe89803-1">1</a></td><td class="code-line" rowspan="4"><span class="hljs-meta">&lt;?php</span>
+$config = <span class="hljs-keyword">new</span> \Doctrine\ORM\Configuration();
+$config-&gt;addCustomStringFunction(<span class="hljs-string">'DATEDIFF'</span>, <span class="hljs-string">'DoctrineExtensions\Query\MySql\DateDiff'</span>);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a87cd9bc918261056c351fa9947fbf9cbe89803-2" class="line-number-anchor" /><a href="#line-number-8a87cd9bc918261056c351fa9947fbf9cbe89803-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a87cd9bc918261056c351fa9947fbf9cbe89803-3" class="line-number-anchor" /><a href="#line-number-8a87cd9bc918261056c351fa9947fbf9cbe89803-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-8a87cd9bc918261056c351fa9947fbf9cbe89803-4" class="line-number-anchor" /><a href="#line-number-8a87cd9bc918261056c351fa9947fbf9cbe89803-4">4</a></td></tr></table></div></code></pre>
+                
+    <p>We can do fancy stuff like:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="81532797503769a3014daee5889ca98d0eba9691"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="81532797503769a3014daee5889ca98d0eba9691"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-81532797503769a3014daee5889ca98d0eba9691-1" class="line-number-anchor" /><a href="#line-number-81532797503769a3014daee5889ca98d0eba9691-1">1</a></td><td class="code-line" rowspan="3">[sql]
+SELECT p FROM DoctrineExtensions\Query\BlogPost p WHERE DATEDIFF(CURRENT_TIME(), p.created) &lt; <span class="hljs-number">7</span>
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-81532797503769a3014daee5889ca98d0eba9691-2" class="line-number-anchor" /><a href="#line-number-81532797503769a3014daee5889ca98d0eba9691-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-81532797503769a3014daee5889ca98d0eba9691-3" class="line-number-anchor" /><a href="#line-number-81532797503769a3014daee5889ca98d0eba9691-3">3</a></td></tr></table></div></code></pre>
+                <h1 class="section-header ">
+    <a href="#date-add">
+        Date Add
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Often useful it the ability to do some simple date calculations in your DQL query using <a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-add">MySql&#039;s DATE_ADD function</a>.</p>
+
+                
+    <p>I&#039;ll skip the bla and show the code for this function:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="45127fd774470053abc3b721e2fb4745920dba5f"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="45127fd774470053abc3b721e2fb4745920dba5f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-1" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-1">1</a></td><td class="code-line" rowspan="41"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">/**
  * DateAddFunction ::=
  *     "DATE_ADD" "(" ArithmeticPrimary ", INTERVAL" ArithmeticPrimary Identifier ")"
- */
-class DateAdd extends FunctionNode
-{
-    public $firstDateExpression = null;
-    public $intervalExpression = null;
-    public $unit = null;
+ */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DateAdd</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FunctionNode</span>
+</span>{
+    <span class="hljs-keyword">public</span> $firstDateExpression = <span class="hljs-keyword">null</span>;
+    <span class="hljs-keyword">public</span> $intervalExpression = <span class="hljs-keyword">null</span>;
+    <span class="hljs-keyword">public</span> $unit = <span class="hljs-keyword">null</span>;
 
-    public function parse(\Doctrine\ORM\Query\Parser $parser)
-    {
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parse</span><span class="hljs-params">(\Doctrine\ORM\Query\Parser $parser)</span>
+    </span>{
         $parser-&gt;match(Lexer::T_IDENTIFIER);
         $parser-&gt;match(Lexer::T_OPEN_PARENTHESIS);
 
-        $this-&gt;firstDateExpression = $parser-&gt;ArithmeticPrimary();
+        <span class="hljs-keyword">$this</span>-&gt;firstDateExpression = $parser-&gt;ArithmeticPrimary();
 
         $parser-&gt;match(Lexer::T_COMMA);
         $parser-&gt;match(Lexer::T_IDENTIFIER);
 
-        $this-&gt;intervalExpression = $parser-&gt;ArithmeticPrimary();
+        <span class="hljs-keyword">$this</span>-&gt;intervalExpression = $parser-&gt;ArithmeticPrimary();
 
         $parser-&gt;match(Lexer::T_IDENTIFIER);
 
-        /* @var $lexer Lexer */
+        <span class="hljs-comment">/* <span class="hljs-doctag">@var</span> $lexer Lexer */</span>
         $lexer = $parser-&gt;getLexer();
-        $this-&gt;unit = $lexer-&gt;token['value'];
+        <span class="hljs-keyword">$this</span>-&gt;unit = $lexer-&gt;token[<span class="hljs-string">'value'</span>];
 
         $parser-&gt;match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
-    public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
-    {
-        return 'DATE_ADD(' .
-            $this-&gt;firstDateExpression-&gt;dispatch($sqlWalker) . ', INTERVAL ' .
-            $this-&gt;intervalExpression-&gt;dispatch($sqlWalker) . ' ' . $this-&gt;unit .
-        ')';
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSql</span><span class="hljs-params">(\Doctrine\ORM\Query\SqlWalker $sqlWalker)</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-string">'DATE_ADD('</span> .
+            <span class="hljs-keyword">$this</span>-&gt;firstDateExpression-&gt;dispatch($sqlWalker) . <span class="hljs-string">', INTERVAL '</span> .
+            <span class="hljs-keyword">$this</span>-&gt;intervalExpression-&gt;dispatch($sqlWalker) . <span class="hljs-string">' '</span> . <span class="hljs-keyword">$this</span>-&gt;unit .
+        <span class="hljs-string">')'</span>;
     }
-}</code></pre>
-<p>The only difference compared to the DATEDIFF here is, we additionally
-need the <code>Lexer</code> to access the value of the <code>T_IDENTIFIER</code> token for the
-Date Interval unit, for example the MONTH in:</p>
-<pre><code>[sql]
-SELECT p FROM DoctrineExtensions\Query\BlogPost p WHERE DATE_ADD(CURRENT_TIME(), INTERVAL 4 MONTH) &gt; p.created</code></pre>
-<p>The above method now only supports the specification using <code>INTERVAL</code>,
-to also allow a real date in DATE_ADD we need to add some decision
-logic to the parsing process (makes up for a nice excercise).</p>
-<p>Now as you see, the Parsing process doesn't catch all the possible SQL
-errors, here we don't match for all the valid inputs for the interval
-unit. However where necessary we rely on the database vendors SQL parser
-to show us further errors in the parsing process, for example if the
-Unit would not be one of the supported values by MySql.</p>
-<h1>Conclusion</h1>
-<p>Now that you all know how you can implement vendor specific SQL
-functionalities in DQL, we would be excited to see user extensions that
-add vendor specific function packages, for example more math functions,
-XML + GIS Support, Hashing functions and so on.</p>
-<p>For 2.0 we will come with the current set of functions, however for a
-future version we will re-evaluate if we can abstract even more vendor
-sql functions and extend the DQL languages scope.</p>
-<p>Code for this Extension to DQL and other Doctrine Extensions can be
-found <a href="https://github.com/beberlei/DoctrineExtensions">in my Github DoctrineExtensions
-repository</a>.</p>
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-2" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-3" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-4" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-5" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-6" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-7" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-8" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-9" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-10" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-11" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-12" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-13" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-14" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-15" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-16" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-17" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-18" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-19" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-20" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-21" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-22" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-23" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-24" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-25" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-26" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-27" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-28" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-29" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-30" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-31" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-32" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-33" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-34" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-35" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-36" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-36">36</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-37" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-37">37</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-38" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-38">38</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-39" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-39">39</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-40" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-40">40</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-45127fd774470053abc3b721e2fb4745920dba5f-41" class="line-number-anchor" /><a href="#line-number-45127fd774470053abc3b721e2fb4745920dba5f-41">41</a></td></tr></table></div></code></pre>
+                
+    <p>The only difference compared to the DATEDIFF here is, we additionally need the <code>Lexer</code> to access the value of the <code>T_IDENTIFIER</code> token for the Date Interval unit, for example the MONTH in:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="25f46a3373fd72842fcb669262d3f1a39eeeb1ea"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="25f46a3373fd72842fcb669262d3f1a39eeeb1ea"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-25f46a3373fd72842fcb669262d3f1a39eeeb1ea-1" class="line-number-anchor" /><a href="#line-number-25f46a3373fd72842fcb669262d3f1a39eeeb1ea-1">1</a></td><td class="code-line" rowspan="3">[sql]
+SELECT p FROM DoctrineExtensions\Query\BlogPost p WHERE DATE_ADD(CURRENT_TIME(), INTERVAL <span class="hljs-number">4</span> MONTH) &gt; p.created
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-25f46a3373fd72842fcb669262d3f1a39eeeb1ea-2" class="line-number-anchor" /><a href="#line-number-25f46a3373fd72842fcb669262d3f1a39eeeb1ea-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-25f46a3373fd72842fcb669262d3f1a39eeeb1ea-3" class="line-number-anchor" /><a href="#line-number-25f46a3373fd72842fcb669262d3f1a39eeeb1ea-3">3</a></td></tr></table></div></code></pre>
+                
+    <p>The above method now only supports the specification using <code>INTERVAL</code>, to also allow a real date in DATE_ADD we need to add some decision logic to the parsing process (makes up for a nice excercise).</p>
+
+                
+    <p>Now as you see, the Parsing process doesn&#039;t catch all the possible SQL errors, here we don&#039;t match for all the valid inputs for the interval unit. However where necessary we rely on the database vendors SQL parser to show us further errors in the parsing process, for example if the Unit would not be one of the supported values by MySql.</p>
+
+                <h1 class="section-header ">
+    <a href="#conclusion">
+        Conclusion
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>Now that you all know how you can implement vendor specific SQL functionalities in DQL, we would be excited to see user extensions that add vendor specific function packages, for example more math functions, XML + GIS Support, Hashing functions and so on.</p>
+
+                
+    <p>For 2.0 we will come with the current set of functions, however for a future version we will re-evaluate if we can abstract even more vendor sql functions and extend the DQL languages scope.</p>
+
+                
+    <p>Code for this Extension to DQL and other Doctrine Extensions can be found <a href="https://github.com/beberlei/DoctrineExtensions">in my Github DoctrineExtensions repository</a>.</p>
+
+        
+    
         </div>
     </article>
     </main>

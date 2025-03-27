@@ -42,8 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "One of most common complaints about Doctrine2 is the requirement to
-write getters/setters for all th"
+        "description": "One of most common complaints about Doctrine2 is the requirement to write getters/setters for all th"
     }
     </script>
     <link
@@ -237,124 +236,197 @@ write getters/setters for all th"
         <hr />
 
         <div>
-                <p>One of most common complaints about Doctrine2 is the requirement to
-write getters/setters for all the fields and assocations of every
-entity. A concern that immediately follows is that Doctrine 2 is not
-suitable for Rapid-Application-Development.</p>
-<p>The problem is purely a usability concern and there are a bunch of very
-easy ways ouf of this problem:</p>
-<ul>
-<li>A base-object that has __get/__set.</li>
-<li>The EntityGenerator can generate getters/setters</li>
-<li>An IDE that generates getters/setters (Netbeans, PHPStorm)</li>
-</ul>
-<p>We have been very critical of ActiveRecord since we started the
-development of Doctrine 2 for various reasons. Mostly because we don't
-think coupling the database to your domain objects is a good choice for
-testability an maintainabilty reasons.</p>
-<p>However we do see the need for Doctrine 2 to be suitable for RAD
-projects. With the launch of Symfony2 and other frameworks with tight
-Doctrine 2 integration this requirement has become even more important.</p>
-<p>That is why we will introduce a very lightweight base-class into
-Doctrine. We managed to write this base-class on an abstract level
-against the Common Metadata interface, such that CouchDB-, MongoDB- and
-PHPCR-ODM implementations benefit from this as well.</p>
-<p>Using a new hook in Doctrine 2.2-DEV you can now inject the
-EntityManager (ObjectManager) and the metadata description into each
-entity during construction. This metadata is used to implement the magic
-__call hook implementing getters/setters and association management
-methods.</p>
-<h1>Example</h1>
-<p>A simple example will demonstrate this:</p>
-<blockquote>
-<p>\&lt;?php use DoctrineCommonPersistencePersistentObject; use
-DoctrineORMEntityManager;</p>
-<p>/<em>*</em> @Entity
-:   **/</p>
-<p>class User extends PersistentObject { /<em>* @Id @Column(type=&quot;integer&quot;)
-@GeneratedValue</em>*/ protected \$id;</p>
-<blockquote>
-<p>/<em>* @Column(type=&quot;string&quot;)</em>*/ protected \$name;</p>
-<p>/<em>* @OneToMany(targetEntity=&quot;Phonenumber&quot;, mappedBy=&quot;user&quot;)</em>*/
-protected \$phonenumbers;</p>
-</blockquote>
-<p>}</p>
-</blockquote>
-<p>Extending from `PersistentObject` will make getters/setters available
-for your entities. Bi-directional associations are handled
-automatically.</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-/**
- * @Entity
- **/
-class Phonenumber extends PersistentObject
-{
-    /** @Id @Column(type="string") **/
-    private $number;
+                
+            
+                
+    <p>One of most common complaints about Doctrine2 is the requirement to write getters/setters for all the fields and assocations of every entity. A concern that immediately follows is that Doctrine 2 is not suitable for Rapid-Application-Development.</p>
 
-    /** @ManyToOne(targetEntity="User", inversedBy="phonenumbers") **/
-    private $user;
-}</code></pre>
-<p>The only configuration call for the `PersistentObject` is a
-registration of the responsible entity/document manager:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
+                
+    <p>The problem is purely a usability concern and there are a bunch of very easy ways ouf of this problem:</p>
+
+                
+
+<ul>
+    <li class="dash">A base-object that has __get/__set.</li>
+    <li class="dash">The EntityGenerator can generate getters/setters</li>
+    <li class="dash">An IDE that generates getters/setters (Netbeans, PHPStorm)</li>
+</ul>
+
+                
+    <p>We have been very critical of ActiveRecord since we started the development of Doctrine 2 for various reasons. Mostly because we don&#039;t think coupling the database to your domain objects is a good choice for testability an maintainabilty reasons.</p>
+
+                
+    <p>However we do see the need for Doctrine 2 to be suitable for RAD projects. With the launch of Symfony2 and other frameworks with tight Doctrine 2 integration this requirement has become even more important.</p>
+
+                
+    <p>That is why we will introduce a very lightweight base-class into Doctrine. We managed to write this base-class on an abstract level against the Common Metadata interface, such that CouchDB-, MongoDB- and PHPCR-ODM implementations benefit from this as well.</p>
+
+                
+    <p>Using a new hook in Doctrine 2.2-DEV you can now inject the EntityManager (ObjectManager) and the metadata description into each entity during construction. This metadata is used to implement the magic __call hook implementing getters/setters and association management methods.</p>
+
+                <h1 class="section-header ">
+    <a href="#example">
+        Example
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>A simple example will demonstrate this:</p>
+
+                <blockquote>
+    <p>&lt;?php use DoctrineCommonPersistencePersistentObject; use DoctrineORMEntityManager;</p>
+
+    <p>/<em>*</em> @Entity :   **/</p>
+
+    <p>class User extends PersistentObject { /<em>* @Id @Column(type=&quot;integer&quot;) @GeneratedValue</em>*/ protected $id;</p>
+
+    <p>/<em>* @Column(type=&quot;string&quot;)</em>*/ protected $name;</p>
+
+    <p>/<em>* @OneToMany(targetEntity=&quot;Phonenumber&quot;, mappedBy=&quot;user&quot;)</em>*/ protected $phonenumbers;</p>
+</blockquote>
+                
+    <p>}</p>
+
+                
+    <p>Extending from `PersistentObject` will make getters/setters available for your entities. Bi-directional associations are handled automatically.</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="ae39c7f70dde5713941870a18c94208554e229b5"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="ae39c7f70dde5713941870a18c94208554e229b5"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-1" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-1">1</a></td><td class="code-line" rowspan="13"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">/**
+ * <span class="hljs-doctag">@Entity</span>
+ **/</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Phonenumber</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">PersistentObject</span>
+</span>{
+    <span class="hljs-comment">/** <span class="hljs-doctag">@Id</span> <span class="hljs-doctag">@Column</span>(type="string") **/</span>
+    <span class="hljs-keyword">private</span> $number;
+
+    <span class="hljs-comment">/** <span class="hljs-doctag">@ManyToOne</span>(targetEntity="User", inversedBy="phonenumbers") **/</span>
+    <span class="hljs-keyword">private</span> $user;
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-2" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-3" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-4" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-5" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-6" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-7" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-8" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-9" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-10" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-11" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-12" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae39c7f70dde5713941870a18c94208554e229b5-13" class="line-number-anchor" /><a href="#line-number-ae39c7f70dde5713941870a18c94208554e229b5-13">13</a></td></tr></table></div></code></pre>
+                
+    <p>The only configuration call for the `PersistentObject` is a registration of the responsible entity/document manager:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="294b5b95d68b5363012e0f044c9f2e1354f7c689"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="294b5b95d68b5363012e0f044c9f2e1354f7c689"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-294b5b95d68b5363012e0f044c9f2e1354f7c689-1" class="line-number-anchor" /><a href="#line-number-294b5b95d68b5363012e0f044c9f2e1354f7c689-1">1</a></td><td class="code-line" rowspan="4"><span class="hljs-meta">&lt;?php</span>
 $entityManager = EntityManager::create(...);
-PersistentObject::setObjectManager($entityManager);</code></pre>
-<p>You can now start using the entities as simple as this:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$number = new Phonenumber();
-$number-&gt;setNumber(123454);
-$user = new User();
-$user-&gt;setName("Benjamin");
+PersistentObject::setObjectManager($entityManager);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-294b5b95d68b5363012e0f044c9f2e1354f7c689-2" class="line-number-anchor" /><a href="#line-number-294b5b95d68b5363012e0f044c9f2e1354f7c689-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-294b5b95d68b5363012e0f044c9f2e1354f7c689-3" class="line-number-anchor" /><a href="#line-number-294b5b95d68b5363012e0f044c9f2e1354f7c689-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-294b5b95d68b5363012e0f044c9f2e1354f7c689-4" class="line-number-anchor" /><a href="#line-number-294b5b95d68b5363012e0f044c9f2e1354f7c689-4">4</a></td></tr></table></div></code></pre>
+                
+    <p>You can now start using the entities as simple as this:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="b6ae570cc23eea99f6dc522782ed03efbe19e470"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="b6ae570cc23eea99f6dc522782ed03efbe19e470"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-1" class="line-number-anchor" /><a href="#line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">&lt;?php</span>
+$number = <span class="hljs-keyword">new</span> Phonenumber();
+$number-&gt;setNumber(<span class="hljs-number">123454</span>);
+$user = <span class="hljs-keyword">new</span> User();
+$user-&gt;setName(<span class="hljs-string">"Benjamin"</span>);
 $user-&gt;addPhonenumbers($number);
 
-echo $user-&gt;getName();
-foreach ($user-&gt;getPhonenumbers() AS $number) {
-    echo $number-&gt;getNumber();
-}</code></pre>
-<h1>Future Developments</h1>
-<p>First important notice: We will not develop the `PersistentObject`
-into a full-fledged active record. Doctrine focuses on being a
-DataMapper. We do however provide a bunch of new hooks in version 2.2
-that will allow you to turn Doctrine 2 into an active record very
-easily:</p>
+<span class="hljs-keyword">echo</span> $user-&gt;getName();
+<span class="hljs-keyword">foreach</span> ($user-&gt;getPhonenumbers() <span class="hljs-keyword">AS</span> $number) {
+    <span class="hljs-keyword">echo</span> $number-&gt;getNumber();
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-2" class="line-number-anchor" /><a href="#line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-3" class="line-number-anchor" /><a href="#line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-4" class="line-number-anchor" /><a href="#line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-5" class="line-number-anchor" /><a href="#line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-6" class="line-number-anchor" /><a href="#line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-7" class="line-number-anchor" /><a href="#line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-8" class="line-number-anchor" /><a href="#line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-9" class="line-number-anchor" /><a href="#line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-10" class="line-number-anchor" /><a href="#line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-11" class="line-number-anchor" /><a href="#line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-12" class="line-number-anchor" /><a href="#line-number-b6ae570cc23eea99f6dc522782ed03efbe19e470-12">12</a></td></tr></table></div></code></pre>
+                <h1 class="section-header ">
+    <a href="#future-developments">
+        Future Developments
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>First important notice: We will not develop the `PersistentObject` into a full-fledged active record. Doctrine focuses on being a DataMapper. We do however provide a bunch of new hooks in version 2.2 that will allow you to turn Doctrine 2 into an active record very easily:</p>
+
+                
+
 <ul>
-<li>Inject EntityManager and ClassMetadata</li>
+    <li class="dash">Inject EntityManager and ClassMetadata</li>
 </ul>
-<p>If your entity implements `DoctrineCommonPersistentObjectManagerAware`
-then the ObjectManager and ClassMetadata of the entity will be injected
-during construction.</p>
+
+                
+    <p>If your entity implements `DoctrineCommonPersistentObjectManagerAware` then the ObjectManager and ClassMetadata of the entity will be injected during construction.</p>
+
+                
+
 <ul>
-<li>EntityManager#flush() can now flush one entity only</li>
+    <li class="dash">EntityManager#flush() can now flush one entity only</li>
 </ul>
-<p>When you pass a single entity to EntityManager#flush() this entity will
-be the only one flushed into the database. Cascade persist rules are
-applied to this object. With this feature and access to the
-EntityManager inside your entities you can now start implementing an
-efficient Active Record with &quot;Record#save()&quot; and &quot;Record#delete()&quot;
-methods.</p>
+
+                
+    <p>When you pass a single entity to EntityManager#flush() this entity will be the only one flushed into the database. Cascade persist rules are applied to this object. With this feature and access to the EntityManager inside your entities you can now start implementing an efficient Active Record with &quot;Record#save()&quot; and &quot;Record#delete()&quot; methods.</p>
+
+                
+
 <ul>
-<li>PHP 5.4 and Traits</li>
+    <li class="dash">PHP 5.4 and Traits</li>
 </ul>
-<p>The next version of PHP is already in Beta 2 and will probably be
-released in the next months. One of the most powerful feature of this
-release will be Traits, something very suitable for Doctrine and ORMs in
-general.</p>
-<p>No worries: Doctrine 2 will always be supporting 5.3, however we will
-probably ship with optional features that are using the trait
-functionality. High on the list:</p>
+
+                
+    <p>The next version of PHP is already in Beta 2 and will probably be released in the next months. One of the most powerful feature of this release will be Traits, something very suitable for Doctrine and ORMs in general.</p>
+
+                
+    <p>No worries: Doctrine 2 will always be supporting 5.3, however we will probably ship with optional features that are using the trait functionality. High on the list:</p>
+
+                
+
 <ul>
-<li>Porting `PersistentObject` to a trait</li>
-<li>Serialization of entities from a trait (ToArray(), ToJson()).
-Available as a service to PHP 5.3</li>
-<li>ActiveEntity trait that extends the `PersistentObject` one.</li>
+    <li class="dash">Porting `PersistentObject` to a trait</li>
+    <li class="dash">Serialization of entities from a trait (ToArray(), ToJson()). Available as a service to PHP 5.3</li>
+    <li class="dash">ActiveEntity trait that extends the `PersistentObject` one.</li>
 </ul>
-<p>Based on this feature set it should even be possible to add behaviors to
-Doctrine 2, although we won't focus on implementing behaviors in the
-core team.</p>
-<h1>Last words</h1>
-<p>I would really appreciate people starting to test the
-`PersistentObject` if they like too and give us feedback.</p>
+
+                
+    <p>Based on this feature set it should even be possible to add behaviors to Doctrine 2, although we won&#039;t focus on implementing behaviors in the core team.</p>
+
+                <h1 class="section-header ">
+    <a href="#last-words">
+        Last words
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+                
+    <p>I would really appreciate people starting to test the `PersistentObject` if they like too and give us feedback.</p>
+
+        
+    
         </div>
     </article>
     </main>

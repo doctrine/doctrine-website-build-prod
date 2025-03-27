@@ -42,9 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "Last month we released DBAL
-2.13.0 as an
-important push for the ecosystem towards DBAL 3 with an ext"
+        "description": "Last month we released DBAL 2.13.0 as an important push for the ecosystem towards DBAL 3 with an ext"
     }
     </script>
     <link
@@ -238,50 +236,98 @@ important push for the ecosystem towards DBAL 3 with an ext"
         <hr />
 
         <div>
-                <p>Last month <a href="https://www.doctrine-project.org/2021/03/29/dbal-2.13.html">we released DBAL
-2.13.0</a> as an
-important push for the ecosystem towards DBAL 3 with an extensive deprecation
-and forward compatibility layer.</p>
-<p>We made a few mistakes, given that the forward compatibility layer is quite complex.
-As such we have now released Doctrine DBAL 2.13.1 and 3.1.0 with two new APIs
-that improve the forward compatiblity.</p>
-<p>The problem lies in <code>Statement::execute()</code>: 2.13.0 would return a <code>bool</code> and
-3.0.0 would return a <code>Result</code> from this method. This kind of API change cannot
-be handled with a forward compatibility.</p>
-<p>As such we introduced two new APIs on <code>Statement</code> that replace <code>execute()</code>.
-When the old code was:</p>
-<pre><code class="language-php">$statement = $connection-&gt;prepare('SELECT * FROM tbl WHERE col = ?');
+                
+            
+                
+    <p>Last month <a href="https://www.doctrine-project.org/2021/03/29/dbal-2.13.html">we released DBAL 2.13.0</a> as an important push for the ecosystem towards DBAL 3 with an extensive deprecation and forward compatibility layer.</p>
+
+                
+    <p>We made a few mistakes, given that the forward compatibility layer is quite complex. As such we have now released Doctrine DBAL 2.13.1 and 3.1.0 with two new APIs that improve the forward compatiblity.</p>
+
+                
+    <p>The problem lies in <code>Statement::execute()</code>: 2.13.0 would return a <code>bool</code> and 3.0.0 would return a <code>Result</code> from this method. This kind of API change cannot be handled with a forward compatibility.</p>
+
+                
+    <p>As such we introduced two new APIs on <code>Statement</code> that replace <code>execute()</code>. When the old code was:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="731e8b6e70f4c066324d829adc55edc3baa9e842"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="731e8b6e70f4c066324d829adc55edc3baa9e842"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-731e8b6e70f4c066324d829adc55edc3baa9e842-1" class="line-number-anchor" /><a href="#line-number-731e8b6e70f4c066324d829adc55edc3baa9e842-1">1</a></td><td class="code-line" rowspan="5">$statement = $connection-&gt;prepare(<span class="hljs-string">'SELECT * FROM tbl WHERE col = ?'</span>);
 $statement-&gt;execute();
 
-$rows = $statement-&gt;fetchAll();</code></pre>
-<p>Then the new code is now:</p>
-<pre><code class="language-php">$statement = $connection-&gt;prepare('SELECT * FROM tbl WHERE col = ?');
+$rows = $statement-&gt;fetchAll();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-731e8b6e70f4c066324d829adc55edc3baa9e842-2" class="line-number-anchor" /><a href="#line-number-731e8b6e70f4c066324d829adc55edc3baa9e842-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-731e8b6e70f4c066324d829adc55edc3baa9e842-3" class="line-number-anchor" /><a href="#line-number-731e8b6e70f4c066324d829adc55edc3baa9e842-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-731e8b6e70f4c066324d829adc55edc3baa9e842-4" class="line-number-anchor" /><a href="#line-number-731e8b6e70f4c066324d829adc55edc3baa9e842-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-731e8b6e70f4c066324d829adc55edc3baa9e842-5" class="line-number-anchor" /><a href="#line-number-731e8b6e70f4c066324d829adc55edc3baa9e842-5">5</a></td></tr></table></div></code></pre>
+                
+    <p>Then the new code is now:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="f85da745bf487fde20e7d94d31388b9936ed0107"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="f85da745bf487fde20e7d94d31388b9936ed0107"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-f85da745bf487fde20e7d94d31388b9936ed0107-1" class="line-number-anchor" /><a href="#line-number-f85da745bf487fde20e7d94d31388b9936ed0107-1">1</a></td><td class="code-line" rowspan="5">$statement = $connection-&gt;prepare(<span class="hljs-string">'SELECT * FROM tbl WHERE col = ?'</span>);
 $result = $statement-&gt;executeQuery();
 
-$rows = $result-&gt;fetchAllAssociative();</code></pre>
-<p>The DBAL 2.13 forward compatiblity layer supports both versions of all code and
-returns a Statement/Result hybrid that has all the APIs that the DBAL Statement
-had up until version 2.12. This way you can move at your own pace from the old
-to the new API in your code.</p>
-<p>Thank you again to <a href="https://github.com/mdumoulin">mdumoulin</a> for the work on
-improving the forward compatiblity and to <a href="https://twitter.com/srgmrzv">Sergei Morozov</a>
-for the thorough reviews and comments.</p>
-<p>Again I want to highlight the Runtime Deprecations library that we introduced
-to support this migration. You can integrate this with your log stack during
-development and testing:</p>
-<pre><code class="language-php">use Doctrine\Deprecations\Deprecation;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+$rows = $result-&gt;fetchAllAssociative();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f85da745bf487fde20e7d94d31388b9936ed0107-2" class="line-number-anchor" /><a href="#line-number-f85da745bf487fde20e7d94d31388b9936ed0107-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f85da745bf487fde20e7d94d31388b9936ed0107-3" class="line-number-anchor" /><a href="#line-number-f85da745bf487fde20e7d94d31388b9936ed0107-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f85da745bf487fde20e7d94d31388b9936ed0107-4" class="line-number-anchor" /><a href="#line-number-f85da745bf487fde20e7d94d31388b9936ed0107-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-f85da745bf487fde20e7d94d31388b9936ed0107-5" class="line-number-anchor" /><a href="#line-number-f85da745bf487fde20e7d94d31388b9936ed0107-5">5</a></td></tr></table></div></code></pre>
+                
+    <p>The DBAL 2.13 forward compatiblity layer supports both versions of all code and returns a Statement/Result hybrid that has all the APIs that the DBAL Statement had up until version 2.12. This way you can move at your own pace from the old to the new API in your code.</p>
 
-$log = new Logger('doctrine');
-$log-&gt;pushHandler(new StreamHandler('deprecations.log', Logger::INFO));
+                
+    <p>Thank you again to <a href="https://github.com/mdumoulin">mdumoulin</a> for the work on improving the forward compatiblity and to <a href="https://twitter.com/srgmrzv">Sergei Morozov</a> for the thorough reviews and comments.</p>
 
-Deprecation::enableWithPsrLogger($log);</code></pre>
-<p>Or alternatively using PHP's global error handler:</p>
-<pre><code class="language-php">Deprecation::enableWithTriggerError();</code></pre>
-<p>See the <a href="https://www.doctrine-project.org/2021/03/29/dbal-2.13.html">2.13 blog
-post</a> for more
-information about the migration to DBAL 3 and strategy recommendations.</p>
+                
+    <p>Again I want to highlight the Runtime Deprecations library that we introduced to support this migration. You can integrate this with your log stack during development and testing:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="6141f061b443fa22c323865ce6660bc3e10662e5"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="6141f061b443fa22c323865ce6660bc3e10662e5"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-6141f061b443fa22c323865ce6660bc3e10662e5-1" class="line-number-anchor" /><a href="#line-number-6141f061b443fa22c323865ce6660bc3e10662e5-1">1</a></td><td class="code-line" rowspan="9"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Deprecations</span>\<span class="hljs-title">Deprecation</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Monolog</span>\<span class="hljs-title">Logger</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Monolog</span>\<span class="hljs-title">Handler</span>\<span class="hljs-title">StreamHandler</span>;
+
+$log = <span class="hljs-keyword">new</span> Logger(<span class="hljs-string">'doctrine'</span>);
+$log-&gt;pushHandler(<span class="hljs-keyword">new</span> StreamHandler(<span class="hljs-string">'deprecations.log'</span>, Logger::INFO));
+
+Deprecation::enableWithPsrLogger($log);
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6141f061b443fa22c323865ce6660bc3e10662e5-2" class="line-number-anchor" /><a href="#line-number-6141f061b443fa22c323865ce6660bc3e10662e5-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6141f061b443fa22c323865ce6660bc3e10662e5-3" class="line-number-anchor" /><a href="#line-number-6141f061b443fa22c323865ce6660bc3e10662e5-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6141f061b443fa22c323865ce6660bc3e10662e5-4" class="line-number-anchor" /><a href="#line-number-6141f061b443fa22c323865ce6660bc3e10662e5-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6141f061b443fa22c323865ce6660bc3e10662e5-5" class="line-number-anchor" /><a href="#line-number-6141f061b443fa22c323865ce6660bc3e10662e5-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6141f061b443fa22c323865ce6660bc3e10662e5-6" class="line-number-anchor" /><a href="#line-number-6141f061b443fa22c323865ce6660bc3e10662e5-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6141f061b443fa22c323865ce6660bc3e10662e5-7" class="line-number-anchor" /><a href="#line-number-6141f061b443fa22c323865ce6660bc3e10662e5-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6141f061b443fa22c323865ce6660bc3e10662e5-8" class="line-number-anchor" /><a href="#line-number-6141f061b443fa22c323865ce6660bc3e10662e5-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-6141f061b443fa22c323865ce6660bc3e10662e5-9" class="line-number-anchor" /><a href="#line-number-6141f061b443fa22c323865ce6660bc3e10662e5-9">9</a></td></tr></table></div></code></pre>
+                
+    <p>Or alternatively using PHP&#039;s global error handler:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="eeab66efd3d87440a7cb64e0e944d9de6db8c529"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="eeab66efd3d87440a7cb64e0e944d9de6db8c529"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-eeab66efd3d87440a7cb64e0e944d9de6db8c529-1" class="line-number-anchor" /><a href="#line-number-eeab66efd3d87440a7cb64e0e944d9de6db8c529-1">1</a></td><td class="code-line" rowspan="2">Deprecation::enableWithTriggerError();
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-eeab66efd3d87440a7cb64e0e944d9de6db8c529-2" class="line-number-anchor" /><a href="#line-number-eeab66efd3d87440a7cb64e0e944d9de6db8c529-2">2</a></td></tr></table></div></code></pre>
+                
+    <p>See the <a href="https://www.doctrine-project.org/2021/03/29/dbal-2.13.html">2.13 blog post</a> for more information about the migration to DBAL 3 and strategy recommendations.</p>
+
+        
+    
         </div>
     </article>
     </main>

@@ -42,8 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "While Doctrine 1 had validation nested inside the Doctrine_Record
-instance this is not the case in D"
+        "description": "While Doctrine 1 had validation nested inside the Doctrine_Record instance this is not the case in D"
     }
     </script>
     <link
@@ -237,116 +236,198 @@ instance this is not the case in D"
         <hr />
 
         <div>
-                <p>While Doctrine 1 had validation nested inside the <code>Doctrine_Record</code>
-instance this is not the case in Doctrine 2 anymore. We won't ship
-Doctrine 2 with any validators, the reason being that we think all the
-frameworks out there already ship with quite decents ones that can be
-integrated into your Domain easily. Besides us being ORM experts not
-wanting to maintain yet another validation library, moving the
-responsibility of validation into the domain layer also allows you to
-integrate it much easier into frameworks form libraries for example.</p>
-<p>What we do offer are hooks to execute any kind of validation inside the
-Doctrine ORM.</p>
-<p>Entities can register lifecycle event methods with Doctrine that are
-called on different occasions. For validation we would need to hook into
-the events called before persisting and updating. Even though we don't
-support validation out of the box, the implementation is even simpler
-than in Doctrine 1 and you will get the additional benefit of being able
-to re-use your validation in any other part of your domain.</p>
-<p>Say we have an <code>Order</code> with several <code>OrderLine</code> instances. We never want
-to allow any customer to order for a larger sum than he is allowed to:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class Order
-{
-    public function assertCustomerAllowedBuying()
-    {
-        $orderLimit = $this-&gt;customer-&gt;getOrderLimit();
+                
+            
+                
+    <p>While Doctrine 1 had validation nested inside the <code>Doctrine_Record</code> instance this is not the case in Doctrine 2 anymore. We won&#039;t ship Doctrine 2 with any validators, the reason being that we think all the frameworks out there already ship with quite decents ones that can be integrated into your Domain easily. Besides us being ORM experts not wanting to maintain yet another validation library, moving the responsibility of validation into the domain layer also allows you to integrate it much easier into frameworks form libraries for example.</p>
 
-        $amount = 0;
-        foreach ($this-&gt;orderLines AS $line) {
+                
+    <p>What we do offer are hooks to execute any kind of validation inside the Doctrine ORM.</p>
+
+                
+    <p>Entities can register lifecycle event methods with Doctrine that are called on different occasions. For validation we would need to hook into the events called before persisting and updating. Even though we don&#039;t support validation out of the box, the implementation is even simpler than in Doctrine 1 and you will get the additional benefit of being able to re-use your validation in any other part of your domain.</p>
+
+                
+    <p>Say we have an <code>Order</code> with several <code>OrderLine</code> instances. We never want to allow any customer to order for a larger sum than he is allowed to:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="19d9d0166ec207978e5466f6919c1410211857ab"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="19d9d0166ec207978e5466f6919c1410211857ab"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-1" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-1">1</a></td><td class="code-line" rowspan="18"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Order</span>
+</span>{
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">assertCustomerAllowedBuying</span><span class="hljs-params">()</span>
+    </span>{
+        $orderLimit = <span class="hljs-keyword">$this</span>-&gt;customer-&gt;getOrderLimit();
+
+        $amount = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">$this</span>-&gt;orderLines <span class="hljs-keyword">AS</span> $line) {
             $amount += $line-&gt;getAmount();
         }
 
-        if ($amount &gt; $orderLimit) {
-            throw new CustomerOrderLimitExceededException();
+        <span class="hljs-keyword">if</span> ($amount &gt; $orderLimit) {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> CustomerOrderLimitExceededException();
         }
     }
-}</code></pre>
-<p>Now this is some pretty important piece of business logic in your code,
-enforcing it at any time is important so that customers with a unknown
-reputation don't owe your business too much money.</p>
-<p>We can enforce this constraint in any of the metadata drivers. First
-Annotations:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-/**
- * @Entity
- * @HasLifecycleCallbacks
- */
-class Order
-{
-    /**
-     * @PrePersist @PreUpdate
-     */
-    public function assertCustomerAllowedBuying() {}
-}</code></pre>
-<p>In XML Mappings:</p>
-<pre><code>[xml]
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-2" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-3" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-4" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-5" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-6" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-7" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-8" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-9" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-10" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-11" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-12" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-13" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-14" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-15" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-16" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-17" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-19d9d0166ec207978e5466f6919c1410211857ab-18" class="line-number-anchor" /><a href="#line-number-19d9d0166ec207978e5466f6919c1410211857ab-18">18</a></td></tr></table></div></code></pre>
+                
+    <p>Now this is some pretty important piece of business logic in your code, enforcing it at any time is important so that customers with a unknown reputation don&#039;t owe your business too much money.</p>
+
+                
+    <p>We can enforce this constraint in any of the metadata drivers. First Annotations:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="ae1c872d308726029efeeb4acf20ce4285a367bd"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="ae1c872d308726029efeeb4acf20ce4285a367bd"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-1" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-1">1</a></td><td class="code-line" rowspan="13"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">/**
+ * <span class="hljs-doctag">@Entity</span>
+ * <span class="hljs-doctag">@HasLifecycleCallbacks</span>
+ */</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Order</span>
+</span>{
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@PrePersist</span> <span class="hljs-doctag">@PreUpdate</span>
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">assertCustomerAllowedBuying</span><span class="hljs-params">()</span> </span>{}
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-2" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-3" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-4" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-5" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-6" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-7" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-8" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-9" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-10" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-11" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-12" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-13" class="line-number-anchor" /><a href="#line-number-ae1c872d308726029efeeb4acf20ce4285a367bd-13">13</a></td></tr></table></div></code></pre>
+                
+    <p>In XML Mappings:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="b99851016982c0b13187218223b30ba764304b1d"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="b99851016982c0b13187218223b30ba764304b1d"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-b99851016982c0b13187218223b30ba764304b1d-1" class="line-number-anchor" /><a href="#line-number-b99851016982c0b13187218223b30ba764304b1d-1">1</a></td><td class="code-line" rowspan="10">[xml]
 &lt;doctrine-mapping&gt;
-    &lt;entity name="Order"&gt;
+    &lt;entity name=<span class="hljs-string">"Order"</span>&gt;
         &lt;lifecycle-callbacks&gt;
-            &lt;lifecycle-callback type="prePersist" method="assertCustomerAllowedBuying" /&gt;
-            &lt;lifecycle-callback type="preUpdate" method="assertCustomerAllowedBuying" /&gt;
+            &lt;lifecycle-callback type=<span class="hljs-string">"prePersist"</span> method=<span class="hljs-string">"assertCustomerAllowedBuying"</span> /&gt;
+            &lt;lifecycle-callback type=<span class="hljs-string">"preUpdate"</span> method=<span class="hljs-string">"assertCustomerAllowedBuying"</span> /&gt;
         &lt;/lifecycle-callbacks&gt;
     &lt;/entity&gt;
-&lt;/doctirne-mapping&gt;</code></pre>
-<p>YAML needs some little change yet, to allow multiple lifecycle events
-for one method, this will happen before Beta 1 though.</p>
-<p>Now validation is performed whenever you call
-<code>EntityManager#persist($order)</code> or when you call <code>EntityManager#flush()</code>
-and an order is about to be updated. Any Exception that happens in the
-lifecycle callbacks will be catched by the EntityManager and the current
-transaction is rolled back.</p>
-<p>Of course you can do any type of primitive checks, not null,
-email-validation, string size, integer and date ranges in your
-validation callbacks.</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-class Order
-{
-    /**
-     * @PrePersist @PreUpdate
-     */
-    public function validate()
-    {
-        if (!($this-&gt;plannedShipDate instanceof DateTime)) {
-            throw new ValidateException();
+&lt;/doctirne-mapping&gt;
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b99851016982c0b13187218223b30ba764304b1d-2" class="line-number-anchor" /><a href="#line-number-b99851016982c0b13187218223b30ba764304b1d-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b99851016982c0b13187218223b30ba764304b1d-3" class="line-number-anchor" /><a href="#line-number-b99851016982c0b13187218223b30ba764304b1d-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b99851016982c0b13187218223b30ba764304b1d-4" class="line-number-anchor" /><a href="#line-number-b99851016982c0b13187218223b30ba764304b1d-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b99851016982c0b13187218223b30ba764304b1d-5" class="line-number-anchor" /><a href="#line-number-b99851016982c0b13187218223b30ba764304b1d-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b99851016982c0b13187218223b30ba764304b1d-6" class="line-number-anchor" /><a href="#line-number-b99851016982c0b13187218223b30ba764304b1d-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b99851016982c0b13187218223b30ba764304b1d-7" class="line-number-anchor" /><a href="#line-number-b99851016982c0b13187218223b30ba764304b1d-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b99851016982c0b13187218223b30ba764304b1d-8" class="line-number-anchor" /><a href="#line-number-b99851016982c0b13187218223b30ba764304b1d-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b99851016982c0b13187218223b30ba764304b1d-9" class="line-number-anchor" /><a href="#line-number-b99851016982c0b13187218223b30ba764304b1d-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-b99851016982c0b13187218223b30ba764304b1d-10" class="line-number-anchor" /><a href="#line-number-b99851016982c0b13187218223b30ba764304b1d-10">10</a></td></tr></table></div></code></pre>
+                
+    <p>YAML needs some little change yet, to allow multiple lifecycle events for one method, this will happen before Beta 1 though.</p>
+
+                
+    <p>Now validation is performed whenever you call <code>EntityManager#persist($order)</code> or when you call <code>EntityManager#flush()</code> and an order is about to be updated. Any Exception that happens in the lifecycle callbacks will be catched by the EntityManager and the current transaction is rolled back.</p>
+
+                
+    <p>Of course you can do any type of primitive checks, not null, email-validation, string size, integer and date ranges in your validation callbacks.</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="337f8cf82eb536d44b0afd15fb693c067c9d74ab"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="337f8cf82eb536d44b0afd15fb693c067c9d74ab"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-1" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-1">1</a></td><td class="code-line" rowspan="22"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Order</span>
+</span>{
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@PrePersist</span> <span class="hljs-doctag">@PreUpdate</span>
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">validate</span><span class="hljs-params">()</span>
+    </span>{
+        <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">$this</span>-&gt;plannedShipDate <span class="hljs-keyword">instanceof</span> DateTime)) {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ValidateException();
         }
 
-        if ($this-&gt;plannedShipDate-&gt;format('U') &lt; time()) {
-            throw new ValidateException();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;plannedShipDate-&gt;format(<span class="hljs-string">'U'</span>) &lt; time()) {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ValidateException();
         }
 
-        if ($this-&gt;customer == null) {
-            throw new OrderRequiresCustomerException();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;customer == <span class="hljs-keyword">null</span>) {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> OrderRequiresCustomerException();
         }
     }
-}</code></pre>
-<p>What is nice about lifecycle events is, you can also re-use the methods
-at other places in your domain, for example in combination with your
-form library. Additionally there is no limitation in the number of
-methods you register on one particular event, i.e. you can register
-multiple methods for validation in &quot;PrePersist&quot; or &quot;PreUpdate&quot; or mix
-and share them in any combinations between those two events.</p>
-<p>There is no limit to what you can and can't validate in &quot;PrePersist&quot; and
-&quot;PreUpdate&quot; aslong as you don't create new entity instances. This was
-already discussed in the previous blog post on the Versionable
-extension, which requires another type of event called &quot;onFlush&quot;.</p>
-<p>Also read:</p>
+}
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-2" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-3" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-4" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-5" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-6" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-7" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-8" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-9" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-10" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-11" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-12" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-13" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-14" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-15" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-16" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-17" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-18" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-19" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-20" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-21" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-22" class="line-number-anchor" /><a href="#line-number-337f8cf82eb536d44b0afd15fb693c067c9d74ab-22">22</a></td></tr></table></div></code></pre>
+                
+    <p>What is nice about lifecycle events is, you can also re-use the methods at other places in your domain, for example in combination with your form library. Additionally there is no limitation in the number of methods you register on one particular event, i.e. you can register multiple methods for validation in &quot;PrePersist&quot; or &quot;PreUpdate&quot; or mix and share them in any combinations between those two events.</p>
+
+                
+    <p>There is no limit to what you can and can&#039;t validate in &quot;PrePersist&quot; and &quot;PreUpdate&quot; aslong as you don&#039;t create new entity instances. This was already discussed in the previous blog post on the Versionable extension, which requires another type of event called &quot;onFlush&quot;.</p>
+
+                
+    <p>Also read:</p>
+
+                
+
 <ul>
-<li><a href="https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/events.html#lifecycle-events">Doctrine 2 Manual:
-Events</a></li>
-<li><a href="https://www.doctrine-project.org/2010/02/24/doctrine2-versionable.html">Doctrine 2 Blog: A reusable Versionable
-Behaviour</a></li>
+    <li class="dash"><a href="https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/events.html#lifecycle-events">Doctrine 2 Manual: Events</a></li>
+    <li class="dash"><a href="https://www.doctrine-project.org/2010/02/24/doctrine2-versionable.html">Doctrine 2 Blog: A reusable Versionable Behaviour</a></li>
 </ul>
+
+        
+    
         </div>
     </article>
     </main>

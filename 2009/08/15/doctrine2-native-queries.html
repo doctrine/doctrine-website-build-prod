@@ -42,8 +42,7 @@
                 "url": "https://www.doctrine-project.org/images/og.png"
             }
         },
-        "description": "If you are familar with Doctrine_RawSql from Doctrine 1.x you probably
-know that it is somewhat brok"
+        "description": "If you are familar with Doctrine_RawSql from Doctrine 1.x you probably know that it is somewhat brok"
     }
     </script>
     <link
@@ -237,52 +236,71 @@ know that it is somewhat brok"
         <hr />
 
         <div>
-                <p>If you are familar with Doctrine_RawSql from Doctrine 1.x you probably
-know that it is somewhat broken by design since it requires a special
-syntax in the select clause that makes a lot of SQL constructs in the
-select clause impossible.</p>
-<p>Doctrine 2 introduces a facility called &quot;native queries&quot;, represented by
-the <code>Doctrine\ORM\NativeQuery</code> class that replaces Doctrine_RawSql. The
-clue about NativeQuery is that it allows the usage of real native SQL
-yet the result can be transformed into all the different formats that
-are supported by DQL.</p>
-<p>This is achieved through having a generic description of how an SQL
-result maps to a Doctrine result in form of a
-<code>Doctrine\ORM\Query\ResultSetMapping</code>.</p>
-<p>Enough of the introductory talk, lets look at a (primitive) example from
-our test suite:</p>
-<pre><code class="language-{.sourceCode">&lt;?php
-$rsm = new ResultSetMapping;
-$rsm-&gt;addEntityResult('Doctrine\Tests\Models\CMS\CmsUser', 'u');
-$rsm-&gt;addFieldResult('u', 'id', 'id'); // ($alias, $columnName, $fieldName)
-$rsm-&gt;addFieldResult('u', 'name', 'name'); // // ($alias, $columnName, $fieldName)
+                
+            
+                
+    <p>If you are familar with Doctrine_RawSql from Doctrine 1.x you probably know that it is somewhat broken by design since it requires a special syntax in the select clause that makes a lot of SQL constructs in the select clause impossible.</p>
 
-$query = $this-&gt;_em-&gt;createNativeQuery('SELECT id, name FROM cms_users WHERE username = ?', $rsm);
-$query-&gt;setParameter(1, 'romanb');
+                
+    <p>Doctrine 2 introduces a facility called &quot;native queries&quot;, represented by the <code>Doctrine\ORM\NativeQuery</code> class that replaces Doctrine_RawSql. The clue about NativeQuery is that it allows the usage of real native SQL yet the result can be transformed into all the different formats that are supported by DQL.</p>
+
+                
+    <p>This is achieved through having a generic description of how an SQL result maps to a Doctrine result in form of a <code>Doctrine\ORM\Query\ResultSetMapping</code>.</p>
+
+                
+    <p>Enough of the introductory talk, lets look at a (primitive) example from our test suite:</p>
+
+                <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="873f012a2fa2ce28eac2f76c3995d2e7782cc266"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="873f012a2fa2ce28eac2f76c3995d2e7782cc266"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-1" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-1">1</a></td><td class="code-line" rowspan="15"><span class="hljs-meta">&lt;?php</span>
+$rsm = <span class="hljs-keyword">new</span> ResultSetMapping;
+$rsm-&gt;addEntityResult(<span class="hljs-string">'Doctrine\Tests\Models\CMS\CmsUser'</span>, <span class="hljs-string">'u'</span>);
+$rsm-&gt;addFieldResult(<span class="hljs-string">'u'</span>, <span class="hljs-string">'id'</span>, <span class="hljs-string">'id'</span>); <span class="hljs-comment">// ($alias, $columnName, $fieldName)</span>
+$rsm-&gt;addFieldResult(<span class="hljs-string">'u'</span>, <span class="hljs-string">'name'</span>, <span class="hljs-string">'name'</span>); <span class="hljs-comment">// // ($alias, $columnName, $fieldName)</span>
+
+$query = <span class="hljs-keyword">$this</span>-&gt;_em-&gt;createNativeQuery(<span class="hljs-string">'SELECT id, name FROM cms_users WHERE username = ?'</span>, $rsm);
+$query-&gt;setParameter(<span class="hljs-number">1</span>, <span class="hljs-string">'romanb'</span>);
 
 $users = $query-&gt;getResult();
 
-$this-&gt;assertEquals(1, count($users));
-$this-&gt;assertTrue($users[0] instanceof CmsUser);
-$this-&gt;assertEquals('Roman', $users[0]-&gt;getName());</code></pre>
-<p>The SQL that is passed to createNativeQuery is not touched by Doctrine
-in any way. The NativeQuery and ResultSetMapping combination are
-extremely powerful. It might not surprise you that Doctrine 2 creates a
-ResultSetMapping internally when it transforms DQL to SQL.</p>
-<p>Granted, this was a very trivial example that can easily be expressed in
-a short DQL 1-liner but it was just for demonstration purposes (and I am
-bad at making up complex ad-hoc SQL examples that make sense).</p>
-<p>So when is this useful? While DQL has been heavily improved in Doctrine
-2 and has many new powerful features which we will cover in future blog
-posts, it is sometimes necessary to use native SQL. NativeQuery gives
-you the ability to do that while still retrieving the results in the
-convenient Doctrine formats you are familar with. NativeQuery is also an
-obvious choice when starting to migrate a pure SQL project to Doctrine
-without going into all the DQL details from the start.</p>
-<p>More on NativeQuery and ResultSetMapping can be found in the new
-documentation under:</p>
-<p><a href="https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/native-sql.html#native-sql">Documentation - Native
-Sql</a></p>
+<span class="hljs-keyword">$this</span>-&gt;assertEquals(<span class="hljs-number">1</span>, count($users));
+<span class="hljs-keyword">$this</span>-&gt;assertTrue($users[<span class="hljs-number">0</span>] <span class="hljs-keyword">instanceof</span> CmsUser);
+<span class="hljs-keyword">$this</span>-&gt;assertEquals(<span class="hljs-string">'Roman'</span>, $users[<span class="hljs-number">0</span>]-&gt;getName());
+</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-2" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-3" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-4" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-5" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-6" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-7" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-8" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-9" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-10" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-11" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-12" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-13" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-14" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-15" class="line-number-anchor" /><a href="#line-number-873f012a2fa2ce28eac2f76c3995d2e7782cc266-15">15</a></td></tr></table></div></code></pre>
+                
+    <p>The SQL that is passed to createNativeQuery is not touched by Doctrine in any way. The NativeQuery and ResultSetMapping combination are extremely powerful. It might not surprise you that Doctrine 2 creates a ResultSetMapping internally when it transforms DQL to SQL.</p>
+
+                
+    <p>Granted, this was a very trivial example that can easily be expressed in a short DQL 1-liner but it was just for demonstration purposes (and I am bad at making up complex ad-hoc SQL examples that make sense).</p>
+
+                
+    <p>So when is this useful? While DQL has been heavily improved in Doctrine 2 and has many new powerful features which we will cover in future blog posts, it is sometimes necessary to use native SQL. NativeQuery gives you the ability to do that while still retrieving the results in the convenient Doctrine formats you are familar with. NativeQuery is also an obvious choice when starting to migrate a pure SQL project to Doctrine without going into all the DQL details from the start.</p>
+
+                
+    <p>More on NativeQuery and ResultSetMapping can be found in the new documentation under:</p>
+
+                
+    <p><a href="https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/native-sql.html#native-sql">Documentation - Native Sql</a></p>
+
+        
+    
         </div>
     </article>
     </main>
