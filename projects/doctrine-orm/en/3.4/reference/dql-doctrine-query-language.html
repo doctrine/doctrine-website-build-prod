@@ -4442,6 +4442,23 @@ $users = $query-&gt;getResult(); <span class="hljs-comment">// array of Customer
     <p>If two arguments have the same name, a <code>DuplicateFieldException</code> is thrown.
 If a field cannot be matched with a property name, a <code>NoMatchingPropertyException</code> is thrown. This typically happens when using functions without aliasing them.</p>
 
+            
+    <p>You can hydrate an entity nested in a DTO :</p>
+
+            <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="417c0031385b91899d5b723abccc42ab7c9f7815"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="417c0031385b91899d5b723abccc42ab7c9f7815"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-417c0031385b91899d5b723abccc42ab7c9f7815-1" class="line-number-anchor" /><a href="#line-number-417c0031385b91899d5b723abccc42ab7c9f7815-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-meta">&lt;?php</span>
+$query = $em-&gt;createQuery(<span class="hljs-string">'SELECT NEW CustomerDTO(c.name, a AS address) FROM Customer c JOIN c.address a'</span>);
+$users = $query-&gt;getResult(); <span class="hljs-comment">// array of CustomerDTO</span>
+
+<span class="hljs-comment">// CustomerDTO =&gt; {name : 'DOE', email: null, address : {city: 'New York', zip: '10011', address: 'Abbey Road'}</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-417c0031385b91899d5b723abccc42ab7c9f7815-2" class="line-number-anchor" /><a href="#line-number-417c0031385b91899d5b723abccc42ab7c9f7815-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-417c0031385b91899d5b723abccc42ab7c9f7815-3" class="line-number-anchor" /><a href="#line-number-417c0031385b91899d5b723abccc42ab7c9f7815-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-417c0031385b91899d5b723abccc42ab7c9f7815-4" class="line-number-anchor" /><a href="#line-number-417c0031385b91899d5b723abccc42ab7c9f7815-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-417c0031385b91899d5b723abccc42ab7c9f7815-5" class="line-number-anchor" /><a href="#line-number-417c0031385b91899d5b723abccc42ab7c9f7815-5">5</a></td></tr></table></div></code></pre>
     </div>
     </div>
             <div class="section" id="using-index-by">
@@ -6217,19 +6234,21 @@ IndexBy                                    ::= <span class="hljs-string">"INDEX"
             <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="4eb96af0e3fd1d31ef77c5f7a9af463475b64a24"
+            data-copy-element-id="a0a5ff686c25e6bdf34fa124b4b4f469567092be"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="4eb96af0e3fd1d31ef77c5f7a9af463475b64a24"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-4eb96af0e3fd1d31ef77c5f7a9af463475b64a24-1" class="line-number-anchor" /><a href="#line-number-4eb96af0e3fd1d31ef77c5f7a9af463475b64a24-1">1</a></td><td class="code-line" rowspan="6">SelectExpression        ::= (IdentificationVariable | ScalarExpression | AggregateExpression | FunctionDeclaration | PartialObjectExpression | <span class="hljs-string">"("</span> Subselect <span class="hljs-string">")"</span> | CaseExpression | NewObjectExpression) [[<span class="hljs-string">"AS"</span>] [<span class="hljs-string">"HIDDEN"</span>] AliasResultVariable]
-SimpleSelectExpression  ::= (StateFieldPathExpression | IdentificationVariable | FunctionDeclaration | AggregateExpression | <span class="hljs-string">"("</span> Subselect <span class="hljs-string">")"</span> | ScalarExpression) [[<span class="hljs-string">"AS"</span>] AliasResultVariable]
-PartialObjectExpression ::= <span class="hljs-string">"PARTIAL"</span> IdentificationVariable <span class="hljs-string">"."</span> PartialFieldSet
-PartialFieldSet         ::= <span class="hljs-string">"{"</span> SimpleStateField {<span class="hljs-string">","</span> SimpleStateField}* <span class="hljs-string">"}"</span>
-NewObjectExpression     ::= <span class="hljs-string">"NEW"</span> AbstractSchemaName <span class="hljs-string">"("</span> NewObjectArg {<span class="hljs-string">","</span> NewObjectArg}* <span class="hljs-string">")"</span>
-NewObjectArg            ::= (ScalarExpression | <span class="hljs-string">"("</span> Subselect <span class="hljs-string">")"</span> | NewObjectExpression) [<span class="hljs-string">"AS"</span> AliasResultVariable]</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4eb96af0e3fd1d31ef77c5f7a9af463475b64a24-2" class="line-number-anchor" /><a href="#line-number-4eb96af0e3fd1d31ef77c5f7a9af463475b64a24-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4eb96af0e3fd1d31ef77c5f7a9af463475b64a24-3" class="line-number-anchor" /><a href="#line-number-4eb96af0e3fd1d31ef77c5f7a9af463475b64a24-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4eb96af0e3fd1d31ef77c5f7a9af463475b64a24-4" class="line-number-anchor" /><a href="#line-number-4eb96af0e3fd1d31ef77c5f7a9af463475b64a24-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4eb96af0e3fd1d31ef77c5f7a9af463475b64a24-5" class="line-number-anchor" /><a href="#line-number-4eb96af0e3fd1d31ef77c5f7a9af463475b64a24-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-4eb96af0e3fd1d31ef77c5f7a9af463475b64a24-6" class="line-number-anchor" /><a href="#line-number-4eb96af0e3fd1d31ef77c5f7a9af463475b64a24-6">6</a></td></tr></table></div></code></pre>
+        ><i class="fas fa-copy"></i></button><div id="a0a5ff686c25e6bdf34fa124b4b4f469567092be"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-1" class="line-number-anchor" /><a href="#line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-1">1</a></td><td class="code-line" rowspan="7">SelectExpression              ::= (IdentificationVariable | ScalarExpression | AggregateExpression | FunctionDeclaration | PartialObjectExpression | <span class="hljs-string">"("</span> Subselect <span class="hljs-string">")"</span> | CaseExpression | NewObjectExpression) [[<span class="hljs-string">"AS"</span>] [<span class="hljs-string">"HIDDEN"</span>] AliasResultVariable]
+SimpleSelectExpression        ::= (StateFieldPathExpression | IdentificationVariable | FunctionDeclaration | AggregateExpression | <span class="hljs-string">"("</span> Subselect <span class="hljs-string">")"</span> | ScalarExpression) [[<span class="hljs-string">"AS"</span>] AliasResultVariable]
+PartialObjectExpression       ::= <span class="hljs-string">"PARTIAL"</span> IdentificationVariable <span class="hljs-string">"."</span> PartialFieldSet
+PartialFieldSet               ::= <span class="hljs-string">"{"</span> SimpleStateField {<span class="hljs-string">","</span> SimpleStateField}* <span class="hljs-string">"}"</span>
+NewObjectExpression           ::= <span class="hljs-string">"NEW"</span> AbstractSchemaName <span class="hljs-string">"("</span> NewObjectArg {<span class="hljs-string">","</span> NewObjectArg}* <span class="hljs-string">")"</span>
+NewObjectArg                  ::= (ScalarExpression | <span class="hljs-string">"("</span> Subselect <span class="hljs-string">")"</span> | NewObjectExpression | EntityAsDtoArgumentExpression) [<span class="hljs-string">"AS"</span> AliasResultVariable]
+EntityAsDtoArgumentExpression ::= IdentificationVariable</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-2" class="line-number-anchor" /><a href="#line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-3" class="line-number-anchor" /><a href="#line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-4" class="line-number-anchor" /><a href="#line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-5" class="line-number-anchor" /><a href="#line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-6" class="line-number-anchor" /><a href="#line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-7" class="line-number-anchor" /><a href="#line-number-a0a5ff686c25e6bdf34fa124b4b4f469567092be-7">7</a></td></tr></table></div></code></pre>
     </div>
             <div class="section" id="conditional-expressions">
             <h3 class="section-header ">
