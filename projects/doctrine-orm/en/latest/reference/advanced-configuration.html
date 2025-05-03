@@ -709,6 +709,11 @@
                     </ul>
 </li>
             <li class="toc-item">
+    <a href="basic-mapping.html#property-hooks">Property Hooks</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="basic-mapping.html#doctrine-mapping-types">Doctrine Mapping Types</a>
 
 
@@ -2646,37 +2651,42 @@
 
         <ul class="section-level-2">
             <li class="toc-item">
-    <a href="#proxy-directory-required">Proxy Directory (*REQUIRED*)</a>
+    <a href="#native-lazy-objects-optional">Native Lazy Objects (OPTIONAL)</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="#proxy-namespace-required">Proxy Namespace (*REQUIRED*)</a>
+    <a href="#proxy-directory">Proxy Directory</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="#metadata-driver-required">Metadata Driver (*REQUIRED*)</a>
+    <a href="#proxy-namespace">Proxy Namespace</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="#metadata-cache-recommended">Metadata Cache (*RECOMMENDED*)</a>
+    <a href="#metadata-driver-required">Metadata Driver (REQUIRED)</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="#query-cache-recommended">Query Cache (*RECOMMENDED*)</a>
+    <a href="#metadata-cache-recommended">Metadata Cache (RECOMMENDED)</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="#sql-logger-optional">SQL Logger (*Optional*)</a>
+    <a href="#query-cache-recommended">Query Cache (RECOMMENDED)</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="#auto-generating-proxy-classes-optional">Auto-generating Proxy Classes (*OPTIONAL*)</a>
+    <a href="#sql-logger-optional">SQL Logger (Optional)</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#auto-generating-proxy-classes-optional">Auto-generating Proxy Classes (OPTIONAL)</a>
 
 
 </li>
@@ -2724,12 +2734,12 @@
 
 </li>
             <li class="toc-item">
-    <a href="#default-repository-optional">Default Repository (*OPTIONAL*)</a>
+    <a href="#default-repository-optional">Default Repository (OPTIONAL)</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="#ignoring-entities-optional">Ignoring entities (*OPTIONAL*)</a>
+    <a href="#ignoring-entities-optional">Ignoring entities (OPTIONAL)</a>
 
 
 </li>
@@ -3270,7 +3280,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/3.3/reference/advanced-configuration.html">
-                                                        3.3.2
+                                                        3.3.3
 
                                                                                                                     (current)
                                                         
@@ -3284,7 +3294,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/2.20/reference/advanced-configuration.html">
-                                                        2.20.2
+                                                        2.20.3
 
                                                         
                                                                                                             </a>
@@ -3338,9 +3348,9 @@ steps of configuration.</p>
             <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb"
+            data-copy-element-id="36300572631f4a799ad9f103c9a8d33f220b909d"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-1" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-1">1</a></td><td class="code-line" rowspan="39"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="36300572631f4a799ad9f103c9a8d33f220b909d"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-1" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-1">1</a></td><td class="code-line" rowspan="44"><span class="hljs-meta">&lt;?php</span>
 
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Configuration</span>;
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">EntityManager</span>;
@@ -3351,7 +3361,7 @@ steps of configuration.</p>
 
 <span class="hljs-comment">// ...</span>
 
-<span class="hljs-keyword">if</span> ($applicationMode == <span class="hljs-string">"development"</span>) {
+<span class="hljs-keyword">if</span> ($applicationMode === <span class="hljs-string">"development"</span>) {
     $queryCache = <span class="hljs-keyword">new</span> ArrayAdapter();
     $metadataCache = <span class="hljs-keyword">new</span> ArrayAdapter();
 } <span class="hljs-keyword">else</span> {
@@ -3364,13 +3374,18 @@ $config-&gt;setMetadataCache($metadataCache);
 $driverImpl = <span class="hljs-keyword">new</span> AttributeDriver([<span class="hljs-string">'/path/to/lib/MyProject/Entities'</span>], <span class="hljs-keyword">true</span>);
 $config-&gt;setMetadataDriverImpl($driverImpl);
 $config-&gt;setQueryCache($queryCache);
-$config-&gt;setProxyDir(<span class="hljs-string">'/path/to/myproject/lib/MyProject/Proxies'</span>);
-$config-&gt;setProxyNamespace(<span class="hljs-string">'MyProject\Proxies'</span>);
 
-<span class="hljs-keyword">if</span> ($applicationMode == <span class="hljs-string">"development"</span>) {
-    $config-&gt;setAutoGenerateProxyClasses(<span class="hljs-keyword">true</span>);
+<span class="hljs-keyword">if</span> (PHP_VERSION_ID &gt; <span class="hljs-number">80400</span>) {
+    $config-&gt;enableNativeLazyObjects(<span class="hljs-keyword">true</span>);
 } <span class="hljs-keyword">else</span> {
-    $config-&gt;setAutoGenerateProxyClasses(<span class="hljs-keyword">false</span>);
+    $config-&gt;setProxyDir(<span class="hljs-string">'/path/to/myproject/lib/MyProject/Proxies'</span>);
+    $config-&gt;setProxyNamespace(<span class="hljs-string">'MyProject\Proxies'</span>);
+
+    <span class="hljs-keyword">if</span> ($applicationMode === <span class="hljs-string">"development"</span>) {
+        $config-&gt;setAutoGenerateProxyClasses(<span class="hljs-keyword">true</span>);
+    } <span class="hljs-keyword">else</span> {
+        $config-&gt;setAutoGenerateProxyClasses(<span class="hljs-keyword">false</span>);
+    }
 }
 
 $connection = DriverManager::getConnection([
@@ -3379,44 +3394,49 @@ $connection = DriverManager::getConnection([
 ], $config);
 
 $em = <span class="hljs-keyword">new</span> EntityManager($connection, $config);</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-2" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-3" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-4" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-5" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-6" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-7" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-8" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-9" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-10" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-11" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-12" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-13" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-14" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-15" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-16" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-17" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-18" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-19" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-20" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-21" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-21">21</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-22" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-22">22</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-23" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-23">23</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-24" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-24">24</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-25" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-25">25</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-26" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-26">26</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-27" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-27">27</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-28" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-28">28</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-29" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-29">29</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-30" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-30">30</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-31" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-31">31</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-32" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-32">32</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-33" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-33">33</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-34" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-34">34</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-35" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-35">35</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-36" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-36">36</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-37" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-37">37</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-38" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-38">38</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-39" class="line-number-anchor" /><a href="#line-number-9b00ff09c908ac0a3a5d4a4e48cb68b9e9f86fcb-39">39</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-2" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-3" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-4" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-5" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-6" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-7" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-8" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-9" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-10" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-11" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-12" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-13" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-14" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-15" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-16" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-17" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-18" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-19" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-20" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-21" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-22" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-23" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-24" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-25" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-26" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-27" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-28" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-29" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-30" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-31" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-32" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-33" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-34" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-35" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-35">35</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-36" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-36">36</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-37" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-37">37</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-38" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-38">38</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-39" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-39">39</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-40" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-40">40</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-41" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-41">41</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-42" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-42">42</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-43" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-43">43</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-36300572631f4a799ad9f103c9a8d33f220b909d-44" class="line-number-anchor" /><a href="#line-number-36300572631f4a799ad9f103c9a8d33f220b909d-44">44</a></td></tr></table></div></code></pre>
             <div class="section" id="doctrine-and-caching">
             <h2 class="section-header ">
     <a href="#doctrine-and-caching">
@@ -3462,13 +3482,41 @@ in this documentation, Symfony Cache is used as a reference implementation.</p>
     <p>The following sections describe all the configuration options
 available on a <code>Doctrine\ORM\Configuration</code> instance.</p>
 
-            <div class="section" id="proxy-directory-required">
+            <div class="section" id="native-lazy-objects-optional">
             <h3 class="section-header ">
-    <a href="#proxy-directory-required">
-        Proxy Directory (<strong>*REQUIRED</strong>*)
+    <a href="#native-lazy-objects-optional">
+        Native Lazy Objects (<strong>OPTIONAL</strong>)
         <i class="fas fa-link"></i>
     </a>
 </h3>
+            
+    <p>With PHP 8.4 we recommend that you use native lazy objects instead of
+the code generation approach using the <code>symfony/var-exporter</code> Ghost trait.</p>
+
+            
+    <p>With Doctrine 4, the minimal requirement will become PHP 8.4 and native lazy objects
+will become the only approach to lazy loading.</p>
+
+            <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="04702d2ab6cd34e93f33ae563b9fbce280019004"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="04702d2ab6cd34e93f33ae563b9fbce280019004"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-04702d2ab6cd34e93f33ae563b9fbce280019004-1" class="line-number-anchor" /><a href="#line-number-04702d2ab6cd34e93f33ae563b9fbce280019004-1">1</a></td><td class="code-line" rowspan="2"><span class="hljs-meta">&lt;?php</span>
+$config-&gt;enableNativeLazyObjects(<span class="hljs-keyword">true</span>);</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-04702d2ab6cd34e93f33ae563b9fbce280019004-2" class="line-number-anchor" /><a href="#line-number-04702d2ab6cd34e93f33ae563b9fbce280019004-2">2</a></td></tr></table></div></code></pre>
+    </div>
+            <div class="section" id="proxy-directory">
+            <h3 class="section-header ">
+    <a href="#proxy-directory">
+        Proxy Directory
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>Required except if you use native lazy objects with PHP 8.4.
+This setting will be removed in the future.</p>
+
             <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
@@ -3486,13 +3534,17 @@ are used in Doctrine, refer to the &quot;Proxy Objects&quot; section further
 down.</p>
 
     </div>
-            <div class="section" id="proxy-namespace-required">
+            <div class="section" id="proxy-namespace">
             <h3 class="section-header ">
-    <a href="#proxy-namespace-required">
-        Proxy Namespace (<strong>*REQUIRED</strong>*)
+    <a href="#proxy-namespace">
+        Proxy Namespace
         <i class="fas fa-link"></i>
     </a>
 </h3>
+            
+    <p>Required except if you use native lazy objects with PHP 8.4.
+This setting will be removed in the future.</p>
+
             <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
@@ -3512,7 +3564,7 @@ Doctrine, refer to the &quot;Proxy Objects&quot; section further down.</p>
             <div class="section" id="metadata-driver-required">
             <h3 class="section-header ">
     <a href="#metadata-driver-required">
-        Metadata Driver (<strong>*REQUIRED</strong>*)
+        Metadata Driver (<strong>REQUIRED</strong>)
         <i class="fas fa-link"></i>
     </a>
 </h3>
@@ -3576,7 +3628,7 @@ directories of Entities.</p>
             <div class="section" id="metadata-cache-recommended">
             <h3 class="section-header ">
     <a href="#metadata-cache-recommended">
-        Metadata Cache (<strong>*RECOMMENDED</strong>*)
+        Metadata Cache (<strong>RECOMMENDED</strong>)
         <i class="fas fa-link"></i>
     </a>
 </h3>
@@ -3610,7 +3662,7 @@ which only caches data on a per-request basis.</p>
             <div class="section" id="query-cache-recommended">
             <h3 class="section-header ">
     <a href="#query-cache-recommended">
-        Query Cache (<strong>*RECOMMENDED</strong>*)
+        Query Cache (<strong>RECOMMENDED</strong>)
         <i class="fas fa-link"></i>
     </a>
 </h3>
@@ -3645,7 +3697,7 @@ which only caches data on a per-request basis.</p>
             <div class="section" id="sql-logger-optional">
             <h3 class="section-header ">
     <a href="#sql-logger-optional">
-        SQL Logger (<strong>*Optional</strong>*)
+        SQL Logger (<strong>Optional</strong>)
         <i class="fas fa-link"></i>
     </a>
 </h3>
@@ -3668,10 +3720,14 @@ deprecated <code>Doctrine\DBAL\Logging\SQLLogger</code> interface.</p>
             <div class="section" id="auto-generating-proxy-classes-optional">
             <h3 class="section-header ">
     <a href="#auto-generating-proxy-classes-optional">
-        Auto-generating Proxy Classes (<strong>*OPTIONAL</strong>*)
+        Auto-generating Proxy Classes (<strong>OPTIONAL</strong>)
         <i class="fas fa-link"></i>
     </a>
 </h3>
+            
+    <p>This setting is not required if you use native lazy objects with PHP 8.4
+and will be removed in the future.</p>
+
             
     <p>Proxy classes can either be generated manually through the Doctrine
 Console or automatically at runtime by Doctrine. The configuration
@@ -4041,7 +4097,7 @@ implementations.</p>
             <div class="section" id="default-repository-optional">
             <h2 class="section-header ">
     <a href="#default-repository-optional">
-        Default Repository (<strong>*OPTIONAL</strong>*)
+        Default Repository (<strong>OPTIONAL</strong>)
         <i class="fas fa-link"></i>
     </a>
 </h2>
@@ -4067,7 +4123,7 @@ Any repository class must be a subclass of EntityRepository otherwise you got an
             <div class="section" id="ignoring-entities-optional">
             <h2 class="section-header ">
     <a href="#ignoring-entities-optional">
-        Ignoring entities (<strong>*OPTIONAL</strong>*)
+        Ignoring entities (<strong>OPTIONAL</strong>)
         <i class="fas fa-link"></i>
     </a>
 </h2>

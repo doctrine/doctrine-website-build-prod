@@ -709,6 +709,11 @@
                     </ul>
 </li>
             <li class="toc-item">
+    <a href="#property-hooks">Property Hooks</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="#doctrine-mapping-types">Doctrine Mapping Types</a>
 
 
@@ -2646,37 +2651,42 @@
 
         <ul class="section-level-2">
             <li class="toc-item">
-    <a href="advanced-configuration.html#proxy-directory-required">Proxy Directory (*REQUIRED*)</a>
+    <a href="advanced-configuration.html#native-lazy-objects-optional">Native Lazy Objects (OPTIONAL)</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="advanced-configuration.html#proxy-namespace-required">Proxy Namespace (*REQUIRED*)</a>
+    <a href="advanced-configuration.html#proxy-directory">Proxy Directory</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="advanced-configuration.html#metadata-driver-required">Metadata Driver (*REQUIRED*)</a>
+    <a href="advanced-configuration.html#proxy-namespace">Proxy Namespace</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="advanced-configuration.html#metadata-cache-recommended">Metadata Cache (*RECOMMENDED*)</a>
+    <a href="advanced-configuration.html#metadata-driver-required">Metadata Driver (REQUIRED)</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="advanced-configuration.html#query-cache-recommended">Query Cache (*RECOMMENDED*)</a>
+    <a href="advanced-configuration.html#metadata-cache-recommended">Metadata Cache (RECOMMENDED)</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="advanced-configuration.html#sql-logger-optional">SQL Logger (*Optional*)</a>
+    <a href="advanced-configuration.html#query-cache-recommended">Query Cache (RECOMMENDED)</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="advanced-configuration.html#auto-generating-proxy-classes-optional">Auto-generating Proxy Classes (*OPTIONAL*)</a>
+    <a href="advanced-configuration.html#sql-logger-optional">SQL Logger (Optional)</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="advanced-configuration.html#auto-generating-proxy-classes-optional">Auto-generating Proxy Classes (OPTIONAL)</a>
 
 
 </li>
@@ -2724,12 +2734,12 @@
 
 </li>
             <li class="toc-item">
-    <a href="advanced-configuration.html#default-repository-optional">Default Repository (*OPTIONAL*)</a>
+    <a href="advanced-configuration.html#default-repository-optional">Default Repository (OPTIONAL)</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="advanced-configuration.html#ignoring-entities-optional">Ignoring entities (*OPTIONAL*)</a>
+    <a href="advanced-configuration.html#ignoring-entities-optional">Ignoring entities (OPTIONAL)</a>
 
 
 </li>
@@ -3270,7 +3280,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/3.3/reference/basic-mapping.html">
-                                                        3.3.2
+                                                        3.3.3
 
                                                                                                                     (current)
                                                         
@@ -3284,7 +3294,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/2.20/reference/basic-mapping.html">
-                                                        2.20.2
+                                                        2.20.3
 
                                                         
                                                                                                             </a>
@@ -3732,6 +3742,10 @@ However, when the property type is nullable this has no effect on the <code>null
     </tr>
 </tbody>
 </table>
+            <div class="alert version-added bg-info text-white">
+    <p class="new-version font-weight-bold"><i class="fas fa-plus-square"></i> New in version 2.11</p>
+    </div>
+
             
     <p>As of version 2.11 Doctrine can also automatically map typed properties using a
 PHP 8.1 enum to set the right <code>type</code> and <code>enumType</code>.</p>
@@ -3748,6 +3762,137 @@ and a custom <code>Doctrine\ORM\Mapping\TypedFieldMapper</code> implementation.<
     <p><a href="typedfieldmapper.html">Read more about TypedFieldMapper</a>.</p>
 
     </div>
+    </div>
+            <div class="section" id="property-hooks">
+            <h2 class="section-header ">
+    <a href="#property-hooks">
+        Property Hooks
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            <div class="alert version-added bg-info text-white">
+    <p class="new-version font-weight-bold"><i class="fas fa-plus-square"></i> New in version 3.4</p>
+    </div>
+
+            
+    <p>Doctrine supports mapping hooked properties as long as they have a backed property
+and are not virtual.</p>
+
+            <div class="configuration-block">
+    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-2">
+                    <button role="tab" type="button" data-language="attribute"
+                    aria-controls="configuration-block-tabpanel-d11ba45b93677782bd7b4ef11a4c12b1" aria-selected="true"
+                    data-active="true" >
+                <span>Attribute</span>
+            </button>
+                    <button role="tab" type="button" data-language="xml"
+                    aria-controls="configuration-block-tabpanel-40d9a6f7f969980f151cc29d1093cd0d" aria-selected="false"
+                     tabindex="-1">
+                <span>Xml</span>
+            </button>
+            </div>
+
+            <div role="tabpanel" id="configuration-block-tabpanel-d11ba45b93677782bd7b4ef11a4c12b1" aria-label="Attribute" class="configuration-codeblock" data-language="attribute" style="">
+            <pre class="code-block-table"><code class="attribute"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="c6bf6ed7f4cf2ac45a6660818432970d3f970f71"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="c6bf6ed7f4cf2ac45a6660818432970d3f970f71"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-1" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-1">1</a></td><td class="code-line" rowspan="20"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Column</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Types</span>;
+
+<span class="hljs-comment">#[Entity]</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Message</span>
+</span>{
+    <span class="hljs-comment">#[Column(type: Types::INTEGER)]</span>
+    <span class="hljs-keyword">private</span> $id;
+    <span class="hljs-comment">#[Column(type: Types::STRING)]</span>
+    <span class="hljs-keyword">public</span> string $language = <span class="hljs-string">'de'</span> {
+        <span class="hljs-comment">// Override the "read" action with arbitrary logic.</span>
+        get =&gt; strtoupper(<span class="hljs-keyword">$this</span>-&gt;language);
+
+        <span class="hljs-comment">// Override the "write" action with arbitrary logic.</span>
+        set {
+            <span class="hljs-keyword">$this</span>-&gt;language = strtolower($value);
+        }
+    }
+}</td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-2" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-3" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-4" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-5" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-6" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-7" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-8" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-9" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-10" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-11" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-12" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-13" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-14" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-15" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-16" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-17" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-18" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-19" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-20" class="line-number-anchor" /><a href="#line-number-c6bf6ed7f4cf2ac45a6660818432970d3f970f71-20">20</a></td></tr></table></div></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-40d9a6f7f969980f151cc29d1093cd0d" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
+            <pre class="code-block-table"><code class="xml"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa-1" class="line-number-anchor" /><a href="#line-number-5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa-1">1</a></td><td class="code-line" rowspan="6"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mapping</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">entity</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"Message"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"id"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"integer"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"language"</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">entity</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mapping</span>&gt;</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa-2" class="line-number-anchor" /><a href="#line-number-5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa-3" class="line-number-anchor" /><a href="#line-number-5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa-4" class="line-number-anchor" /><a href="#line-number-5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa-5" class="line-number-anchor" /><a href="#line-number-5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa-6" class="line-number-anchor" /><a href="#line-number-5cdbdda039d8e11b92b5fb7dd1373f29baaf15fa-6">6</a></td></tr></table></div></code></pre>
+        </div>
+    </div>
+            
+    <p>If you attempt to map a virtual property with <code>#[Column]</code> an exception will be thrown.</p>
+
+            
+    <p>Some caveats apply to the use of property hooks, as they behave differently when accessing the property through
+the entity or directly through DQL/EntityRepository. Because the property hook can modify the value of the property in a way
+that value and raw value are different, you have to use the raw value representation when querying for the property.</p>
+
+            <pre class="code-block-table"><code class="php"><button
+            type="button"
+            class="copy-to-clipboard"
+            data-copy-element-id="dae356fbec1debee155bc766709bb95cdc481971"
+            title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><div id="dae356fbec1debee155bc766709bb95cdc481971"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-dae356fbec1debee155bc766709bb95cdc481971-1" class="line-number-anchor" /><a href="#line-number-dae356fbec1debee155bc766709bb95cdc481971-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">&lt;?php</span>
+$queryBuilder = $entityManager-&gt;createQueryBuilder();
+$queryBuilder-&gt;select(<span class="hljs-string">'m'</span>)
+    -&gt;from(Message::class, <span class="hljs-string">'m'</span>)
+    -&gt;where(<span class="hljs-string">'m.language = :language'</span>)
+    -&gt;setParameter(<span class="hljs-string">'language'</span>, <span class="hljs-string">'de'</span>); <span class="hljs-comment">// Use lower case here for raw value representation</span>
+
+$query = $queryBuilder-&gt;getQuery();
+$result = $query-&gt;getResult();
+
+$messageRepository = $entityManager-&gt;getRepository(Message::class);
+$deMessages = $messageRepository-&gt;findBy([<span class="hljs-string">'language'</span> =&gt; <span class="hljs-string">'de'</span>]); <span class="hljs-comment">// Use lower case here for raw value representation</span></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-dae356fbec1debee155bc766709bb95cdc481971-2" class="line-number-anchor" /><a href="#line-number-dae356fbec1debee155bc766709bb95cdc481971-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-dae356fbec1debee155bc766709bb95cdc481971-3" class="line-number-anchor" /><a href="#line-number-dae356fbec1debee155bc766709bb95cdc481971-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-dae356fbec1debee155bc766709bb95cdc481971-4" class="line-number-anchor" /><a href="#line-number-dae356fbec1debee155bc766709bb95cdc481971-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-dae356fbec1debee155bc766709bb95cdc481971-5" class="line-number-anchor" /><a href="#line-number-dae356fbec1debee155bc766709bb95cdc481971-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-dae356fbec1debee155bc766709bb95cdc481971-6" class="line-number-anchor" /><a href="#line-number-dae356fbec1debee155bc766709bb95cdc481971-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-dae356fbec1debee155bc766709bb95cdc481971-7" class="line-number-anchor" /><a href="#line-number-dae356fbec1debee155bc766709bb95cdc481971-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-dae356fbec1debee155bc766709bb95cdc481971-8" class="line-number-anchor" /><a href="#line-number-dae356fbec1debee155bc766709bb95cdc481971-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-dae356fbec1debee155bc766709bb95cdc481971-9" class="line-number-anchor" /><a href="#line-number-dae356fbec1debee155bc766709bb95cdc481971-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-dae356fbec1debee155bc766709bb95cdc481971-10" class="line-number-anchor" /><a href="#line-number-dae356fbec1debee155bc766709bb95cdc481971-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-dae356fbec1debee155bc766709bb95cdc481971-11" class="line-number-anchor" /><a href="#line-number-dae356fbec1debee155bc766709bb95cdc481971-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-dae356fbec1debee155bc766709bb95cdc481971-12" class="line-number-anchor" /><a href="#line-number-dae356fbec1debee155bc766709bb95cdc481971-12">12</a></td></tr></table></div></code></pre>
     </div>
             <div class="section" id="doctrine-mapping-types">
             <a id="reference-mapping-types"></a>
