@@ -3281,6 +3281,22 @@
                     </ul>
 </li>
     <li class="toc-item">
+    <a href="../cookbook/generated-columns.html#generated-columns">Generated Columns</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="../cookbook/generated-columns.html#declaring-a-generated-column">Declaring a generated column</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/generated-columns.html#advanced-example-extracting-a-value-from-a-json-structure">Advanced example: Extracting a value from a JSON structure</a>
+
+
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
     <a href="../cookbook/implementing-arrayaccess-for-domain-objects.html#implementing-arrayaccess-for-domain-objects">Implementing ArrayAccess for Domain Objects</a>
 
         <ul class="section-level-1">
@@ -3908,12 +3924,15 @@ be supported by all vendors).</li>
 </ul>
 </li>
     <li class="dash">
-    <p><strong>columnDefinition</strong>: DDL SQL snippet that starts after the column
+    <p><strong>columnDefinition</strong>: Specify the DDL SQL snippet that starts after the column
 name and specifies the complete (non-portable!) column definition.
 This attribute allows to make use of advanced RMDBS features.
-However you should make careful use of this feature and the
-consequences. <code>SchemaTool</code> will not detect changes on the column correctly
-anymore if you use <code>columnDefinition</code>.</p>
+However, as this needs to be specified in the DDL native to the database,
+the resulting schema changes are no longer portable. If you specify a
+<code>columnDefinition</code>, the <code>SchemaTool</code> ignores all other attributes
+that are normally used to build the definition DDL. Changes to the
+<code>columnDefinition</code> are not detected, you will need to manually create a
+migration to apply changes.</p>
 
     <p>Additionally you should remember that the <code>type</code>
 attribute still handles the conversion between PHP and Database
@@ -3944,9 +3963,9 @@ the DBAL <code>Schema-Representation</code> documentation.</p>
             <pre class="code-block-table"><code class="php"><button
             type="button"
             class="copy-to-clipboard"
-            data-copy-element-id="13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2"
+            data-copy-element-id="a35a506133af714bba56944720788320aacf2594"
             title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-1" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-1">1</a></td><td class="code-line" rowspan="34"><span class="hljs-meta">&lt;?php</span>
+        ><i class="fas fa-copy"></i></button><div id="a35a506133af714bba56944720788320aacf2594"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-1" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-1">1</a></td><td class="code-line" rowspan="35"><span class="hljs-meta">&lt;?php</span>
 <span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Column</span>;
 
 <span class="hljs-comment">#[Column(type: "string", length: 32, unique: true, nullable: false)]</span>
@@ -3972,47 +3991,49 @@ the DBAL <code>Schema-Representation</code> documentation.</p>
 )]
 <span class="hljs-keyword">protected</span> $loginCount;
 
-<span class="hljs-comment">// MySQL example: full_name char(41) GENERATED ALWAYS AS (concat(firstname,' ',lastname)),</span>
+<span class="hljs-comment">// columnDefinition is raw SQL, not DQL. This example works for MySQL:</span>
 <span class="hljs-comment">#[Column(</span>
     type: <span class="hljs-string">"string"</span>,
     name: <span class="hljs-string">"user_fullname"</span>,
+    columnDefinition: <span class="hljs-string">"VARCHAR(255) GENERATED ALWAYS AS (concat(firstname,' ',lastname))"</span>,
     insertable: <span class="hljs-keyword">false</span>,
     updatable: <span class="hljs-keyword">false</span>
 )]
 <span class="hljs-keyword">protected</span> $fullname;</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-2" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-3" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-4" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-5" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-6" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-7" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-8" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-9" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-10" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-11" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-12" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-13" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-14" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-15" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-16" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-17" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-18" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-19" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-20" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-21" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-21">21</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-22" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-22">22</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-23" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-23">23</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-24" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-24">24</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-25" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-25">25</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-26" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-26">26</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-27" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-27">27</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-28" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-28">28</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-29" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-29">29</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-30" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-30">30</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-31" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-31">31</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-32" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-32">32</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-33" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-33">33</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-34" class="line-number-anchor" /><a href="#line-number-13bc03d9404b8f5ec92fb81bbf5dd0da9a29e2e2-34">34</a></td></tr></table></div></code></pre>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-2" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-2">2</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-3" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-3">3</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-4" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-4">4</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-5" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-5">5</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-6" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-6">6</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-7" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-7">7</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-8" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-8">8</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-9" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-9">9</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-10" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-10">10</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-11" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-11">11</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-12" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-12">12</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-13" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-13">13</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-14" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-14">14</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-15" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-15">15</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-16" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-16">16</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-17" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-17">17</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-18" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-18">18</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-19" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-19">19</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-20" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-20">20</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-21" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-21">21</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-22" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-22">22</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-23" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-23">23</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-24" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-24">24</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-25" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-25">25</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-26" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-26">26</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-27" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-27">27</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-28" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-28">28</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-29" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-29">29</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-30" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-30">30</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-31" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-31">31</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-32" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-32">32</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-33" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-33">33</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-34" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-34">34</a></td></tr>
+<tr><td class="line-number noselect"><a name="line-number-a35a506133af714bba56944720788320aacf2594-35" class="line-number-anchor" /><a href="#line-number-a35a506133af714bba56944720788320aacf2594-35">35</a></td></tr></table></div></code></pre>
     </div>
             <div class="section" id="cache">
             <a id="attrref_cache"></a>
@@ -4176,7 +4197,7 @@ used during Array hydration as key to specify the class-name.</li>
 <ul>
     <li class="dash"><strong>type</strong>: By default this is string.</li>
     <li class="dash"><strong>length</strong>: By default this is 255.</li>
-    <li class="dash"><strong>columnDefinition</strong>: By default this is null the definition according to the type will be used. This option allows to override it.</li>
+    <li class="dash"><strong>columnDefinition</strong>: Allows to override how the column is generated. See the &quot;columnDefinition&quot; attribute on <a href="#attrref_column">#[Column]</a></li>
     <li class="dash"><strong>enumType</strong>: By default this is <code>null</code>. Allows to map discriminatorColumn value to PHP enum</li>
     <li class="dash"><strong>options</strong>: See &quot;options&quot; attribute on <a href="#attrref_column">#[Column]</a>.</li>
 </ul>
@@ -4692,8 +4713,10 @@ null is an allowed state for the relation. Defaults to true.</li>
     <li class="dash"><strong>onDelete</strong>: Cascade Action (Database-level)</li>
     <li class="dash"><strong>columnDefinition</strong>: DDL SQL snippet that starts after the column
 name and specifies the complete (non-portable!) column definition.
-This attribute enables the use of advanced RMDBS features. Using
-this attribute on <code>#[JoinColumn]</code> is necessary if you need slightly
+This attribute enables the use of advanced RMDBS features. Note that you
+need to reference columns by their database name (either explicitly set in
+the mapping or per the current <a href="namingstrategy.html">naming strategy</a>).
+Using this attribute on <code>#[JoinColumn]</code> is necessary if you need
 different column definitions for joining columns, for example
 regarding NULL/NOT NULL defaults. However by default a
 &quot;columnDefinition&quot; attribute on <a href="#attrref_column">#[Column]</a> also sets
