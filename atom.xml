@@ -3,9 +3,26 @@
     <title><![CDATA[Doctrine]]></title>
     <link href="https://www.doctrine-project.org/atom.xml" rel="self" />
     <link href="https://www.doctrine-project.org/" />
-    <updated>2025-06-30T21:52:09-04:00</updated>
+    <updated>2025-07-01T14:31:32-04:00</updated>
     <id>https://www.doctrine-project.org/</id>
 
+            <entry>
+            <title type="html"><![CDATA[Doctrine Core Team Meetup 2025 in Paris, France]]></title>
+            <link href="https://www.doctrine-project.org/2025/07/01/doctrine-core-team-meetup-paris25.html"/>
+            <updated>2025-07-01T00:00:00-04:00</updated>
+            <id>https://www.doctrine-project.org/2025/07/01/doctrine-core-team-meetup-paris25.html</id>
+            <author><name>Benjamin Eberlei</name></author>
+            <content type="html"><![CDATA[<p>We are organizing another Doctrine Core Team Meetup in Paris, France from
+Tuesday, 7.10.2025 to Thursday, 09.10.2025. We are happy that
+<a href="https://jolicode.com/">JoliCode</a> will open their offices for us to meet. </p>
+<p>The event is organized and hosted by <a href="https://tideways.com">Tideways GmbH</a> to
+allow our international contributors the visit to the European Union.</p>
+<p>The goal is to get the current team together, discuss and work on Doctrine
+DBAL, ORM and ODM.</p>
+<p>We thank all of our <a href="https://github.com/sponsors/doctrine#sponsors">GitHub</a> and
+<a href="https://opencollective.com/doctrine">OpenCollective</a> sponsors for making this
+possible.</p>]]></content>
+        </entry>
             <entry>
             <title type="html"><![CDATA[ORM 3.4.0 released with Native Lazy Objects and Property hooks support]]></title>
             <link href="https://www.doctrine-project.org/2025/06/28/orm-3.4.0-released.html"/>
@@ -539,58 +556,5 @@ in the right directory (and also, the right repository, which is
 well written.</p>
 <p>Anyway, now that these 2 bugs are fixed and you know how to migrate, plan that
 migration, and let us know how it goes! Happy Rectoring!</p>]]></content>
-        </entry>
-            <entry>
-            <title type="html"><![CDATA[New Release: Doctrine DBAL 3.4.0]]></title>
-            <link href="https://www.doctrine-project.org/2022/08/06/dbal-3.4.0.html"/>
-            <updated>2022-08-06T00:00:00-04:00</updated>
-            <id>https://www.doctrine-project.org/2022/08/06/dbal-3.4.0.html</id>
-            <author><name>Sergei Morozov</name></author>
-            <content type="html"><![CDATA[<p>Doctrine is proud to announce the release of Doctrine DBAL 3.4.0. Below is a summary of the most noteworthy changes
-in the new release:</p>
-<h2>Database schema introspection optimization (<a href="https://github.com/doctrine/dbal/pull/5268">#5268</a>)</h2>
-<p>Older DBAL versions, in order to introspect database schema, performed a set of queries for each table individually.
-This caused noticeable performance issues on some platforms like Oracle which seemingly rebuild their internal views
-for each such query.</p>
-<p>As of this release, the entire schema is introspected in a fixed number of queries. The more tables the schema contains,
-the more noticeable this optimization should be.</p>
-<p>It was impossible to make these optimizations while using the schema introspection platform methods
-(e.g. <code>getListTableColumnsSQL()</code>). As a result, although these methods are kept in the codebase for backward
-compatibility, the DBAL itself no longer uses them. The SQL queries used for schema introspection are no longer
-considered part of the public DBAL API.</p>
-<h2>Support for foreign key constraints on SQLite (<a href="https://github.com/doctrine/dbal/pull/5427">#5427</a>)</h2>
-<p>Although SQLite has supported foreign key constraints since its earliest versions, their support in the DBAL
-was quite limited. One of the reasons for that was that managing foreign key constraints in SQLite is quite different
-from the rest of the supported platforms.</p>
-<p>For example, when a foreign key constraint is declared, platforms like MySQL require that the referenced table
-must already exist. To support creating tables with mutually referencing constraints, the DBAL would
-create the tables first and create the constraints via <code>ALTER TABLE … ADD FOREIGN KEY …</code>.</p>
-<p>This approach doesn't work with SQLite since it doesn't allow adding constraints to an existing table. Fortunately,
-it doesn't require the referenced table to exist at the time of creating the foreign key either.</p>
-<p>The new DBAL release introduces a new API for building <code>CREATE TABLE</code> and <code>DROP TABLE</code> statements for multiple tables
-which could be tailored to the requirements of a given platform. The <code>AbstractPlatform::supportsForeignKeys()</code> method
-is now deprecated since the DBAL supports foreign key constraints on all supported platforms.</p>
-<h2>Support for TEXT/BLOB default values on MariaDB (<a href="https://github.com/doctrine/dbal/pull/5332">#5332</a>)</h2>
-<p>The platform layer in the DBAL is organized in the way that the code implementing the support for MySQL is also
-used to support MariaDB. As a result, even though MariaDB may support certain features the DBAL doesn't support them
-because they are not supported by MySQL. One of such features is the default values for TEXT and BLOB columns.</p>
-<p>As of the new release, the default TEXT and BLOB values are supported on MariaDB but are still unsupported on MySQL,
-even though MySQL supports them as of
-release <a href="https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-13.html#mysqld-8-0-13-data-types">8.0.13</a>.</p>
-<h2>Support for result caching in QueryBuilder (<a href="https://github.com/doctrine/dbal/pull/5539">#5539</a>)</h2>
-<p>The recently added <code>enableResultCache()</code> method of the <code>QueryBuilder</code> class allows specifying the query cache profile
-to be used for performing the queries built by the builder.</p>
-<h2>PHP 7.4 or newer is required (<a href="https://github.com/doctrine/dbal/pull/5459">#5459</a>)</h2>
-<p>The DBAL no longer supports PHP 7.3 since its support by the community ended last year. The codebase now
-actively uses such features of PHP 7.4 as
-<a href="https://wiki.php.net/rfc/covariant-returns-and-contravariant-parameters">covariant return types</a>
-and <a href="https://wiki.php.net/rfc/typed_properties_v2">typed properties</a>.</p>
-<h2>Deprecations</h2>
-<p>In light of the DBAL 4 release planned for later this year, the 3.4.0 release introduces over 30 deprecations which,
-as usual, focus on cleaning up obsolete features and making the API more robust and clearer from the
-static analysis standpoint.</p>
-<p>To learn more about upgrading your application, see the
-<a href="https://github.com/doctrine/dbal/blob/3.4.0/UPGRADE.md#upgrade-to-34">upgrade notes</a>. You can find the full
-list of changes in the release <a href="https://github.com/doctrine/dbal/milestone/107">milestone</a>.</p>]]></content>
         </entry>
     </feed>
