@@ -22,8 +22,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?74d1a1"
-                        integrity="sha384-dAaEn2ZyD87ZE8ZaTOc39tmNlPuZWU7Tvl3K1W/IXH5rtko68QAI5cdG6HLv97IH"
+            href="https://www.doctrine-project.org/frontend/css/index.css?6e5d9f"
+                        integrity="sha384-1gHMA2pCh3C7C5PdanZqLyU+p0j9aNUSKdqMxyST9hhhoAcooEmUcqk0Rj7owse5"
                         crossorigin="anonymous"
         />
 
@@ -1801,12 +1801,15 @@ Every document has an identifier, which is its PHPCR path. The path is unique
 inside the workspace. Take the following example, where you find an article
 with the headline &quot;Hello World&quot; with the ID <code>/cms/article/hello-world</code>:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>article = $documentManager->find(null, '/cms/article/hello-world');
-<span class="noselect">$ </span>article->setHeadline('Hello World dude!');
+                <div class="console">
+        <pre><code class="console">$article = $documentManager-&gt;find(null, &#039;/cms/article/hello-world&#039;);
+$article-&gt;setHeadline(&#039;Hello World dude!&#039;);
 
-<span class="noselect">$ </span>article2 = $documentManager->find(null, '/cms/article/hello-world');
-echo $article2->getHeadline(); // Hello World dude!
-</code></pre></div>
+$article2 = $documentManager-&gt;find(null, &#039;/cms/article/hello-world&#039;);
+echo $article2-&gt;getHeadline(); // Hello World dude!
+</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -1843,10 +1846,13 @@ screen. You can even verify that <code>$article</code> and <code>$article2</code
 indeed pointing to the same instance by running the following
 code:</p>
 
-            <div class="console"><pre><code class="console">if ($article === $article2) {
-    echo "Yes we are the same!";
+                <div class="console">
+        <pre><code class="console">if ($article === $article2) {
+    echo &quot;Yes we are the same!&quot;;
 }
-</code></pre></div>
+</code></pre>
+    </div>
+
             
     <p>Sometimes you want to clear the identity map of a <code>DocumentManager</code> to
 start over. We use this regularly in our unit tests to enforce
@@ -1892,7 +1898,8 @@ want.</p>
     <p>Take the following example of a single <code>Article</code> document fetched
 from newly opened DocumentManager:</p>
 
-            <div class="console"><pre><code class="console">use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+                <div class="console">
+        <pre><code class="console">use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
 /**
  * @PHPCR\Document
@@ -1905,7 +1912,7 @@ class Article
     private $id;
 
     /**
-     * @PHPCR\Field(type="string")
+     * @PHPCR\Field(type=&quot;string&quot;)
      */
     private $headline;
 
@@ -1915,20 +1922,22 @@ class Article
     private $author;
 
     /**
-     * @PHPCR\Referrers(referrerDocument="Comment", referencedBy="article")
+     * @PHPCR\Referrers(referrerDocument=&quot;Comment&quot;, referencedBy=&quot;article&quot;)
      */
     private $comments;
 
     public function __construct {
-        $this->comments = new ArrayCollection();
+        $this-&gt;comments = new ArrayCollection();
     }
 
-    public function getAuthor() { return $this->author; }
-    public function getComments() { return $this->comments; }
+    public function getAuthor() { return $this-&gt;author; }
+    public function getComments() { return $this-&gt;comments; }
 }
 
-<span class="noselect">$ </span>article = $em->find(null, '/cms/article/hello-world');
-</code></pre></div>
+$article = $em-&gt;find(null, &#039;/cms/article/hello-world&#039;);
+</code></pre>
+    </div>
+
             
     <p>This code retrieves an <code>Article</code> instance with ID
 <code>/cms/article/hello-world</code>, executing a single <code>getNode()</code> operation
@@ -1963,34 +1972,38 @@ References are directed links. You can map the backlinks using the
     <p>This lazy-loading process happens behind the scenes, hidden from
 your code. Have a look at the following example:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>article = $em->find(null, '/cms/article/hello-world');
+                <div class="console">
+        <pre><code class="console">$article = $em-&gt;find(null, &#039;/cms/article/hello-world&#039;);
 
 // accessing a method of the user instance triggers the lazy-load
-echo "Author: " . $article->getAuthor()->getName() . "\n";
+echo &quot;Author: &quot; . $article-&gt;getAuthor()-&gt;getName() . &quot;\n&quot;;
 
-if ($article->getAuthor() instanceof User) {
+if ($article-&gt;getAuthor() instanceof User) {
     // getAuthor returns a proxy class which is instanceof User
 }
 
 // accessing the comments as an iterator triggers the lazy-load
 // retrieving ALL the comments of this article from the repository
 // using a single getNodes call
-foreach ($article->getComments() AS $comment) {
-    echo $comment->getText() . "\n\n";
+foreach ($article-&gt;getComments() AS $comment) {
+    echo $comment-&gt;getText() . &quot;\n\n&quot;;
 }
 
 // Article::$comments passes instanceof tests for the Collection interface
 // But it will NOT pass for the ArrayCollection interface
-if ($article->getComments() instanceof \Doctrine\Common\Collections\Collection) {
-    echo "This will always be true!";
+if ($article-&gt;getComments() instanceof \Doctrine\Common\Collections\Collection) {
+    echo &quot;This will always be true!&quot;;
 }
-</code></pre></div>
+</code></pre>
+    </div>
+
             
     <p>A slice of the generated proxy classes code looks like the
 following example. Real proxy class override <em>all</em> public
 methods along the lines of the <code>getName()</code> method shown below:</p>
 
-            <div class="console"><pre><code class="console">class UserProxy extends User implements Proxy
+                <div class="console">
+        <pre><code class="console">class UserProxy extends User implements Proxy
 {
     private function _load()
     {
@@ -1999,12 +2012,14 @@ methods along the lines of the <code>getName()</code> method shown below:</p>
 
     public function getName()
     {
-        $this->_load();
+        $this-&gt;_load();
         return parent::getName();
     }
     // .. other public methods of User
 }
-</code></pre></div>
+</code></pre>
+    </div>
+
                         <div class="alert warning-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -2062,11 +2077,14 @@ taking care of maintaining referential integrity.</p>
             
     <p>Example:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>user = new User;
-<span class="noselect">$ </span>user->setName('Mr.Right');
-<span class="noselect">$ </span>dm->persist($user);
-<span class="noselect">$ </span>dm->flush();
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$user = new User;
+$user-&gt;setName(&#039;Mr.Right&#039;);
+$dm-&gt;persist($user);
+$dm-&gt;flush();
+</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -2145,9 +2163,12 @@ for more information.</p>
             
     <p>Example:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>dm->remove($user);
-<span class="noselect">$ </span>dm->flush();
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$dm-&gt;remove($user);
+$dm-&gt;flush();
+</code></pre>
+    </div>
+
             
     <p>The semantics of the remove operation, applied to a document X are
 as follows:</p>
@@ -2229,8 +2250,11 @@ detached.</p>
             
     <p>Example:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>dm->detach($document);
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$dm-&gt;detach($document);
+</code></pre>
+    </div>
+
             
     <p>The semantics of the detach operation, applied to a document X are
 as follows:</p>
@@ -2290,12 +2314,15 @@ this document and this copy will subsequently be returned.</p>
             
     <p>Example:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>detachedDocument = unserialize($serializedDocument); // some detached document
-<span class="noselect">$ </span>document = $em->merge($detachedDocument);
+                <div class="console">
+        <pre><code class="console">$detachedDocument = unserialize($serializedDocument); // some detached document
+$document = $em-&gt;merge($detachedDocument);
 // $document now refers to the fully managed copy returned by the merge operation.
 // The DocumentManager now manages the persistence of $document as usual.
 
-</code></pre></div>
+</code></pre>
+    </div>
+
             
     <p>The semantics of the merge operation, applied to a document X, are
 as follows:</p>
@@ -2520,8 +2547,11 @@ documents at a particular point in time.</p>
             
     <p>You can get the size of a Unit of Work as follows:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>uowSize = $dm->getUnitOfWork()->size();
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$uowSize = $dm-&gt;getUnitOfWork()-&gt;size();
+</code></pre>
+    </div>
+
             
     <p>The size represents the number of managed documents in the Unit of
 Work. This size affects the performance of flush() operations due
@@ -2562,8 +2592,11 @@ single HTTP request there should be usually no need for invoking
 <code>DocumentManager::getUnitOfWork()</code>. This will return the UnitOfWork
 instance the <code>DocumentManager</code> is currently using:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>uow = $em->getUnitOfWork();
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$uow = $em-&gt;getUnitOfWork();
+</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -2596,7 +2629,8 @@ explicitly need to find out what the current state of a document is
 in the context of a certain <code>DocumentManager</code> you can ask the
 underlying <code>UnitOfWork</code>:</p>
 
-            <div class="console"><pre><code class="console">switch ($dm->getUnitOfWork()->getDocumentState($document)) {
+                <div class="console">
+        <pre><code class="console">switch ($dm-&gt;getUnitOfWork()-&gt;getDocumentState($document)) {
     case UnitOfWork::STATE_MANAGED:
         ...
     case UnitOfWork::STATE_REMOVED:
@@ -2606,7 +2640,9 @@ underlying <code>UnitOfWork</code>:</p>
     case UnitOfWork::STATE_NEW:
         ...
 }
-</code></pre></div>
+</code></pre>
+    </div>
+
             
     <p>The states mean the following:</p>
 
@@ -2654,9 +2690,12 @@ identifier (PHPCR path) using the
 <code>DocumentManager::find(null, $id)</code> method. Here is an
 example:</p>
 
-            <div class="console"><pre><code class="console">/** @var $em DocumentManager */
-<span class="noselect">$ </span>user = $em->find('MyProject\Domain\User', $id);
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">/** @var $em DocumentManager */
+$user = $em-&gt;find(&#039;MyProject\Domain\User&#039;, $id);
+</code></pre>
+    </div>
+
             
     <p>The return value is either the found document instance or null if no
 instance could be found with the given identifier.</p>
@@ -2685,17 +2724,20 @@ class.</p>
 form a logical conjunction, use the <code>findBy</code> and <code>findOneBy</code>
 methods on a repository as follows:</p>
 
-            <div class="console"><pre><code class="console">/** @var $dm DocumentManager */
+                <div class="console">
+        <pre><code class="console">/** @var $dm DocumentManager */
 
 // All users that are 20 years old
-<span class="noselect">$ </span>users = $dm->getRepository('MyProject\Domain\User')->findBy(array('age' => 20));
+$users = $dm-&gt;getRepository(&#039;MyProject\Domain\User&#039;)-&gt;findBy(array(&#039;age&#039; =&gt; 20));
 
-// All users that are 20 years old and have a surname of 'Miller'
-<span class="noselect">$ </span>users = $dm->getRepository('MyProject\Domain\User')->findBy(array('age' => 20, 'surname' => 'Miller'));
+// All users that are 20 years old and have a surname of &#039;Miller&#039;
+$users = $dm-&gt;getRepository(&#039;MyProject\Domain\User&#039;)-&gt;findBy(array(&#039;age&#039; =&gt; 20, &#039;surname&#039; =&gt; &#039;Miller&#039;));
 
 // A single user by its nickname
-<span class="noselect">$ </span>user = $dm->getRepository('MyProject\Domain\User')->findOneBy(array('nickname' => 'romanb'));
-</code></pre></div>
+$user = $dm-&gt;getRepository(&#039;MyProject\Domain\User&#039;)-&gt;findOneBy(array(&#039;nickname&#039; =&gt; &#039;romanb&#039;));
+</code></pre>
+    </div>
+
                         <div class="alert warning-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -2716,9 +2758,12 @@ need to fetch several documents.</p>
             
     <p>You can also query by references through the repository:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>number = $dm->find('MyProject\Domain\Phonenumber', '/path/to/phone/number');
-<span class="noselect">$ </span>user = $dm->getRepository('MyProject\Domain\User')->findOneBy(array('phone' => $number->getUuid()));
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$number = $dm-&gt;find(&#039;MyProject\Domain\Phonenumber&#039;, &#039;/path/to/phone/number&#039;);
+$user = $dm-&gt;getRepository(&#039;MyProject\Domain\User&#039;)-&gt;findOneBy(array(&#039;phone&#039; =&gt; $number-&gt;getUuid()));
+</code></pre>
+    </div>
+
             
     <p>Be careful that this only works by passing the uuid of the associated
 document, not yet by passing the associated document itself.</p>
@@ -2727,10 +2772,13 @@ document, not yet by passing the associated document itself.</p>
     <p>The <code>DocumentRepository::findBy()</code> method additionally accepts orderings,
 limit and offset as second to fourth parameters:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>tenUsers = $dm
-    ->getRepository('MyProject\Domain\User')
-    ->findBy(array('age' => 20), array('name' => 'ASC'), 10, 0);
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$tenUsers = $dm
+    -&gt;getRepository(&#039;MyProject\Domain\User&#039;)
+    -&gt;findBy(array(&#039;age&#039; =&gt; 20), array(&#039;name&#039; =&gt; &#039;ASC&#039;), 10, 0);
+</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -2752,13 +2800,16 @@ section does not work yet.</p>
 calls through its use of <code>__call</code>. Thus, the following two
 examples are equivalent:</p>
 
-            <div class="console"><pre><code class="console">// A single user by its nickname
-<span class="noselect">$ </span>user = $dm->getRepository('MyProject\Domain\User')->findOneBy(array('nickname' => 'romanb'));
+                <div class="console">
+        <pre><code class="console">// A single user by its nickname
+$user = $dm-&gt;getRepository(&#039;MyProject\Domain\User&#039;)-&gt;findOneBy(array(&#039;nickname&#039; =&gt; &#039;romanb&#039;));
 
 // A single user by its nickname (__call magic)
-<span class="noselect">$ </span>user = $dm->getRepository('MyProject\Domain\User')->findOneByNickname('romanb');
+$user = $dm-&gt;getRepository(&#039;MyProject\Domain\User&#039;)-&gt;findOneByNickname(&#039;romanb&#039;);
 
-</code></pre></div>
+</code></pre>
+    </div>
+
     </div>
             <div class="section" id="by-lazy-loading">
             <h3 class="section-header ">
@@ -2825,12 +2876,13 @@ Repository in the Annotation, XML or YAML metadata.</p>
 custom repository is the recommended way of grouping these queries
 in a central location:</p>
 
-            <div class="console"><pre><code class="console">namespace MyDomain\Model;
+                <div class="console">
+        <pre><code class="console">namespace MyDomain\Model;
 
 use Doctrine\ODM\PHPCR\DocumentRepository;
 
 /**
- * @PHPCR\Document(repositoryClass="MyDomain\Model\UserRepository")
+ * @PHPCR\Document(repositoryClass=&quot;MyDomain\Model\UserRepository&quot;)
  */
 class User
 {
@@ -2841,18 +2893,23 @@ class UserRepository extends DocumentRepository
 {
     public function getAllAdminUsers()
     {
-        $qb = $this->dm->getQueryBuilder();
+        $qb = $this-&gt;dm-&gt;getQueryBuilder();
         // ... build some fancy query
-        return $qb->getQuery()->getResult();
+        return $qb-&gt;getQuery()-&gt;getResult();
     }
 }
-</code></pre></div>
+</code></pre>
+    </div>
+
             
     <p>You can access your repository now by calling:</p>
 
-            <div class="console"><pre><code class="console">/** @var $dm DocumentManager */
+                <div class="console">
+        <pre><code class="console">/** @var $dm DocumentManager */
 
-<span class="noselect">$ </span>admins = $dm->getRepository('MyDomain\Model\User')->getAllAdminUsers();</code></pre></div>
+$admins = $dm-&gt;getRepository(&#039;MyDomain\Model\User&#039;)-&gt;getAllAdminUsers();</code></pre>
+    </div>
+
     </div>
     </div>
     </div>

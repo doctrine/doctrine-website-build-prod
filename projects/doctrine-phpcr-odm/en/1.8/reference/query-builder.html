@@ -22,8 +22,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?74d1a1"
-                        integrity="sha384-dAaEn2ZyD87ZE8ZaTOc39tmNlPuZWU7Tvl3K1W/IXH5rtko68QAI5cdG6HLv97IH"
+            href="https://www.doctrine-project.org/frontend/css/index.css?6e5d9f"
+                        integrity="sha384-1gHMA2pCh3C7C5PdanZqLyU+p0j9aNUSKdqMxyST9hhhoAcooEmUcqk0Rj7owse5"
                         crossorigin="anonymous"
         />
 
@@ -1932,13 +1932,16 @@ level of the ODM using a fluent interface.</p>
             
     <p>An example query:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb = $documentManager->createQueryBuilder();
+                <div class="console">
+        <pre><code class="console">$qb = $documentManager-&gt;createQueryBuilder();
 
-<span class="noselect">$ </span>qb->from()->document(User::class, 'u');
-<span class="noselect">$ </span>qb->where()->eq()->field('u.name')->literal('dtl');
+$qb-&gt;from()-&gt;document(User::class, &#039;u&#039;);
+$qb-&gt;where()-&gt;eq()-&gt;field(&#039;u.name&#039;)-&gt;literal(&#039;dtl&#039;);
 
-<span class="noselect">$ </span>query = $qb->getQuery();
-</code></pre></div>
+$query = $qb-&gt;getQuery();
+</code></pre>
+    </div>
+
             
     <p>This query will select all documents of class <code>Blog\User</code> which
 have a value of <code>dtl</code> for the field <code>name</code>.</p>
@@ -1963,15 +1966,18 @@ literal string &quot;dtl&quot;.</p>
     <p>Alternatively the above query can be written more fluently by the using
 <code>end()</code> terminators as follows:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb = $documentManager->createQueryBuilder();
-<span class="noselect">$ </span>qb->from()
-    ->document(User::class)
-  ->end()
-  ->where()
-    ->eq()
-      ->field('a.name')
-      ->literal('dtl');
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$qb = $documentManager-&gt;createQueryBuilder();
+$qb-&gt;from()
+    -&gt;document(User::class)
+  -&gt;end()
+  -&gt;where()
+    -&gt;eq()
+      -&gt;field(&#039;a.name&#039;)
+      -&gt;literal(&#039;dtl&#039;);
+</code></pre>
+    </div>
+
             <div class="section" id="concepts">
             <h2 class="section-header ">
     <a href="#concepts">
@@ -1998,18 +2004,21 @@ arguments.</p>
 themselves to the query builder tree. The parent node is always a factory
 node and the leaf node always has arguments:</p>
 
-            <div class="console"><pre><code class="console">// the query builder is a factory node
-<span class="noselect">$ </span>qb = $dm->createQueryBuilder();
+                <div class="console">
+        <pre><code class="console">// the query builder is a factory node
+$qb = $dm-&gt;createQueryBuilder();
 
 // from() returns a new factory node
-<span class="noselect">$ </span>from = $qb->from();
+$from = $qb-&gt;from();
 
 // document() is a leaf node, it returns the parent factory
-<span class="noselect">$ </span>from = $from->document('Post', 'p');
+$from = $from-&gt;document(&#039;Post&#039;, &#039;p&#039;);
 
 // end() returns the parent, in this case the query builder.
-<span class="noselect">$ </span>qb = $from->end();
-</code></pre></div>
+$qb = $from-&gt;end();
+</code></pre>
+    </div>
+
     </div>
             <div class="section" id="fluent-interface">
             <h3 class="section-header ">
@@ -2027,8 +2036,11 @@ constructed in a single, unbroken, statement.</p>
 other factory nodes or, if the factory method returns a leaf, the method will
 return its owning class instance:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb->where()->eq()->field('p.title', 'p')->literal('My Post');
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$qb-&gt;where()-&gt;eq()-&gt;field(&#039;p.title&#039;, &#039;p&#039;)-&gt;literal(&#039;My Post&#039;);
+</code></pre>
+    </div>
+
             
     <p>In the example above:</p>
 
@@ -2062,8 +2074,11 @@ current node, allowing us to construct the query in full without breaking the
 chain. A practical application of this is when we do more complicated things,
 such as chaining operands:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb->where()->eq()->lowerCase()->field('p.title')->end()->literal('my post');
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$qb-&gt;where()-&gt;eq()-&gt;lowerCase()-&gt;field(&#039;p.title&#039;)-&gt;end()-&gt;literal(&#039;my post&#039;);
+</code></pre>
+    </div>
+
             
     <p>Here the <code>lowerCase()</code> method would return the <code>LowerCase</code> operand, which will
 transform the value of its child member to lowercase. Because <code>field()</code> will
@@ -2097,12 +2112,15 @@ will not add <code>end()</code> terminators where they are not required.</p>
             
     <p>Each node has an associated node type:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb->getNodeType(); // returns "builder"
-<span class="noselect">$ </span>qb->where()->getNodeType(); // returns "where"
-<span class="noselect">$ </span>qb->andWhere()->getNodeType(); // returns "where"
-<span class="noselect">$ </span>qb->where()->eq()->getNodeType(); // returns "constraint"
-<span class="noselect">$ </span>qb->where()->eq()->field()->getNodeType(); // returns "operand"
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$qb-&gt;getNodeType(); // returns &quot;builder&quot;
+$qb-&gt;where()-&gt;getNodeType(); // returns &quot;where&quot;
+$qb-&gt;andWhere()-&gt;getNodeType(); // returns &quot;where&quot;
+$qb-&gt;where()-&gt;eq()-&gt;getNodeType(); // returns &quot;constraint&quot;
+$qb-&gt;where()-&gt;eq()-&gt;field()-&gt;getNodeType(); // returns &quot;operand&quot;
+</code></pre>
+    </div>
+
             
     <p>Node types (not to be confused with PHPCR node types) are used to validate the
 query builder trees structure. Each factory node declares how many children of
@@ -2115,21 +2133,24 @@ factory nodes.</p>
 given node type will cause an exception to be thrown when retrieving the
 query, for example:</p>
 
-            <div class="console"><pre><code class="console">// throws exception, query builder node needs at least one "from".
-<span class="noselect">$ </span>qb->getQuery();
+                <div class="console">
+        <pre><code class="console">// throws exception, query builder node needs at least one &quot;from&quot;.
+$qb-&gt;getQuery();
 
 // throws exception, eq() needs one dynamic and one static operand
-<span class="noselect">$ </span>qb->where()->eq()->field('p.title');
-<span class="noselect">$ </span>qb->getQuery();
+$qb-&gt;where()-&gt;eq()-&gt;field(&#039;p.title&#039;);
+$qb-&gt;getQuery();
 
 // throws exception, eq() needs one dynamic and one static operand
-<span class="noselect">$ </span>qb->where()->eq()->field('p.title')->field('p.name');
-<span class="noselect">$ </span>qb->getQuery();
+$qb-&gt;where()-&gt;eq()-&gt;field(&#039;p.title&#039;)-&gt;field(&#039;p.name&#039;);
+$qb-&gt;getQuery();
 
 // ok
-<span class="noselect">$ </span>qb->where()->eq()->field('p.title')->literal('My Post');
-<span class="noselect">$ </span>qb->getQuery();
-</code></pre></div>
+$qb-&gt;where()-&gt;eq()-&gt;field(&#039;p.title&#039;)-&gt;literal(&#039;My Post&#039;);
+$qb-&gt;getQuery();
+</code></pre>
+    </div>
+
             
     <p>The cardinality for each node is documented in the
 <a href="query-builder-reference.html">Query Builder Reference</a>, for an example see
@@ -2147,19 +2168,25 @@ query, for example:</p>
     <p>The term &quot;alias&quot; refers to the string that is assigned to a document source,
 either a <code>SourceFrom</code> or a <code>SourceJoin</code>:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb->from(Post::class, 'post');
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$qb-&gt;from(Post::class, &#039;post&#039;);
+</code></pre>
+    </div>
+
             
     <p>In the example above, &quot;post&quot; is the alias. The alias is subsequently used
 whenever the source is referenced. The following example show some instances
 where we reference the alias:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb->where()->eq()->field('post.title')->literal('foobar');
+                <div class="console">
+        <pre><code class="console">$qb-&gt;where()-&gt;eq()-&gt;field(&#039;post.title&#039;)-&gt;literal(&#039;foobar&#039;);
 // or
-<span class="noselect">$ </span>qb->where()->fieldIsset('post.username');
+$qb-&gt;where()-&gt;fieldIsset(&#039;post.username&#039;);
 // or
-<span class="noselect">$ </span>qb->where()->child('/blog', 'post');
-</code></pre></div>
+$qb-&gt;where()-&gt;child(&#039;/blog&#039;, &#039;post&#039;);
+</code></pre>
+    </div>
+
             
     <p>The term &quot;field&quot; refers to the property of an aliased document. In the first
 of the above examples we reference the property <code>$post</code> on the dcoument
@@ -2190,8 +2217,11 @@ the <code>DocumentManager</code> or via a <code>DocumentRepository</code>.</p>
     <p>You can instantiate the <code>QueryBuilder</code> with the <code>DocumentManager</code> using the
 <code>createQueryBuilder</code> method:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb = $documentManager->createQueryBuilder();
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$qb = $documentManager-&gt;createQueryBuilder();
+</code></pre>
+    </div>
+
     </div>
             <div class="section" id="via-a-document-repository">
             <h3 class="section-header ">
@@ -2205,10 +2235,13 @@ the <code>DocumentManager</code> or via a <code>DocumentRepository</code>.</p>
 instance, doing so will automatically select only those records which are
 associated with the <code>DocumentRepository</code>:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>postsRepository = $dm->getRepository(Post::class);
-<span class="noselect">$ </span>qb = $postsRepository->createQueryBuilder('p');
-<span class="noselect">$ </span>posts = $qb->getQuery()->execute();
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$postsRepository = $dm-&gt;getRepository(Post::class);
+$qb = $postsRepository-&gt;createQueryBuilder(&#039;p&#039;);
+$posts = $qb-&gt;getQuery()-&gt;execute();
+</code></pre>
+    </div>
+
             
     <p>The above code block will select all documents in the document tree of class
 <code>Blog\Post</code>. This feature is especially useful within a document repository
@@ -2217,7 +2250,8 @@ class.</p>
             
     <p>Example showing the use of the query builder in a <code>DocumentRepository</code>:</p>
 
-            <div class="console"><pre><code class="console">namespace Blog;
+                <div class="console">
+        <pre><code class="console">namespace Blog;
 
 use Doctrine\ODM\PHPCR\DocumentRepository;
 
@@ -2225,13 +2259,15 @@ class PostRepository extends DocumentRepository
 {
     public function getPostsByAuthor($authorName)
     {
-        $qb = $this->createQueryBuilder('p');
-        $qb->where()->eq()->field('p.author')->literal('dtl');
+        $qb = $this-&gt;createQueryBuilder(&#039;p&#039;);
+        $qb-&gt;where()-&gt;eq()-&gt;field(&#039;p.author&#039;)-&gt;literal(&#039;dtl&#039;);
 
-        return $qb->getQuery()->execute();
+        return $qb-&gt;getQuery()-&gt;execute();
     }
 }
-</code></pre></div>
+</code></pre>
+    </div>
+
             
     <p>Note that we specify the string &quot;a&quot; as an argument to
 <code>createQueryBuilder</code> - this is the alias name (analagous to &quot;alias&quot; in
@@ -2283,12 +2319,12 @@ PHPCR query builder is not bound to the field mappings of the ODM.</p>
         <i class="fas fa-link"></i>
     </a>
 </h4>
-            <pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="e6bf278bd5fb87c613f26c10322944d90c9d5a1d"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="e6bf278bd5fb87c613f26c10322944d90c9d5a1d"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-e6bf278bd5fb87c613f26c10322944d90c9d5a1d-1" class="line-number-anchor" /><a href="#line-number-e6bf278bd5fb87c613f26c10322944d90c9d5a1d-1">1</a></td><td class="code-line" rowspan="1">$qb-&gt;from()-&gt;document(Post::class, <span class="hljs-string">'p'</span>);</td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="0676b3bde2817af3f40c4a1144c1e05d679320df"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="0676b3bde2817af3f40c4a1144c1e05d679320df"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php">$qb-&gt;from()-&gt;document(Post::class, <span class="hljs-string">'p'</span>);</code><code class="empty"></code></pre>
             
     <p>The above example will setup the query builder to select documents only of class
 <code>Blog\Post</code> using the <em>alias name</em> &quot;p&quot;. The alias name is the alias used
@@ -2313,17 +2349,20 @@ alias</em> as an argument to the <code>from</code> factory node.</p>
             
     <p>The following will retrieve a collection of <code>Blog\Post</code> documents for active users:</p>
 
-            <div class="console"><pre><code class="console">// select documents from a join
-<span class="noselect">$ </span>qb->from('p')->joinInner()
-    ->left()->document(Post::class, 'p')->end()
-    ->right()->document(User::class', 'u')->end()
-    ->condition()->equi('p.username', 'u.username');
+                <div class="console">
+        <pre><code class="console">// select documents from a join
+$qb-&gt;from(&#039;p&#039;)-&gt;joinInner()
+    -&gt;left()-&gt;document(Post::class, &#039;p&#039;)-&gt;end()
+    -&gt;right()-&gt;document(User::class&#039;, &#039;u&#039;)-&gt;end()
+    -&gt;condition()-&gt;equi(&#039;p.username&#039;, &#039;u.username&#039;);
 
-<span class="noselect">$ </span>qb->where()
-    ->eq()->field('u.status')->literal('active');
+$qb-&gt;where()
+    -&gt;eq()-&gt;field(&#039;u.status&#039;)-&gt;literal(&#039;active&#039;);
 
-<span class="noselect">$ </span>posts = $qb->getQuery()->execute();
-</code></pre></div>
+$posts = $qb-&gt;getQuery()-&gt;execute();
+</code></pre>
+    </div>
+
             
     <p>Using the document source <code>p</code> as the primary document source we select from
 a <code>joinInner</code> source, with <code>Blog\Post</code> documents on the left (alias <code>p</code>)
@@ -2346,16 +2385,19 @@ status &quot;active&quot; are selected.</p>
     <p>The following is another example which joins on an <em>association</em>.  The
 <code>CmsUser</code> class is associated with a single address:</p>
 
-            <div class="console"><pre><code class="console">use Doctrine\Tests\Models\CMS\CmsAddress;
+                <div class="console">
+        <pre><code class="console">use Doctrine\Tests\Models\CMS\CmsAddress;
 use Doctrine\Tests\Models\CMS\CmsUser;
 
-<span class="noselect">$ </span>qb->fromDocument(CmsUser::class, 'u');
-    ->addJoinInner()
-    ->right()->document(CmsAddress::class, 'a')->end()
-    ->condition()->equi('u.address', 'a.uuid');
-    ->where()->eq()->field('a.city')->literal('Lyon');
-<span class="noselect">$ </span>users = $qb->getQuery()->execute();
-</code></pre></div>
+$qb-&gt;fromDocument(CmsUser::class, &#039;u&#039;);
+    -&gt;addJoinInner()
+    -&gt;right()-&gt;document(CmsAddress::class, &#039;a&#039;)-&gt;end()
+    -&gt;condition()-&gt;equi(&#039;u.address&#039;, &#039;a.uuid&#039;);
+    -&gt;where()-&gt;eq()-&gt;field(&#039;a.city&#039;)-&gt;literal(&#039;Lyon&#039;);
+$users = $qb-&gt;getQuery()-&gt;execute();
+</code></pre>
+    </div>
+
             
     <p>This query selects all <code>CmsUser</code> documents which have an associated address
 where the <code>city</code> field has a value of <code>Lyon</code>.</p>
@@ -2378,17 +2420,20 @@ where the <code>city</code> field has a value of <code>Lyon</code>.</p>
 node, this is currently only useful when <a href="query.html#queryref_hydration">hydrating to PHPCR nodes</a>. The default (object) hydration will <em>always</em> hydrate
 all fields regardless of what you specify:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb->from(User::class, 'u');
-<span class="noselect">$ </span>qb->select()
-  ->field('u.firstname')
-  ->field('u.lastname');
+                <div class="console">
+        <pre><code class="console">$qb-&gt;from(User::class, &#039;u&#039;);
+$qb-&gt;select()
+  -&gt;field(&#039;u.firstname&#039;)
+  -&gt;field(&#039;u.lastname&#039;);
 
-<span class="noselect">$ </span>query = $qb->getQuery();
+$query = $qb-&gt;getQuery();
 
 // field selection only used when hydrating to nodes
-<span class="noselect">$ </span>node = $query->getSingleResult(Query::HYDRATE_PHPCR);
-<span class="noselect">$ </span>node->getProperty('firstname');
-</code></pre></div>
+$node = $query-&gt;getSingleResult(Query::HYDRATE_PHPCR);
+$node-&gt;getProperty(&#039;firstname&#039;);
+</code></pre>
+    </div>
+
     </div>
             <div class="section" id="limiting-the-number-of-results">
             <a id="qbref_limiting"></a>
@@ -2402,15 +2447,18 @@ all fields regardless of what you specify:</p>
     <p>You can specify a maximum number of results and the index of the first result
 (the offset):</p>
 
-            <div class="console"><pre><code class="console">// select a maximum of 10 records.
-<span class="noselect">$ </span>qb->from()->document('User')
-   ->setMaxResults(10);
+                <div class="console">
+        <pre><code class="console">// select a maximum of 10 records.
+$qb-&gt;from()-&gt;document(&#039;User&#039;)
+   -&gt;setMaxResults(10);
 
 // select a maximum of 10 records from the position of the 20th record.
-<span class="noselect">$ </span>qb->from()->document('User')
-   ->setMaxResults(10)
-   ->setFirstResult(20);
-</code></pre></div>
+$qb-&gt;from()-&gt;document(&#039;User&#039;)
+   -&gt;setMaxResults(10)
+   -&gt;setFirstResult(20);
+</code></pre>
+    </div>
+
     </div>
             <div class="section" id="specifying-selection-criteria">
             <a id="qbref_where"></a>
@@ -2423,43 +2471,46 @@ all fields regardless of what you specify:</p>
             
     <p>You can specify selection criteria using the <code>where</code> factory node:</p>
 
-            <div class="console"><pre><code class="console">// setup our document source with alias "u"
-<span class="noselect">$ </span>qb->from(User::class, 'u');
+                <div class="console">
+        <pre><code class="console">// setup our document source with alias &quot;u&quot;
+$qb-&gt;from(User::class, &#039;u&#039;);
 
-// where name is "daniel"
-<span class="noselect">$ </span>qb->where()
-  ->eq()->field('u.name')->literal('daniel');
+// where name is &quot;daniel&quot;
+$qb-&gt;where()
+  -&gt;eq()-&gt;field(&#039;u.name&#039;)-&gt;literal(&#039;daniel&#039;);
 
-// where username is "dtl" AND name is "daniel"
-<span class="noselect">$ </span>qb->where()->eq()->field('u.username')->literal('dtl');
-<span class="noselect">$ </span>qb->andWhere()->eq()->field('u.name')->literal('daniel');
-
-// which is equivalent to
-<span class="noselect">$ </span>qb->where()->andX()
-  ->eq()->field('u.username')->literal('dtl')->end()
-  ->eq()->field('u.name')->literal('daniel');
-
-// where username is "dtl" OR name is "daniel"
-<span class="noselect">$ </span>qb->where()->eq()->field('u.username')->literal('dtl');
-<span class="noselect">$ </span>qb->orWhere()->eq()->field('u.name')->literal('daniel');
+// where username is &quot;dtl&quot; AND name is &quot;daniel&quot;
+$qb-&gt;where()-&gt;eq()-&gt;field(&#039;u.username&#039;)-&gt;literal(&#039;dtl&#039;);
+$qb-&gt;andWhere()-&gt;eq()-&gt;field(&#039;u.name&#039;)-&gt;literal(&#039;daniel&#039;);
 
 // which is equivalent to
-<span class="noselect">$ </span>qb->where()->orX()
-  ->eq()->field('u.username')->literal('dtl')->end()
-  ->eq()->field('u.name')->literal('daniel');
+$qb-&gt;where()-&gt;andX()
+  -&gt;eq()-&gt;field(&#039;u.username&#039;)-&gt;literal(&#039;dtl&#039;)-&gt;end()
+  -&gt;eq()-&gt;field(&#039;u.name&#039;)-&gt;literal(&#039;daniel&#039;);
+
+// where username is &quot;dtl&quot; OR name is &quot;daniel&quot;
+$qb-&gt;where()-&gt;eq()-&gt;field(&#039;u.username&#039;)-&gt;literal(&#039;dtl&#039;);
+$qb-&gt;orWhere()-&gt;eq()-&gt;field(&#039;u.name&#039;)-&gt;literal(&#039;daniel&#039;);
+
+// which is equivalent to
+$qb-&gt;where()-&gt;orX()
+  -&gt;eq()-&gt;field(&#039;u.username&#039;)-&gt;literal(&#039;dtl&#039;)-&gt;end()
+  -&gt;eq()-&gt;field(&#039;u.name&#039;)-&gt;literal(&#039;daniel&#039;);
 
 // where the lowercase value of node name is equal to dtl
-<span class="noselect">$ </span>qb->where()
-    ->eq()
-        ->lowercase()->localName('a')->end()
-        ->literal('dtl');
+$qb-&gt;where()
+    -&gt;eq()
+        -&gt;lowercase()-&gt;localName(&#039;a&#039;)-&gt;end()
+        -&gt;literal(&#039;dtl&#039;);
 
 // where the lowercase value of node name is NOT equal to dtl
-<span class="noselect">$ </span>qb->where()
-    ->eq()
-        ->lowercase()->localName('a')->end()
-        ->literal('dtl');
-</code></pre></div>
+$qb-&gt;where()
+    -&gt;eq()
+        -&gt;lowercase()-&gt;localName(&#039;a&#039;)-&gt;end()
+        -&gt;literal(&#039;dtl&#039;);
+</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -2492,29 +2543,41 @@ orderings with <code>addOrderBy</code>.</p>
             
     <p>Add a single ordering:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb->orderBy()
-  ->asc()->field('u.username'); // username asc
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$qb-&gt;orderBy()
+  -&gt;asc()-&gt;field(&#039;u.username&#039;); // username asc
+</code></pre>
+    </div>
+
             
     <p>Descending:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb->orderBy()
-  ->desc()->field('u.username');
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$qb-&gt;orderBy()
+  -&gt;desc()-&gt;field(&#039;u.username&#039;);
+</code></pre>
+    </div>
+
             
     <p>Add three orderings - equivilent to the SQL <code>ORDER BY username ASC, name ASC, website DESC</code>:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb->orderBy()
-  ->asc()->field('u.username')->end()
-  ->asc()->field('u.name')->end()
-  ->desc()->field('u.website');
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$qb-&gt;orderBy()
+  -&gt;asc()-&gt;field(&#039;u.username&#039;)-&gt;end()
+  -&gt;asc()-&gt;field(&#039;u.name&#039;)-&gt;end()
+  -&gt;desc()-&gt;field(&#039;u.website&#039;);
+</code></pre>
+    </div>
+
             
     <p>Adding multiple orderings using <code>addOrderBy</code>:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb->orderBy()->asc()->field('u.username');
-<span class="noselect">$ </span>qb->addOrderBy()->asc()->field('u.name');
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$qb-&gt;orderBy()-&gt;asc()-&gt;field(&#039;u.username&#039;);
+$qb-&gt;addOrderBy()-&gt;asc()-&gt;field(&#039;u.name&#039;);
+</code></pre>
+    </div>
+
     </div>
             <div class="section" id="querying-translated-documents">
             <a id="qb-translation"></a>
@@ -2533,17 +2596,20 @@ when using the attribute or child translation strategy.</p>
     <p>It will use the &quot;current&quot; locale according to the LocaleChooser. If you want
 to query in a different locale, you can also specify the locale explicitly:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>qb = $dm->createQueryBuilder();
-<span class="noselect">$ </span>qb
-    ->setLocale('fr')
-    ->from()
-        ->document(Document::class, 'd')
-    ->end()
-    ->where()->fieldIsset('d.title')->end()
-    ->orderBy()
-        ->asc()->field('d.title')->end()
-    ->end();
-</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$qb = $dm-&gt;createQueryBuilder();
+$qb
+    -&gt;setLocale(&#039;fr&#039;)
+    -&gt;from()
+        -&gt;document(Document::class, &#039;d&#039;)
+    -&gt;end()
+    -&gt;where()-&gt;fieldIsset(&#039;d.title&#039;)-&gt;end()
+    -&gt;orderBy()
+        -&gt;asc()-&gt;field(&#039;d.title&#039;)-&gt;end()
+    -&gt;end();
+</code></pre>
+    </div>
+
     </div>
     </div>
             <div class="section" id="additional-notes">
@@ -2564,12 +2630,15 @@ to query in a different locale, you can also specify the locale explicitly:</p>
     <p>Multivalue fields can be queried using either <code>eq()</code> or <code>like()</code> in the same
 way as you would for a single value field:</p>
 
-            <div class="console"><pre><code class="console">// Find all posts which have a tag "general"
-<span class="noselect">$ </span>qb->where()->eq()->field('p.tags')->literal('general');
+                <div class="console">
+        <pre><code class="console">// Find all posts which have a tag &quot;general&quot;
+$qb-&gt;where()-&gt;eq()-&gt;field(&#039;p.tags&#039;)-&gt;literal(&#039;general&#039;);
 
-// Find all posts which have a tag containing the string "foo"
-<span class="noselect">$ </span>qb->where()->like()->field('p.tags')->literal('%foo%');
-</code></pre></div>
+// Find all posts which have a tag containing the string &quot;foo&quot;
+$qb-&gt;where()-&gt;like()-&gt;field(&#039;p.tags&#039;)-&gt;literal(&#039;%foo%&#039;);
+</code></pre>
+    </div>
+
     </div>
             <div class="section" id="using-the-query-builder-in-tests">
             <h3 class="section-header ">
@@ -2595,62 +2664,12 @@ builder class and a special companion class, the <code>QueryBuilderTester</code>
 instance.</li>
 </ul>
 
-            <pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="5061dc82f976688c086d846b5861754ef58c5720"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="5061dc82f976688c086d846b5861754ef58c5720"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-1" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-1">1</a></td><td class="code-line" rowspan="26"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">Query</span>\<span class="hljs-title">Builder</span>\<span class="hljs-title">QueryBuilder</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Test</span>\<span class="hljs-title">QueryBuilderTester</span>;
-
-$test = <span class="hljs-comment">// pretend we have a PHPUnit_Framework_TestCase</span>
-$qb = <span class="hljs-keyword">new</span> QueryBuilder;
-$qb-&gt;where()-&gt;eq()-&gt;field(<span class="hljs-string">'p.title'</span>)-&gt;literal(<span class="hljs-string">'Foobar'</span>);
-
-$qbTester = <span class="hljs-keyword">new</span> QueryBuilderTester($qb);
-
-<span class="hljs-comment">// -&gt;getNode - retrieve node by its nodetype path.</span>
-$literalNode = $qbTester-&gt;getNode(<span class="hljs-string">'where.constraint.operand_statuc'</span>);
-$fieldNode = $qbTester-&gt;getNode(<span class="hljs-string">'where.constraint.operand_dynamic'</span>);
-
-$test-&gt;assertEquals(<span class="hljs-string">'Foobar'</span>, $literalNode-&gt;getValue());
-$test-&gt;assertEquals(<span class="hljs-string">'p'</span>, $fieldNode-&gt;getSelectorName());
-$test-&gt;assertEquals(<span class="hljs-string">'title'</span>, $fieldNode-&gt;getPropertyName());
-
-$qb-&gt;where()-&gt;andX()
-    -&gt;eq()-&gt;field(<span class="hljs-string">'p.title'</span>)-&gt;literal(<span class="hljs-string">'Foobar'</span>)-&gt;end()
-    -&gt;fieldIsset(<span class="hljs-string">'p.username'</span>);
-
-<span class="hljs-comment">// first constraint is the "andX", the second constraint node of "andX" is "fieldIsset"</span>
-$fieldIsset = $qbTester-&gt;getNode(<span class="hljs-string">'where.constraint.constraint[1]'</span>);
-
-<span class="hljs-comment">// -&gt;dumpNodePaths - dump all the node paths of the query builder</span>
-$res = $qbTester-&gt;dumpNodePaths();</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-2" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-3" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-4" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-5" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-6" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-7" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-8" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-9" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-10" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-11" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-12" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-13" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-14" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-15" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-16" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-17" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-18" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-19" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-20" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-21" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-21">21</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-22" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-22">22</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-23" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-23">23</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-24" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-24">24</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-25" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-25">25</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-5061dc82f976688c086d846b5861754ef58c5720-26" class="line-number-anchor" /><a href="#line-number-5061dc82f976688c086d846b5861754ef58c5720-26">26</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="0209285f83e9ceb6587c7a2b03239a6765c1e263"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="0209285f83e9ceb6587c7a2b03239a6765c1e263"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">Query</span>\<span class="hljs-title">Builder</span>\<span class="hljs-title">QueryBuilder</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Test</span>\<span class="hljs-title">QueryBuilderTester</span>;</code><code class="line language-php"></code><code class="line language-php">$test = <span class="hljs-comment">// pretend we have a PHPUnit_Framework_TestCase</span></code><code class="line language-php">$qb = <span class="hljs-keyword">new</span> QueryBuilder;</code><code class="line language-php">$qb-&gt;where()-&gt;eq()-&gt;field(<span class="hljs-string">'p.title'</span>)-&gt;literal(<span class="hljs-string">'Foobar'</span>);</code><code class="line language-php"></code><code class="line language-php">$qbTester = <span class="hljs-keyword">new</span> QueryBuilderTester($qb);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// -&gt;getNode - retrieve node by its nodetype path.</span></code><code class="line language-php">$literalNode = $qbTester-&gt;getNode(<span class="hljs-string">'where.constraint.operand_statuc'</span>);</code><code class="line language-php">$fieldNode = $qbTester-&gt;getNode(<span class="hljs-string">'where.constraint.operand_dynamic'</span>);</code><code class="line language-php"></code><code class="line language-php">$test-&gt;assertEquals(<span class="hljs-string">'Foobar'</span>, $literalNode-&gt;getValue());</code><code class="line language-php">$test-&gt;assertEquals(<span class="hljs-string">'p'</span>, $fieldNode-&gt;getSelectorName());</code><code class="line language-php">$test-&gt;assertEquals(<span class="hljs-string">'title'</span>, $fieldNode-&gt;getPropertyName());</code><code class="line language-php"></code><code class="line language-php">$qb-&gt;where()-&gt;andX()</code><code class="line language-php">    -&gt;eq()-&gt;field(<span class="hljs-string">'p.title'</span>)-&gt;literal(<span class="hljs-string">'Foobar'</span>)-&gt;end()</code><code class="line language-php">    -&gt;fieldIsset(<span class="hljs-string">'p.username'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// first constraint is the "andX", the second constraint node of "andX" is "fieldIsset"</span></code><code class="line language-php">$fieldIsset = $qbTester-&gt;getNode(<span class="hljs-string">'where.constraint.constraint[1]'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// -&gt;dumpNodePaths - dump all the node paths of the query builder</span></code><code class="line language-php">$res = $qbTester-&gt;dumpNodePaths();</code><code class="empty"></code></pre>
     </div>
     </div>
     </div>

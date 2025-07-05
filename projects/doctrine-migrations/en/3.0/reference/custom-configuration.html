@@ -22,8 +22,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?74d1a1"
-                        integrity="sha384-dAaEn2ZyD87ZE8ZaTOc39tmNlPuZWU7Tvl3K1W/IXH5rtko68QAI5cdG6HLv97IH"
+            href="https://www.doctrine-project.org/frontend/css/index.css?6e5d9f"
+                        integrity="sha384-1gHMA2pCh3C7C5PdanZqLyU+p0j9aNUSKdqMxyST9hhhoAcooEmUcqk0Rj7owse5"
                         crossorigin="anonymous"
         />
 
@@ -605,126 +605,12 @@ instance instead of using YAML, XML, etc. In order to do this, you will need to 
             
     <p>Once you have your custom integration setup, you can modify it to look like the following:</p>
 
-            <pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="31630701aa0359d0abd6127bfba285bd226ea595"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="31630701aa0359d0abd6127bfba285bd226ea595"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-1" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-1">1</a></td><td class="code-line" rowspan="58"><span class="hljs-comment">#!/usr/bin/env php</span>
-<span class="hljs-meta">&lt;?php</span>
-
-<span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">'/vendor/autoload.php'</span>;
-
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">DriverManager</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Configuration</span>\<span class="hljs-title">Configuration</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Configuration</span>\<span class="hljs-title">Connection</span>\<span class="hljs-title">ExistingConnection</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Configuration</span>\<span class="hljs-title">Configuration</span>\<span class="hljs-title">ExistingConfiguration</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">DependencyFactory</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Metadata</span>\<span class="hljs-title">Storage</span>\<span class="hljs-title">TableMetadataStorageConfiguration</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Console</span>\<span class="hljs-title">Command</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Console</span>\<span class="hljs-title">Application</span>;
-
-$dbParams = [
-    <span class="hljs-string">'dbname'</span> =&gt; <span class="hljs-string">'migrations_docs_example'</span>,
-    <span class="hljs-string">'user'</span> =&gt; <span class="hljs-string">'root'</span>,
-    <span class="hljs-string">'password'</span> =&gt; <span class="hljs-string">''</span>,
-    <span class="hljs-string">'host'</span> =&gt; <span class="hljs-string">'localhost'</span>,
-    <span class="hljs-string">'driver'</span> =&gt; <span class="hljs-string">'pdo_mysql'</span>,
-];
-
-$connection = DriverManager::getConnection($dbParams);
-
-$configuration = <span class="hljs-keyword">new</span> Configuration($connection);
-
-$configuration-&gt;setName(<span class="hljs-string">'My Project Migrations'</span>);
-$configuration-&gt;addMigrationsDirectory(<span class="hljs-string">'MyProject\Migrations'</span>, <span class="hljs-string">'/data/doctrine/migrations-docs-example/lib/MyProject/Migrations'</span>);
-$configuration-&gt;setAllOrNothing(<span class="hljs-keyword">true</span>);
-$configuration-&gt;setCheckDatabasePlatform(<span class="hljs-keyword">false</span>);
-
-$storageConfiguration = <span class="hljs-keyword">new</span> TableMetadataStorageConfiguration();
-$storageConfiguration-&gt;setTableName(<span class="hljs-string">'doctrine_migration_versions'</span>);
-
-$configuration-&gt;setMetadataStorageConfiguration($storageConfiguration);
-
-$dependencyFactory = DependencyFactory::fromConnection(
-    <span class="hljs-keyword">new</span> ExistingConfiguration($configuration),
-    <span class="hljs-keyword">new</span> ExistingConnection($connection)
-);
-
-$cli = <span class="hljs-keyword">new</span> Application(<span class="hljs-string">'Doctrine Migrations'</span>);
-$cli-&gt;setCatchExceptions(<span class="hljs-keyword">true</span>);
-
-$cli-&gt;addCommands(<span class="hljs-keyword">array</span>(
-    <span class="hljs-keyword">new</span> Command\DumpSchemaCommand($dependencyFactory),
-    <span class="hljs-keyword">new</span> Command\ExecuteCommand($dependencyFactory),
-    <span class="hljs-keyword">new</span> Command\GenerateCommand($dependencyFactory),
-    <span class="hljs-keyword">new</span> Command\LatestCommand($dependencyFactory),
-    <span class="hljs-keyword">new</span> Command\ListCommand($dependencyFactory),
-    <span class="hljs-keyword">new</span> Command\MigrateCommand($dependencyFactory),
-    <span class="hljs-keyword">new</span> Command\RollupCommand($dependencyFactory),
-    <span class="hljs-keyword">new</span> Command\StatusCommand($dependencyFactory),
-    <span class="hljs-keyword">new</span> Command\SyncMetadataCommand($dependencyFactory),
-    <span class="hljs-keyword">new</span> Command\VersionCommand($dependencyFactory),
-));
-
-$cli-&gt;run();</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-2" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-3" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-4" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-5" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-6" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-7" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-8" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-9" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-10" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-11" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-12" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-13" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-14" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-15" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-16" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-17" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-17">17</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-18" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-18">18</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-19" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-19">19</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-20" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-20">20</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-21" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-21">21</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-22" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-22">22</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-23" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-23">23</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-24" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-24">24</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-25" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-25">25</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-26" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-26">26</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-27" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-27">27</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-28" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-28">28</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-29" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-29">29</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-30" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-30">30</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-31" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-31">31</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-32" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-32">32</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-33" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-33">33</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-34" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-34">34</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-35" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-35">35</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-36" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-36">36</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-37" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-37">37</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-38" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-38">38</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-39" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-39">39</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-40" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-40">40</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-41" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-41">41</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-42" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-42">42</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-43" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-43">43</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-44" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-44">44</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-45" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-45">45</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-46" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-46">46</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-47" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-47">47</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-48" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-48">48</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-49" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-49">49</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-50" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-50">50</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-51" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-51">51</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-52" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-52">52</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-53" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-53">53</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-54" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-54">54</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-55" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-55">55</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-56" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-56">56</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-57" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-57">57</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-31630701aa0359d0abd6127bfba285bd226ea595-58" class="line-number-anchor" /><a href="#line-number-31630701aa0359d0abd6127bfba285bd226ea595-58">58</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="5ea6107187772fdae4c0351d174106b2342648c3"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="5ea6107187772fdae4c0351d174106b2342648c3"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">#!/usr/bin/env php</span></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">require_once</span> <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">'/vendor/autoload.php'</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">DriverManager</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Configuration</span>\<span class="hljs-title">Configuration</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Configuration</span>\<span class="hljs-title">Connection</span>\<span class="hljs-title">ExistingConnection</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Configuration</span>\<span class="hljs-title">Configuration</span>\<span class="hljs-title">ExistingConfiguration</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">DependencyFactory</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Metadata</span>\<span class="hljs-title">Storage</span>\<span class="hljs-title">TableMetadataStorageConfiguration</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Migrations</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Console</span>\<span class="hljs-title">Command</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Console</span>\<span class="hljs-title">Application</span>;</code><code class="line language-php"></code><code class="line language-php">$dbParams = [</code><code class="line language-php">    <span class="hljs-string">'dbname'</span> =&gt; <span class="hljs-string">'migrations_docs_example'</span>,</code><code class="line language-php">    <span class="hljs-string">'user'</span> =&gt; <span class="hljs-string">'root'</span>,</code><code class="line language-php">    <span class="hljs-string">'password'</span> =&gt; <span class="hljs-string">''</span>,</code><code class="line language-php">    <span class="hljs-string">'host'</span> =&gt; <span class="hljs-string">'localhost'</span>,</code><code class="line language-php">    <span class="hljs-string">'driver'</span> =&gt; <span class="hljs-string">'pdo_mysql'</span>,</code><code class="line language-php">];</code><code class="line language-php"></code><code class="line language-php">$connection = DriverManager::getConnection($dbParams);</code><code class="line language-php"></code><code class="line language-php">$configuration = <span class="hljs-keyword">new</span> Configuration($connection);</code><code class="line language-php"></code><code class="line language-php">$configuration-&gt;setName(<span class="hljs-string">'My Project Migrations'</span>);</code><code class="line language-php">$configuration-&gt;addMigrationsDirectory(<span class="hljs-string">'MyProject\Migrations'</span>, <span class="hljs-string">'/data/doctrine/migrations-docs-example/lib/MyProject/Migrations'</span>);</code><code class="line language-php">$configuration-&gt;setAllOrNothing(<span class="hljs-keyword">true</span>);</code><code class="line language-php">$configuration-&gt;setCheckDatabasePlatform(<span class="hljs-keyword">false</span>);</code><code class="line language-php"></code><code class="line language-php">$storageConfiguration = <span class="hljs-keyword">new</span> TableMetadataStorageConfiguration();</code><code class="line language-php">$storageConfiguration-&gt;setTableName(<span class="hljs-string">'doctrine_migration_versions'</span>);</code><code class="line language-php"></code><code class="line language-php">$configuration-&gt;setMetadataStorageConfiguration($storageConfiguration);</code><code class="line language-php"></code><code class="line language-php">$dependencyFactory = DependencyFactory::fromConnection(</code><code class="line language-php">    <span class="hljs-keyword">new</span> ExistingConfiguration($configuration),</code><code class="line language-php">    <span class="hljs-keyword">new</span> ExistingConnection($connection)</code><code class="line language-php">);</code><code class="line language-php"></code><code class="line language-php">$cli = <span class="hljs-keyword">new</span> Application(<span class="hljs-string">'Doctrine Migrations'</span>);</code><code class="line language-php">$cli-&gt;setCatchExceptions(<span class="hljs-keyword">true</span>);</code><code class="line language-php"></code><code class="line language-php">$cli-&gt;addCommands(<span class="hljs-keyword">array</span>(</code><code class="line language-php">    <span class="hljs-keyword">new</span> Command\DumpSchemaCommand($dependencyFactory),</code><code class="line language-php">    <span class="hljs-keyword">new</span> Command\ExecuteCommand($dependencyFactory),</code><code class="line language-php">    <span class="hljs-keyword">new</span> Command\GenerateCommand($dependencyFactory),</code><code class="line language-php">    <span class="hljs-keyword">new</span> Command\LatestCommand($dependencyFactory),</code><code class="line language-php">    <span class="hljs-keyword">new</span> Command\ListCommand($dependencyFactory),</code><code class="line language-php">    <span class="hljs-keyword">new</span> Command\MigrateCommand($dependencyFactory),</code><code class="line language-php">    <span class="hljs-keyword">new</span> Command\RollupCommand($dependencyFactory),</code><code class="line language-php">    <span class="hljs-keyword">new</span> Command\StatusCommand($dependencyFactory),</code><code class="line language-php">    <span class="hljs-keyword">new</span> Command\SyncMetadataCommand($dependencyFactory),</code><code class="line language-php">    <span class="hljs-keyword">new</span> Command\VersionCommand($dependencyFactory),</code><code class="line language-php">));</code><code class="line language-php"></code><code class="line language-php">$cli-&gt;run();</code><code class="empty"></code></pre>
             
     <p>Next Chapter: Migrations Events</p>
 

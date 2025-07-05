@@ -22,8 +22,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?74d1a1"
-                        integrity="sha384-dAaEn2ZyD87ZE8ZaTOc39tmNlPuZWU7Tvl3K1W/IXH5rtko68QAI5cdG6HLv97IH"
+            href="https://www.doctrine-project.org/frontend/css/index.css?6e5d9f"
+                        integrity="sha384-1gHMA2pCh3C7C5PdanZqLyU+p0j9aNUSKdqMxyST9hhhoAcooEmUcqk0Rj7owse5"
                         crossorigin="anonymous"
         />
 
@@ -3475,21 +3475,30 @@ in one query.</li>
             
     <p>First we need to begin a new transation:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>conn->beginTransaction();</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$conn-&gt;beginTransaction();</code></pre>
+    </div>
+
             
     <p>Next perform some operations which result in queries being executed:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>user       = new User();
-<span class="noselect">$ </span>user->name = 'New user';
-<span class="noselect">$ </span>user->save();
+                <div class="console">
+        <pre><code class="console">$user       = new User();
+$user-&gt;name = &#039;New user&#039;;
+$user-&gt;save();
 
-<span class="noselect">$ </span>user       = Doctrine_Core::getTable('User')->find(5);
-<span class="noselect">$ </span>user->name = 'Modified user';
-<span class="noselect">$ </span>user->save();</code></pre></div>
+$user       = Doctrine_Core::getTable(&#039;User&#039;)-&gt;find(5);
+$user-&gt;name = &#039;Modified user&#039;;
+$user-&gt;save();</code></pre>
+    </div>
+
             
     <p>Now we can commit all the queries by using the <code>commit()</code> method:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>conn->commit();</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$conn-&gt;commit();</code></pre>
+    </div>
+
     </div>
             <div class="section" id="nesting">
             <h2 class="section-header ">
@@ -3505,31 +3514,37 @@ below for a simple example demonstrating nested transactions.</p>
             
     <p>First lets create a standard PHP function named <code>saveUserAndGroup()</code>:</p>
 
-            <div class="console"><pre><code class="console">function saveUserAndGroup(Doctrin_Connection $conn, User $user, Group $group)
+                <div class="console">
+        <pre><code class="console">function saveUserAndGroup(Doctrin_Connection $conn, User $user, Group $group)
 {
-    $conn->beginTransaction();
+    $conn-&gt;beginTransaction();
 
-    $user->save();
+    $user-&gt;save();
 
-    $group->save();
+    $group-&gt;save();
 
-    $conn->commit();
-}</code></pre></div>
+    $conn-&gt;commit();
+}</code></pre>
+    </div>
+
             
     <p>Now we make use of the function inside another transaction:</p>
 
-            <div class="console"><pre><code class="console">try {
-    $conn->beginTransaction();
+                <div class="console">
+        <pre><code class="console">try {
+    $conn-&gt;beginTransaction();
 
     saveUserAndGroup($conn,$user,$group);
     saveUserAndGroup($conn,$user2,$group2);
     saveUserAndGroup($conn,$user3,$group3);
 
-    $conn->commit();
+    $conn-&gt;commit();
 
 } catch(Doctrine_Exception $e) {
-    $conn->rollback();
-}</code></pre></div>
+    $conn-&gt;rollback();
+}</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -3564,23 +3579,26 @@ transactions and have them nested.</p>
 If the current transaction has a savepoint with the same name, the old
 savepoint is deleted and a new one is set.</p>
 
-            <div class="console"><pre><code class="console">try {
-    $conn->beginTransaction();
+                <div class="console">
+        <pre><code class="console">try {
+    $conn-&gt;beginTransaction();
     // do some operations here
 
     // creates a new savepoint called mysavepoint
-    $conn->beginTransaction('mysavepoint');
+    $conn-&gt;beginTransaction(&#039;mysavepoint&#039;);
     try {
         // do some operations here
 
-        $conn->commit('mysavepoint');
+        $conn-&gt;commit(&#039;mysavepoint&#039;);
     } catch(Exception $e) {
-        $conn->rollback('mysavepoint');
+        $conn-&gt;rollback(&#039;mysavepoint&#039;);
     }
-    $conn->commit();
+    $conn-&gt;commit();
 } catch(Exception $e) {
-    $conn->rollback();
-}</code></pre></div>
+    $conn-&gt;rollback();
+}</code></pre>
+    </div>
+
             
     <p>The <code>Doctrine_Transaction::rollback($savepoint)</code> rolls back a
 transaction to the named savepoint. Modifications that the current
@@ -3615,19 +3633,22 @@ savepoint from the set of savepoints of the current transaction.</p>
 commit or if a rollback is being called without savepoint name
 parameter.</p>
 
-            <div class="console"><pre><code class="console">try {
-    $conn->beginTransaction();
+                <div class="console">
+        <pre><code class="console">try {
+    $conn-&gt;beginTransaction();
     // do some operations here
 
     // creates a new savepoint called mysavepoint
-    $conn->beginTransaction('mysavepoint');
+    $conn-&gt;beginTransaction(&#039;mysavepoint&#039;);
 
     // do some operations here
 
-    $conn->commit();   // deletes all savepoints
+    $conn-&gt;commit();   // deletes all savepoints
 } catch(Exception $e) {
-    $conn->rollback(); // deletes all savepoints
-}</code></pre></div>
+    $conn-&gt;rollback(); // deletes all savepoints
+}</code></pre>
+    </div>
+
     </div>
             <div class="section" id="isolation-levels">
             <h2 class="section-header ">
@@ -3660,15 +3681,24 @@ ascending order of strictness):</p>
             
     <p>To get the transaction module use the following code:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>tx = $conn->transaction;</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$tx = $conn-&gt;transaction;</code></pre>
+    </div>
+
             
     <p>Set the isolation level to READ COMMITTED:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>tx->setIsolation('READ COMMITTED');</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$tx-&gt;setIsolation(&#039;READ COMMITTED&#039;);</code></pre>
+    </div>
+
             
     <p>Set the isolation level to SERIALIZABLE:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>tx->setIsolation('SERIALIZABLE');</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$tx-&gt;setIsolation(&#039;SERIALIZABLE&#039;);</code></pre>
+    </div>
+
             <div class="alert -admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -3684,7 +3714,10 @@ transaction isolation level. It can be done as follows:</p>
         </tbody>
     </table>
 </div>
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>level = $tx->getIsolation();</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$level = $tx-&gt;getIsolation();</code></pre>
+    </div>
+
     </div>
             <div class="section" id="conclusion">
             <h2 class="section-header ">

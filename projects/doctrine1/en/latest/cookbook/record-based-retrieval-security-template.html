@@ -22,8 +22,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?74d1a1"
-                        integrity="sha384-dAaEn2ZyD87ZE8ZaTOc39tmNlPuZWU7Tvl3K1W/IXH5rtko68QAI5cdG6HLv97IH"
+            href="https://www.doctrine-project.org/frontend/css/index.css?6e5d9f"
+                        integrity="sha384-1gHMA2pCh3C7C5PdanZqLyU+p0j9aNUSKdqMxyST9hhhoAcooEmUcqk0Rj7owse5"
                         crossorigin="anonymous"
         />
 
@@ -450,7 +450,8 @@ for all situations I&#039;m asking of it, I thought I would post it as is.</p>
             
     <p>$_options = array();</p>
 
-            <div class="console"><pre><code class="console">/**
+                <div class="console">
+        <pre><code class="console">/**
  * __construct
  *
  * @param string $options
@@ -458,17 +459,19 @@ for all situations I&#039;m asking of it, I thought I would post it as is.</p>
  */
 public function __construct(array $options)
 {
-    if (!isset($options['conditions']) || empty($options['conditions'])) {
-        throw new Doctrine_Exception('Unable to create security template without conditions');
+    if (!isset($options[&#039;conditions&#039;]) || empty($options[&#039;conditions&#039;])) {
+        throw new Doctrine_Exception(&#039;Unable to create security template without conditions&#039;);
     }
 
-    $this->_options = $options;
+    $this-&gt;_options = $options;
 }
 
 public function setUp()
 {
-    $this->addListener(new gsSecurityListener($this->_options));
-}</code></pre></div>
+    $this-&gt;addListener(new gsSecurityListener($this-&gt;_options));
+}</code></pre>
+    </div>
+
             
     <p>}</p>
 
@@ -476,7 +479,8 @@ public function setUp()
     <p>class gsSecurityListener extends Doctrine_Record_Listener { private
 static $<em>user\_id = 0, $</em>credentials = array(), $_alias_count = 30;</p>
 
-            <div class="console"><pre><code class="console">protected $_options = array();
+                <div class="console">
+        <pre><code class="console">protected $_options = array();
 
 /**
  * __construct
@@ -486,34 +490,34 @@ static $<em>user\_id = 0, $</em>credentials = array(), $_alias_count = 30;</p>
  */
 public function __construct(array $options)
 {
-    $this->_options = $options;
+    $this-&gt;_options = $options;
 }
 
 public function preDqlSelect(Doctrine_Event $event)
 {
-    $invoker = $event->getInvoker();
+    $invoker = $event-&gt;getInvoker();
     $class   = get_class($invoker);
-    $params  = $event->getParams();
+    $params  = $event-&gt;getParams();
 
-    if($class == $params['alias']) {
+    if($class == $params[&#039;alias&#039;]) {
         return;
     }
 
-    $q       = $event->getQuery();
+    $q       = $event-&gt;getQuery();
 
     // only apply to the main protected table not chained tables... may break some situations
-    if(!$q->contains('FROM '.$class)) {
+    if(!$q-&gt;contains(&#039;FROM &#039;.$class)) {
         return;
     }
 
     $wheres = array();
     $pars   = array();
 
-    $from = $q->getDqlPart('from');
+    $from = $q-&gt;getDqlPart(&#039;from&#039;);
 
-    foreach ($this->_options['conditions'] as $rel_name => $conditions) {
+    foreach ($this-&gt;_options[&#039;conditions&#039;] as $rel_name =&gt; $conditions) {
         $apply = false;
-        foreach ($conditions['apply_to'] as $val) {
+        foreach ($conditions[&#039;apply_to&#039;] as $val) {
             if (in_array($val,self::$_credentials)) {
                 $apply = true;
                 break;
@@ -521,14 +525,14 @@ public function preDqlSelect(Doctrine_Event $event)
         }
 
         if ($apply) {
-            $alias = $params['alias'];
+            $alias = $params[&#039;alias&#039;];
             $aliases = array();
             $aliases[] = $alias;
 
-            foreach ($conditions['through'] as $key => $table) {
+            foreach ($conditions[&#039;through&#039;] as $key =&gt; $table) {
                 $index = 0;
                 $found = false;
-                foreach ($from as $index => $val) {
+                foreach ($from as $index =&gt; $val) {
                     if (strpos($val,$table) !== false) {
                         $found = true;
                         break;
@@ -537,23 +541,23 @@ public function preDqlSelect(Doctrine_Event $event)
                 }
 
                 if ($found) {
-                    $vals = explode(' ', substr($from[$index],strpos($from[$index],$table)));
+                    $vals = explode(&#039; &#039;, substr($from[$index],strpos($from[$index],$table)));
                     $alias = (count($vals) == 2) ? $vals[1]:$vals[0];
                     $aliases[] = $alias;
                 } else {
                     $newalias = strtolower(substr($table,0,3)).self::$_alias_count++;
-                    $q->leftJoin(end($aliases).'.'.$table.' '.$newalias);
+                    $q-&gt;leftJoin(end($aliases).&#039;.&#039;.$table.&#039; &#039;.$newalias);
                     $aliases[] = $newalias;
                 }
             }
 
-            $wheres[] = '('.end($aliases).'.'.$conditions['field'].' = ? )';
+            $wheres[] = &#039;(&#039;.end($aliases).&#039;.&#039;.$conditions[&#039;field&#039;].&#039; = ? )&#039;;
             $pars[] = self::$_user_id;
         }
     }
 
     if(!empty($wheres)) {
-        $q->addWhere( '('.implode(' OR ',$wheres).')',$pars);
+        $q-&gt;addWhere( &#039;(&#039;.implode(&#039; OR &#039;,$wheres).&#039;)&#039;,$pars);
     }
 }
 
@@ -565,7 +569,9 @@ static public function setUserId($id)
 static public function setCredentials($vals)
 {
     self::$_credentials = $vals;
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>}</p>
 

@@ -22,8 +22,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?74d1a1"
-                        integrity="sha384-dAaEn2ZyD87ZE8ZaTOc39tmNlPuZWU7Tvl3K1W/IXH5rtko68QAI5cdG6HLv97IH"
+            href="https://www.doctrine-project.org/frontend/css/index.css?6e5d9f"
+                        integrity="sha384-1gHMA2pCh3C7C5PdanZqLyU+p0j9aNUSKdqMxyST9hhhoAcooEmUcqk0Rj7owse5"
                         crossorigin="anonymous"
         />
 
@@ -3406,22 +3406,12 @@ Doctrine ORM and are now described in more detail.</p>
 provided by the Doctrine ORM EntityManager. Given the following
 code snippet, without any explicit transaction demarcation:</p>
 
-            <pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="aa983b3d2a5caf9798bebde31e622c63c767310b"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="aa983b3d2a5caf9798bebde31e622c63c767310b"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-aa983b3d2a5caf9798bebde31e622c63c767310b-1" class="line-number-anchor" /><a href="#line-number-aa983b3d2a5caf9798bebde31e622c63c767310b-1">1</a></td><td class="code-line" rowspan="6"><span class="hljs-meta">&lt;?php</span>
-<span class="hljs-comment">// $em instanceof EntityManager</span>
-$user = <span class="hljs-keyword">new</span> User;
-$user-&gt;setName(<span class="hljs-string">'George'</span>);
-$em-&gt;persist($user);
-$em-&gt;flush();</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-aa983b3d2a5caf9798bebde31e622c63c767310b-2" class="line-number-anchor" /><a href="#line-number-aa983b3d2a5caf9798bebde31e622c63c767310b-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-aa983b3d2a5caf9798bebde31e622c63c767310b-3" class="line-number-anchor" /><a href="#line-number-aa983b3d2a5caf9798bebde31e622c63c767310b-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-aa983b3d2a5caf9798bebde31e622c63c767310b-4" class="line-number-anchor" /><a href="#line-number-aa983b3d2a5caf9798bebde31e622c63c767310b-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-aa983b3d2a5caf9798bebde31e622c63c767310b-5" class="line-number-anchor" /><a href="#line-number-aa983b3d2a5caf9798bebde31e622c63c767310b-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-aa983b3d2a5caf9798bebde31e622c63c767310b-6" class="line-number-anchor" /><a href="#line-number-aa983b3d2a5caf9798bebde31e622c63c767310b-6">6</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="0f6f1c49dbda6a1dcb5a0936655c03a31972662d"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="0f6f1c49dbda6a1dcb5a0936655c03a31972662d"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">// $em instanceof EntityManager</span></code><code class="line language-php">$user = <span class="hljs-keyword">new</span> User;</code><code class="line language-php">$user-&gt;setName(<span class="hljs-string">'George'</span>);</code><code class="line language-php">$em-&gt;persist($user);</code><code class="line language-php">$em-&gt;flush();</code><code class="empty"></code></pre>
             
     <p>Since we do not do any custom transaction demarcation in the above
 code, <code>EntityManager#flush()</code> will begin and commit/rollback a
@@ -3444,38 +3434,12 @@ the domain model and thus the ORM.</p>
 API directly to control the transaction boundaries. The code then
 looks like this:</p>
 
-            <pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="f4617abe0f4830df09086487723eb567794ccad4"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="f4617abe0f4830df09086487723eb567794ccad4"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-1" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-1">1</a></td><td class="code-line" rowspan="14"><span class="hljs-meta">&lt;?php</span>
-<span class="hljs-comment">// $em instanceof EntityManager</span>
-$em-&gt;getConnection()-&gt;beginTransaction(); <span class="hljs-comment">// suspend auto-commit</span>
-<span class="hljs-keyword">try</span> {
-    <span class="hljs-comment">// ... do some work</span>
-    $user = <span class="hljs-keyword">new</span> User;
-    $user-&gt;setName(<span class="hljs-string">'George'</span>);
-    $em-&gt;persist($user);
-    $em-&gt;flush();
-    $em-&gt;getConnection()-&gt;commit();
-} <span class="hljs-keyword">catch</span> (<span class="hljs-keyword">Exception</span> $e) {
-    $em-&gt;getConnection()-&gt;rollBack();
-    <span class="hljs-keyword">throw</span> $e;
-}</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-2" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-3" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-4" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-5" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-6" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-7" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-8" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-9" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-10" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-11" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-12" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-13" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-f4617abe0f4830df09086487723eb567794ccad4-14" class="line-number-anchor" /><a href="#line-number-f4617abe0f4830df09086487723eb567794ccad4-14">14</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="994722a3dc237675ae7baded926c9b4ed279e9c6"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="994722a3dc237675ae7baded926c9b4ed279e9c6"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">// $em instanceof EntityManager</span></code><code class="line language-php">$em-&gt;getConnection()-&gt;beginTransaction(); <span class="hljs-comment">// suspend auto-commit</span></code><code class="line language-php"><span class="hljs-keyword">try</span> {</code><code class="line language-php">    <span class="hljs-comment">// ... do some work</span></code><code class="line language-php">    $user = <span class="hljs-keyword">new</span> User;</code><code class="line language-php">    $user-&gt;setName(<span class="hljs-string">'George'</span>);</code><code class="line language-php">    $em-&gt;persist($user);</code><code class="line language-php">    $em-&gt;flush();</code><code class="line language-php">    $em-&gt;getConnection()-&gt;commit();</code><code class="line language-php">} <span class="hljs-keyword">catch</span> (<span class="hljs-keyword">Exception</span> $e) {</code><code class="line language-php">    $em-&gt;getConnection()-&gt;rollBack();</code><code class="line language-php">    <span class="hljs-keyword">throw</span> $e;</code><code class="line language-php">}</code><code class="empty"></code></pre>
             
     <p>Explicit transaction demarcation is required when you want to
 include custom DBAL operations in a unit of work or when you want
@@ -3492,44 +3456,12 @@ When used, these control abstractions ensure that you never forget to rollback
 the transaction, in addition to the obvious code reduction. An example that is
 functionally equivalent to the previously shown code looks as follows:</p>
 
-            <pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="53983c951e177fbc7e45d5205c3affa903480762"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="53983c951e177fbc7e45d5205c3affa903480762"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-1" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-1">1</a></td><td class="code-line" rowspan="17"><span class="hljs-meta">&lt;?php</span>
-<span class="hljs-comment">// transactional with Connection instance</span>
-<span class="hljs-comment">// $conn instanceof Connection</span>
-$conn-&gt;transactional(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($conn)</span> </span>{
-    <span class="hljs-comment">// ... do some work</span>
-    $user = <span class="hljs-keyword">new</span> User;
-    $user-&gt;setName(<span class="hljs-string">'George'</span>);
-});
-
-<span class="hljs-comment">// transactional with EntityManager instance</span>
-<span class="hljs-comment">// $em instanceof EntityManager</span>
-$em-&gt;wrapInTransaction(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($em)</span> </span>{
-    <span class="hljs-comment">// ... do some work</span>
-    $user = <span class="hljs-keyword">new</span> User;
-    $user-&gt;setName(<span class="hljs-string">'George'</span>);
-    $em-&gt;persist($user);
-});</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-2" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-3" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-4" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-5" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-6" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-7" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-8" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-9" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-10" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-11" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-12" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-13" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-14" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-15" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-16" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-16">16</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-53983c951e177fbc7e45d5205c3affa903480762-17" class="line-number-anchor" /><a href="#line-number-53983c951e177fbc7e45d5205c3affa903480762-17">17</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="fee67c623b8a02c468dbd7505f9db7be110f961c"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="fee67c623b8a02c468dbd7505f9db7be110f961c"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">// transactional with Connection instance</span></code><code class="line language-php"><span class="hljs-comment">// $conn instanceof Connection</span></code><code class="line language-php">$conn-&gt;transactional(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($conn)</span> </span>{</code><code class="line language-php">    <span class="hljs-comment">// ... do some work</span></code><code class="line language-php">    $user = <span class="hljs-keyword">new</span> User;</code><code class="line language-php">    $user-&gt;setName(<span class="hljs-string">'George'</span>);</code><code class="line language-php">});</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// transactional with EntityManager instance</span></code><code class="line language-php"><span class="hljs-comment">// $em instanceof EntityManager</span></code><code class="line language-php">$em-&gt;wrapInTransaction(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($em)</span> </span>{</code><code class="line language-php">    <span class="hljs-comment">// ... do some work</span></code><code class="line language-php">    $user = <span class="hljs-keyword">new</span> User;</code><code class="line language-php">    $user-&gt;setName(<span class="hljs-string">'George'</span>);</code><code class="line language-php">    $em-&gt;persist($user);</code><code class="line language-php">});</code><code class="empty"></code></pre>
             
     <p>The difference between <code>Connection#transactional($func)</code> and
 <code>EntityManager#transactional($func)</code> is that the latter
@@ -3642,42 +3574,20 @@ example we&#039;ll use an integer.</p>
             </div>
 
             <div role="tabpanel" id="configuration-block-tabpanel-4c295ca35425ce4058908af90414ee92" aria-label="Attribute" class="configuration-codeblock" data-language="attribute" style="">
-            <pre class="code-block-table"><code class="attribute"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="2d929cc16973736812494509a09ab890cacd9d57"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="2d929cc16973736812494509a09ab890cacd9d57"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-2d929cc16973736812494509a09ab890cacd9d57-1" class="line-number-anchor" /><a href="#line-number-2d929cc16973736812494509a09ab890cacd9d57-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">&lt;?php</span>
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span>
-</span>{
-    <span class="hljs-comment">// ...</span>
-    <span class="hljs-comment">#[Version, Column(type: 'integer')]</span>
-    <span class="hljs-keyword">private</span> int $version;
-    <span class="hljs-comment">// ...</span>
-}</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2d929cc16973736812494509a09ab890cacd9d57-2" class="line-number-anchor" /><a href="#line-number-2d929cc16973736812494509a09ab890cacd9d57-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2d929cc16973736812494509a09ab890cacd9d57-3" class="line-number-anchor" /><a href="#line-number-2d929cc16973736812494509a09ab890cacd9d57-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2d929cc16973736812494509a09ab890cacd9d57-4" class="line-number-anchor" /><a href="#line-number-2d929cc16973736812494509a09ab890cacd9d57-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2d929cc16973736812494509a09ab890cacd9d57-5" class="line-number-anchor" /><a href="#line-number-2d929cc16973736812494509a09ab890cacd9d57-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2d929cc16973736812494509a09ab890cacd9d57-6" class="line-number-anchor" /><a href="#line-number-2d929cc16973736812494509a09ab890cacd9d57-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2d929cc16973736812494509a09ab890cacd9d57-7" class="line-number-anchor" /><a href="#line-number-2d929cc16973736812494509a09ab890cacd9d57-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-2d929cc16973736812494509a09ab890cacd9d57-8" class="line-number-anchor" /><a href="#line-number-2d929cc16973736812494509a09ab890cacd9d57-8">8</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="cfc8f582ef584120eab007a2951ee153afa8085c"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="cfc8f582ef584120eab007a2951ee153afa8085c"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-attribute"><span class="hljs-meta">&lt;?php</span></code><code class="line language-attribute"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span></span></code><code class="line language-attribute">{</code><code class="line language-attribute">    <span class="hljs-comment">// ...</span></code><code class="line language-attribute">    <span class="hljs-comment">#[Version, Column(type: 'integer')]</span></code><code class="line language-attribute">    <span class="hljs-keyword">private</span> int $version;</code><code class="line language-attribute">    <span class="hljs-comment">// ...</span></code><code class="line language-attribute">}</code><code class="empty"></code></pre>
         </div>
             <div role="tabpanel" id="configuration-block-tabpanel-bf1fcb2d6f782f6e56150571435cec72" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
-            <pre class="code-block-table"><code class="xml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="3a4b2894675ed13d6781ca0983ccd945a07a0010"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="3a4b2894675ed13d6781ca0983ccd945a07a0010"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-3a4b2894675ed13d6781ca0983ccd945a07a0010-1" class="line-number-anchor" /><a href="#line-number-3a4b2894675ed13d6781ca0983ccd945a07a0010-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mapping</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">entity</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"User"</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"version"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"integer"</span> <span class="hljs-attr">version</span>=<span class="hljs-string">"true"</span> /&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">entity</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mapping</span>&gt;</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3a4b2894675ed13d6781ca0983ccd945a07a0010-2" class="line-number-anchor" /><a href="#line-number-3a4b2894675ed13d6781ca0983ccd945a07a0010-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3a4b2894675ed13d6781ca0983ccd945a07a0010-3" class="line-number-anchor" /><a href="#line-number-3a4b2894675ed13d6781ca0983ccd945a07a0010-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3a4b2894675ed13d6781ca0983ccd945a07a0010-4" class="line-number-anchor" /><a href="#line-number-3a4b2894675ed13d6781ca0983ccd945a07a0010-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-3a4b2894675ed13d6781ca0983ccd945a07a0010-5" class="line-number-anchor" /><a href="#line-number-3a4b2894675ed13d6781ca0983ccd945a07a0010-5">5</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="820b9b7eda2ba8db6bd7c9aea5d9d0c9d02b5e02"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="820b9b7eda2ba8db6bd7c9aea5d9d0c9d02b5e02"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mapping</span>&gt;</span></code><code class="line language-xml">  <span class="hljs-tag">&lt;<span class="hljs-name">entity</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"User"</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"version"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"integer"</span> <span class="hljs-attr">version</span>=<span class="hljs-string">"true"</span> /&gt;</span></code><code class="line language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">entity</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mapping</span>&gt;</span></code><code class="empty"></code></pre>
         </div>
     </div>
             
@@ -3699,42 +3609,20 @@ timestamp or datetime):</p>
             </div>
 
             <div role="tabpanel" id="configuration-block-tabpanel-cb1ded4190cd387e890583cef56f1198" aria-label="Attribute" class="configuration-codeblock" data-language="attribute" style="">
-            <pre class="code-block-table"><code class="attribute"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="e8fdf6f99946c8e8cbeb7467af351f580d040015"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="e8fdf6f99946c8e8cbeb7467af351f580d040015"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-1" class="line-number-anchor" /><a href="#line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">&lt;?php</span>
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span>
-</span>{
-    <span class="hljs-comment">// ...</span>
-    <span class="hljs-comment">#[Version, Column(type: 'datetime')]</span>
-    <span class="hljs-keyword">private</span> DateTime $version;
-    <span class="hljs-comment">// ...</span>
-}</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-2" class="line-number-anchor" /><a href="#line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-3" class="line-number-anchor" /><a href="#line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-4" class="line-number-anchor" /><a href="#line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-5" class="line-number-anchor" /><a href="#line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-6" class="line-number-anchor" /><a href="#line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-7" class="line-number-anchor" /><a href="#line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-8" class="line-number-anchor" /><a href="#line-number-e8fdf6f99946c8e8cbeb7467af351f580d040015-8">8</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="c5b432421c9373f180b1d10490c8a921654e4ed1"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="c5b432421c9373f180b1d10490c8a921654e4ed1"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-attribute"><span class="hljs-meta">&lt;?php</span></code><code class="line language-attribute"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span></span></code><code class="line language-attribute">{</code><code class="line language-attribute">    <span class="hljs-comment">// ...</span></code><code class="line language-attribute">    <span class="hljs-comment">#[Version, Column(type: 'datetime')]</span></code><code class="line language-attribute">    <span class="hljs-keyword">private</span> DateTime $version;</code><code class="line language-attribute">    <span class="hljs-comment">// ...</span></code><code class="line language-attribute">}</code><code class="empty"></code></pre>
         </div>
             <div role="tabpanel" id="configuration-block-tabpanel-079d7997f1a0a5b6ba528072724cbc85" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
-            <pre class="code-block-table"><code class="xml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="9c3a6b2f07164137a5c9dee94b5808617b9e18eb"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="9c3a6b2f07164137a5c9dee94b5808617b9e18eb"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-9c3a6b2f07164137a5c9dee94b5808617b9e18eb-1" class="line-number-anchor" /><a href="#line-number-9c3a6b2f07164137a5c9dee94b5808617b9e18eb-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mapping</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">entity</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"User"</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"version"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"datetime"</span> <span class="hljs-attr">version</span>=<span class="hljs-string">"true"</span> /&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">entity</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mapping</span>&gt;</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9c3a6b2f07164137a5c9dee94b5808617b9e18eb-2" class="line-number-anchor" /><a href="#line-number-9c3a6b2f07164137a5c9dee94b5808617b9e18eb-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9c3a6b2f07164137a5c9dee94b5808617b9e18eb-3" class="line-number-anchor" /><a href="#line-number-9c3a6b2f07164137a5c9dee94b5808617b9e18eb-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9c3a6b2f07164137a5c9dee94b5808617b9e18eb-4" class="line-number-anchor" /><a href="#line-number-9c3a6b2f07164137a5c9dee94b5808617b9e18eb-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9c3a6b2f07164137a5c9dee94b5808617b9e18eb-5" class="line-number-anchor" /><a href="#line-number-9c3a6b2f07164137a5c9dee94b5808617b9e18eb-5">5</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="c7ebe04cc8f1ebbca8dd8a2c3c8ef50787a3a457"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="c7ebe04cc8f1ebbca8dd8a2c3c8ef50787a3a457"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mapping</span>&gt;</span></code><code class="line language-xml">  <span class="hljs-tag">&lt;<span class="hljs-name">entity</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"User"</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"version"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"datetime"</span> <span class="hljs-attr">version</span>=<span class="hljs-string">"true"</span> /&gt;</span></code><code class="line language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">entity</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mapping</span>&gt;</span></code><code class="empty"></code></pre>
         </div>
     </div>
             
@@ -3765,81 +3653,21 @@ locking exception:</p>
     <p>You can always verify the version of an entity during a request
 either when calling <code>EntityManager#find()</code>:</p>
 
-            <pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="29b49ccb2dc90101e7f94bb8d041d260d3868e60"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="29b49ccb2dc90101e7f94bb8d041d260d3868e60"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-1" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-1">1</a></td><td class="code-line" rowspan="16"><span class="hljs-meta">&lt;?php</span>
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">LockMode</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">OptimisticLockException</span>;
-
-$theEntityId = <span class="hljs-number">1</span>;
-$expectedVersion = <span class="hljs-number">184</span>;
-
-<span class="hljs-keyword">try</span> {
-    $entity = $em-&gt;find(<span class="hljs-string">'User'</span>, $theEntityId, LockMode::OPTIMISTIC, $expectedVersion);
-
-    <span class="hljs-comment">// do the work</span>
-
-    $em-&gt;flush();
-} <span class="hljs-keyword">catch</span>(OptimisticLockException $e) {
-    <span class="hljs-keyword">echo</span> <span class="hljs-string">"Sorry, but someone else has already changed this entity. Please apply the changes again!"</span>;
-}</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-2" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-3" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-4" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-5" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-6" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-7" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-8" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-9" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-10" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-11" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-12" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-13" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-14" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-15" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-16" class="line-number-anchor" /><a href="#line-number-29b49ccb2dc90101e7f94bb8d041d260d3868e60-16">16</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="3ab8cec20d6fa0d579e077973e5f05fe07b49c09"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="3ab8cec20d6fa0d579e077973e5f05fe07b49c09"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">LockMode</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">OptimisticLockException</span>;</code><code class="line language-php"></code><code class="line language-php">$theEntityId = <span class="hljs-number">1</span>;</code><code class="line language-php">$expectedVersion = <span class="hljs-number">184</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">try</span> {</code><code class="line language-php">    $entity = $em-&gt;find(<span class="hljs-string">'User'</span>, $theEntityId, LockMode::OPTIMISTIC, $expectedVersion);</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">// do the work</span></code><code class="line language-php"></code><code class="line language-php">    $em-&gt;flush();</code><code class="line language-php">} <span class="hljs-keyword">catch</span>(OptimisticLockException $e) {</code><code class="line language-php">    <span class="hljs-keyword">echo</span> <span class="hljs-string">"Sorry, but someone else has already changed this entity. Please apply the changes again!"</span>;</code><code class="line language-php">}</code><code class="empty"></code></pre>
             
     <p>Or you can use <code>EntityManager#lock()</code> to find out:</p>
 
-            <pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="c1a7bb07687eaf61615b5269f8d435b8f11a0b36"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="c1a7bb07687eaf61615b5269f8d435b8f11a0b36"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-1" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-1">1</a></td><td class="code-line" rowspan="16"><span class="hljs-meta">&lt;?php</span>
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">LockMode</span>;
-<span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">OptimisticLockException</span>;
-
-$theEntityId = <span class="hljs-number">1</span>;
-$expectedVersion = <span class="hljs-number">184</span>;
-
-$entity = $em-&gt;find(<span class="hljs-string">'User'</span>, $theEntityId);
-
-<span class="hljs-keyword">try</span> {
-    <span class="hljs-comment">// assert version</span>
-    $em-&gt;lock($entity, LockMode::OPTIMISTIC, $expectedVersion);
-
-} <span class="hljs-keyword">catch</span>(OptimisticLockException $e) {
-    <span class="hljs-keyword">echo</span> <span class="hljs-string">"Sorry, but someone else has already changed this entity. Please apply the changes again!"</span>;
-}</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-2" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-3" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-4" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-5" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-6" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-7" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-8" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-9" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-10" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-11" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-12" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-13" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-14" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-15" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-15">15</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-16" class="line-number-anchor" /><a href="#line-number-c1a7bb07687eaf61615b5269f8d435b8f11a0b36-16">16</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="18e54d371f735ead767ba0267f83a112425a5481"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="18e54d371f735ead767ba0267f83a112425a5481"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">LockMode</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">OptimisticLockException</span>;</code><code class="line language-php"></code><code class="line language-php">$theEntityId = <span class="hljs-number">1</span>;</code><code class="line language-php">$expectedVersion = <span class="hljs-number">184</span>;</code><code class="line language-php"></code><code class="line language-php">$entity = $em-&gt;find(<span class="hljs-string">'User'</span>, $theEntityId);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">try</span> {</code><code class="line language-php">    <span class="hljs-comment">// assert version</span></code><code class="line language-php">    $em-&gt;lock($entity, LockMode::OPTIMISTIC, $expectedVersion);</code><code class="line language-php"></code><code class="line language-php">} <span class="hljs-keyword">catch</span>(OptimisticLockException $e) {</code><code class="line language-php">    <span class="hljs-keyword">echo</span> <span class="hljs-string">"Sorry, but someone else has already changed this entity. Please apply the changes again!"</span>;</code><code class="line language-php">}</code><code class="empty"></code></pre>
             <div class="section" id="important-implementation-notes">
             <h4 class="section-header ">
     <a href="#important-implementation-notes">
@@ -3882,37 +3710,21 @@ updates you wanted to prevent with Optimistic Locking.</p>
             
     <p>See the example code, The form (GET Request):</p>
 
-            <pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="52f5f29ff33eada51684a7387a23fad30b1c11b5"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="52f5f29ff33eada51684a7387a23fad30b1c11b5"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-52f5f29ff33eada51684a7387a23fad30b1c11b5-1" class="line-number-anchor" /><a href="#line-number-52f5f29ff33eada51684a7387a23fad30b1c11b5-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-meta">&lt;?php</span>
-$post = $em-&gt;find(<span class="hljs-string">'BlogPost'</span>, <span class="hljs-number">123456</span>);
-
-<span class="hljs-keyword">echo</span> <span class="hljs-string">'&lt;input type="hidden" name="id" value="'</span> . $post-&gt;getId() . <span class="hljs-string">'" /&gt;'</span>;
-<span class="hljs-keyword">echo</span> <span class="hljs-string">'&lt;input type="hidden" name="version" value="'</span> . $post-&gt;getCurrentVersion() . <span class="hljs-string">'" /&gt;'</span>;</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-52f5f29ff33eada51684a7387a23fad30b1c11b5-2" class="line-number-anchor" /><a href="#line-number-52f5f29ff33eada51684a7387a23fad30b1c11b5-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-52f5f29ff33eada51684a7387a23fad30b1c11b5-3" class="line-number-anchor" /><a href="#line-number-52f5f29ff33eada51684a7387a23fad30b1c11b5-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-52f5f29ff33eada51684a7387a23fad30b1c11b5-4" class="line-number-anchor" /><a href="#line-number-52f5f29ff33eada51684a7387a23fad30b1c11b5-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-52f5f29ff33eada51684a7387a23fad30b1c11b5-5" class="line-number-anchor" /><a href="#line-number-52f5f29ff33eada51684a7387a23fad30b1c11b5-5">5</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="0b472c2a2edee157c698fffa4dd45b0f755b4bf8"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="0b472c2a2edee157c698fffa4dd45b0f755b4bf8"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$post = $em-&gt;find(<span class="hljs-string">'BlogPost'</span>, <span class="hljs-number">123456</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">echo</span> <span class="hljs-string">'&lt;input type="hidden" name="id" value="'</span> . $post-&gt;getId() . <span class="hljs-string">'" /&gt;'</span>;</code><code class="line language-php"><span class="hljs-keyword">echo</span> <span class="hljs-string">'&lt;input type="hidden" name="version" value="'</span> . $post-&gt;getCurrentVersion() . <span class="hljs-string">'" /&gt;'</span>;</code><code class="empty"></code></pre>
             
     <p>And the change headline action (POST Request):</p>
 
-            <pre class="code-block-table"><code class="php"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="e31b01bebd91216b3613fc9a34c6274b5d38eed6"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="e31b01bebd91216b3613fc9a34c6274b5d38eed6"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-e31b01bebd91216b3613fc9a34c6274b5d38eed6-1" class="line-number-anchor" /><a href="#line-number-e31b01bebd91216b3613fc9a34c6274b5d38eed6-1">1</a></td><td class="code-line" rowspan="5"><span class="hljs-meta">&lt;?php</span>
-$postId = (int)$_GET[<span class="hljs-string">'id'</span>];
-$postVersion = (int)$_GET[<span class="hljs-string">'version'</span>];
-
-$post = $em-&gt;find(<span class="hljs-string">'BlogPost'</span>, $postId, \Doctrine\DBAL\LockMode::OPTIMISTIC, $postVersion);</td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e31b01bebd91216b3613fc9a34c6274b5d38eed6-2" class="line-number-anchor" /><a href="#line-number-e31b01bebd91216b3613fc9a34c6274b5d38eed6-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e31b01bebd91216b3613fc9a34c6274b5d38eed6-3" class="line-number-anchor" /><a href="#line-number-e31b01bebd91216b3613fc9a34c6274b5d38eed6-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e31b01bebd91216b3613fc9a34c6274b5d38eed6-4" class="line-number-anchor" /><a href="#line-number-e31b01bebd91216b3613fc9a34c6274b5d38eed6-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-e31b01bebd91216b3613fc9a34c6274b5d38eed6-5" class="line-number-anchor" /><a href="#line-number-e31b01bebd91216b3613fc9a34c6274b5d38eed6-5">5</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="3c34bab8f933f69b50efccaaff8468594c12227f"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="3c34bab8f933f69b50efccaaff8468594c12227f"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$postId = (int)$_GET[<span class="hljs-string">'id'</span>];</code><code class="line language-php">$postVersion = (int)$_GET[<span class="hljs-string">'version'</span>];</code><code class="line language-php"></code><code class="line language-php">$post = $em-&gt;find(<span class="hljs-string">'BlogPost'</span>, $postId, \Doctrine\DBAL\LockMode::OPTIMISTIC, $postVersion);</code><code class="empty"></code></pre>
     </div>
     </div>
             <div class="section" id="pessimistic-locking">

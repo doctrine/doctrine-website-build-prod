@@ -22,8 +22,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?74d1a1"
-                        integrity="sha384-dAaEn2ZyD87ZE8ZaTOc39tmNlPuZWU7Tvl3K1W/IXH5rtko68QAI5cdG6HLv97IH"
+            href="https://www.doctrine-project.org/frontend/css/index.css?6e5d9f"
+                        integrity="sha384-1gHMA2pCh3C7C5PdanZqLyU+p0j9aNUSKdqMxyST9hhhoAcooEmUcqk0Rj7owse5"
                         crossorigin="anonymous"
         />
 
@@ -599,44 +599,47 @@ build-all-reload command to reinitialize the database.</p>
     <p>changeme [Groups] =&gt; Array ( [0] =&gt; Array ( [id] =&gt; 1 [name] =&gt; Founder
 )</p>
 
-            <div class="console"><pre><code class="console">                [1] => Array
+                <div class="console">
+        <pre><code class="console">                [1] =&gt; Array
                     (
-                        [id] => 2
-                        [name] => Lead
+                        [id] =&gt; 2
+                        [name] =&gt; Lead
                     )
 
-                [2] => Array
+                [2] =&gt; Array
                     (
-                        [id] => 3
-                        [name] => Documentation
+                        [id] =&gt; 3
+                        [name] =&gt; Documentation
                     )
 
             )
 
     )
 
-[1] => Array
+[1] =&gt; Array
     (
-        [id] => 2
-        [username] => jwage
-        [password] => changeme
-        [Groups] => Array
+        [id] =&gt; 2
+        [username] =&gt; jwage
+        [password] =&gt; changeme
+        [Groups] =&gt; Array
             (
-                [0] => Array
+                [0] =&gt; Array
                     (
-                        [id] => 2
-                        [name] => Lead
+                        [id] =&gt; 2
+                        [name] =&gt; Lead
                     )
 
-                [1] => Array
+                [1] =&gt; Array
                     (
-                        [id] => 3
-                        [name] => Documentation
+                        [id] =&gt; 3
+                        [name] =&gt; Documentation
                     )
 
             )
 
-    )</code></pre></div>
+    )</code></pre>
+    </div>
+
             
     <p>)</p>
 
@@ -681,54 +684,57 @@ will see the simple application.</p>
     <p>if ($module == &#039;users&#039;) { <code>userId = isset(</code><em>REQUEST[&#039;id&#039;]) &amp;&amp;$</em>REQUEST[&#039;id&#039;] &gt; 0 ? $_REQUEST[&#039;id&#039;]:null; $userTable =
 Doctrine_Core::getTable(&#039;User&#039;);</p>
 
-            <div class="console"><pre><code class="console">if ($userId === null) {
+                <div class="console">
+        <pre><code class="console">if ($userId === null) {
     $user = new User();
 } else {
-    $user = $userTable->find($userId);
+    $user = $userTable-&gt;find($userId);
 }
 
 switch ($action) {
-    case 'edit':
-    case 'add':
-        echo '<form action="index.php?module=users&action=save" method="POST">
-              <fieldset>
-                <legend>User</legend>
-                <input type="hidden" name="id" value="' . $user->id . '" />
-                <label for="username">Username</label> <input type="text" name="user[username]" value="' . $user->username . '" />
-                <label for="password">Password</label> <input type="text" name="user[password]" value="' . $user->password . '" />
-                <input type="submit" name="save" value="Save" />
-              </fieldset>
-              </form>';
+    case &#039;edit&#039;:
+    case &#039;add&#039;:
+        echo &#039;&lt;form action=&quot;index.php?module=users&amp;action=save&quot; method=&quot;POST&quot;&gt;
+              &lt;fieldset&gt;
+                &lt;legend&gt;User&lt;/legend&gt;
+                &lt;input type=&quot;hidden&quot; name=&quot;id&quot; value=&quot;&#039; . $user-&gt;id . &#039;&quot; /&gt;
+                &lt;label for=&quot;username&quot;&gt;Username&lt;/label&gt; &lt;input type=&quot;text&quot; name=&quot;user[username]&quot; value=&quot;&#039; . $user-&gt;username . &#039;&quot; /&gt;
+                &lt;label for=&quot;password&quot;&gt;Password&lt;/label&gt; &lt;input type=&quot;text&quot; name=&quot;user[password]&quot; value=&quot;&#039; . $user-&gt;password . &#039;&quot; /&gt;
+                &lt;input type=&quot;submit&quot; name=&quot;save&quot; value=&quot;Save&quot; /&gt;
+              &lt;/fieldset&gt;
+              &lt;/form&gt;&#039;;
         break;
-    case 'save':
-        $user->merge($_REQUEST['user']);
-        $user->save();
+    case &#039;save&#039;:
+        $user-&gt;merge($_REQUEST[&#039;user&#039;]);
+        $user-&gt;save();
 
-        header('location: index.php?module=users&action=edit&id=' . $user->id);
+        header(&#039;location: index.php?module=users&amp;action=edit&amp;id=&#039; . $user-&gt;id);
         break;
-    case 'delete':
-        $user->delete();
+    case &#039;delete&#039;:
+        $user-&gt;delete();
 
-        header('location: index.php?module=users&action=list');
+        header(&#039;location: index.php?module=users&amp;action=list&#039;);
         break;
     default:
         $query = new Doctrine_Query();
-        $query->from('User u')
-              ->orderby('u.username');
+        $query-&gt;from(&#039;User u&#039;)
+              -&gt;orderby(&#039;u.username&#039;);
 
-        $users = $query->execute();
+        $users = $query-&gt;execute();
 
-        echo '<ul>';
+        echo &#039;&lt;ul&gt;&#039;;
         foreach ($users as $user) {
-            echo '<li><a href="index.php?module=users&action=edit&id=' . $user->id . '">' . $user->username . '</a> &nbsp; <a href="index.php?module=users&action=delete&id=' . $user->id . '">[X]</a></li>';
+            echo &#039;&lt;li&gt;&lt;a href=&quot;index.php?module=users&amp;action=edit&amp;id=&#039; . $user-&gt;id . &#039;&quot;&gt;&#039; . $user-&gt;username . &#039;&lt;/a&gt; &amp;nbsp; &lt;a href=&quot;index.php?module=users&amp;action=delete&amp;id=&#039; . $user-&gt;id . &#039;&quot;&gt;[X]&lt;/a&gt;&lt;/li&gt;&#039;;
         }
-        echo '</ul>';
+        echo &#039;&lt;/ul&gt;&#039;;
 }
 
-echo '<ul>
-        <li><a href="index.php?module=users&action=add">Add</a></li>
-        <li><a href="index.php?module=users&action=list">List</a></li>
-      </ul>';</code></pre></div>
+echo &#039;&lt;ul&gt;
+        &lt;li&gt;&lt;a href=&quot;index.php?module=users&amp;action=add&quot;&gt;Add&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;index.php?module=users&amp;action=list&quot;&gt;List&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;&#039;;</code></pre>
+    </div>
+
             
     <p>} else { throw new Exception(&#039;Invalid module&#039;); }</p>
 

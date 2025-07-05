@@ -22,8 +22,8 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="https://www.doctrine-project.org/frontend/css/index.css?74d1a1"
-                        integrity="sha384-dAaEn2ZyD87ZE8ZaTOc39tmNlPuZWU7Tvl3K1W/IXH5rtko68QAI5cdG6HLv97IH"
+            href="https://www.doctrine-project.org/frontend/css/index.css?6e5d9f"
+                        integrity="sha384-1gHMA2pCh3C7C5PdanZqLyU+p0j9aNUSKdqMxyST9hhhoAcooEmUcqk0Rj7owse5"
                         crossorigin="anonymous"
         />
 
@@ -3479,97 +3479,96 @@ date columns &#039;created&#039; and &#039;updated&#039; to the record class tha
 template. Additionally this template uses a listener called Timestamp
 listener which updates these fields based on record actions.</p>
 
-            <div class="console"><pre><code class="console">// models/TimestampListener.php
+                <div class="console">
+        <pre><code class="console">// models/TimestampListener.php
 class TimestampListener extends Doctrine_Record_Listener
 {
     public function preInsert(Doctrine_Event $event)
     {
-        $event->getInvoker()->created = date('Y-m-d', time());
-        $event->getInvoker()->updated = date('Y-m-d', time());
+        $event-&gt;getInvoker()-&gt;created = date(&#039;Y-m-d&#039;, time());
+        $event-&gt;getInvoker()-&gt;updated = date(&#039;Y-m-d&#039;, time());
     }
 
     public function preUpdate(Doctrine_Event $event)
     {
-        $event->getInvoker()->updated = date('Y-m-d', time());
+        $event-&gt;getInvoker()-&gt;updated = date(&#039;Y-m-d&#039;, time());
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Now lets create a child Doctrine_Template named
 <code>TimestampTemplate</code> so we can attach it to our models with the
 <code>actAs()</code> method:</p>
 
-            <div class="console"><pre><code class="console">   // models/TimestampBehavior.php
+                <div class="console">
+        <pre><code class="console">   // models/TimestampBehavior.php
 class TimestampTemplate extends Doctrine_Template
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('created', 'date');
-        $this->hasColumn('updated', 'date');
+        $this-&gt;hasColumn(&#039;created&#039;, &#039;date&#039;);
+        $this-&gt;hasColumn(&#039;updated&#039;, &#039;date&#039;);
 
-        $this->addListener(new TimestampListener());
+        $this-&gt;addListener(new TimestampListener());
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Lets say we have a class called <code>BlogPost</code> that needs the timestamp
 functionality. All we need to do is to add <code>actAs()</code> call in the class
 definition.</p>
 
-            <div class="console"><pre><code class="console">class BlogPost extends Doctrine_Record
+                <div class="console">
+        <pre><code class="console">class BlogPost extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('title', 'string', 200);
-        $this->hasColumn('body', 'clob');
+        $this-&gt;hasColumn(&#039;title&#039;, &#039;string&#039;, 200);
+        $this-&gt;hasColumn(&#039;body&#039;, &#039;clob&#039;);
     }
 
     public function setUp()
     {
-        $this->actAs('TimestampBehavior');
+        $this-&gt;actAs(&#039;TimestampBehavior&#039;);
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="54018b5ffb958e0c60fbd764b741baa57436ef10"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="54018b5ffb958e0c60fbd764b741baa57436ef10"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-54018b5ffb958e0c60fbd764b741baa57436ef10-1" class="line-number-anchor" /><a href="#line-number-54018b5ffb958e0c60fbd764b741baa57436ef10-1">1</a></td><td class="code-line" rowspan="6"><span class="hljs-meta">---</span>
-<span class="hljs-attr">BlogPost:</span>
-  <span class="hljs-attr">actAs:</span> <span class="hljs-string">[TimestampBehavior]</span>
-  <span class="hljs-attr">columns:</span>
-    <span class="hljs-attr">title:</span> <span class="hljs-string">string(200)</span>
-    <span class="hljs-attr">body:</span> <span class="hljs-string">clob</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-54018b5ffb958e0c60fbd764b741baa57436ef10-2" class="line-number-anchor" /><a href="#line-number-54018b5ffb958e0c60fbd764b741baa57436ef10-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-54018b5ffb958e0c60fbd764b741baa57436ef10-3" class="line-number-anchor" /><a href="#line-number-54018b5ffb958e0c60fbd764b741baa57436ef10-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-54018b5ffb958e0c60fbd764b741baa57436ef10-4" class="line-number-anchor" /><a href="#line-number-54018b5ffb958e0c60fbd764b741baa57436ef10-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-54018b5ffb958e0c60fbd764b741baa57436ef10-5" class="line-number-anchor" /><a href="#line-number-54018b5ffb958e0c60fbd764b741baa57436ef10-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-54018b5ffb958e0c60fbd764b741baa57436ef10-6" class="line-number-anchor" /><a href="#line-number-54018b5ffb958e0c60fbd764b741baa57436ef10-6">6</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="804036ac2ec6a090ee0f2ca5a6d3d21425301a85"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="804036ac2ec6a090ee0f2ca5a6d3d21425301a85"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-attr">BlogPost:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span> <span class="hljs-string">[TimestampBehavior]</span></code><code class="line language-yaml">  <span class="hljs-attr">columns:</span></code><code class="line language-yaml">    <span class="hljs-attr">title:</span> <span class="hljs-string">string(200)</span></code><code class="line language-yaml">    <span class="hljs-attr">body:</span> <span class="hljs-string">clob</span></code><code class="empty"></code></pre>
             
     <p>Now when we try and utilize the <code>BlogPost</code> model you will notice that
 the <code>created</code> and <code>updated</code> columns were added for you and
 automatically set when saved:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>blogPost        = new BlogPost();
-<span class="noselect">$ </span>blogPost->title = 'Test';
-<span class="noselect">$ </span>blogPost->body  = 'test';
-<span class="noselect">$ </span>blogPost->save();
+                <div class="console">
+        <pre><code class="console">$blogPost        = new BlogPost();
+$blogPost-&gt;title = &#039;Test&#039;;
+$blogPost-&gt;body  = &#039;test&#039;;
+$blogPost-&gt;save();
 
-print_r($blogPost->toArray());</code></pre></div>
+print_r($blogPost-&gt;toArray());</code></pre>
+    </div>
+
             
     <p>The above example would produce the following output:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
-Array
-(
-    [id] => 1
-    [title] => Test
-    [body] => test
-    [created] => 2009-01-22
-    [updated] => 2009-01-22
-)</code></pre></div>
+                <pre class="code-block-table" id="aad98e7fb48440034f2cb11e8e45392bb9616410"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="aad98e7fb48440034f2cb11e8e45392bb9616410"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sh">$ php test.php</code><code class="line language-sh">Array</code><code class="line language-sh">(</code><code class="line language-sh">    [id] =&gt; 1</code><code class="line language-sh">    [title] =&gt; Test</code><code class="line language-sh">    [body] =&gt; <span class="hljs-built_in">test</span></code><code class="line language-sh">    [created] =&gt; 2009-01-22</code><code class="line language-sh">    [updated] =&gt; 2009-01-22</code><code class="line language-sh">)</code><code class="empty"></code></pre>
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -3605,19 +3604,20 @@ with some extended class.</p>
     <p>Consider we have two classes, <code>User</code> and <code>Email</code>, with the following
 definitions:</p>
 
-            <div class="console"><pre><code class="console">class User extends Doctrine_Record
+                <div class="console">
+        <pre><code class="console">class User extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('username', 'string', 255);
-        $this->hasColumn('password', 'string', 255);
+        $this-&gt;hasColumn(&#039;username&#039;, &#039;string&#039;, 255);
+        $this-&gt;hasColumn(&#039;password&#039;, &#039;string&#039;, 255);
     }
 
     public function setUp()
     {
-        $this->hasMany('Email', array(
-                'local' => 'id',
-                'foreign' => 'user_id'
+        $this-&gt;hasMany(&#039;Email&#039;, array(
+                &#039;local&#039; =&gt; &#039;id&#039;,
+                &#039;foreign&#039; =&gt; &#039;user_id&#039;
             )
         );
     }
@@ -3627,51 +3627,31 @@ class Email extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('address', 'string');
-        $this->hasColumn('user_id', 'integer');
+        $this-&gt;hasColumn(&#039;address&#039;, &#039;string&#039;);
+        $this-&gt;hasColumn(&#039;user_id&#039;, &#039;integer&#039;);
     }
 
     public function setUp()
     {
-        $this->hasOne('User', array(
-                'local' => 'user_id',
-                'foreign' => 'id'
+        $this-&gt;hasOne(&#039;User&#039;, array(
+                &#039;local&#039; =&gt; &#039;user_id&#039;,
+                &#039;foreign&#039; =&gt; &#039;id&#039;
             )
         );
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="6455e14f5050a3027eede38849a96b3afa4cba5c"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="6455e14f5050a3027eede38849a96b3afa4cba5c"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-1" class="line-number-anchor" /><a href="#line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">---</span>
-<span class="hljs-attr">User:</span>
-  <span class="hljs-attr">columns:</span>
-    <span class="hljs-attr">username:</span> <span class="hljs-string">string(255)</span>
-    <span class="hljs-attr">password:</span> <span class="hljs-string">string(255)</span>
-
-<span class="hljs-attr">Email:</span>
-  <span class="hljs-attr">columns:</span>
-    <span class="hljs-attr">address:</span> <span class="hljs-string">string</span>
-    <span class="hljs-attr">user_id:</span> <span class="hljs-string">integer</span>
-  <span class="hljs-attr">relations:</span>
-    <span class="hljs-attr">User:</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-2" class="line-number-anchor" /><a href="#line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-3" class="line-number-anchor" /><a href="#line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-4" class="line-number-anchor" /><a href="#line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-5" class="line-number-anchor" /><a href="#line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-6" class="line-number-anchor" /><a href="#line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-7" class="line-number-anchor" /><a href="#line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-8" class="line-number-anchor" /><a href="#line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-9" class="line-number-anchor" /><a href="#line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-10" class="line-number-anchor" /><a href="#line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-11" class="line-number-anchor" /><a href="#line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-12" class="line-number-anchor" /><a href="#line-number-6455e14f5050a3027eede38849a96b3afa4cba5c-12">12</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="8be2419491650702e3b8860396f53adf7548b0c1"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="8be2419491650702e3b8860396f53adf7548b0c1"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-attr">User:</span></code><code class="line language-yaml">  <span class="hljs-attr">columns:</span></code><code class="line language-yaml">    <span class="hljs-attr">username:</span> <span class="hljs-string">string(255)</span></code><code class="line language-yaml">    <span class="hljs-attr">password:</span> <span class="hljs-string">string(255)</span></code><code class="line language-yaml"></code><code class="line language-yaml"><span class="hljs-attr">Email:</span></code><code class="line language-yaml">  <span class="hljs-attr">columns:</span></code><code class="line language-yaml">    <span class="hljs-attr">address:</span> <span class="hljs-string">string</span></code><code class="line language-yaml">    <span class="hljs-attr">user_id:</span> <span class="hljs-string">integer</span></code><code class="line language-yaml">  <span class="hljs-attr">relations:</span></code><code class="line language-yaml">    <span class="hljs-attr">User:</span></code><code class="empty"></code></pre>
             
     <p>Now if we extend the <code>User</code> and <code>Email</code> classes and create, for
 example, classes <code>ExtendedUser</code> and <code>ExtendedEmail</code>, the
@@ -3687,45 +3667,51 @@ with its dependency injection solution.</p>
 and <code>EmailTemplate</code>, with almost identical definitions as the <code>User</code>
 and <code>Email</code> class had.</p>
 
-            <div class="console"><pre><code class="console">// models/UserTemplate.php
+                <div class="console">
+        <pre><code class="console">// models/UserTemplate.php
 class UserTemplate extends Doctrine_Template
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('username', 'string', 255);
-        $this->hasColumn('password', 'string', 255);
+        $this-&gt;hasColumn(&#039;username&#039;, &#039;string&#039;, 255);
+        $this-&gt;hasColumn(&#039;password&#039;, &#039;string&#039;, 255);
     }
 
     public function setUp()
     {
-        $this->hasMany('EmailTemplate as Emails', array(
-                'local' => 'id',
-                'foreign' => 'user_id'
+        $this-&gt;hasMany(&#039;EmailTemplate as Emails&#039;, array(
+                &#039;local&#039; =&gt; &#039;id&#039;,
+                &#039;foreign&#039; =&gt; &#039;user_id&#039;
             )
         );
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Now lets define the <code>EmailTemplate</code>:</p>
 
-            <div class="console"><pre><code class="console">// models/EmailTemplate.php
+                <div class="console">
+        <pre><code class="console">// models/EmailTemplate.php
 class EmailTemplate extends Doctrine_Template
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('address', 'string');
-        $this->hasColumn('user_id', 'integer');
+        $this-&gt;hasColumn(&#039;address&#039;, &#039;string&#039;);
+        $this-&gt;hasColumn(&#039;user_id&#039;, &#039;integer&#039;);
     }
 
     public function setUp()
     {
-        $this->hasOne('UserTemplate as User', array(
-                'local' => 'user_id',
-                'foreign' => 'id'
+        $this-&gt;hasOne(&#039;UserTemplate as User&#039;, array(
+                &#039;local&#039; =&gt; &#039;user_id&#039;,
+                &#039;foreign&#039; =&gt; &#039;id&#039;
             )
         );
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Notice how we set the relations. We are not pointing to concrete Record
 classes, rather we are setting the relations to templates. This tells
@@ -3734,11 +3720,12 @@ templates. If Doctrine can&#039;t find these concrete implementations the
 relation parser will throw an exception, but before we go ahead of
 things, here are the actual record classes:</p>
 
-            <div class="console"><pre><code class="console">class User extends Doctrine_Record
+                <div class="console">
+        <pre><code class="console">class User extends Doctrine_Record
 {
     public function setUp()
     {
-        $this->actAs('UserTemplate');
+        $this-&gt;actAs(&#039;UserTemplate&#039;);
     }
 }
 
@@ -3746,74 +3733,65 @@ class Email extends Doctrine_Record
 {
     public function setUp()
     {
-        $this->actAs('EmailTemplate');
+        $this-&gt;actAs(&#039;EmailTemplate&#039;);
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="bd3a96ca1048c34b9e11f8f86a4c83f56144c224"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="bd3a96ca1048c34b9e11f8f86a4c83f56144c224"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-bd3a96ca1048c34b9e11f8f86a4c83f56144c224-1" class="line-number-anchor" /><a href="#line-number-bd3a96ca1048c34b9e11f8f86a4c83f56144c224-1">1</a></td><td class="code-line" rowspan="6"><span class="hljs-meta">---</span>
-<span class="hljs-attr">User:</span>
-  <span class="hljs-attr">actAs:</span> <span class="hljs-string">[UserTemplate]</span>
-
-<span class="hljs-attr">Email:</span>
-  <span class="hljs-attr">actAs:</span> <span class="hljs-string">[EmailTemplate]</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-bd3a96ca1048c34b9e11f8f86a4c83f56144c224-2" class="line-number-anchor" /><a href="#line-number-bd3a96ca1048c34b9e11f8f86a4c83f56144c224-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-bd3a96ca1048c34b9e11f8f86a4c83f56144c224-3" class="line-number-anchor" /><a href="#line-number-bd3a96ca1048c34b9e11f8f86a4c83f56144c224-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-bd3a96ca1048c34b9e11f8f86a4c83f56144c224-4" class="line-number-anchor" /><a href="#line-number-bd3a96ca1048c34b9e11f8f86a4c83f56144c224-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-bd3a96ca1048c34b9e11f8f86a4c83f56144c224-5" class="line-number-anchor" /><a href="#line-number-bd3a96ca1048c34b9e11f8f86a4c83f56144c224-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-bd3a96ca1048c34b9e11f8f86a4c83f56144c224-6" class="line-number-anchor" /><a href="#line-number-bd3a96ca1048c34b9e11f8f86a4c83f56144c224-6">6</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="b4cb2633cfbdbdab1f08fc037ac90d17a507ac91"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="b4cb2633cfbdbdab1f08fc037ac90d17a507ac91"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-attr">User:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span> <span class="hljs-string">[UserTemplate]</span></code><code class="line language-yaml"></code><code class="line language-yaml"><span class="hljs-attr">Email:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span> <span class="hljs-string">[EmailTemplate]</span></code><code class="empty"></code></pre>
             
     <p>Now consider the following code snippet. This does NOT work since we
 haven&#039;t yet set any concrete implementations for the templates.</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>user = new User();
-<span class="noselect">$ </span>user->Emails; // throws an exception</code></pre></div>
+$user = new User();
+$user-&gt;Emails; // throws an exception</code></pre>
+    </div>
+
             
     <p>The following version works. Notice how we set the concrete
 implementations for the templates globally using Doctrine_Manager:</p>
 
-            <div class="console"><pre><code class="console">// bootstrap.php
+                <div class="console">
+        <pre><code class="console">// bootstrap.php
 
 // ...
-<span class="noselect">$ </span>manager->setImpl('UserTemplate', 'User')
-        ->setImpl('EmailTemplate', 'Email');</code></pre></div>
+$manager-&gt;setImpl(&#039;UserTemplate&#039;, &#039;User&#039;)
+        -&gt;setImpl(&#039;EmailTemplate&#039;, &#039;Email&#039;);</code></pre>
+    </div>
+
             
     <p>Now this code will work and won&#039;t throw an exception like it did before:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>user                     = new User();
-<span class="noselect">$ </span>user->Emails[0]->address = 'jonwage@gmail.com';
-<span class="noselect">$ </span>user->save();
+                <div class="console">
+        <pre><code class="console">$user                     = new User();
+$user-&gt;Emails[0]-&gt;address = &#039;jonwage@gmail.com&#039;;
+$user-&gt;save();
 
-print_r($user->toArray(true));</code></pre></div>
+print_r($user-&gt;toArray(true));</code></pre>
+    </div>
+
             
     <p>The above example would produce the following output:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
-Array
-(
-    [id] => 1
-    [username] =>
-    [password] =>
-    [Emails] => Array
-        (
-            [0] => Array
-                (
-                    [id] => 1
-                    [address] => jonwage@gmail.com
-                    [user_id] => 1
-                )
-        )
-)</code></pre></div>
+                <pre class="code-block-table" id="9786a57f162ad0aaacfab131b3b8484ef941a124"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="9786a57f162ad0aaacfab131b3b8484ef941a124"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sh">$ php test.php</code><code class="line language-sh">Array</code><code class="line language-sh">(</code><code class="line language-sh">    [id] =&gt; 1</code><code class="line language-sh">    [username] =&gt;</code><code class="line language-sh">    [password] =&gt;</code><code class="line language-sh">    [Emails] =&gt; Array</code><code class="line language-sh">        (</code><code class="line language-sh">            [0] =&gt; Array</code><code class="line language-sh">                (</code><code class="line language-sh">                    [id] =&gt; 1</code><code class="line language-sh">                    [address] =&gt; jonwage@gmail.com</code><code class="line language-sh">                    [user_id] =&gt; 1</code><code class="line language-sh">                )</code><code class="line language-sh">        )</code><code class="line language-sh">)</code><code class="empty"></code></pre>
             <div class="alert -admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -3848,14 +3826,15 @@ method called <code>__call()</code> to achieve this functionality.</p>
     <p>Lets add to our previous example and add some custom methods to the
 <code>UserTemplate</code>:</p>
 
-            <div class="console"><pre><code class="console">// models/UserTemplate.php
+                <div class="console">
+        <pre><code class="console">// models/UserTemplate.php
 class UserTemplate extends Doctrine_Template
 {
     // ...
     public function authenticate($username, $password)
     {
-        $invoker = $this->getInvoker();
-        if ($invoker->username == $username && $invoker->password == $password)
+        $invoker = $this-&gt;getInvoker();
+        if ($invoker-&gt;username == $username &amp;&amp; $invoker-&gt;password == $password)
         {
             return true;
         }
@@ -3864,22 +3843,27 @@ class UserTemplate extends Doctrine_Template
             return false;
         }
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Now take a look at the following code and how we can use it:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>user           = new User();
-<span class="noselect">$ </span>user->username = 'jwage';
-<span class="noselect">$ </span>user->password = 'changeme';
+                <div class="console">
+        <pre><code class="console">$user           = new User();
+$user-&gt;username = &#039;jwage&#039;;
+$user-&gt;password = &#039;changeme&#039;;
 
-if ($user->authenticate('jwage', 'changemte'))
+if ($user-&gt;authenticate(&#039;jwage&#039;, &#039;changemte&#039;))
 {
-    echo 'Authenticated successfully!';
+    echo &#039;Authenticated successfully!&#039;;
 }
 else
 {
-    echo 'Could not authenticate user!';
-}</code></pre></div>
+    echo &#039;Could not authenticate user!&#039;;
+}</code></pre>
+    </div>
+
             
     <p>You can also delegate methods to Doctrine_Table classes just as
 easily. But, to avoid naming collisions the methods for table classes
@@ -3889,25 +3873,31 @@ name.</p>
             
     <p>Here is an example where we add a new finder method:</p>
 
-            <div class="console"><pre><code class="console">// models/UserTemplate.php
+                <div class="console">
+        <pre><code class="console">// models/UserTemplate.php
 class UserTemplate extends Doctrine_Template
 {
     // ...
     public function findUsersWithEmailTableProxy()
     {
         return Doctrine_Query::create()
-            ->select('u.username')
-            ->from('User u')
-            ->innerJoin('u.Emails e')
-            ->execute();
+            -&gt;select(&#039;u.username&#039;)
+            -&gt;from(&#039;User u&#039;)
+            -&gt;innerJoin(&#039;u.Emails e&#039;)
+            -&gt;execute();
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Now we can access that function from the Doctrine_Table object for
 the <code>User</code> model:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>userTable = Doctrine_Core::getTable('User');
-<span class="noselect">$ </span>users = $userTable->findUsersWithEmail();</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$userTable = Doctrine_Core::getTable(&#039;User&#039;);
+$users = $userTable-&gt;findUsersWithEmail();</code></pre>
+    </div>
+
             <div class="alert -admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -3945,37 +3935,43 @@ method various helper methods can be used for easily creating the
 dynamic record definition. Commonly the following methods are being
 used:</p>
 
-            <div class="console"><pre><code class="console">public function initOptions()
+                <div class="console">
+        <pre><code class="console">public function initOptions()
 public function buildLocalRelation()
 public function buildForeignKeys(Doctrine_Table $table)
 public function buildForeignRelation($alias = null)
-public function buildRelation() // calls buildForeignRelation() and buildLocalRelation()</code></pre></div>
-            <div class="console"><pre><code class="console">class EmailBehavior extends Doctrine_Record_Generator
+public function buildRelation() // calls buildForeignRelation() and buildLocalRelation()</code></pre>
+    </div>
+
+                <div class="console">
+        <pre><code class="console">class EmailBehavior extends Doctrine_Record_Generator
 {
     public function initOptions()
     {
-        $this->setOption('className', '%CLASS%Email');
+        $this-&gt;setOption(&#039;className&#039;, &#039;%CLASS%Email&#039;);
 
         // Some other options
-        // $this->setOption('appLevelDelete', true);
-        // $this->setOption('cascadeDelete', false);
+        // $this-&gt;setOption(&#039;appLevelDelete&#039;, true);
+        // $this-&gt;setOption(&#039;cascadeDelete&#039;, false);
     }
 
     public function buildRelation()
     {
-        $this->buildForeignRelation('Emails');
-        $this->buildLocalRelation();
+        $this-&gt;buildForeignRelation(&#039;Emails&#039;);
+        $this-&gt;buildLocalRelation();
     }
 
     public function setTableDefinition()
     {
-        $this->hasColumn('address', 'string', 255, array(
-                'email'  => true,
-                'primary' => true
+        $this-&gt;hasColumn(&#039;address&#039;, &#039;string&#039;, 255, array(
+                &#039;email&#039;  =&gt; true,
+                &#039;primary&#039; =&gt; true
             )
         );
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
     </div>
             <div class="section" id="core-behaviors">
             <h2 class="section-header ">
@@ -3989,9 +3985,12 @@ public function buildRelation() // calls buildForeignRelation() and buildLocalRe
 our existing schemas and models from our test environment we created and
 have been using in the earlier chapters:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>rm schema.yml
-<span class="noselect">$ </span>touch schema.yml
-<span class="noselect">$ </span>rm -rf models/*</code></pre></div>
+                <pre class="code-block-table" id="58f5942d66bcf884bd60f7a81be892d6943569ea"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="58f5942d66bcf884bd60f7a81be892d6943569ea"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sh">$ rm schema.yml</code><code class="line language-sh">$ touch schema.yml</code><code class="line language-sh">$ rm -rf models/*</code><code class="empty"></code></pre>
             <div class="section" id="introduction">
             <h3 class="section-header ">
     <a href="#introduction">
@@ -4023,53 +4022,38 @@ that come bundled with Doctrine.</p>
     <p>Lets create a <code>BlogPost</code> model that we want to have the ability to
 have versions:</p>
 
-            <div class="console"><pre><code class="console">// models/BlogPost.php
+                <div class="console">
+        <pre><code class="console">// models/BlogPost.php
 class BlogPost extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('title', 'string', 255);
-        $this->hasColumn('body', 'clob');
+        $this-&gt;hasColumn(&#039;title&#039;, &#039;string&#039;, 255);
+        $this-&gt;hasColumn(&#039;body&#039;, &#039;clob&#039;);
     }
 
     public function setUp()
     {
-        $this->actAs('Versionable', array(
-                'versionColumn' => 'version',
-                'className' => '%CLASS%Version',
-                'auditLog' => true
+        $this-&gt;actAs(&#039;Versionable&#039;, array(
+                &#039;versionColumn&#039; =&gt; &#039;version&#039;,
+                &#039;className&#039; =&gt; &#039;%CLASS%Version&#039;,
+                &#039;auditLog&#039; =&gt; true
             )
         );
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="d8c64de1debc79198a2b6d5a80615b9d42c3ed4c"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="d8c64de1debc79198a2b6d5a80615b9d42c3ed4c"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-1" class="line-number-anchor" /><a href="#line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-1">1</a></td><td class="code-line" rowspan="10"><span class="hljs-meta">---</span>
-<span class="hljs-attr">BlogPost:</span>
-  <span class="hljs-attr">actAs:</span>
-    <span class="hljs-attr">Versionable:</span>
-      <span class="hljs-attr">versionColumn:</span> <span class="hljs-string">version</span>
-      <span class="hljs-attr">className:</span> <span class="hljs-string">%CLASS%Version</span>
-      <span class="hljs-attr">auditLog:</span> <span class="hljs-literal">true</span>
-  <span class="hljs-attr">columns:</span>
-    <span class="hljs-attr">title:</span> <span class="hljs-string">string(255)</span>
-    <span class="hljs-attr">body:</span> <span class="hljs-string">clob</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-2" class="line-number-anchor" /><a href="#line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-3" class="line-number-anchor" /><a href="#line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-4" class="line-number-anchor" /><a href="#line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-5" class="line-number-anchor" /><a href="#line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-6" class="line-number-anchor" /><a href="#line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-7" class="line-number-anchor" /><a href="#line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-8" class="line-number-anchor" /><a href="#line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-9" class="line-number-anchor" /><a href="#line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-10" class="line-number-anchor" /><a href="#line-number-d8c64de1debc79198a2b6d5a80615b9d42c3ed4c-10">10</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="aeee4ccc13a48d3cbd22d89171364b30f62cf2d2"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="aeee4ccc13a48d3cbd22d89171364b30f62cf2d2"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-attr">BlogPost:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span></code><code class="line language-yaml">    <span class="hljs-attr">Versionable:</span></code><code class="line language-yaml">      <span class="hljs-attr">versionColumn:</span> <span class="hljs-string">version</span></code><code class="line language-yaml">      <span class="hljs-attr">className:</span> <span class="hljs-string">%CLASS%Version</span></code><code class="line language-yaml">      <span class="hljs-attr">auditLog:</span> <span class="hljs-literal">true</span></code><code class="line language-yaml">  <span class="hljs-attr">columns:</span></code><code class="line language-yaml">    <span class="hljs-attr">title:</span> <span class="hljs-string">string(255)</span></code><code class="line language-yaml">    <span class="hljs-attr">body:</span> <span class="hljs-string">clob</span></code><code class="empty"></code></pre>
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -4089,16 +4073,20 @@ not maintain the data at each version.</p>
             
     <p>Lets check the SQL that is generated by the above models:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>sql = Doctrine_Core::generateSqlFromArray(array('BlogPost'));
-echo $sql[0] . "\n";
-echo $sql[1];</code></pre></div>
+$sql = Doctrine_Core::generateSqlFromArray(array(&#039;BlogPost&#039;));
+echo $sql[0] . &quot;\n&quot;;
+echo $sql[1];</code></pre>
+    </div>
+
             
     <p>The above code would output the following SQL query:</p>
 
-            <div class="console"><pre><code class="console">CREATE TABLE blog_post_version (id BIGINT,
+                <div class="console">
+        <pre><code class="console">CREATE TABLE blog_post_version (id BIGINT,
 title VARCHAR(255),
 body LONGTEXT,
 version BIGINT,
@@ -4109,7 +4097,9 @@ title VARCHAR(255),
 body LONGTEXT,
 version BIGINT,
 PRIMARY KEY(id)) ENGINE = INNODB
-ALTER TABLE blog_post_version ADD FOREIGN KEY (id) REFERENCES blog_post(id) ON UPDATE CASCADE ON DELETE CASCADE</code></pre></div>
+ALTER TABLE blog_post_version ADD FOREIGN KEY (id) REFERENCES blog_post(id) ON UPDATE CASCADE ON DELETE CASCADE</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -4146,26 +4136,27 @@ increased.</li>
             
     <p>Now lets play around with the <code>BlogPost</code> model:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>blogPost        = new BlogPost();
-<span class="noselect">$ </span>blogPost->title = 'Test blog post';
-<span class="noselect">$ </span>blogPost->body  = 'test';
-<span class="noselect">$ </span>blogPost->save();
+                <div class="console">
+        <pre><code class="console">$blogPost        = new BlogPost();
+$blogPost-&gt;title = &#039;Test blog post&#039;;
+$blogPost-&gt;body  = &#039;test&#039;;
+$blogPost-&gt;save();
 
-<span class="noselect">$ </span>blogPost->title = 'Modified blog post title';
-<span class="noselect">$ </span>blogPost->save();
+$blogPost-&gt;title = &#039;Modified blog post title&#039;;
+$blogPost-&gt;save();
 
-print_r($blogPost->toArray());</code></pre></div>
+print_r($blogPost-&gt;toArray());</code></pre>
+    </div>
+
             
     <p>The above example would produce the following output:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
-Array
-(
-    [id] => 1
-    [title] => Modified blog post title
-    [body] => test
-    [version] => 2
-)</code></pre></div>
+                <pre class="code-block-table" id="31a0b95dcd54f7f5cd0e2d80a57c5c72b663ad54"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="31a0b95dcd54f7f5cd0e2d80a57c5c72b663ad54"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sh">$ php test.php</code><code class="line language-sh">Array</code><code class="line language-sh">(</code><code class="line language-sh">    [id] =&gt; 1</code><code class="line language-sh">    [title] =&gt; Modified blog post title</code><code class="line language-sh">    [body] =&gt; <span class="hljs-built_in">test</span></code><code class="line language-sh">    [version] =&gt; 2</code><code class="line language-sh">)</code><code class="empty"></code></pre>
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -4186,19 +4177,20 @@ method that the behavior includes.</p>
             
     <p>Lets revert back to the first version:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>blogPost->revert(1);
-print_r($blogPost->toArray());</code></pre></div>
+                <div class="console">
+        <pre><code class="console">$blogPost-&gt;revert(1);
+print_r($blogPost-&gt;toArray());</code></pre>
+    </div>
+
             
     <p>The above example would produce the following output:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
-Array
-(
-    [id] => 2
-    [title] => Test blog post
-    [body] => test
-    [version] => 1
-)</code></pre></div>
+                <pre class="code-block-table" id="7b25021e33881b75595d23e61db9ee5792398a57"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="7b25021e33881b75595d23e61db9ee5792398a57"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sh">$ php test.php</code><code class="line language-sh">Array</code><code class="line language-sh">(</code><code class="line language-sh">    [id] =&gt; 2</code><code class="line language-sh">    [title] =&gt; Test blog post</code><code class="line language-sh">    [body] =&gt; <span class="hljs-built_in">test</span></code><code class="line language-sh">    [version] =&gt; 1</code><code class="line language-sh">)</code><code class="empty"></code></pre>
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -4234,96 +4226,60 @@ inserted and updated.</p>
 our <code>BlogPost</code> model and add the <code>Timestampable</code> behavior to
 automatically set these dates for us.</p>
 
-            <div class="console"><pre><code class="console">// models/BlogPost.php
+                <div class="console">
+        <pre><code class="console">// models/BlogPost.php
 class BlogPost extends Doctrine_Record
 {
     // ...
     public function setUp()
     {
-        $this->actAs('Timestampable');
+        $this-&gt;actAs(&#039;Timestampable&#039;);
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="9b51e22b3bca53f1cdc8914ad16f7500bcb0311d"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="9b51e22b3bca53f1cdc8914ad16f7500bcb0311d"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-1" class="line-number-anchor" /><a href="#line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-1">1</a></td><td class="code-line" rowspan="9"><span class="hljs-meta">---</span>
-<span class="hljs-comment"># schema.yml</span>
-
-<span class="hljs-comment"># ...</span>
-<span class="hljs-attr">BlogPost:</span>
-  <span class="hljs-attr">actAs:</span>
-<span class="hljs-comment"># ...</span>
-    <span class="hljs-attr">Timestampable:</span>
-<span class="hljs-comment"># ...</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-2" class="line-number-anchor" /><a href="#line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-3" class="line-number-anchor" /><a href="#line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-4" class="line-number-anchor" /><a href="#line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-5" class="line-number-anchor" /><a href="#line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-6" class="line-number-anchor" /><a href="#line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-7" class="line-number-anchor" /><a href="#line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-8" class="line-number-anchor" /><a href="#line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-9" class="line-number-anchor" /><a href="#line-number-9b51e22b3bca53f1cdc8914ad16f7500bcb0311d-9">9</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="7f0859d7191268ac841679ab56459cdb45ca66af"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="7f0859d7191268ac841679ab56459cdb45ca66af"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-comment"># schema.yml</span></code><code class="line language-yaml"></code><code class="line language-yaml"><span class="hljs-comment"># ...</span></code><code class="line language-yaml"><span class="hljs-attr">BlogPost:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span></code><code class="line language-yaml"><span class="hljs-comment"># ...</span></code><code class="line language-yaml">    <span class="hljs-attr">Timestampable:</span></code><code class="line language-yaml"><span class="hljs-comment"># ...</span></code><code class="empty"></code></pre>
             
     <p>If you are only interested in using only one of the columns, such as a
 <code>created_at</code> timestamp, but not a an <code>updated_at</code> field, set the
 <code>disabled</code> to true for either of the fields as in the example below.</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="80ac87f1d38fd8282e9a0992d02a4f69c50e71f6"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="80ac87f1d38fd8282e9a0992d02a4f69c50e71f6"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-1" class="line-number-anchor" /><a href="#line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">---</span>
-<span class="hljs-attr">BlogPost:</span>
-  <span class="hljs-attr">actAs:</span>
-<span class="hljs-comment"># ...</span>
-    <span class="hljs-attr">Timestampable:</span>
-      <span class="hljs-attr">created:</span>
-        <span class="hljs-attr">name:</span> <span class="hljs-string">created_at</span>
-        <span class="hljs-attr">type:</span> <span class="hljs-string">timestamp</span>
-        <span class="hljs-attr">format:</span> <span class="hljs-string">Y-m-d</span> <span class="hljs-string">H:i:s</span>
-      <span class="hljs-attr">updated:</span>
-        <span class="hljs-attr">disabled:</span> <span class="hljs-literal">true</span>
-<span class="hljs-comment"># ...</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-2" class="line-number-anchor" /><a href="#line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-3" class="line-number-anchor" /><a href="#line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-4" class="line-number-anchor" /><a href="#line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-5" class="line-number-anchor" /><a href="#line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-6" class="line-number-anchor" /><a href="#line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-7" class="line-number-anchor" /><a href="#line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-8" class="line-number-anchor" /><a href="#line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-9" class="line-number-anchor" /><a href="#line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-10" class="line-number-anchor" /><a href="#line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-11" class="line-number-anchor" /><a href="#line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-12" class="line-number-anchor" /><a href="#line-number-80ac87f1d38fd8282e9a0992d02a4f69c50e71f6-12">12</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="7b89a6a789e15e366ee1f2675eeeaf42a3aa5d80"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="7b89a6a789e15e366ee1f2675eeeaf42a3aa5d80"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-attr">BlogPost:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span></code><code class="line language-yaml"><span class="hljs-comment"># ...</span></code><code class="line language-yaml">    <span class="hljs-attr">Timestampable:</span></code><code class="line language-yaml">      <span class="hljs-attr">created:</span></code><code class="line language-yaml">        <span class="hljs-attr">name:</span> <span class="hljs-string">created_at</span></code><code class="line language-yaml">        <span class="hljs-attr">type:</span> <span class="hljs-string">timestamp</span></code><code class="line language-yaml">        <span class="hljs-attr">format:</span> <span class="hljs-string">Y-m-d</span> <span class="hljs-string">H:i:s</span></code><code class="line language-yaml">      <span class="hljs-attr">updated:</span></code><code class="line language-yaml">        <span class="hljs-attr">disabled:</span> <span class="hljs-literal">true</span></code><code class="line language-yaml"><span class="hljs-comment"># ...</span></code><code class="empty"></code></pre>
             
     <p>Now look what happens when we create a new post:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>blogPost        = new BlogPost();
-<span class="noselect">$ </span>blogPost->title = 'Test blog post';
-<span class="noselect">$ </span>blogPost->body  = 'test';
-<span class="noselect">$ </span>blogPost->save();
+                <div class="console">
+        <pre><code class="console">$blogPost        = new BlogPost();
+$blogPost-&gt;title = &#039;Test blog post&#039;;
+$blogPost-&gt;body  = &#039;test&#039;;
+$blogPost-&gt;save();
 
-print_r($blogPost->toArray());</code></pre></div>
+print_r($blogPost-&gt;toArray());</code></pre>
+    </div>
+
             
     <p>The above example would produce the following output:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
-Array
-(
-    [id] => 1
-    [title] => Test blog post
-    [body] => test
-    [version] => 1
-    [created_at] => 2009-01-21 17:54:23
-    [updated_at] => 2009-01-21 17:54:23
-)</code></pre></div>
+                <pre class="code-block-table" id="f65e117fa8f1b45bb14217b9a72c4397b10f591f"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="f65e117fa8f1b45bb14217b9a72c4397b10f591f"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sh">$ php test.php</code><code class="line language-sh">Array</code><code class="line language-sh">(</code><code class="line language-sh">    [id] =&gt; 1</code><code class="line language-sh">    [title] =&gt; Test blog post</code><code class="line language-sh">    [body] =&gt; <span class="hljs-built_in">test</span></code><code class="line language-sh">    [version] =&gt; 1</code><code class="line language-sh">    [created_at] =&gt; 2009-01-21 17:54:23</code><code class="line language-sh">    [updated_at] =&gt; 2009-01-21 17:54:23</code><code class="line language-sh">)</code><code class="empty"></code></pre>
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -4424,77 +4380,56 @@ subject, etc. These values can be used for search engine friendly urls.</p>
     <p>Lets expand our <code>BlogPost</code> model to use the <code>Sluggable</code> behavior
 because we will want to have nice URLs for our posts:</p>
 
-            <div class="console"><pre><code class="console">// models/BlogPost.php
+                <div class="console">
+        <pre><code class="console">// models/BlogPost.php
 class BlogPost extends Doctrine_Record
 {
     // ...
     public function setUp()
     {
         // ...
-        $this->actAs('Sluggable', array(
-                'unique'    => true,
-                'fields'    => array('title'),
-                'canUpdate' => true
+        $this-&gt;actAs(&#039;Sluggable&#039;, array(
+                &#039;unique&#039;    =&gt; true,
+                &#039;fields&#039;    =&gt; array(&#039;title&#039;),
+                &#039;canUpdate&#039; =&gt; true
             )
         );
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="87df57fa32bd087f7f422b19776cb831db8d476b"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="87df57fa32bd087f7f422b19776cb831db8d476b"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-87df57fa32bd087f7f422b19776cb831db8d476b-1" class="line-number-anchor" /><a href="#line-number-87df57fa32bd087f7f422b19776cb831db8d476b-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">---</span>
-<span class="hljs-comment"># schema.yml</span>
-
-<span class="hljs-comment"># ...</span>
-<span class="hljs-attr">BlogPost:</span>
-  <span class="hljs-attr">actAs:</span>
-<span class="hljs-comment"># ...</span>
-    <span class="hljs-attr">Sluggable:</span>
-      <span class="hljs-attr">unique:</span> <span class="hljs-literal">true</span>
-      <span class="hljs-attr">fields:</span> <span class="hljs-string">[title]</span>
-      <span class="hljs-attr">canUpdate:</span> <span class="hljs-literal">true</span>
-<span class="hljs-comment"># ...</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-87df57fa32bd087f7f422b19776cb831db8d476b-2" class="line-number-anchor" /><a href="#line-number-87df57fa32bd087f7f422b19776cb831db8d476b-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-87df57fa32bd087f7f422b19776cb831db8d476b-3" class="line-number-anchor" /><a href="#line-number-87df57fa32bd087f7f422b19776cb831db8d476b-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-87df57fa32bd087f7f422b19776cb831db8d476b-4" class="line-number-anchor" /><a href="#line-number-87df57fa32bd087f7f422b19776cb831db8d476b-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-87df57fa32bd087f7f422b19776cb831db8d476b-5" class="line-number-anchor" /><a href="#line-number-87df57fa32bd087f7f422b19776cb831db8d476b-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-87df57fa32bd087f7f422b19776cb831db8d476b-6" class="line-number-anchor" /><a href="#line-number-87df57fa32bd087f7f422b19776cb831db8d476b-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-87df57fa32bd087f7f422b19776cb831db8d476b-7" class="line-number-anchor" /><a href="#line-number-87df57fa32bd087f7f422b19776cb831db8d476b-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-87df57fa32bd087f7f422b19776cb831db8d476b-8" class="line-number-anchor" /><a href="#line-number-87df57fa32bd087f7f422b19776cb831db8d476b-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-87df57fa32bd087f7f422b19776cb831db8d476b-9" class="line-number-anchor" /><a href="#line-number-87df57fa32bd087f7f422b19776cb831db8d476b-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-87df57fa32bd087f7f422b19776cb831db8d476b-10" class="line-number-anchor" /><a href="#line-number-87df57fa32bd087f7f422b19776cb831db8d476b-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-87df57fa32bd087f7f422b19776cb831db8d476b-11" class="line-number-anchor" /><a href="#line-number-87df57fa32bd087f7f422b19776cb831db8d476b-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-87df57fa32bd087f7f422b19776cb831db8d476b-12" class="line-number-anchor" /><a href="#line-number-87df57fa32bd087f7f422b19776cb831db8d476b-12">12</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="d8d476f985342ec60fe844f27da09f95bfe5e28a"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="d8d476f985342ec60fe844f27da09f95bfe5e28a"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-comment"># schema.yml</span></code><code class="line language-yaml"></code><code class="line language-yaml"><span class="hljs-comment"># ...</span></code><code class="line language-yaml"><span class="hljs-attr">BlogPost:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span></code><code class="line language-yaml"><span class="hljs-comment"># ...</span></code><code class="line language-yaml">    <span class="hljs-attr">Sluggable:</span></code><code class="line language-yaml">      <span class="hljs-attr">unique:</span> <span class="hljs-literal">true</span></code><code class="line language-yaml">      <span class="hljs-attr">fields:</span> <span class="hljs-string">[title]</span></code><code class="line language-yaml">      <span class="hljs-attr">canUpdate:</span> <span class="hljs-literal">true</span></code><code class="line language-yaml"><span class="hljs-comment"># ...</span></code><code class="empty"></code></pre>
             
     <p>Now look what happens when we create a new post. The slug column will
 automatically be set for us:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>blogPost        = new BlogPost();
-<span class="noselect">$ </span>blogPost->title = 'Test blog post';
-<span class="noselect">$ </span>blogPost->body  = 'test';
-<span class="noselect">$ </span>blogPost->save();
+                <div class="console">
+        <pre><code class="console">$blogPost        = new BlogPost();
+$blogPost-&gt;title = &#039;Test blog post&#039;;
+$blogPost-&gt;body  = &#039;test&#039;;
+$blogPost-&gt;save();
 
-print_r($blogPost->toArray());</code></pre></div>
+print_r($blogPost-&gt;toArray());</code></pre>
+    </div>
+
             
     <p>The above example would produce the following output:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
-Array
-(
-    [id] => 1
-    [title] => Test blog post
-    [body] => test
-    [version] => 1
-    [created_at] => 2009-01-21 17:57:05
-    [updated_at] => 2009-01-21 17:57:05
-    [slug] => test-blog-post
-)</code></pre></div>
+                <pre class="code-block-table" id="195f36067b8a18e891ae7db125ce7fc48471fd6a"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="195f36067b8a18e891ae7db125ce7fc48471fd6a"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sh">$ php test.php</code><code class="line language-sh">Array</code><code class="line language-sh">(</code><code class="line language-sh">    [id] =&gt; 1</code><code class="line language-sh">    [title] =&gt; Test blog post</code><code class="line language-sh">    [body] =&gt; <span class="hljs-built_in">test</span></code><code class="line language-sh">    [version] =&gt; 1</code><code class="line language-sh">    [created_at] =&gt; 2009-01-21 17:57:05</code><code class="line language-sh">    [updated_at] =&gt; 2009-01-21 17:57:05</code><code class="line language-sh">    [slug] =&gt; <span class="hljs-built_in">test</span>-blog-post</code><code class="line language-sh">)</code><code class="empty"></code></pre>
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -4613,46 +4548,35 @@ example we have a <code>NewsItem</code> class with two fields <code>title</code>
 <code>content</code>. We want to have the field <code>title</code> with different
 languages support. This can be achieved as follows:</p>
 
-            <div class="console"><pre><code class="console">class NewsItem extends Doctrine_Record
+                <div class="console">
+        <pre><code class="console">class NewsItem extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('title', 'string', 255);
-        $this->hasColumn('body', 'blog');
+        $this-&gt;hasColumn(&#039;title&#039;, &#039;string&#039;, 255);
+        $this-&gt;hasColumn(&#039;body&#039;, &#039;blog&#039;);
     }
 
     public function setUp()
     {
-        $this->actAs('I18n', array(
-                'fields' => array('title', 'body')
+        $this-&gt;actAs(&#039;I18n&#039;, array(
+                &#039;fields&#039; =&gt; array(&#039;title&#039;, &#039;body&#039;)
             )
         );
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="8f58d7c22a50928cc16e91a7e06678b769991b39"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="8f58d7c22a50928cc16e91a7e06678b769991b39"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-1" class="line-number-anchor" /><a href="#line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">---</span>
-<span class="hljs-attr">NewsItem:</span>
-  <span class="hljs-attr">actAs:</span>
-    <span class="hljs-attr">I18n:</span>
-      <span class="hljs-attr">fields:</span> <span class="hljs-string">[title,</span> <span class="hljs-string">body]</span>
-  <span class="hljs-attr">columns:</span>
-    <span class="hljs-attr">title:</span> <span class="hljs-string">string(255)</span>
-    <span class="hljs-attr">body:</span> <span class="hljs-string">clob</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-2" class="line-number-anchor" /><a href="#line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-3" class="line-number-anchor" /><a href="#line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-4" class="line-number-anchor" /><a href="#line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-5" class="line-number-anchor" /><a href="#line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-6" class="line-number-anchor" /><a href="#line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-7" class="line-number-anchor" /><a href="#line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-8" class="line-number-anchor" /><a href="#line-number-8f58d7c22a50928cc16e91a7e06678b769991b39-8">8</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="fcfcf98aa1ee82892fcac57c940cb4e294f0912d"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="fcfcf98aa1ee82892fcac57c940cb4e294f0912d"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-attr">NewsItem:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span></code><code class="line language-yaml">    <span class="hljs-attr">I18n:</span></code><code class="line language-yaml">      <span class="hljs-attr">fields:</span> <span class="hljs-string">[title,</span> <span class="hljs-string">body]</span></code><code class="line language-yaml">  <span class="hljs-attr">columns:</span></code><code class="line language-yaml">    <span class="hljs-attr">title:</span> <span class="hljs-string">string(255)</span></code><code class="line language-yaml">    <span class="hljs-attr">body:</span> <span class="hljs-string">clob</span></code><code class="empty"></code></pre>
             
     <p>Below is a list of all the options you can use with the <code>I18n</code>
 behavior:</p>
@@ -4696,23 +4620,29 @@ behavior:</p>
             
     <p>Lets check the SQL that is generated by the above models:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>sql = Doctrine_Core::generateSqlFromArray(array('NewsItem'));
-echo $sql[0] . "";
-echo $sql[1];</code></pre></div>
+$sql = Doctrine_Core::generateSqlFromArray(array(&#039;NewsItem&#039;));
+echo $sql[0] . &quot;&quot;;
+echo $sql[1];</code></pre>
+    </div>
+
             
     <p>The above code would output the following SQL query:</p>
 
-            <div class="console"><pre><code class="console">CREATE TABLE news_item_translation (id BIGINT,
+                <div class="console">
+        <pre><code class="console">CREATE TABLE news_item_translation (id BIGINT,
 title VARCHAR(255),
 body LONGTEXT,
 lang CHAR(2),
 PRIMARY KEY(id,
 lang)) ENGINE = INNODB
 CREATE TABLE news_item (id BIGINT AUTO_INCREMENT,
-PRIMARY KEY(id)) ENGINE = INNODB</code></pre></div>
+PRIMARY KEY(id)) ENGINE = INNODB</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -4747,60 +4677,54 @@ initializes the behavior that builds the followings things:</p>
     <p>Lets take a look at how we can manipulate the translations of the
 <code>NewsItem</code>:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>newsItem = new NewsItem();
-<span class="noselect">$ </span>newsItem->Translation['en']->title = 'some title';
-<span class="noselect">$ </span>newsItem->Translation['en']->body  = 'test';
-<span class="noselect">$ </span>newsItem->Translation['fi']->title = 'joku otsikko';
-<span class="noselect">$ </span>newsItem->Translation['fi']->body  = 'test'; $newsItem->save();
+$newsItem = new NewsItem();
+$newsItem-&gt;Translation[&#039;en&#039;]-&gt;title = &#039;some title&#039;;
+$newsItem-&gt;Translation[&#039;en&#039;]-&gt;body  = &#039;test&#039;;
+$newsItem-&gt;Translation[&#039;fi&#039;]-&gt;title = &#039;joku otsikko&#039;;
+$newsItem-&gt;Translation[&#039;fi&#039;]-&gt;body  = &#039;test&#039;; $newsItem-&gt;save();
 
-print_r($newsItem->toArray());</code></pre></div>
+print_r($newsItem-&gt;toArray());</code></pre>
+    </div>
+
             
     <p>The above example would produce the following output:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
-Array
-(
-    [id] => 1
-    [Translation] => Array
-        (
-            [en] => Array
-                (
-                    [id] => 1
-                    [title] => some title
-                    [body] => test
-                    [lang] => en
-                )
-            [fi] => Array
-                (
-                    [id] => 1
-                    [title] => joku otsikko
-                    [body] => test
-                    [lang] => fi
-                )
-        )
-)</code></pre></div>
+                <pre class="code-block-table" id="fb15766df2d0eac33e1580edcab5ba604bd7568e"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="fb15766df2d0eac33e1580edcab5ba604bd7568e"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sh">$ php test.php</code><code class="line language-sh">Array</code><code class="line language-sh">(</code><code class="line language-sh">    [id] =&gt; 1</code><code class="line language-sh">    [Translation] =&gt; Array</code><code class="line language-sh">        (</code><code class="line language-sh">            [en] =&gt; Array</code><code class="line language-sh">                (</code><code class="line language-sh">                    [id] =&gt; 1</code><code class="line language-sh">                    [title] =&gt; some title</code><code class="line language-sh">                    [body] =&gt; <span class="hljs-built_in">test</span></code><code class="line language-sh">                    [lang] =&gt; en</code><code class="line language-sh">                )</code><code class="line language-sh">            [<span class="hljs-keyword">fi</span>] =&gt; Array</code><code class="line language-sh">                (</code><code class="line language-sh">                    [id] =&gt; 1</code><code class="line language-sh">                    [title] =&gt; joku otsikko</code><code class="line language-sh">                    [body] =&gt; <span class="hljs-built_in">test</span></code><code class="line language-sh">                    [lang] =&gt; <span class="hljs-keyword">fi</span></code><code class="line language-sh">                )</code><code class="line language-sh">        )</code><code class="line language-sh">)</code><code class="empty"></code></pre>
             
     <p>How do we retrieve the translated data now? This is easy! Lets find all
 items and their Finnish translations:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>newsItems = Doctrine_Query::create()
-    ->from('NewsItem n')
-    ->leftJoin('n.Translation t')
-    ->where('t.lang = ?')
-    ->execute(array('fi'));
+$newsItems = Doctrine_Query::create()
+    -&gt;from(&#039;NewsItem n&#039;)
+    -&gt;leftJoin(&#039;n.Translation t&#039;)
+    -&gt;where(&#039;t.lang = ?&#039;)
+    -&gt;execute(array(&#039;fi&#039;));
 
-echo $newsItems[0]->Translation['fi']->title;</code></pre></div>
+echo $newsItems[0]-&gt;Translation[&#039;fi&#039;]-&gt;title;</code></pre>
+    </div>
+
             
     <p>The above example would produce the following output:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
-joku otsikko</code></pre></div>
+                <pre class="code-block-table" id="b99b21e3f3bc13146038384980d71cc24cc5ee4f"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="b99b21e3f3bc13146038384980d71cc24cc5ee4f"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sh">$ php test.php</code><code class="line language-sh">joku otsikko</code><code class="empty"></code></pre>
     </div>
             <div class="section" id="nestedset">
             <a id="behaviors-core-behaviors-nestedset"></a>
@@ -4820,71 +4744,60 @@ the data in your trees.</p>
     <p>Lets take a <code>Category</code> model for example where the categories need to
 be organized in a hierarchical tree structure:</p>
 
-            <div class="console"><pre><code class="console">// models/Category.php
+                <div class="console">
+        <pre><code class="console">// models/Category.php
 class Category extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('name', 'string', 255);
+        $this-&gt;hasColumn(&#039;name&#039;, &#039;string&#039;, 255);
     }
 
     public function setUp()
     {
-        $this->actAs('NestedSet', array(
-                'hasManyRoots' => true,
-                'rootColumnName' => 'root_id'
+        $this-&gt;actAs(&#039;NestedSet&#039;, array(
+                &#039;hasManyRoots&#039; =&gt; true,
+                &#039;rootColumnName&#039; =&gt; &#039;root_id&#039;
             )
         );
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-1" class="line-number-anchor" /><a href="#line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-1">1</a></td><td class="code-line" rowspan="11"><span class="hljs-meta">---</span>
-<span class="hljs-comment"># schema.yml</span>
-
-<span class="hljs-comment"># ...</span>
-<span class="hljs-attr">Category:</span>
-  <span class="hljs-attr">actAs:</span>
-    <span class="hljs-attr">NestedSet:</span>
-      <span class="hljs-attr">hasManyRoots:</span> <span class="hljs-literal">true</span>
-      <span class="hljs-attr">rootColumnName:</span> <span class="hljs-string">root_id</span>
-  <span class="hljs-attr">columns:</span>
-    <span class="hljs-attr">name:</span> <span class="hljs-string">string(255)</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-2" class="line-number-anchor" /><a href="#line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-3" class="line-number-anchor" /><a href="#line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-4" class="line-number-anchor" /><a href="#line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-5" class="line-number-anchor" /><a href="#line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-6" class="line-number-anchor" /><a href="#line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-7" class="line-number-anchor" /><a href="#line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-8" class="line-number-anchor" /><a href="#line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-9" class="line-number-anchor" /><a href="#line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-10" class="line-number-anchor" /><a href="#line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-11" class="line-number-anchor" /><a href="#line-number-57d79c4f9ed3ee55ead2517ec0f45852dbdbc1bf-11">11</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="a8b49fbca7ee016001e3394d5f69a4ab3bcd44be"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="a8b49fbca7ee016001e3394d5f69a4ab3bcd44be"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-comment"># schema.yml</span></code><code class="line language-yaml"></code><code class="line language-yaml"><span class="hljs-comment"># ...</span></code><code class="line language-yaml"><span class="hljs-attr">Category:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span></code><code class="line language-yaml">    <span class="hljs-attr">NestedSet:</span></code><code class="line language-yaml">      <span class="hljs-attr">hasManyRoots:</span> <span class="hljs-literal">true</span></code><code class="line language-yaml">      <span class="hljs-attr">rootColumnName:</span> <span class="hljs-string">root_id</span></code><code class="line language-yaml">  <span class="hljs-attr">columns:</span></code><code class="line language-yaml">    <span class="hljs-attr">name:</span> <span class="hljs-string">string(255)</span></code><code class="empty"></code></pre>
             
     <p>Lets check the SQL that is generated by the above models:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>sql = Doctrine_Core::generateSqlFromArray(array('Category'));
-echo $sql[0];</code></pre></div>
+$sql = Doctrine_Core::generateSqlFromArray(array(&#039;Category&#039;));
+echo $sql[0];</code></pre>
+    </div>
+
             
     <p>The above code would output the following SQL query:</p>
 
-            <div class="console"><pre><code class="console">CREATE TABLE category (id BIGINT AUTO_INCREMENT,
+                <div class="console">
+        <pre><code class="console">CREATE TABLE category (id BIGINT AUTO_INCREMENT,
 name VARCHAR(255),
 root_id INT,
 lft INT,
 rgt INT,
 level SMALLINT,
-PRIMARY KEY(id)) ENGINE = INNODB</code></pre></div>
+PRIMARY KEY(id)) ENGINE = INNODB</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -4922,61 +4835,54 @@ It can be used for indexing and searching both database and files.</p>
     <p>Imagine we have a <code>Job</code> model for job postings and we want it to be
 easily searchable:</p>
 
-            <div class="console"><pre><code class="console">// models/Job.php
+                <div class="console">
+        <pre><code class="console">// models/Job.php
 class Job extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('title', 'string', 255);
-        $this->hasColumn('description', 'clob');
+        $this-&gt;hasColumn(&#039;title&#039;, &#039;string&#039;, 255);
+        $this-&gt;hasColumn(&#039;description&#039;, &#039;clob&#039;);
     }
 
     public function setUp()
     {
-        $this->actAs('Searchable', array(
-                'fields' => array('title', 'content')
+        $this-&gt;actAs(&#039;Searchable&#039;, array(
+                &#039;fields&#039; =&gt; array(&#039;title&#039;, &#039;content&#039;)
             )
         );
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="a1123b038df2d82db023b507e8e3b2300fe16be1"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="a1123b038df2d82db023b507e8e3b2300fe16be1"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-1" class="line-number-anchor" /><a href="#line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-1">1</a></td><td class="code-line" rowspan="8"><span class="hljs-meta">---</span>
-<span class="hljs-attr">Job:</span>
-  <span class="hljs-attr">actAs:</span>
-    <span class="hljs-attr">Searchable:</span>
-      <span class="hljs-attr">fields:</span> <span class="hljs-string">[title,</span> <span class="hljs-string">description]</span>
-  <span class="hljs-attr">columns:</span>
-    <span class="hljs-attr">title:</span> <span class="hljs-string">string(255)</span>
-    <span class="hljs-attr">description:</span> <span class="hljs-string">clob</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-2" class="line-number-anchor" /><a href="#line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-3" class="line-number-anchor" /><a href="#line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-4" class="line-number-anchor" /><a href="#line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-5" class="line-number-anchor" /><a href="#line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-6" class="line-number-anchor" /><a href="#line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-7" class="line-number-anchor" /><a href="#line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-8" class="line-number-anchor" /><a href="#line-number-a1123b038df2d82db023b507e8e3b2300fe16be1-8">8</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="5279f5fc1104b87bc485c1883b863252707e65b0"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="5279f5fc1104b87bc485c1883b863252707e65b0"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-attr">Job:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span></code><code class="line language-yaml">    <span class="hljs-attr">Searchable:</span></code><code class="line language-yaml">      <span class="hljs-attr">fields:</span> <span class="hljs-string">[title,</span> <span class="hljs-string">description]</span></code><code class="line language-yaml">  <span class="hljs-attr">columns:</span></code><code class="line language-yaml">    <span class="hljs-attr">title:</span> <span class="hljs-string">string(255)</span></code><code class="line language-yaml">    <span class="hljs-attr">description:</span> <span class="hljs-string">clob</span></code><code class="empty"></code></pre>
             
     <p>Lets check the SQL that is generated by the above models:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>sql = Doctrine_Core::generateSqlFromArray(array('Job'));
-echo $sql[0] . "";
-echo $sql[1] . "";
-echo $sql[2];</code></pre></div>
+$sql = Doctrine_Core::generateSqlFromArray(array(&#039;Job&#039;));
+echo $sql[0] . &quot;&quot;;
+echo $sql[1] . &quot;&quot;;
+echo $sql[2];</code></pre>
+    </div>
+
             
     <p>The above code would output the following SQL query:</p>
 
-            <div class="console"><pre><code class="console">CREATE TABLE job_index (id BIGINT,
+                <div class="console">
+        <pre><code class="console">CREATE TABLE job_index (id BIGINT,
 keyword VARCHAR(200),
 field VARCHAR(50),
 position BIGINT,
@@ -4988,7 +4894,9 @@ CREATE TABLE job (id BIGINT AUTO_INCREMENT,
 title VARCHAR(255),
 description LONGTEXT,
 PRIMARY KEY(id)) ENGINE = INNODB
-ALTER TABLE job_index ADD FOREIGN KEY (id) REFERENCES job(id) ON UPDATE CASCADE ON DELETE CASCADE</code></pre></div>
+ALTER TABLE job_index ADD FOREIGN KEY (id) REFERENCES job(id) ON UPDATE CASCADE ON DELETE CASCADE</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -5024,67 +4932,52 @@ chapter.</p>
 data record for determining the number of miles or kilometers between 2
 records.</p>
 
-            <div class="console"><pre><code class="console">// models/Zipcode.php
+                <div class="console">
+        <pre><code class="console">// models/Zipcode.php
 class Zipcode extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('zipcode', 'string', 255);
-        $this->hasColumn('city', 'string', 255);
-        $this->hasColumn('state', 'string', 2);
-        $this->hasColumn('county', 'string', 255);
-        $this->hasColumn('zip_class', 'string', 255);
+        $this-&gt;hasColumn(&#039;zipcode&#039;, &#039;string&#039;, 255);
+        $this-&gt;hasColumn(&#039;city&#039;, &#039;string&#039;, 255);
+        $this-&gt;hasColumn(&#039;state&#039;, &#039;string&#039;, 2);
+        $this-&gt;hasColumn(&#039;county&#039;, &#039;string&#039;, 255);
+        $this-&gt;hasColumn(&#039;zip_class&#039;, &#039;string&#039;, 255);
     }
 
     public function setUp()
     {
-        $this->actAs('Geographical');
+        $this-&gt;actAs(&#039;Geographical&#039;);
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="b6a9d1c17579f28a75e3bd4c17c610202f91bc74"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="b6a9d1c17579f28a75e3bd4c17c610202f91bc74"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-1" class="line-number-anchor" /><a href="#line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-1">1</a></td><td class="code-line" rowspan="12"><span class="hljs-meta">---</span>
-<span class="hljs-comment"># schema.yml</span>
-
-<span class="hljs-comment"># ...</span>
-<span class="hljs-attr">Zipcode:</span>
-  <span class="hljs-attr">actAs:</span> <span class="hljs-string">[Geographical]</span>
-  <span class="hljs-attr">columns:</span>
-    <span class="hljs-attr">zipcode:</span> <span class="hljs-string">string(255)</span>
-    <span class="hljs-attr">city:</span> <span class="hljs-string">string(255)</span>
-    <span class="hljs-attr">state:</span> <span class="hljs-string">string(2)</span>
-    <span class="hljs-attr">county:</span> <span class="hljs-string">string(255)</span>
-    <span class="hljs-attr">zip_class:</span> <span class="hljs-string">string(255)</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-2" class="line-number-anchor" /><a href="#line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-3" class="line-number-anchor" /><a href="#line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-4" class="line-number-anchor" /><a href="#line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-5" class="line-number-anchor" /><a href="#line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-6" class="line-number-anchor" /><a href="#line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-7" class="line-number-anchor" /><a href="#line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-8" class="line-number-anchor" /><a href="#line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-9" class="line-number-anchor" /><a href="#line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-10" class="line-number-anchor" /><a href="#line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-11" class="line-number-anchor" /><a href="#line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-12" class="line-number-anchor" /><a href="#line-number-b6a9d1c17579f28a75e3bd4c17c610202f91bc74-12">12</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="95f2ecb4bd7965e10b2c3d042fd326e85ee3dd92"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="95f2ecb4bd7965e10b2c3d042fd326e85ee3dd92"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-comment"># schema.yml</span></code><code class="line language-yaml"></code><code class="line language-yaml"><span class="hljs-comment"># ...</span></code><code class="line language-yaml"><span class="hljs-attr">Zipcode:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span> <span class="hljs-string">[Geographical]</span></code><code class="line language-yaml">  <span class="hljs-attr">columns:</span></code><code class="line language-yaml">    <span class="hljs-attr">zipcode:</span> <span class="hljs-string">string(255)</span></code><code class="line language-yaml">    <span class="hljs-attr">city:</span> <span class="hljs-string">string(255)</span></code><code class="line language-yaml">    <span class="hljs-attr">state:</span> <span class="hljs-string">string(2)</span></code><code class="line language-yaml">    <span class="hljs-attr">county:</span> <span class="hljs-string">string(255)</span></code><code class="line language-yaml">    <span class="hljs-attr">zip_class:</span> <span class="hljs-string">string(255)</span></code><code class="empty"></code></pre>
             
     <p>Lets check the SQL that is generated by the above models:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>sql = Doctrine_Core::generateSqlFromArray(array('Zipcode'));
-echo $sql[0];</code></pre></div>
+$sql = Doctrine_Core::generateSqlFromArray(array(&#039;Zipcode&#039;));
+echo $sql[0];</code></pre>
+    </div>
+
             
     <p>The above code would output the following SQL query:</p>
 
-            <div class="console"><pre><code class="console">CREATE TABLE zipcode (id BIGINT AUTO_INCREMENT,
+                <div class="console">
+        <pre><code class="console">CREATE TABLE zipcode (id BIGINT AUTO_INCREMENT,
 zipcode VARCHAR(255),
 city VARCHAR(255),
 state VARCHAR(2),
@@ -5092,7 +4985,9 @@ county VARCHAR(255),
 zip_class VARCHAR(255),
 latitude DOUBLE,
 longitude DOUBLE,
-PRIMARY KEY(id)) ENGINE = INNODB</code></pre></div>
+PRIMARY KEY(id)) ENGINE = INNODB</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -5113,19 +5008,25 @@ example usage.</p>
             
     <p>First lets retrieve two different zipcode records:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>zipcode1 = Doctrine_Core::getTable('Zipcode')->findOneByZipcode('37209');
-<span class="noselect">$ </span>zipcode2 = Doctrine_Core::getTable('Zipcode')->findOneByZipcode('37388');</code></pre></div>
+$zipcode1 = Doctrine_Core::getTable(&#039;Zipcode&#039;)-&gt;findOneByZipcode(&#039;37209&#039;);
+$zipcode2 = Doctrine_Core::getTable(&#039;Zipcode&#039;)-&gt;findOneByZipcode(&#039;37388&#039;);</code></pre>
+    </div>
+
             
     <p>Now we can get the distance between those two records by using the
 <code>getDistance()</code> method that the behavior provides:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-echo $zipcode1->getDistance($zipcode2, $kilometers = false);</code></pre></div>
+echo $zipcode1-&gt;getDistance($zipcode2, $kilometers = false);</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -5144,20 +5045,24 @@ or not to return the distance in kilometers. The default is false.</p>
             
     <p>Now lets get the 50 closest zipcodes that are not in the same city:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>q = $zipcode1->getDistanceQuery();
+$q = $zipcode1-&gt;getDistanceQuery();
 
-<span class="noselect">$ </span>q->orderby('miles asc')
-    ->addWhere($q->getRootAlias() . '.city != ?', $zipcode1->city)
-    ->limit(50);
+$q-&gt;orderby(&#039;miles asc&#039;)
+    -&gt;addWhere($q-&gt;getRootAlias() . &#039;.city != ?&#039;, $zipcode1-&gt;city)
+    -&gt;limit(50);
 
-echo $q->getSqlQuery();</code></pre></div>
+echo $q-&gt;getSqlQuery();</code></pre>
+    </div>
+
             
     <p>The above call to <code>getSql()</code> would output the following SQL query:</p>
 
-            <div class="console"><pre><code class="console">SELECT
+                <div class="console">
+        <pre><code class="console">SELECT
 z.id AS z**id,
 z.zipcode AS z**zipcode,
 z.city AS z**city,
@@ -5171,7 +5076,9 @@ z.longitude AS z**longitude,
 FROM zipcode z
 WHERE z.city != ?
 ORDER BY z__0 asc
-LIMIT 50</code></pre></div>
+LIMIT 50</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -5192,15 +5099,18 @@ calculate the number of miles between records.</p>
     <p>Now we can execute the query and use the calculated number of miles
 values:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>result = $q->execute();
+$result = $q-&gt;execute();
 
 foreach ($result as $zipcode) {
-    echo $zipcode->city . " - " . $zipcode->miles . "";
-    // You could also access $zipcode->kilometers
-}</code></pre></div>
+    echo $zipcode-&gt;city . &quot; - &quot; . $zipcode-&gt;miles . &quot;&quot;;
+    // You could also access $zipcode-&gt;kilometers
+}</code></pre>
+    </div>
+
             
     <p>Get some sample zip code data to test this</p>
 
@@ -5210,21 +5120,22 @@ foreach ($result as $zipcode) {
             
     <p>Download and import the csv file with the following function:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-function parseCsvFile($file, $columnheadings = false, $delimiter = ',', $enclosure = "\"")
+function parseCsvFile($file, $columnheadings = false, $delimiter = &#039;,&#039;, $enclosure = &quot;\&quot;&quot;)
 {
     $row    = 1;
     $rows   = array();
-    $handle = fopen($file, 'r');
+    $handle = fopen($file, &#039;r&#039;);
 
     while (($data = fgetcsv($handle, 1000, $delimiter, $enclosure)) !== FALSE) {
 
-        if (!($columnheadings == false) && ($row == 1)) {
+        if (!($columnheadings == false) &amp;&amp; ($row == 1)) {
             $headingTexts = $data;
         } elseif (!($columnheadings == false)) {
-            foreach ($data as $key => $value) {
+            foreach ($data as $key =&gt; $value) {
                 unset($data[$key]);
                 $data[$headingTexts[$key]] = $value;
             }
@@ -5239,13 +5150,15 @@ function parseCsvFile($file, $columnheadings = false, $delimiter = ',', $enclosu
     return $rows;
 }
 
-<span class="noselect">$ </span>array = parseCsvFile('zipcodes.csv', false);
+$array = parseCsvFile(&#039;zipcodes.csv&#039;, false);
 
-foreach ($array as $key => $value) {
+foreach ($array as $key =&gt; $value) {
     $zipcode = new Zipcode();
-    $zipcode->fromArray($value);
-    $zipcode->save();
-}</code></pre></div>
+    $zipcode-&gt;fromArray($value);
+    $zipcode-&gt;save();
+}</code></pre>
+    </div>
+
     </div>
             <div class="section" id="softdelete">
             <a id="behaviors-core-behaviors-softdelete"></a>
@@ -5263,64 +5176,55 @@ the record from the database, a delete_at date is set. Below is an
 example of how to create a model with the <code>SoftDelete</code> behavior being
 used.</p>
 
-            <div class="console"><pre><code class="console">// models/SoftDeleteTest.php
+                <div class="console">
+        <pre><code class="console">// models/SoftDeleteTest.php
 class SoftDeleteTest extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('name', 'string', null, array(
-                'primary' => true
+        $this-&gt;hasColumn(&#039;name&#039;, &#039;string&#039;, null, array(
+                &#039;primary&#039; =&gt; true
             )
         );
     }
 
     public function setUp()
     {
-        $this->actAs('SoftDelete');
+        $this-&gt;actAs(&#039;SoftDelete&#039;);
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="78fc14798733c192b37081fd5fa6e3db3b34f97a"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="78fc14798733c192b37081fd5fa6e3db3b34f97a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-1" class="line-number-anchor" /><a href="#line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-1">1</a></td><td class="code-line" rowspan="10"><span class="hljs-meta">---</span>
-<span class="hljs-comment"># schema.yml</span>
-
-<span class="hljs-comment"># ...</span>
-<span class="hljs-attr">SoftDeleteTest:</span>
-  <span class="hljs-attr">actAs:</span> <span class="hljs-string">[SoftDelete]</span>
-  <span class="hljs-attr">columns:</span>
-    <span class="hljs-attr">name:</span>
-      <span class="hljs-attr">type:</span> <span class="hljs-string">string(255)</span>
-      <span class="hljs-attr">primary:</span> <span class="hljs-literal">true</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-2" class="line-number-anchor" /><a href="#line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-3" class="line-number-anchor" /><a href="#line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-4" class="line-number-anchor" /><a href="#line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-5" class="line-number-anchor" /><a href="#line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-6" class="line-number-anchor" /><a href="#line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-7" class="line-number-anchor" /><a href="#line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-8" class="line-number-anchor" /><a href="#line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-9" class="line-number-anchor" /><a href="#line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-10" class="line-number-anchor" /><a href="#line-number-78fc14798733c192b37081fd5fa6e3db3b34f97a-10">10</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="8322f8b52f7340ce4784790482507719b33ec290"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="8322f8b52f7340ce4784790482507719b33ec290"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-comment"># schema.yml</span></code><code class="line language-yaml"></code><code class="line language-yaml"><span class="hljs-comment"># ...</span></code><code class="line language-yaml"><span class="hljs-attr">SoftDeleteTest:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span> <span class="hljs-string">[SoftDelete]</span></code><code class="line language-yaml">  <span class="hljs-attr">columns:</span></code><code class="line language-yaml">    <span class="hljs-attr">name:</span></code><code class="line language-yaml">      <span class="hljs-attr">type:</span> <span class="hljs-string">string(255)</span></code><code class="line language-yaml">      <span class="hljs-attr">primary:</span> <span class="hljs-literal">true</span></code><code class="empty"></code></pre>
             
     <p>Lets check the SQL that is generated by the above models:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>sql = Doctrine_Core::generateSqlFromArray(array('SoftDeleteTest'));
-echo $sql[0];</code></pre></div>
+$sql = Doctrine_Core::generateSqlFromArray(array(&#039;SoftDeleteTest&#039;));
+echo $sql[0];</code></pre>
+    </div>
+
             
     <p>The above code would output the following SQL query:</p>
 
-            <div class="console"><pre><code class="console">CREATE TABLE soft_delete_test (name VARCHAR(255),
+                <div class="console">
+        <pre><code class="console">CREATE TABLE soft_delete_test (name VARCHAR(255),
 deleted_at DATETIME DEFAULT NULL,
-PRIMARY KEY(name)) ENGINE = INNODB</code></pre></div>
+PRIMARY KEY(name)) ENGINE = INNODB</code></pre>
+    </div>
+
             
     <p>Now lets put the behavior in action.</p>
 
@@ -5345,56 +5249,71 @@ additional WHERE condition.</p>
             
     <p><strong>Enable DQL Callbacks</strong></p>
 
-            <div class="console"><pre><code class="console">// bootstrap.php
+                <div class="console">
+        <pre><code class="console">// bootstrap.php
 
 // ...
-<span class="noselect">$ </span>manager->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);</code></pre></div>
+$manager-&gt;setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);</code></pre>
+    </div>
+
             
     <p>Now save a new record so we can test the <code>SoftDelete</code> functionality:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>record       = new SoftDeleteTest();
-<span class="noselect">$ </span>record->name = 'new record';
-<span class="noselect">$ </span>record->save();</code></pre></div>
+$record       = new SoftDeleteTest();
+$record-&gt;name = &#039;new record&#039;;
+$record-&gt;save();</code></pre>
+    </div>
+
             
     <p>Now when we call <code>delete()</code> the <code>deleted_at</code> flag will be set to
 true:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>record->delete();
+$record-&gt;delete();
 
-print_r($record->toArray());</code></pre></div>
+print_r($record-&gt;toArray());</code></pre>
+    </div>
+
             
     <p>The above example would produce the following output:</p>
 
-            <div class="console"><pre><code class="console"><span class="noselect">$ </span>php test.php
-Array
-(
-    [name] => new record
-    [deleted_at] => 2009-09-01 00:59:01
-)</code></pre></div>
+                <pre class="code-block-table" id="0a77d046c1069574cc860bc1978dcda2468c960a"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="0a77d046c1069574cc860bc1978dcda2468c960a"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sh">$ php test.php</code><code class="line language-sh">Array</code><code class="line language-sh">(</code><code class="line language-sh">    [name] =&gt; new record</code><code class="line language-sh">    [deleted_at] =&gt; 2009-09-01 00:59:01</code><code class="line language-sh">)</code><code class="empty"></code></pre>
             
     <p>Also, when we select some data the query is modified for you:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>q = Doctrine_Query::create()
-    ->from('SoftDeleteTest t');
+$q = Doctrine_Query::create()
+    -&gt;from(&#039;SoftDeleteTest t&#039;);
 
-echo $q->getSqlQuery();</code></pre></div>
+echo $q-&gt;getSqlQuery();</code></pre>
+    </div>
+
             
     <p>The above call to <code>getSql()</code> would output the following SQL query:</p>
 
-            <div class="console"><pre><code class="console">SELECT
+                <div class="console">
+        <pre><code class="console">SELECT
 s.name AS s**name,
 s.deleted_at AS s**deleted_at
 FROM soft_delete_test s
-WHERE (s.deleted_at IS NULL)</code></pre></div>
+WHERE (s.deleted_at IS NULL)</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -5413,11 +5332,14 @@ only return the records that have not been deleted.</p>
             
     <p>Now if we execute the query:</p>
 
-            <div class="console"><pre><code class="console">// test.php
+                <div class="console">
+        <pre><code class="console">// test.php
 
 // ...
-<span class="noselect">$ </span>count = $q->count();
-echo $count;</code></pre></div>
+$count = $q-&gt;count();
+echo $count;</code></pre>
+    </div>
+
             
     <p>The above would be echo 0 because it would exclude the record saved
 above because the delete flag was set.</p>
@@ -5435,72 +5357,47 @@ above because the delete flag was set.</p>
     <p>Below is an example of several behaviors to give a complete wiki
 database that is versionable, searchable, sluggable, and full I18n.</p>
 
-            <div class="console"><pre><code class="console">class Wiki extends Doctrine_Record
+                <div class="console">
+        <pre><code class="console">class Wiki extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('title', 'string', 255);
-        $this->hasColumn('content', 'string');
+        $this-&gt;hasColumn(&#039;title&#039;, &#039;string&#039;, 255);
+        $this-&gt;hasColumn(&#039;content&#039;, &#039;string&#039;);
     }
 
     public function setUp()
     {
-        $options  = array('fields' => array('title', 'content'));
+        $options  = array(&#039;fields&#039; =&gt; array(&#039;title&#039;, &#039;content&#039;));
         $auditLog = new Doctrine_Template_Versionable($options);
         $search   = new Doctrine_Template_Searchable($options);
         $slug     = new Doctrine_Template_Sluggable(array(
-                'fields' => array('title')
+                &#039;fields&#039; =&gt; array(&#039;title&#039;)
             )
         );
         $i18n = new Doctrine_Template_I18n($options);
 
-        $i18n->addChild($auditLog)
-            ->addChild($search)
-            ->addChild($slug);
+        $i18n-&gt;addChild($auditLog)
+            -&gt;addChild($search)
+            -&gt;addChild($slug);
 
-        $this->actAs($i18n);
+        $this-&gt;actAs($i18n);
 
-        $this->actAs('Timestampable');
+        $this-&gt;actAs(&#039;Timestampable&#039;);
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="80af68b28121c1a616f1da21eec3bcebd99ded7f"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="80af68b28121c1a616f1da21eec3bcebd99ded7f"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-1" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-1">1</a></td><td class="code-line" rowspan="15"><span class="hljs-meta">---</span>
-<span class="hljs-attr">WikiTest:</span>
-  <span class="hljs-attr">actAs:</span>
-    <span class="hljs-attr">I18n:</span>
-      <span class="hljs-attr">fields:</span> <span class="hljs-string">[title,</span> <span class="hljs-string">content]</span>
-      <span class="hljs-attr">actAs:</span>
-        <span class="hljs-attr">Versionable:</span>
-          <span class="hljs-attr">fields:</span> <span class="hljs-string">[title,</span> <span class="hljs-string">content]</span>
-        <span class="hljs-attr">Searchable:</span>
-          <span class="hljs-attr">fields:</span> <span class="hljs-string">[title,</span> <span class="hljs-string">content]</span>
-        <span class="hljs-attr">Sluggable:</span>
-          <span class="hljs-attr">fields:</span> <span class="hljs-string">[title]</span>
-  <span class="hljs-attr">columns:</span>
-    <span class="hljs-attr">title:</span> <span class="hljs-string">string(255)</span>
-    <span class="hljs-attr">content:</span> <span class="hljs-string">string</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-2" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-3" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-4" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-5" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-6" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-7" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-8" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-9" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-10" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-11" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-11">11</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-12" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-12">12</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-13" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-13">13</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-14" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-14">14</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-15" class="line-number-anchor" /><a href="#line-number-80af68b28121c1a616f1da21eec3bcebd99ded7f-15">15</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="fbc6d8d197f73bdbb2db3113fde6de9fe2108172"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="fbc6d8d197f73bdbb2db3113fde6de9fe2108172"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-attr">WikiTest:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span></code><code class="line language-yaml">    <span class="hljs-attr">I18n:</span></code><code class="line language-yaml">      <span class="hljs-attr">fields:</span> <span class="hljs-string">[title,</span> <span class="hljs-string">content]</span></code><code class="line language-yaml">      <span class="hljs-attr">actAs:</span></code><code class="line language-yaml">        <span class="hljs-attr">Versionable:</span></code><code class="line language-yaml">          <span class="hljs-attr">fields:</span> <span class="hljs-string">[title,</span> <span class="hljs-string">content]</span></code><code class="line language-yaml">        <span class="hljs-attr">Searchable:</span></code><code class="line language-yaml">          <span class="hljs-attr">fields:</span> <span class="hljs-string">[title,</span> <span class="hljs-string">content]</span></code><code class="line language-yaml">        <span class="hljs-attr">Sluggable:</span></code><code class="line language-yaml">          <span class="hljs-attr">fields:</span> <span class="hljs-string">[title]</span></code><code class="line language-yaml">  <span class="hljs-attr">columns:</span></code><code class="line language-yaml">    <span class="hljs-attr">title:</span> <span class="hljs-string">string(255)</span></code><code class="line language-yaml">    <span class="hljs-attr">content:</span> <span class="hljs-string">string</span></code><code class="empty"></code></pre>
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -5533,53 +5430,36 @@ disk. This can be changed with a configuration option. Below is an
 example of how to configure the I18n behavior to generate the classes
 and write them to files instead of evaluating them at run-time.</p>
 
-            <div class="console"><pre><code class="console">class NewsArticle extends Doctrine_Record
+                <div class="console">
+        <pre><code class="console">class NewsArticle extends Doctrine_Record
 {
     public function setTableDefinition() {
-        $this->hasColumn('title', 'string', 255);
-        $this->hasColumn('body', 'string', 255); $this->hasColumn('author', 'string', 255);
+        $this-&gt;hasColumn(&#039;title&#039;, &#039;string&#039;, 255);
+        $this-&gt;hasColumn(&#039;body&#039;, &#039;string&#039;, 255); $this-&gt;hasColumn(&#039;author&#039;, &#039;string&#039;, 255);
     }
 
     public function setUp()
     {
-        $this->actAs('I18n', array(
-                'fields'          => array('title', 'body'),
-                'generateFiles'   => true,
-                'generatePath'    => '/path/to/generate'
+        $this-&gt;actAs(&#039;I18n&#039;, array(
+                &#039;fields&#039;          =&gt; array(&#039;title&#039;, &#039;body&#039;),
+                &#039;generateFiles&#039;   =&gt; true,
+                &#039;generatePath&#039;    =&gt; &#039;/path/to/generate&#039;
             )
         );
     }
-}</code></pre></div>
+}</code></pre>
+    </div>
+
             
     <p>Here is the same example in YAML format. You can read more about YAML in
 the <a href="yaml-schema-files.html">YAML Schema Files</a> chapter:</p>
 
-            <pre class="code-block-table"><code class="yaml"><button
-            type="button"
-            class="copy-to-clipboard"
-            data-copy-element-id="dfd654f3293ce3e238b5b117ccfab32a2da45d2a"
-            title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><div id="dfd654f3293ce3e238b5b117ccfab32a2da45d2a"><table class="code-block-table"><tr><td class="line-number noselect"><a name="line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-1" class="line-number-anchor" /><a href="#line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-1">1</a></td><td class="code-line" rowspan="11"><span class="hljs-meta">---</span>
-<span class="hljs-attr">NewsArticle:</span>
-  <span class="hljs-attr">actAs:</span>
-    <span class="hljs-attr">I18n:</span>
-      <span class="hljs-attr">fields:</span> <span class="hljs-string">[title,</span> <span class="hljs-string">body]</span>
-      <span class="hljs-attr">generateFiles:</span> <span class="hljs-literal">true</span>
-      <span class="hljs-attr">generatePath:</span> <span class="hljs-string">/path/to/generate</span>
-  <span class="hljs-attr">columns:</span>
-    <span class="hljs-attr">title:</span> <span class="hljs-string">string(255)</span>
-    <span class="hljs-attr">body:</span> <span class="hljs-string">string(255)</span>
-    <span class="hljs-attr">author:</span> <span class="hljs-string">string(255)</span></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-2" class="line-number-anchor" /><a href="#line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-2">2</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-3" class="line-number-anchor" /><a href="#line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-3">3</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-4" class="line-number-anchor" /><a href="#line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-4">4</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-5" class="line-number-anchor" /><a href="#line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-5">5</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-6" class="line-number-anchor" /><a href="#line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-6">6</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-7" class="line-number-anchor" /><a href="#line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-7">7</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-8" class="line-number-anchor" /><a href="#line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-8">8</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-9" class="line-number-anchor" /><a href="#line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-9">9</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-10" class="line-number-anchor" /><a href="#line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-10">10</a></td></tr>
-<tr><td class="line-number noselect"><a name="line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-11" class="line-number-anchor" /><a href="#line-number-dfd654f3293ce3e238b5b117ccfab32a2da45d2a-11">11</a></td></tr></table></div></code></pre>
+                <pre class="code-block-table" id="5ea98b8839796fda568a2d9c6368b4c05cc64dac"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="5ea98b8839796fda568a2d9c6368b4c05cc64dac"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-meta">---</span></code><code class="line language-yaml"><span class="hljs-attr">NewsArticle:</span></code><code class="line language-yaml">  <span class="hljs-attr">actAs:</span></code><code class="line language-yaml">    <span class="hljs-attr">I18n:</span></code><code class="line language-yaml">      <span class="hljs-attr">fields:</span> <span class="hljs-string">[title,</span> <span class="hljs-string">body]</span></code><code class="line language-yaml">      <span class="hljs-attr">generateFiles:</span> <span class="hljs-literal">true</span></code><code class="line language-yaml">      <span class="hljs-attr">generatePath:</span> <span class="hljs-string">/path/to/generate</span></code><code class="line language-yaml">  <span class="hljs-attr">columns:</span></code><code class="line language-yaml">    <span class="hljs-attr">title:</span> <span class="hljs-string">string(255)</span></code><code class="line language-yaml">    <span class="hljs-attr">body:</span> <span class="hljs-string">string(255)</span></code><code class="line language-yaml">    <span class="hljs-attr">author:</span> <span class="hljs-string">string(255)</span></code><code class="empty"></code></pre>
             
     <p>Now the behavior will generate a file instead of generating the code and
 using <a href="http://www.php.net/eval">eval()</a> to evaluate it at runtime.</p>
@@ -5602,13 +5482,16 @@ method.</p>
     <p>For example if you want to query the translation table for a
 <code>BlogPost</code> model you will need to run the following code:</p>
 
-            <div class="console"><pre><code class="console">Doctrine_Core::initializeModels(array('BlogPost'));
+                <div class="console">
+        <pre><code class="console">Doctrine_Core::initializeModels(array(&#039;BlogPost&#039;));
 
-<span class="noselect">$ </span>q = Doctrine_Query::create()
-    ->from('BlogPostTranslation t')
-    ->where('t.id = ? AND t.lang = ?', array(1, 'en'));
+$q = Doctrine_Query::create()
+    -&gt;from(&#039;BlogPostTranslation t&#039;)
+    -&gt;where(&#039;t.id = ? AND t.lang = ?&#039;, array(1, &#039;en&#039;));
 
-<span class="noselect">$ </span>translations = $q->execute();</code></pre></div>
+$translations = $q-&gt;execute();</code></pre>
+    </div>
+
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
