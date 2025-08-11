@@ -17,7 +17,7 @@
                     <meta name="robots" content="index, follow">
         
         
-                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/2.9/reference/basic-mapping.html" />
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/2.11/reference/basic-mapping.html" />
     
         <link
             rel="stylesheet"
@@ -171,7 +171,7 @@
                     </ul>
 
                     <div class="layout-edit-button d-inline-block mr-2">
-                                                    <a href="https://github.com/doctrine/mongodb-odm/edit/2.10.x/docs/en/reference/basic-mapping.rst" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
+                                                    <a href="https://github.com/doctrine/mongodb-odm/edit/2.12.x/docs/en/reference/basic-mapping.rst" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
                                             </div>
                 </div>
                 <div class="nav-outbound">
@@ -354,6 +354,11 @@
 </li>
             <li class="toc-item">
     <a href="#fields">Fields</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#date-fields">Date Fields</a>
 
 
 </li>
@@ -2045,7 +2050,7 @@
                                                             
                                 <div class="dropdown show d-inline-block">
                                     <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-mongodb-odm/en/latest/reference/basic-mapping.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        2.10.2
+                                        2.12
                                     </a>
 
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -2053,14 +2058,14 @@
 
                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-mongodb-odm/en/latest/reference/basic-mapping.html">
-                                                        2.10.2
+                                                        2.12
 
                                                         
                                                                                                                     (upcoming)
                                                                                                             </a>
                                                                                                                                                                                                 
-                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.9/reference/basic-mapping.html">
-                                                        2.9.2
+                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.11/reference/basic-mapping.html">
+                                                        2.11.3
 
                                                                                                                     (current)
                                                         
@@ -2069,7 +2074,9 @@
                                                                                     <h6 class="dropdown-header">Unmaintained</h6>
 
                                                                                                                                                 
-                                                    <a class="dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.11/reference/basic-mapping.html">2.11</a>
+                                                    <a class="dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.10/reference/basic-mapping.html">2.10</a>
+                                                                                                                                                                                                
+                                                    <a class="dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.9/reference/basic-mapping.html">2.9</a>
                                                                                                                                                                                                 
                                                     <a class="dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.8/reference/basic-mapping.html">2.8</a>
                                                                                                                                                                                                 
@@ -2168,8 +2175,8 @@ the need for the separate parsing library required by annotations.</p>
 
             
     <p>In this documentation we follow the <a href="https://www.php-fig.org/per/coding-style/#12-attributes">PER Coding Style</a>
-for attributes. We use named arguments for attributes as they argument names
-or attribute classes constructors are covered by Doctrine Backward-Compatibility promise.</p>
+for attributes. We use named arguments for attributes as the names of their
+constructor arguments are covered by Doctrine Backward-Compatibility promise.</p>
 
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
@@ -2272,8 +2279,8 @@ option as follows:</p>
 collection named <code>users</code> in the database <code>my_db</code>.</p>
 
             
-    <p>If you want to omit the db attribute you can configure the default db
-to use with the <code>setDefaultDB</code> method:</p>
+    <p>If you want to omit the <code>db</code> argument you can configure the default database
+to use with the <code>setDefaultDB()</code> method:</p>
 
                 <pre class="code-block-table" id="ce08462965cfb785ba1f2a64e9dd644923e78e09"><button
                 type="button"
@@ -2409,7 +2416,7 @@ by the MongoDB driver (e.g. <code>\MongoDB\BSON\UTCDateTime</code> instead of <c
 </div>
             
     <p>Since version 2.4 Doctrine can determine usable defaults from property types
-on document classes. Doctrine will map PHP types to <code>type</code> attribute as
+on document classes. Doctrine will map PHP types to <code>type</code> arguments as
 follows:</p>
 
             
@@ -2628,12 +2635,9 @@ object ID. The available strategies are:</p>
     </a>
 </h4>
             
-    <p>To mark a property for document persistence the <code>#[Field]</code> docblock
-attribute can be used. This attribute usually requires at least 1
-attribute to be set, the <code>type</code>. The <code>type</code> attribute specifies
-the Doctrine Mapping Type to use for the field. If the type is not
-specified, &#039;string&#039; is used as the default mapping type since it is
-the most flexible.</p>
+    <p>To mark a property to be persisted in the document, add the <code>#[Field]</code>
+attribute. The name and the type of the field are inferred from the property
+name and type.</p>
 
             
     <p>Example:</p>
@@ -2641,7 +2645,7 @@ the most flexible.</p>
             <div class="configuration-block">
     <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-2">
                     <button role="tab" type="button" data-language="php"
-                    aria-controls="configuration-block-tabpanel-c18d17298c9783457f7b57944a90b957" aria-selected="true"
+                    aria-controls="configuration-block-tabpanel-bc31472c44ece58f7950e2a20a31d174" aria-selected="true"
                     data-active="true" >
                 <span>Php</span>
             </button>
@@ -2652,13 +2656,13 @@ the most flexible.</p>
             </button>
             </div>
 
-            <div role="tabpanel" id="configuration-block-tabpanel-c18d17298c9783457f7b57944a90b957" aria-label="Php" class="configuration-codeblock" data-language="php" style="">
-                <pre class="code-block-table" id="cd6779c81851b3b08fe601116ebb834658e0b801"><button
+            <div role="tabpanel" id="configuration-block-tabpanel-bc31472c44ece58f7950e2a20a31d174" aria-label="Php" class="configuration-codeblock" data-language="php" style="">
+                <pre class="code-block-table" id="6e82b13cc3a95ee08175ed2102af76733b871dfb"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="cd6779c81851b3b08fe601116ebb834658e0b801"
+                data-copy-element-id="6e82b13cc3a95ee08175ed2102af76733b871dfb"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">Document</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">Field</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// ...</span></code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Field(type: 'string')]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> string $username;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">Document</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">Field</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// ...</span></code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Field]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> string $username;</code><code class="line language-php">}</code><code class="empty"></code></pre>
         </div>
             <div role="tabpanel" id="configuration-block-tabpanel-0ed4d1e17b5c55d80f318caa2b48fd91" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
                 <pre class="code-block-table" id="9b40f0c5761f632175ecb09be98cedcc580b640a"><button
@@ -2672,11 +2676,9 @@ the most flexible.</p>
             
     <p>In that example we mapped the property <code>id</code> to the field <code>id</code>
 using the mapping type <code>id</code> and the property <code>name</code> is mapped
-to the field <code>name</code> with the default mapping type <code>string</code>. As
-you can see, by default the mongo field names are assumed to be the
-same as the property names. To specify a different name for the
-field, you can use the <code>name</code> attribute of the Field attribute
-as follows:</p>
+to the field <code>name</code> with the default mapping type <code>string</code>.
+To specify a different name for the field, you can use the <code>name</code> argument
+of the Field attribute as follows:</p>
 
             <div class="configuration-block">
     <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-2">
@@ -2709,6 +2711,68 @@ as follows:</p>
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">field-name</span>=<span class="hljs-string">"name"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"db_name"</span> /&gt;</span></code><code class="empty"></code></pre>
         </div>
     </div>
+    </div>
+            <div class="section" id="date-fields">
+            <h4 class="section-header ">
+    <a href="#date-fields">
+        Date Fields
+        <i class="fas fa-link"></i>
+    </a>
+</h4>
+            
+    <p>MongoDB has a specific database type to store date and time values. You should never
+use a string to store a date. To define a date field, use the property types
+<code>DateTime</code> or <code>DateTimeImmutable</code> so that Doctrine maps it to a BSON date.
+The <code>date</code> and <code>date_immutable</code> mapping types can be used explicitly;
+they are required only if the property type is <code>DateTimeInterface</code> or not set.</p>
+
+            <div class="configuration-block">
+    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-2">
+                    <button role="tab" type="button" data-language="php"
+                    aria-controls="configuration-block-tabpanel-fa98bc0e243e6434bfec0f0165d32867" aria-selected="true"
+                    data-active="true" >
+                <span>Php</span>
+            </button>
+                    <button role="tab" type="button" data-language="xml"
+                    aria-controls="configuration-block-tabpanel-4670333f158979dfa7e0554369b5c157" aria-selected="false"
+                     tabindex="-1">
+                <span>Xml</span>
+            </button>
+            </div>
+
+            <div role="tabpanel" id="configuration-block-tabpanel-fa98bc0e243e6434bfec0f0165d32867" aria-label="Php" class="configuration-codeblock" data-language="php" style="">
+                <pre class="code-block-table" id="9e380b832484fd5ac5ae2d8a3b72ed3736d7eb86"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="9e380b832484fd5ac5ae2d8a3b72ed3736d7eb86"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[Field]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> \DateTimeImmutable $immutableDateTime;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Field]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> \DateTime $mutableDateTime;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Field(type: 'date_immutable')]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> \DateTimeInterface $datetime;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-4670333f158979dfa7e0554369b5c157" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
+                <pre class="code-block-table" id="62cd8eb514a060efde7b38bb850020717113fcd5"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="62cd8eb514a060efde7b38bb850020717113fcd5"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">field-name</span>=<span class="hljs-string">"immutableDateTime"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"date_immutable"</span> /&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">field-name</span>=<span class="hljs-string">"mutableDateTime"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"date"</span> /&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">field-name</span>=<span class="hljs-string">"datetime"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"date_immutable"</span> /&gt;</span></code><code class="empty"></code></pre>
+        </div>
+    </div>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>Prefer using <code>DateTimeImmutable</code> over <code>DateTime</code> to avoid issues with
+mutable objects. If you need to modify a date, create a new instance
+and assign it to the property.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
     </div>
     </div>
             <div class="section" id="multiple-document-types-in-a-collection">
@@ -2812,7 +2876,7 @@ may pass an array of document class names when creating a query builder:</p>
 
             var searchBoxSettings = {
                 container: '#search-box',
-                placeholder: 'Search MongoDB ODM 2.10'
+                placeholder: 'Search MongoDB ODM 2.12'
             };
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {

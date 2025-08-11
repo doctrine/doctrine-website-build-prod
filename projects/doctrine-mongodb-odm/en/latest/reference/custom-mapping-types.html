@@ -17,7 +17,7 @@
                     <meta name="robots" content="index, follow">
         
         
-                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/2.9/reference/custom-mapping-types.html" />
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/2.11/reference/custom-mapping-types.html" />
     
         <link
             rel="stylesheet"
@@ -171,7 +171,7 @@
                     </ul>
 
                     <div class="layout-edit-button d-inline-block mr-2">
-                                                    <a href="https://github.com/doctrine/mongodb-odm/edit/2.10.x/docs/en/reference/custom-mapping-types.rst" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
+                                                    <a href="https://github.com/doctrine/mongodb-odm/edit/2.12.x/docs/en/reference/custom-mapping-types.rst" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
                                             </div>
                 </div>
                 <div class="nav-outbound">
@@ -354,6 +354,11 @@
 </li>
             <li class="toc-item">
     <a href="basic-mapping.html#fields">Fields</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="basic-mapping.html#date-fields">Date Fields</a>
 
 
 </li>
@@ -2045,7 +2050,7 @@
                                                             
                                 <div class="dropdown show d-inline-block">
                                     <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-mongodb-odm/en/latest/reference/custom-mapping-types.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        2.10.2
+                                        2.12
                                     </a>
 
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -2053,14 +2058,14 @@
 
                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-mongodb-odm/en/latest/reference/custom-mapping-types.html">
-                                                        2.10.2
+                                                        2.12
 
                                                         
                                                                                                                     (upcoming)
                                                                                                             </a>
                                                                                                                                                                                                 
-                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.9/reference/custom-mapping-types.html">
-                                                        2.9.2
+                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.11/reference/custom-mapping-types.html">
+                                                        2.11.3
 
                                                                                                                     (current)
                                                         
@@ -2069,7 +2074,9 @@
                                                                                     <h6 class="dropdown-header">Unmaintained</h6>
 
                                                                                                                                                 
-                                                    <a class="dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.11/reference/custom-mapping-types.html">2.11</a>
+                                                    <a class="dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.10/reference/custom-mapping-types.html">2.10</a>
+                                                                                                                                                                                                
+                                                    <a class="dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.9/reference/custom-mapping-types.html">2.9</a>
                                                                                                                                                                                                 
                                                     <a class="dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.8/reference/custom-mapping-types.html">2.8</a>
                                                                                                                                                                                                 
@@ -2124,12 +2131,12 @@ instances as an embedded document containing a BSON date and accompanying
 timezone string. Those same embedded documents are then be translated back into
 a <code>DateTimeImmutable</code> when the data is read from the database.</p>
 
-                <pre class="code-block-table" id="e0f967ead1909e1c29fc6d0e05bfaf2e74abed56"><button
+                <pre class="code-block-table" id="efe467793365baaa4c5e5639d652a92c98ea9ba4"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="e0f967ead1909e1c29fc6d0e05bfaf2e74abed56"
+                data-copy-element-id="efe467793365baaa4c5e5639d652a92c98ea9ba4"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">My</span>\<span class="hljs-title">Project</span>\<span class="hljs-title">Types</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">DateTimeImmutable</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">DateTimeZone</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">ClosureToPHP</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">MongoDB</span>\<span class="hljs-title">BSON</span>\<span class="hljs-title">UTCDateTime</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DateTimeWithTimezoneType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// This trait provides default closureToPHP used during data hydration</span></code><code class="line language-php">    <span class="hljs-keyword">use</span> <span class="hljs-title">ClosureToPHP</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValue</span><span class="hljs-params">($value)</span>: <span class="hljs-title">DateTimeImmutable</span></span></code><code class="line language-php">    {</code><code class="line language-php">        $timeZone = <span class="hljs-keyword">new</span> DateTimeZone($value[<span class="hljs-string">'tz'</span>]);</code><code class="line language-php">        $dateTime = $value[<span class="hljs-string">'utc'</span>]</code><code class="line language-php">            -&gt;toDateTime()</code><code class="line language-php">            -&gt;setTimeZone($timeZone);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> DateTimeImmutable::createFromMutable($dateTime);</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">($value)</span>: <span class="hljs-title">array</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (! <span class="hljs-keyword">isset</span>($value[<span class="hljs-string">'utc'</span>], $value[<span class="hljs-string">'tz'</span>])) {</code><code class="line language-php">            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">'Database value cannot be converted to date with timezone. Expected array with "utc" and "tz" keys.'</span>);</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> [</code><code class="line language-php">            <span class="hljs-string">'utc'</span> =&gt; <span class="hljs-keyword">new</span> UTCDateTime($value),</code><code class="line language-php">            <span class="hljs-string">'tz'</span> =&gt; $value-&gt;getTimezone()-&gt;getName(),</code><code class="line language-php">        ];</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">My</span>\<span class="hljs-title">Project</span>\<span class="hljs-title">Types</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">DateTimeImmutable</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">DateTimeZone</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">ClosureToPHP</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">MongoDB</span>\<span class="hljs-title">BSON</span>\<span class="hljs-title">UTCDateTime</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">RuntimeException</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DateTimeWithTimezoneType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// This trait provides default closureToPHP used during data hydration</span></code><code class="line language-php">    <span class="hljs-keyword">use</span> <span class="hljs-title">ClosureToPHP</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValue</span><span class="hljs-params">($value)</span>: <span class="hljs-title">DateTimeImmutable</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>($value[<span class="hljs-string">'utc'</span>], $value[<span class="hljs-string">'tz'</span>])) {</code><code class="line language-php">            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">'Database value cannot be converted to date with timezone. Expected array with "utc" and "tz" keys.'</span>);</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        $timeZone = <span class="hljs-keyword">new</span> DateTimeZone($value[<span class="hljs-string">'tz'</span>]);</code><code class="line language-php">        $dateTime = $value[<span class="hljs-string">'utc'</span>]</code><code class="line language-php">            -&gt;toDateTime()</code><code class="line language-php">            -&gt;setTimeZone($timeZone);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> DateTimeImmutable::createFromMutable($dateTime);</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">($value)</span>: <span class="hljs-title">array</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (!$value <span class="hljs-keyword">instanceof</span> DateTimeImmutable) {</code><code class="line language-php">            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> \RuntimeException(</code><code class="line language-php">                sprintf(</code><code class="line language-php">                    <span class="hljs-string">'Expected instance of \DateTimeImmutable, got %s'</span>,</code><code class="line language-php">                    gettype($value)</code><code class="line language-php">                )</code><code class="line language-php">            );</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> [</code><code class="line language-php">            <span class="hljs-string">'utc'</span> =&gt; <span class="hljs-keyword">new</span> UTCDateTime($value),</code><code class="line language-php">            <span class="hljs-string">'tz'</span> =&gt; $value-&gt;getTimezone()-&gt;getName(),</code><code class="line language-php">        ];</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
             
     <p>Restrictions to keep in mind:</p>
 
@@ -2249,7 +2256,7 @@ specify a unique name for the mapping type and map that to the corresponding
 
             var searchBoxSettings = {
                 container: '#search-box',
-                placeholder: 'Search MongoDB ODM 2.10'
+                placeholder: 'Search MongoDB ODM 2.12'
             };
 
             function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
