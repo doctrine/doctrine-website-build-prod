@@ -2182,6 +2182,41 @@ namespace:</p>
                 data-copy-element-id="ef4126f5bd076c611b350fc5f8077bdb671b9202"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php">$driver = <span class="hljs-keyword">new</span> \Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver(<span class="hljs-string">'/path/to/mapping/files'</span>);</code><code class="line language-php">$em-&gt;getConfiguration()-&gt;setMetadataDriverImpl($driver);</code><code class="empty"></code></pre>
+            
+    <p>The <code>AttributeDriver</code> can be initialized from a list of directories that
+contain the PHP classes with ODM attributes, or from an instance of a class
+locator that will find the classes:</p>
+
+            
+    <p>From a list of directories:</p>
+
+                <pre class="code-block-table" id="2d4177d5fa982d237389e72a30c79069d54f9ce8"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="2d4177d5fa982d237389e72a30c79069d54f9ce8"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Driver</span>\<span class="hljs-title">AttributeDriver</span>;</code><code class="line language-php"></code><code class="line language-php">$driver = <span class="hljs-keyword">new</span> AttributeDriver([<span class="hljs-keyword">__DIR__</span> . <span class="hljs-string">'/src/Document'</span>]);</code><code class="line language-php">$em-&gt;getConfiguration()-&gt;setMetadataDriverImpl($driver);</code><code class="empty"></code></pre>
+            
+    <p>Using Symfony Finder to locate classes. For example, if you are using Vertical
+Slice architecture, you can exclude <code>*Test.php</code>, <code>*Controller.php</code>,
+<code>*Service.php</code>, etc.:</p>
+
+                <pre class="code-block-table" id="9a54f88687c5f9b3acfd84372e1506612ad75d24"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="9a54f88687c5f9b3acfd84372e1506612ad75d24"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Driver</span>\<span class="hljs-title">AttributeDriver</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Driver</span>\<span class="hljs-title">FileClassLocator</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Finder</span>\<span class="hljs-title">Finder</span>;</code><code class="line language-php"></code><code class="line language-php">$finder = <span class="hljs-keyword">new</span> Finder()-&gt;files()-&gt;in([<span class="hljs-keyword">__DIR__</span> . <span class="hljs-string">'/src/'</span>])</code><code class="line language-php">  -&gt;name(<span class="hljs-string">'*.php'</span>)</code><code class="line language-php">  -&gt;notName([<span class="hljs-string">'*Test.php'</span>, <span class="hljs-string">'*Controller.php'</span>, <span class="hljs-string">'*Service.php'</span>]);</code><code class="line language-php"></code><code class="line language-php">$classLocator = <span class="hljs-keyword">new</span> FileClassLocator($finder);</code><code class="line language-php"></code><code class="line language-php">$driver = <span class="hljs-keyword">new</span> AttributeDriver($classLocator);</code><code class="line language-php">$em-&gt;getConfiguration()-&gt;setMetadataDriverImpl($driver);</code><code class="empty"></code></pre>
+            
+    <p>If you know the list of class names you want to track, use
+<code>Doctrine\Persistence\Mapping\Driver\ClassNames</code>:</p>
+
+                <pre class="code-block-table" id="607f47dd0238f92b05700dca33de03210faad7b4"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="607f47dd0238f92b05700dca33de03210faad7b4"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Driver</span>\<span class="hljs-title">AttributeDriver</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Driver</span>\<span class="hljs-title">ClassNames</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Document</span>\{<span class="hljs-title">Article</span>, <span class="hljs-title">Book</span>};</code><code class="line language-php"></code><code class="line language-php">$entityClasses = [Article::class, Book::class];</code><code class="line language-php"></code><code class="line language-php">$classLocator = <span class="hljs-keyword">new</span> ClassNames($entityClasses);</code><code class="line language-php"></code><code class="line language-php">$driver = <span class="hljs-keyword">new</span> AttributeDriver($classLocator);</code><code class="line language-php">$em-&gt;getConfiguration()-&gt;setMetadataDriverImpl($driver);</code><code class="empty"></code></pre>
     </div>
             <div class="section" id="implementing-metadata-drivers">
             <h2 class="section-header ">
