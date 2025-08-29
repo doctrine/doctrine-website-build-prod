@@ -720,6 +720,11 @@
 
 </li>
             <li class="toc-item">
+    <a href="#encrypt">#[Encrypt]</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="#field">#[Field]</a>
 
 
@@ -1137,6 +1142,11 @@
     <a href="migrating-schemas.html#migrating-schemas">Migrating Schemas</a>
 
         <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="migrating-schemas.html#creating-a-collection">Creating a collection</a>
+
+
+</li>
             <li class="toc-item">
     <a href="migrating-schemas.html#renaming-a-field">Renaming a Field</a>
 
@@ -1891,6 +1901,63 @@
                     </ul>
 </li>
     <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#queryable-encryption">Queryable Encryption</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#introduction">Introduction</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#the-scenario">The Scenario</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#defining-the-documents">Defining the Documents</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#configuration-and-usage">Configuration and Usage</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#step-1-configure-the-documentmanager">Step 1: Configure the DocumentManager</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#step-2-create-the-documentmanager">Step 2: Create the DocumentManager</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#step-3-create-the-encrypted-collection">Step 3: Create the Encrypted Collection</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#step-4-persist-and-query-documents">Step 4: Persist and Query Documents</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#what-the-document-looks-like-in-the-database">What the Document Looks Like in the Database</a>
+
+
+</li>
+                    </ul>
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#limitations">Limitations</a>
+
+
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
     <a href="../cookbook/resolve-target-document-listener.html#keeping-your-modules-independent">Keeping Your Modules Independent</a>
 
         <ul class="section-level-1">
@@ -2417,6 +2484,109 @@ relationship.</p>
 collection. That said, a single embedded document class may be used with
 multiple document classes, and even other embedded documents!</p>
 
+    </div>
+            <div class="section" id="encrypt">
+            <a id="encrypt_attribute"></a>
+            <h2 class="section-header ">
+    <a href="#encrypt">
+        #[Encrypt]
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>The <code>#[Encrypt]</code> attribute is used to define an encrypted field mapping for a
+document property. It allows you to configure fields for automatic and queryable
+encryption in MongoDB.</p>
+
+            
+    <p>Optional arguments:</p>
+
+            
+
+<ul>
+    <li class="dash"><code>queryType</code> - Specifies the query type for the field. Possible values:
+- <code>null</code> (default) - Field is not queryable.
+- <code>EncryptQuery::Equality</code> - Enables equality queries.
+- <code>EncryptQuery::Range</code> - Enables range queries.</li>
+    <li class="dash"><code>min</code>, <code>max</code> - Specify minimum and maximum (inclusive) queryable values
+for a field when possible, as smaller bounds improve query efficiency. If
+querying values outside of these bounds, MongoDB returns an error.</li>
+    <li class="dash"><code>sparsity</code>, <code>precision</code>, <code>trimFactor</code>, <code>contention</code> - For advanced
+users only. The default values for these options are suitable for the majority
+of use cases, and should only be modified if your use case requires it.</li>
+</ul>
+
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>Queryable encryption is only supported in MongoDB version 7.0 and later.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+            
+    <p>Example:</p>
+
+                <pre class="code-block-table" id="2b0cfb593d68bd8f93c2ddd6faf1dac88b5bc14c"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="2b0cfb593d68bd8f93c2ddd6faf1dac88b5bc14c"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">Encrypt</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">EncryptQuery</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Client</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[Field]</span></code><code class="line language-php">    <span class="hljs-comment">#[Encrypt(queryType: EncryptQuery::Equality)]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> string $name;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>The <code>#[Encrypt]</code> attribute can be added to a class with <a href="#[EmbeddedDocument]">#[EmbeddedDocument]</a>.
+This will encrypt the entire embedded document, in the field that contains it.
+Fields within an encrypted embedded document cannot be individually encrypted.
+Queryable encryption is not supported for embedded documents, so the <code>queryType</code>
+argument is not applicable. Encrypted embedded documents are stored as a binary
+value in the parent document.</p>
+
+                <pre class="code-block-table" id="bac5a2d2b23f815a930fce90509eb55da8d02dd4"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="bac5a2d2b23f815a930fce90509eb55da8d02dd4"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">Encrypt</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Encrypt]</span></code><code class="line language-php"><span class="hljs-comment">#[EmbeddedDocument]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CreditCard</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[Field]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> string $number;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Field]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> string $expiryDate;</code><code class="line language-php">}</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[EmbedOne(targetDocument: CreditCard::class)]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> CreditCard $creditCard;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>For more details, refer to the MongoDB documentation on
+<a href="https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/">Queryable Encryption</a>.</p>
+
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>The encrypted collection must be created with the <a href="../reference/migrating-schemas">Schema Manager</a> before
+before inserting documents.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>Due to the way the encrypted fields map is generated, the queryable encryption
+is not compatible with <code>SINGLE_COLLECTION</code> inheritance.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
     </div>
             <div class="section" id="field">
             <h2 class="section-header ">

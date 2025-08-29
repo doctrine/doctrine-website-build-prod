@@ -720,6 +720,11 @@
 
 </li>
             <li class="toc-item">
+    <a href="attributes-reference.html#encrypt">#[Encrypt]</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="attributes-reference.html#field">#[Field]</a>
 
 
@@ -1137,6 +1142,11 @@
     <a href="#migrating-schemas">Migrating Schemas</a>
 
         <ul class="section-level-1 opened-ul ">
+            <li class="toc-item">
+    <a href="#creating-a-collection">Creating a collection</a>
+
+
+</li>
             <li class="toc-item">
     <a href="#renaming-a-field">Renaming a Field</a>
 
@@ -1891,6 +1901,63 @@
                     </ul>
 </li>
     <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#queryable-encryption">Queryable Encryption</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#introduction">Introduction</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#the-scenario">The Scenario</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#defining-the-documents">Defining the Documents</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#configuration-and-usage">Configuration and Usage</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#step-1-configure-the-documentmanager">Step 1: Configure the DocumentManager</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#step-2-create-the-documentmanager">Step 2: Create the DocumentManager</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#step-3-create-the-encrypted-collection">Step 3: Create the Encrypted Collection</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#step-4-persist-and-query-documents">Step 4: Persist and Query Documents</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#what-the-document-looks-like-in-the-database">What the Document Looks Like in the Database</a>
+
+
+</li>
+                    </ul>
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/queryable-encryption.html#limitations">Limitations</a>
+
+
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
     <a href="../cookbook/resolve-target-document-listener.html#keeping-your-modules-independent">Keeping Your Modules Independent</a>
 
         <ul class="section-level-1">
@@ -2140,6 +2207,54 @@ the <a href="https://github.com/objectify/objectify/wiki/SchemaMigration">Object
         </tbody>
     </table>
 </div>
+            <div class="section" id="creating-a-collection">
+            <h2 class="section-header ">
+    <a href="#creating-a-collection">
+        Creating a collection
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>Collections are automatically created by the MongoDB server upon first insertion.
+You must explicitly create the collections if you need specific options, such as
+validation rules. In particular, encrypted collections must be created explicitly.</p>
+
+                <pre class="code-block-table" id="7cf196bb80173a845adaef38a2f4aeefded1a06b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="7cf196bb80173a845adaef38a2f4aeefded1a06b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Assuming $dm is your DocumentManager instance</span></code><code class="line language-php">$schemaManager = $dm-&gt;getSchemaManager();</code><code class="empty"></code></pre>
+            
+    <p>To create the collections for all the document classes, you can use the
+<code>createCollections()</code> method on the <code>DocumentManager</code>:</p>
+
+                <pre class="code-block-table" id="82ac8ba09db26d1bb110a47b7908f1dbbb7c219b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="82ac8ba09db26d1bb110a47b7908f1dbbb7c219b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php">$schemaManager-&gt;createCollections();</code><code class="empty"></code></pre>
+            
+    <p>For a specific document class, you can use the <code>createDocumentCollection()</code>
+method with the class name as an argument:</p>
+
+            <blockquote>
+    <p>&lt;?php</p>
+
+    <p>$schemaManager-&gt;createDocumentCollection(Person::class);</p>
+</blockquote>
+            
+    <p>Once the collection is created, you can also set up indexes with <code>ensureIndexes</code>,
+and search indexes with <code>createSearchIndexes</code>:</p>
+
+            <blockquote>
+    <p>&lt;?php</p>
+
+    <p>$schemaManager-&gt;ensureIndexes();
+$schemaManager-&gt;createSearchIndexes();</p>
+</blockquote>
+    </div>
             <div class="section" id="renaming-a-field">
             <h2 class="section-header ">
     <a href="#renaming-a-field">
