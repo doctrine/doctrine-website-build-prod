@@ -17,7 +17,7 @@
                     <meta name="robots" content="index, follow">
         
         
-                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-bundle/en/latest/configuration.html" />
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-bundle/en/2.16/configuration.html" />
     
         <link
             rel="stylesheet"
@@ -381,8 +381,8 @@
                                                                                                                     (upcoming)
                                                                                                             </a>
                                                                                                                                                                                                 
-                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-bundle/en/latest/configuration.html">
-                                                        2.16.0
+                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-bundle/en/2.16/configuration.html">
+                                                        2.16.1
 
                                                                                                                     (current)
                                                         
@@ -471,17 +471,19 @@ certain classes, but those are for very advanced use-cases only.</p>
 </h3>
             
     <p>If the environment format configured in oracle does not meet doctrine requirements,
-you need to use the OracleSessionInit listener so that doctrine is aware of the format used by Oracle DB.</p>
+you need to use a middleware so that doctrine is aware of the format
+used by Oracle DB. With <code>doctrine/dbal</code> 3, the same could be done with
+an event listener.</p>
 
             
     <p>You can do so easily with</p>
 
-                <pre class="code-block-table" id="3a75f47618e9a0e3a2390fe92e510eb3a9bc0b33"><button
+                <pre class="code-block-table" id="609d98408279eee1c31a1b0326b8f5b58f35a690"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="3a75f47618e9a0e3a2390fe92e510eb3a9bc0b33"
+                data-copy-element-id="609d98408279eee1c31a1b0326b8f5b58f35a690"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-attr">services:</span></code><code class="line language-yaml">    <span class="hljs-attr">oracle.listener:</span></code><code class="line language-yaml">        <span class="hljs-attr">class:</span> <span class="hljs-string">Doctrine\DBAL\Event\Listeners\OracleSessionInit</span></code><code class="line language-yaml">        <span class="hljs-attr">tags:</span></code><code class="line language-yaml">            <span class="hljs-bullet">-</span> <span class="hljs-string">{</span> <span class="hljs-attr">name:</span> <span class="hljs-string">doctrine.event_listener,</span> <span class="hljs-attr">event:</span> <span class="hljs-string">postConnect</span> <span class="hljs-string">}</span></code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-attr">services:</span></code><code class="line language-yaml">    <span class="hljs-comment"># DBAL 4</span></code><code class="line language-yaml">    <span class="hljs-attr">oracle.middleware:</span></code><code class="line language-yaml">        <span class="hljs-attr">class:</span> <span class="hljs-string">Doctrine\DBAL\Driver\OCI8\Middleware\InitializeSession</span></code><code class="line language-yaml">        <span class="hljs-attr">tags:</span></code><code class="line language-yaml">            <span class="hljs-bullet">-</span> <span class="hljs-string">{</span> <span class="hljs-attr">name:</span> <span class="hljs-string">doctrine.middleware,</span> <span class="hljs-attr">connection:</span> <span class="hljs-string">default</span> <span class="hljs-string">}</span></code><code class="line language-yaml">    <span class="hljs-comment"># DBAL 3</span></code><code class="line language-yaml">    <span class="hljs-attr">oracle.listener:</span></code><code class="line language-yaml">        <span class="hljs-attr">class:</span> <span class="hljs-string">Doctrine\DBAL\Event\Listeners\OracleSessionInit</span></code><code class="line language-yaml">        <span class="hljs-attr">tags:</span></code><code class="line language-yaml">            <span class="hljs-bullet">-</span> <span class="hljs-string">{</span> <span class="hljs-attr">name:</span> <span class="hljs-string">doctrine.event_listener,</span> <span class="hljs-attr">event:</span> <span class="hljs-string">postConnect</span> <span class="hljs-string">}</span></code><code class="empty"></code></pre>
             
     <p>The environment variables that doctrine is going to change in the Oracle DB session are:</p>
 
