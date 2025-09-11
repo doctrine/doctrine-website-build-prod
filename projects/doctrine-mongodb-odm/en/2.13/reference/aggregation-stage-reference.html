@@ -880,6 +880,11 @@
 
 </li>
             <li class="toc-item">
+    <a href="attributes-reference.html#vectorsearchindex">#[VectorSearchIndex]</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="attributes-reference.html#version">#[Version]</a>
 
 
@@ -1438,6 +1443,11 @@
 </li>
             <li class="toc-item">
     <a href="#sortbycount">$sortByCount</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#vectorsearch">$vectorSearch</a>
 
 
 </li>
@@ -2218,6 +2228,7 @@
     <li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/skip/">$skip</a></li>
     <li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/project/">$sort</a></li>
     <li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/sortByCount/">$sortByCount</a></li>
+    <li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/vectorSearch/">$vectorSearch</a></li>
     <li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/unionWith/">$unionWith</a></li>
     <li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/unset/">$unset</a></li>
     <li class="dash"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/unwind/">$unwind</a></li>
@@ -2235,6 +2246,20 @@
 was added in Doctrine MongoDB ODM 2.6. Please consult the MongoDB
 documentation to ensure that the pipeline stage is available in the MongoDB
 version you are using.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>Support for <code>$vectorSearch</code> was added in Doctrine MongoDB ODM 2.13.</p>
 
             </td>
         </tr>
@@ -2953,6 +2978,26 @@ to that grouping or category.</p>
                 data-copy-element-id="24d36bccbf62c0a54a3f651658854ab198cc2c7d"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php">$builder = $dm-&gt;createAggregationBuilder(\Documents\Orders::class);</code><code class="line language-php">$builder</code><code class="line language-php">    -&gt;group()</code><code class="line language-php">        -&gt;field(<span class="hljs-string">'_id'</span>)</code><code class="line language-php">        -&gt;expression(<span class="hljs-string">'$items'</span>)</code><code class="line language-php">        -&gt;field(<span class="hljs-string">'count'</span>)</code><code class="line language-php">        -&gt;sum(<span class="hljs-number">1</span>)</code><code class="line language-php">    -&gt;sort([<span class="hljs-string">'count'</span> =&gt; <span class="hljs-number">-1</span>])</code><code class="line language-php">;</code><code class="empty"></code></pre>
+    </div>
+            <div class="section" id="vectorsearch">
+            <h2 class="section-header ">
+    <a href="#vectorsearch">
+        $vectorSearch
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>The <code>$vectorSearch</code> stage performs a vector similarity search on the specified
+field or fields which must be covered by an Atlas Vector Search index.
+This stage is only available when using MongoDB Atlas. <code>$vectorSearch</code> must be
+the first stage in the aggregation pipeline.</p>
+
+                <pre class="code-block-table" id="28323af334579c6249062ccf8c94fd5fbe694f3b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="28323af334579c6249062ccf8c94fd5fbe694f3b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php">$builder = $dm-&gt;createAggregationBuilder(\Documents\Products::class);</code><code class="line language-php">$builder</code><code class="line language-php">    -&gt;vectorSearch()</code><code class="line language-php">        -&gt;index(<span class="hljs-string">'vectorIndexName'</span>)</code><code class="line language-php">        -&gt;path(<span class="hljs-string">'vectorField'</span>)</code><code class="line language-php">        -&gt;filter(</code><code class="line language-php">            $builder-&gt;matchExpr()</code><code class="line language-php">                -&gt;field(<span class="hljs-string">'status'</span>)</code><code class="line language-php">                -&gt;notEqual(<span class="hljs-string">'discontinued'</span>)</code><code class="line language-php">        )</code><code class="line language-php">        -&gt;queryVector([<span class="hljs-number">0.1</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.4</span>, <span class="hljs-number">0.5</span>])</code><code class="line language-php">        -&gt;numCandidates($limit * <span class="hljs-number">20</span>)</code><code class="line language-php">        -&gt;limit($limit)</code><code class="line language-php">    -&gt;project()</code><code class="line language-php">        -&gt;field(<span class="hljs-string">'_id'</span>)-&gt;expression(<span class="hljs-number">0</span>)</code><code class="line language-php">        -&gt;field(<span class="hljs-string">'product'</span>)-&gt;expression(<span class="hljs-string">'$$ROOT'</span>)</code><code class="line language-php">        -&gt;field(<span class="hljs-string">'score'</span>)-&gt;meta(<span class="hljs-string">'vectorSearchScore'</span>);</code><code class="line language-php">;</code><code class="empty"></code></pre>
     </div>
             <div class="section" id="unionwith">
             <h2 class="section-header ">

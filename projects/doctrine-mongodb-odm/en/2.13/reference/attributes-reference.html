@@ -880,6 +880,11 @@
 
 </li>
             <li class="toc-item">
+    <a href="#vectorsearchindex">#[VectorSearchIndex]</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="#version">#[Version]</a>
 
 
@@ -1438,6 +1443,11 @@
 </li>
             <li class="toc-item">
     <a href="aggregation-stage-reference.html#sortbycount">$sortByCount</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="aggregation-stage-reference.html#vectorsearch">$vectorSearch</a>
 
 
 </li>
@@ -3309,6 +3319,20 @@ ODM will not save the property value back to the database.</li>
     <p>This attribute is used to specify <a href="search-indexes.html#search_indexes">search indexes</a> for
 <a href="https://www.mongodb.com/docs/atlas/atlas-search/">MongoDB Atlas Search</a>.</p>
 
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>For vector search indexes, see <a href="#vector_search_index">#[VectorSearchIndex]</a> below.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
             
     <p>The arguments correspond to arguments for
 <a href="https://www.mongodb.com/docs/php-library/current/reference/method/MongoDBCollection-createSearchIndex/">MongoDB\Collection::createSearchIndex()</a>.
@@ -3525,6 +3549,56 @@ Those values are also declared as constants for convenience:</p>
                 data-copy-element-id="d070c065710352151fab8f9743c7919ec5e1a644"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ClassMetadata</span>;</code><code class="line language-php"><span class="hljs-comment">// ... other imports</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document]</span></code><code class="line language-php"><span class="hljs-comment">#[Validation(</span></code><code class="line language-php">    validator: SchemaValidated::VALIDATOR,</code><code class="line language-php">    action: ClassMetadata::SCHEMA_VALIDATION_ACTION_WARN,</code><code class="line language-php">    level: ClassMetadata::SCHEMA_VALIDATION_LEVEL_MODERATE,</code><code class="line language-php">)]</code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SchemaValidated</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> VALIDATOR = <span class="hljs-string">&lt;&lt;&lt;'EOT'</span></code><code class="line language-php">        {</code><code class="line language-php">            <span class="hljs-string">"$jsonSchema"</span>: {</code><code class="line language-php">                <span class="hljs-string">"required"</span>: [<span class="hljs-string">"name"</span>],</code><code class="line language-php">                <span class="hljs-string">"properties"</span>: {</code><code class="line language-php">                    <span class="hljs-string">"name"</span>: {</code><code class="line language-php">                        <span class="hljs-string">"bsonType"</span>: <span class="hljs-string">"string"</span>,</code><code class="line language-php">                        <span class="hljs-string">"description"</span>: <span class="hljs-string">"must be a string and is required"</span></code><code class="line language-php">                    }</code><code class="line language-php">                }</code><code class="line language-php">            },</code><code class="line language-php">            <span class="hljs-string">"$or"</span>: [</code><code class="line language-php">                { <span class="hljs-string">"phone"</span>: { <span class="hljs-string">"$type"</span>: <span class="hljs-string">"string"</span> } },</code><code class="line language-php">                { <span class="hljs-string">"email"</span>: { <span class="hljs-string">"$regularExpression"</span> : { <span class="hljs-string">"pattern"</span>: <span class="hljs-string">"@mongodb\\.com$"</span>, <span class="hljs-string">"options"</span>: <span class="hljs-string">""</span> } } },</code><code class="line language-php">                { <span class="hljs-string">"status"</span>: { <span class="hljs-string">"$in"</span>: [ <span class="hljs-string">"Unknown"</span>, <span class="hljs-string">"Incomplete"</span> ] } }</code><code class="line language-php">            ]</code><code class="line language-php">        }</code><code class="line language-php">        EOT;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">// rest of the class code...</span></code><code class="line language-php">}</code><code class="empty"></code></pre>
+    </div>
+            <div class="section" id="vectorsearchindex">
+            <h2 class="section-header ">
+    <a href="#vectorsearchindex">
+        #[VectorSearchIndex]
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            <a id="vector_search_index"></a>
+            
+    <p>The <code>#[VectorSearchIndex]</code> attribute is used to define a vector search index
+on a document class. This enables efficient similarity search on vector fields,
+such as those used for machine learning embeddings.</p>
+
+            
+    <p>Optional arguments:</p>
+
+            
+
+<ul>
+    <li class="dash"><code>name</code>: (optional) The name of the vector search index. If omitted, a default name is used.</li>
+    <li class="dash">
+    <p><code>fields</code> (required): A list of field definitions. Each field definition is an associative array describing a vector or filter field. For vector fields, the following keys are supported:</p>
+
+
+<ul>
+    <li class="dash"><code>type</code>: Must be set to <code>&#039;vector&#039;</code> for vector fields or <code>&#039;filter&#039;</code> for filter fields.</li>
+    <li class="dash"><code>path</code>: The name of the field in the document to index.</li>
+    <li class="dash"><code>numDimensions</code>: (vector fields only) The number of dimensions in the vector.</li>
+    <li class="dash"><code>similarity</code>: (vector fields only) The vector similarity function to use. Supported values include <code>&#039;euclidean&#039;</code>, <code>&#039;cosine&#039;</code>, and <code>&#039;dotProduct&#039;</code>. Use the constants from <code>Doctrine\ODM\MongoDB\Mapping\ClassMetadata::VECTOR_SIMILARITY_*</code> for best compatibility.</li>
+    <li class="dash"><code>quantization</code>: (vector fields only, optional) The quantization method, e.g., <code>&#039;scalar&#039;</code>.</li>
+    <li class="dash"><code>hnswOptions</code>: (vector fields only, optional) Options for the HNSW algorithm: <code>maxEdges</code> and <code>numEdgeCandidates</code>.</li>
+</ul>
+
+    <p>For filter fields, only <code>type: &#039;filter&#039;</code> and <code>path</code> are required.</p>
+</li>
+</ul>
+
+            
+    <p>Example:</p>
+
+                <pre class="code-block-table" id="bb9ee4e48e903eb419a5457c05c760c33fa1d549"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="bb9ee4e48e903eb419a5457c05c760c33fa1d549"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">Document</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">Field</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">Id</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">VectorSearchIndex</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ClassMetadata</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document(collection: 'vector_embeddings')]</span></code><code class="line language-php"><span class="hljs-comment">#[VectorSearchIndex(</span></code><code class="line language-php">    fields: [</code><code class="line language-php">        [</code><code class="line language-php">            <span class="hljs-string">'type'</span> =&gt; <span class="hljs-string">'vector'</span>,</code><code class="line language-php">            <span class="hljs-string">'path'</span> =&gt; <span class="hljs-string">'plotEmbeddingVoyage3Large'</span>,</code><code class="line language-php">            <span class="hljs-string">'numDimensions'</span> =&gt; <span class="hljs-number">2048</span>,</code><code class="line language-php">            <span class="hljs-string">'similarity'</span> =&gt; ClassMetadata::VECTOR_SIMILARITY_DOT_PRODUCT,</code><code class="line language-php">            <span class="hljs-string">'quantization'</span> =&gt; ClassMetadata::VECTOR_QUANTIZATION_SCALAR,</code><code class="line language-php">        ],</code><code class="line language-php">        [</code><code class="line language-php">            <span class="hljs-string">'type'</span> =&gt; <span class="hljs-string">'filter'</span>,</code><code class="line language-php">            <span class="hljs-string">'path'</span> =&gt; <span class="hljs-string">'category'</span>,</code><code class="line language-php">        ],</code><code class="line language-php">    ],</code><code class="line language-php">)]</code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VectorEmbedding</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[Id]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> ?string $id = <span class="hljs-keyword">null</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">/** <span class="hljs-doctag">@var</span> list&lt;float&gt; */</span></code><code class="line language-php">    <span class="hljs-comment">#[Field(type: Type::COLLECTION)]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">array</span> $plotEmbeddingVoyage3Large = [];</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Field]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> string $category;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>For more details, see the MongoDB documentation on <a href="https://www.mongodb.com/docs/atlas/atlas-vector-search/">Atlas Vector Search</a>.</p>
+
     </div>
             <div class="section" id="version">
             <h2 class="section-header ">
