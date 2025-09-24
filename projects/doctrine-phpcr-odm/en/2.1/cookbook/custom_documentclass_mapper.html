@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>        Using a Custom Document Class Mapper with PHPCR-ODM - Doctrine PHPCR ODM
+    </title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="description" content="Doctrine PHPCR ODM Documentation: Using a Custom Document Class Mapper with PHPCR-ODM ">
+
+        <meta name="keywords" content="                    php,content,odm,data,mapper,mapping,object,documentation,using,a,custom,document,class,mapper,with,phpcr-odm
+    ">
+
+                    <meta name="robots" content="index, follow">
+        
+        
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-phpcr-odm/en/latest/cookbook/custom_documentclass_mapper.html" />
+    
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://www.doctrine-project.org/frontend/css/index.css?6e5d9f"
+                        integrity="sha384-1gHMA2pCh3C7C5PdanZqLyU+p0j9aNUSKdqMxyST9hhhoAcooEmUcqk0Rj7owse5"
+                        crossorigin="anonymous"
+        />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://www.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://www.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://www.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://www.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://www.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://www.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://www.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://www.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://www.doctrine-project.org/images/mstile-310x310.png" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@doctrineproject" />
+        <meta name="twitter:creator" content="@doctrineproject" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.doctrine-project.org/projects/doctrine-phpcr-odm/en/2.1/cookbook/custom_documentclass_mapper.html" />
+        <meta property="og:title" content="        Using a Custom Document Class Mapper with PHPCR-ODM - Doctrine PHPCR ODM
+    " />
+        <meta property="og:description" content="Doctrine PHPCR ODM Documentation: Using a Custom Document Class Mapper with PHPCR-ODM " />
+        <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://www.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "url": "https://www.doctrine-project.org",
+            "logo": "https://www.doctrine-project.org/logos/doctrine-logo.svg"
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://www.doctrine-project.org",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.doctrine-project.org?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Doctrine",
+            "url": "https://www.doctrine-project.org",
+            "sameAs": [
+                "https://twitter.com/doctrineproject"
+            ]
+        }
+        </script>
+
+                    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Doctrine PHPCR ODM",
+            "description": "Using a Custom Document Class Mapper with PHPCR-ODM",
+            "provider": {
+                "@type": "Organization",
+                "name": "Doctrine",
+                "sameAs": "https://www.doctrine-project.org"
+            }
+        }
+        </script>
+    
+        
+            </head>
+    <body>
+                    
+            <nav class="doctrine-navbar navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="/index.html"><img src="https://www.doctrine-project.org/logos/doctrine-logo.svg?1a5b7c" />Doctrine</a>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="/projects.html" id="navbarProjectsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarProjectsDropdown">
+                                                                    <a class="dropdown-item" href="/projects/orm.html">ORM</a>
+                                                                    <a class="dropdown-item" href="/projects/dbal.html">DBAL</a>
+                                                                    <a class="dropdown-item" href="/projects/mongodb-odm.html">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="/projects/coding-standard.html">Coding Standard</a>
+                                                                    <a class="dropdown-item" href="/projects/collections.html">Collections</a>
+                                                                    <a class="dropdown-item" href="/projects/common.html">Common</a>
+                                                                    <a class="dropdown-item" href="/projects/data-fixtures.html">Data fixtures</a>
+                                                                    <a class="dropdown-item" href="/projects/event-manager.html">Event Manager</a>
+                                                                    <a class="dropdown-item" href="/projects/inflector.html">Inflector</a>
+                                                                    <a class="dropdown-item" href="/projects/instantiator.html">Instantiator</a>
+                                                                    <a class="dropdown-item" href="/projects/lexer.html">Lexer</a>
+                                                                    <a class="dropdown-item" href="/projects/migrations.html">Migrations</a>
+                                                                    <a class="dropdown-item" href="/projects/phpcr-odm.html">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="/projects/persistence.html">Persistence</a>
+                                                                    <a class="dropdown-item" href="/projects/rst-parser.html">RST Parser</a>
+                                                                <a class="dropdown-item bg-secondary text-white font-weight-bold" href="/projects.html">View All</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="/contribute/index.html" id="navbarDevelopmentDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Development</a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarContributeDropdown">
+                                <a class="dropdown-item" href="/community/index.html">Community</a>
+                                <a class="dropdown-item" href="/contribute/index.html">Contributor Workflow</a>
+                                <a class="dropdown-item" href="/contribute/maintainer/index.html">Maintainer Workflow</a>
+                                <a class="dropdown-item" href="/contribute/website/index.html">Contribute to Website</a>
+                                <a class="dropdown-item" href="/policies.html">Policies</a>
+                                <a class="dropdown-item" href="https://github.com/doctrine" target="_blank" rel="noopener noreferrer">GitHub</a>
+                                <a class="dropdown-item" href="/styleguide.html">Styleguide</a>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/sponsorship.html">Sponsorship</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/partners.html">Partners</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/blog/index.html">Blog</a>
+                        </li>
+                    </ul>
+
+                    <div class="layout-edit-button d-inline-block mr-2">
+                                                    <a href="https://github.com/doctrine/phpcr-odm/edit/2.1.x/docs/en/cookbook/custom_documentclass_mapper.rst" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
+                                            </div>
+                </div>
+                <div class="nav-outbound">
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </nav>
+
+            <div class="search-results rounded">
+                <div id="hits">
+                    <!-- Hits widget will appear here -->
+                </div>
+
+                <a href="https://www.algolia.com" target="_blank" rel="noopener noreferrer"><img src="https://www.doctrine-project.org/images/search-by-algolia.png" class="float-right" style="width: 150px;" /></a>
+            </div>
+        
+            <div class="container-wrapper container">
+        <div class="row row-offcanvas row-offcanvas-right">
+                            <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
+                    <div class="sidebar-sticky">
+                        <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7D553W&placement=wwwdoctrine-projectorg" id="_carbonads_js"></script>
+
+                        
+
+            <div class="toc">
+    <ul class="menu-level">
+    <li class="toc-item">
+    <a href="choosing-phpcr-implementation.html#choosing-a-phpcr-implementation">Choosing a PHPCR Implementation</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="choosing-phpcr-implementation.html#jackalope-with-jackrabbit">Jackalope with Jackrabbit</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="choosing-phpcr-implementation.html#jackalope-with-doctrine-dbal">Jackalope with Doctrine DBAL</a>
+
+
+</li>
+                    </ul>
+</li>
+    <li class="toc-item opened">
+    <a href="#using-a-custom-document-class-mapper-with-phpcr-odm">Using a Custom Document Class Mapper with PHPCR-ODM</a>
+
+        <ul class="section-level-1 opened-ul ">
+            <li class="toc-item">
+    <a href="#symfony-integration">Symfony integration</a>
+
+
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
+    <a href="last-modified.html#last-modification-timestamp">Last modification timestamp</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="last-modified.html#using-the-build-in-support">Using the build-in support</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="last-modified.html#a-lastmodified-listener-for-custom-behaviour">A lastModified listener for custom behaviour</a>
+
+
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
+    <a href="refactoring-multilang.html#refactoring-multilanguage-documents">Refactoring Multilanguage Documents</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="refactoring-multilang.html#procedure">Procedure</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="refactoring-multilang.html#converting-untranslated-fields-to-be-translated">Converting Untranslated Fields to be Translated</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="refactoring-multilang.html#removing-translation-from-a-field">Removing Translation from a Field</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="refactoring-multilang.html#changing-the-translation-strategy">Changing the Translation Strategy</a>
+
+
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
+    <a href="running-jackrabbit.html#running-jackrabbit">Running Jackrabbit</a>
+
+
+</li>
+    </ul>
+</div>
+    
+
+                    </div>
+                </nav>
+            
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-9 pt-3 px-4">
+                <div class="row">
+                                        
+                                                                <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+                {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Projects",
+            "item": "https://www.doctrine-project.org/projects.html"
+        },                {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "PHPCR ODM",
+            "item": "https://www.doctrine-project.org/projects/phpcr-odm.html"
+        },                {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Documentation",
+            "item": "https://www.doctrine-project.org/projects/doctrine-phpcr-odm/en/2.1/index.html"
+        },                {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "Using a Custom Document Class Mapper with PHPCR-ODM",
+            "item": "https://www.doctrine-project.org/projects/doctrine-phpcr-odm/en/2.1/cookbook/custom_documentclass_mapper.html"
+        }            ]
+}
+</script>
+
+<nav class="breadcrumbs d-none d-sm-block d-md-block d-lg-block d-xl-block" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects.html">Projects</a></li>
+                                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/phpcr-odm.html">PHPCR ODM</a></li>
+                                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine-phpcr-odm/en/2.1/index.html">Documentation</a></li>
+                                                <li class="breadcrumb-item active" aria-current="page">Using a Custom Document Class Mapper with PHPCR-ODM</li>
+                        </ol>
+</nav>
+                                    </div>
+
+                    
+    <div class="alert caution bg-light-yellow text-dark border">
+    <table width="100%">
+        <tr>
+            <td width="10" class="align-top">
+                <i class="fas fa-exclamation-circle text-warning mr-2"></i>
+            </td>
+            <td><p>You are browsing a version that is no longer maintained.</p></td>
+        </tr>
+    </table>
+</div>
+
+                <div class="row">
+                    <div class="col-12">
+                                                    <button type="button" class="btn btn-primary btn-sm float-right toc-toggle" data-toggle="offcanvas" id="toc-toggle">Table of Contents</button>
+
+                                                            
+                                <div class="dropdown show d-inline-block">
+                                    <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-phpcr-odm/en/2.1/cookbook/custom_documentclass_mapper.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        2.1.0
+                                    </a>
+
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                                                    <h6 class="dropdown-header">Maintained</h6>
+
+                                                                                                                                                
+                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-phpcr-odm/en/latest/cookbook/custom_documentclass_mapper.html">
+                                                        2.0.1
+
+                                                                                                                    (current)
+                                                        
+                                                                                                            </a>
+                                                                                                                                                                                                                                
+                                                                                    <h6 class="dropdown-header">Unmaintained</h6>
+
+                                                                                                                                                
+                                                    <a class="dropdown-item active" href="/projects/doctrine-phpcr-odm/en/2.1/cookbook/custom_documentclass_mapper.html">2.1</a>
+                                                                                                                                                                                                
+                                                    <a class="dropdown-item" href="/projects/doctrine-phpcr-odm/en/1.8/cookbook/custom_documentclass_mapper.html">1.8</a>
+                                                                                                                                                                                                
+                                                    <a class="dropdown-item" href="/projects/doctrine-phpcr-odm/en/1.7/cookbook/custom_documentclass_mapper.html">1.7</a>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                </div>
+                            
+                            
+
+            <div class="section" id="using-a-custom-document-class-mapper-with-phpcr-odm">
+            <h1 class="section-header ">
+    <a href="#using-a-custom-document-class-mapper-with-phpcr-odm">
+        Using a Custom Document Class Mapper with PHPCR-ODM
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+            
+    <p>The default document class mapper of PHPCR-ODM uses the attribute
+<code>phpcr:class</code> to store and retrieve the document class of a node. When
+accessing an existing PHPCR repository, you might need different logic to
+decide on the class.</p>
+
+            
+    <p>You can extend the <code>DocumentClassMapper</code> or implement
+<code>DocumentClassMapperInterface</code> from scratch. The important methods are
+<code>getClassName</code> that needs to find the class name and <code>writeMetadata</code>
+that needs to make sure the class of a newly stored document can be
+determined when loading it again.</p>
+
+            
+    <p>An example mapper from the <a href="https://github.com/symfony-cmf/cmf-sandbox/tree/magnolia_integration">symfony cmf sandbox</a>
+(<code>magnolia_integration</code> branch):</p>
+
+                <div class="console">
+        <pre><code class="console">namespace Sandbox\MagnoliaBundle\Document;
+
+use Doctrine\ODM\PHPCR\DocumentClassMapper;
+use Doctrine\ODM\PHPCR\DocumentManager;
+use Doctrine\ODM\PHPCR\Document\Generic;
+
+use PHPCR\NodeInterface;
+use PHPCR\PropertyType;
+
+class MagnoliaDocumentClassMapper extends DocumentClassMapper
+{
+    public function __construct(
+        /**
+         * @var array&lt;string, string&gt; map from mgnl:template values to document class names
+         */
+        private array $templateMap
+    ) {
+    }
+
+    /**
+     * Determine the class name from a given node
+     *
+     * @throws \RuntimeException if no class name could be determined
+     */
+    public function getClassName(DocumentManager $dm, NodeInterface $node, string $className = null): string
+    {
+        $className = parent::getClassName($dm, $node, $className);
+        if (Generic::class === $className) {
+            if ($node-&gt;hasNode(&#039;MetaData&#039;)) {
+                $metaData = $node-&gt;getNode(&#039;MetaData&#039;);
+                if ($metaData-&gt;hasProperty(&#039;mgnl:template&#039;)) {
+                    if (isset($this-&gt;templateMap[$metaData-&gt;getPropertyValue(&#039;mgnl:template&#039;)])) {
+                        return $this-&gt;templateMap[$metaData-&gt;getPropertyValue(&#039;mgnl:template&#039;)];
+                    }
+                }
+            }
+        }
+
+        return $className;
+    }
+}
+</code></pre>
+    </div>
+
+            
+    <p>Then adjust your <a href="../reference/introduction.html#intro-bootstrap">bootstrap code</a> to use the
+custom mapper:</p>
+
+                <div class="console">
+        <pre><code class="console">/* prepare the doctrine configuration */
+$config = new \Doctrine\ODM\PHPCR\Configuration();
+$map = [
+    &#039;standard-templating-kit:pages/stkSection&#039; =&gt; \Sandbox\MagnoliaBundle\Document\Section::class,
+];
+$mapper = new MagnoliaDocumentClassMapper($map);
+$config-&gt;setDocumentClassMapper($mapper);
+
+$documentManager = \Doctrine\ODM\PHPCR\DocumentManager::create($session, $config);
+
+...
+</code></pre>
+    </div>
+
+            <div class="section" id="symfony-integration">
+            <h2 class="section-header ">
+    <a href="#symfony-integration">
+        Symfony integration
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>If you are running on Symfony, you do not instantiate PHPCR-ODM manually.
+Instead, you adjust the configuration in your service definition.</p>
+
+            
+    <p>Here we overwrite the <code>doctrine.odm_configuration</code> service to call
+<code>setDocumentClassMapper</code> on it. This will make it use this mapper instead
+of instantiating the default one. An example from the <a href="https://github.com/symfony-cmf/cmf-sandbox/tree/magnolia_integration">symfony cmf sandbox</a>
+(<code>magnolia_integration</code> branch):</p>
+
+            <div class="configuration-block">
+    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-3">
+                    <button role="tab" type="button" data-language="yaml"
+                    aria-controls="configuration-block-tabpanel-2225f5d3989ec41817fe186a345ea7ed" aria-selected="true"
+                    data-active="true" >
+                <span>Yaml</span>
+            </button>
+                    <button role="tab" type="button" data-language="xml"
+                    aria-controls="configuration-block-tabpanel-2d9049b089ade4028b6bc42eea8622f1" aria-selected="false"
+                     tabindex="-1">
+                <span>Xml</span>
+            </button>
+                    <button role="tab" type="button" data-language="php"
+                    aria-controls="configuration-block-tabpanel-1be29d33d0fe35b438ea3e69874267f6" aria-selected="false"
+                     tabindex="-1">
+                <span>Php</span>
+            </button>
+            </div>
+
+            <div role="tabpanel" id="configuration-block-tabpanel-2225f5d3989ec41817fe186a345ea7ed" aria-label="Yaml" class="configuration-codeblock" data-language="yaml" style="">
+                <pre class="code-block-table" id="f5e8c3870caa4247ccad81ebe482a0ebcb274128"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="f5e8c3870caa4247ccad81ebe482a0ebcb274128"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-comment"># if you want to overwrite default configuration, otherwise use a</span></code><code class="line language-yaml"><span class="hljs-comment"># custom name and specify in odm configuration block</span></code><code class="line language-yaml"></code><code class="line language-yaml"><span class="hljs-attr">doctrine.odm_configuration:</span></code><code class="line language-yaml">    <span class="hljs-attr">class:</span> <span class="hljs-string">%doctrine_phpcr.odm.configuration.class%</span></code><code class="line language-yaml">    <span class="hljs-attr">calls:</span></code><code class="line language-yaml">        <span class="hljs-bullet">-</span> <span class="hljs-string">[</span> <span class="hljs-string">setDocumentClassMapper,</span> <span class="hljs-string">[@sandbox_magnolia.odm_mapper]</span> <span class="hljs-string">]</span></code><code class="line language-yaml"></code><code class="line language-yaml"><span class="hljs-attr">sandbox_magnolia.odm_mapper:</span></code><code class="line language-yaml">    <span class="hljs-attr">class:</span> <span class="hljs-string">"Sandbox\MagnoliaBundle\Document\MagnoliaDocumentClassMapper"</span></code><code class="line language-yaml">    <span class="hljs-attr">arguments:</span></code><code class="line language-yaml">        <span class="hljs-bullet">-</span> <span class="hljs-attr">'standard-templating-kit:pages/stkSection':</span> <span class="hljs-string">'Sandbox\MagnoliaBundle\Document\Section'</span></code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-2d9049b089ade4028b6bc42eea8622f1" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
+                <pre class="code-block-table" id="eb8eea1a0158ee18a40ae02ee8158cdae9c16f7a"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="eb8eea1a0158ee18a40ae02ee8158cdae9c16f7a"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">service</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"doctrine.odm_configuration"</span></span></code><code class="line language-xml">    class="%doctrine_phpcr.odm.configuration.class%"&gt;</code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">call</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"setDocumentClassMapper"</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">argument</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"service"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"sandbox_magnolia.odm_mapper"</span> /&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">call</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">service</span>&gt;</span></code><code class="line language-xml"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">service</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"sandbox_magnolia.odm_mapper"</span></span></code><code class="line language-xml">    class="Sandbox\MagnoliaBundle\Document\MagnoliaDocumentClassMapper"&gt;</code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">argument</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"collection"</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">argument</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"standard-templating-kit:pages/stkSection"</span>&gt;</span>Sandbox\MagnoliaBundle\Document\Section<span class="hljs-tag">&lt;/<span class="hljs-name">argument</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">argument</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">service</span>&gt;</span></code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-1be29d33d0fe35b438ea3e69874267f6" aria-label="Php" class="configuration-codeblock" data-language="php" style="display: none">
+                <pre class="code-block-table" id="05afa445bcf3772e309090c712532f6cff1d172f"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="05afa445bcf3772e309090c712532f6cff1d172f"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">DependencyInjection</span>\<span class="hljs-title">Definition</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">DependencyInjection</span>\<span class="hljs-title">Reference</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Sandbox</span>\<span class="hljs-title">MagnoliaBundle</span>\<span class="hljs-title">Document</span>\<span class="hljs-title">MagnoliaDocumentClassMapper</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Sandbox</span>\<span class="hljs-title">MagnoliaBundle</span>\<span class="hljs-title">Document</span>\<span class="hljs-title">Section</span>;</code><code class="line language-php"></code><code class="line language-php">$container</code><code class="line language-php">    -&gt;register(<span class="hljs-string">'doctrine.odm_configuration'</span>, <span class="hljs-string">'%doctrine_phpcr.odm.configuration.class%'</span>)</code><code class="line language-php">    -&gt;addMethodCall(<span class="hljs-string">'setDocumentClassMapper'</span>, [</code><code class="line language-php">        <span class="hljs-keyword">new</span> Reference(<span class="hljs-string">'sandbox_magnolia.odm_mapper'</span>),</code><code class="line language-php">    ])</code><code class="line language-php">;</code><code class="line language-php"></code><code class="line language-php">$container -&gt;setDefinition(<span class="hljs-string">'sandbox_amgnolia.odm_mapper'</span>, <span class="hljs-keyword">new</span> Definition(</code><code class="line language-php">    MagnoliaDocumentClassMapper::class,</code><code class="line language-php">    [</code><code class="line language-php">        [</code><code class="line language-php">            <span class="hljs-string">'standard-templating-kit:pages/stkSection'</span> =&gt; Section::class,</code><code class="line language-php">        ],</code><code class="line language-php">    ],</code><code class="line language-php">));</code><code class="empty"></code></pre>
+        </div>
+    </div>
+    </div>
+    </div>
+        
+
+                                                </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+        <button id="back-to-top" title="Go to top">Top</button>
+
+                
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script
+            src="https://www.doctrine-project.org/frontend/js/bundle.js?1546fc"
+                            integrity="sha384-ix9eb2EZyp9uayYpxmCQoylbz8msHl5wOg/aqZnD/3cxszNUGePN656MRg5GEgbm"
+                        crossorigin="anonymous">
+        </script>
+
+                
+        <script type="text/javascript">
+            var projectSlug = 'phpcr-odm';
+            var versionSlug = '2.1';
+
+            var searchBoxSettings = {
+                container: '#search-box',
+                placeholder: 'Search PHPCR ODM 2.1'
+            };
+
+            function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
+                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                            }
+        </script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+            </body>
+</html>
