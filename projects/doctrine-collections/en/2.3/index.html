@@ -1174,6 +1174,40 @@ contain <code>DateTime</code> or <code>DateTimeImmutable</code> objects.</p>
         </tbody>
     </table>
 </div>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>For collections that contain objects, the field name given to <code>Comparison</code> will
+lead to various access methods being tried in sequence. For the exact implementation,
+refer to the <code>ClosureExpressionVisitor::getObjectFieldValue()</code> method.</p>
+
+    <p>Roughly speaking, for a field named <code>field</code>, the following things will be tried
+in order:</p>
+
+    
+<ol start="1" type="1">
+    <li value="1"><code>getField()</code>, <code>isField()</code> and <code>field()</code> as getter methods</li>
+    <li value="2">When the object implements a <code>__call</code> magic method, invoke it
+by calling <code>getField()</code></li>
+    <li value="3">When the object implements <code>ArrayAccess</code>, use that to access the
+<code>field</code> offset</li>
+    <li value="4">When the object contains a <code>::$field</code> public property that is not
+<code>null</code>, access it directly</li>
+    <li value="5">Convert snake-case field names to camel case and retry the <code>get</code>, <code>is</code>
+and prefixless accessor methods</li>
+    <li value="6">Direct access to <code>::$field</code>, which must be a public property, as a
+last resort.</li>
+</ol>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
     </div>
     </div>
     </div>
