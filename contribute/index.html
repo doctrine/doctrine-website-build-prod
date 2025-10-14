@@ -634,7 +634,7 @@ $ git rebase --continue # resume the rebase</code></pre>
 
             
     <p>You should be able to apply the example above with any tool we use in
-our CI pipelines, such as PHPUnit, PHPStan or Psalm.</p>
+our CI pipelines, such as PHPUnit or PHPStan.</p>
 
             
     <p><code>git rebase --interactive</code> is a really powerful tool and we barely
@@ -812,34 +812,26 @@ them manually.</p>
     </a>
 </h3>
             
-    <p>We use two different static analysis tools, that can be complementary:</p>
+    <p>We use <a href="https://phpstan.org/">PHPStan</a> for static analysis.</p>
 
             
-
-<ul>
-    <li class="dash"><a href="https://psalm.dev/">Psalm</a></li>
-    <li class="dash"><a href="https://phpstan.org/">PHPStan</a></li>
-</ul>
-
-            
-    <p>Here is how to run both tools:</p>
+    <p>Here is how to run it locally:</p>
 
                 <div class="console">
-        <pre><code class="console">$ vendor/bin/psalm
-$ vendor/bin/phpstan</code></pre>
+        <pre><code class="console">$ vendor/bin/phpstan</code></pre>
     </div>
 
             
     <p>It might happen that these tools report false positives. In that case,
 we try to report the false positives upstream, and then we ignore them
-in <code>psalm.xml</code> or <code>phpstan.neon</code>, along with a link to the bug
-report.</p>
+in <code>phpstan.neon</code> or with a special comment, along with a link to the
+bug report.</p>
 
             
-    <p>When things get overwhelming, for instance when upgrading Psalm or
-PHPStan, we use baseline files, but as a last resort: it&#039;s better to
-have new code pass analysis with the latest version of the tools than to
-block the ugprade until every single issue is addressed.</p>
+    <p>When things get overwhelming, for instance when upgrading PHPStan, we
+use baseline files, but as a last resort: it&#039;s better to have new code
+pass analysis with the latest version of the tools than to block the
+ugprade until every single issue is addressed.</p>
 
             
     <p>If you are looking for something to contribute, you can try to
@@ -849,15 +841,10 @@ configured to let you know when you should remove lines from the
 baseline.</p>
 
             
-    <p>We never rely on <code>@psalm-suppress</code> except in some Symfony bundles. We
-are aware of this inconsistency, and might resolve it someday. Until
-then, try to be consistent with the repository you are contributing to.</p>
-
-            
     <p>Both tools understand most of each other annotations, and we use
-<code>@psalm-</code>-prefixed annotations and let PHPStan do the translation. We
-use prefixed annotations for advanced features that are not understood
-by all IDEs yet.</p>
+<code>@phpstan-</code>-prefixed annotations and let PHPStan do the translation.
+We use prefixed annotations for advanced features that are not
+understood by all IDEs yet.</p>
 
     </div>
             <div class="section" id="tests">
@@ -891,12 +878,12 @@ before pushing is never a bad idea. You can do so by creating a
 <code>.git/hooks/pre-push</code> file or even a <code>.git/hooks/pre-commit</code> file
 with the following content:</p>
 
-                <pre class="code-block-table" id="ed120e280ae700a9a6ea7a47d631acdad63c1c10"><button
+                <pre class="code-block-table" id="f6a922c3b0c0baa1947ba57299a13a34ef415eea"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="ed120e280ae700a9a6ea7a47d631acdad63c1c10"
+                data-copy-element-id="f6a922c3b0c0baa1947ba57299a13a34ef415eea"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-bash"><span class="hljs-meta">#!/bin/bash</span></code><code class="line language-bash"><span class="hljs-built_in">set</span> -e</code><code class="line language-bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">''</span>|vendor/bin/phpcs</code><code class="line language-bash">vendor/bin/phpstan</code><code class="line language-bash">vendor/bin/psalm</code><code class="line language-bash">vendor/bin/phpunit</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-bash"><span class="hljs-meta">#!/bin/bash</span></code><code class="line language-bash"><span class="hljs-built_in">set</span> -e</code><code class="line language-bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">''</span>|vendor/bin/phpcs</code><code class="line language-bash">vendor/bin/phpstan</code><code class="line language-bash">vendor/bin/phpunit</code><code class="empty"></code></pre>
     </div>
     </div>
             <div class="section" id="getting-your-pr-reviewed">
