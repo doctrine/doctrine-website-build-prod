@@ -299,7 +299,12 @@
 
 </li>
             <li class="toc-item">
-    <a href="#encrypted-fields-map">Encrypted Fields Map</a>
+    <a href="#encrypted-fields-configuration">Encrypted Fields Configuration</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#encrypted-fields-map-optional">Encrypted Fields Map (optional)</a>
 
 
 </li>
@@ -660,7 +665,7 @@ Additional options are available for advanced use cases.</p>
     </a>
 </h2>
             
-    <p>The <code>kmsProvider</code> option specifies a single KMS provider that will be used for encryption.
+    <p>The <code>kmsProvider</code> option specifies a single <a href="https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/kms-providers/">KMS provider</a> that will be used for encryption.
 The type of KMS provider is specified with the <code>type</code> property along with its options.</p>
 
             
@@ -677,20 +682,42 @@ The type of KMS provider is specified with the <code>type</code> property along 
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-attr">doctrine_mongodb:</span></code><code class="line language-yaml">    <span class="hljs-attr">connections:</span></code><code class="line language-yaml">        <span class="hljs-attr">default:</span></code><code class="line language-yaml">            <span class="hljs-attr">autoEncryption:</span></code><code class="line language-yaml">                <span class="hljs-attr">kmsProvider:</span></code><code class="line language-yaml">                    <span class="hljs-attr">type:</span> <span class="hljs-string">aws</span></code><code class="line language-yaml">                    <span class="hljs-attr">accessKeyId:</span> <span class="hljs-string">YOUR_AWS_ACCESS_KEY_ID</span></code><code class="line language-yaml">                    <span class="hljs-attr">secretAccessKey:</span> <span class="hljs-string">YOUR_AWS_SECRET_ACCESS_KEY</span></code><code class="line language-yaml">                <span class="hljs-attr">masterKey:</span></code><code class="line language-yaml">                    <span class="hljs-attr">region:</span> <span class="hljs-string">"eu-west-1"</span></code><code class="line language-yaml">                    <span class="hljs-attr">key:</span> <span class="hljs-string">"arn:aws:kms:eu-west-1:123456789012:key/abcd1234-12ab-34cd-56ef-1234567890ab"</span></code><code class="empty"></code></pre>
     </div>
-            <div class="section" id="encrypted-fields-map">
+            <div class="section" id="encrypted-fields-configuration">
             <h2 class="section-header ">
-    <a href="#encrypted-fields-map">
-        Encrypted Fields Map
+    <a href="#encrypted-fields-configuration">
+        Encrypted Fields Configuration
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>The encrypted fields are configured per document class using the <code>#[Encrypt]</code>
+attribute or the equivalent XML mapping.</p>
+
+                <pre class="code-block-table" id="c4079c28a690e755048d5b05bd3c41a88eeb60fd"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="c4079c28a690e755048d5b05bd3c41a88eeb60fd"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">Encrypt</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span>\<span class="hljs-title">EncryptQuery</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Annotations</span> <span class="hljs-title">as</span> <span class="hljs-title">ODM</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[ODM\Document]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[ODM\Id]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> $id;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Encrypt(queryType: EncryptQuery::Equality)]</span></code><code class="line language-php">    <span class="hljs-comment">#[ODM\Field(type: 'string')]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> $sensitiveField;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">// ...</span></code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>Read more about it in the <a href="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/cookbook/queryable-encryption.html">MongoDB ODM documentation on Queryable Encryption</a></p>
+
+    </div>
+            <div class="section" id="encrypted-fields-map-optional">
+            <h2 class="section-header ">
+    <a href="#encrypted-fields-map-optional">
+        Encrypted Fields Map (optional)
         <i class="fas fa-link"></i>
     </a>
 </h2>
             
     <p>The encrypted fields are set to the collection when you create it, and the MongoDB
 client will query the server for the collection schema before performing any
-operations. For additional security, you can also specify the encrypted fields
+operations. For <strong>additional security</strong>, you <strong>can</strong> also specify the encrypted fields
 in the connection configuration, which allows the client to use local rules
 instead of downloading the remote schema from the server, that could potentially
-be tampered with if an attacker compromises the server.</p>
+be tampered with if an attacker compromises the server. Read more about it in the
+<a href="https://www.mongodb.com/docs/manual/core/queryable-encryption/about-qe-csfle/#std-label-qe-csfle-security-considerations">Security Considerations</a>.</p>
 
             
     <p>The Encrypted Fields Map is a list of all encrypted fields associated with all
@@ -722,30 +749,50 @@ schema for the collection and uses it instead.</li>
     <p>For more details, see the official MongoDB documentation:
 <a href="https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/">Encrypted Fields and Enabled Queries</a>.</p>
 
-            .. tabs:: 
+            <div class="configuration-block">
+    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-3">
+                    <button role="tab" type="button" data-language="yaml"
+                    aria-controls="configuration-block-tabpanel-4e6876251745752e20dfe0e97d51fe0d" aria-selected="true"
+                    data-active="true" >
+                <span>Yaml</span>
+            </button>
+                    <button role="tab" type="button" data-language="xml"
+                    aria-controls="configuration-block-tabpanel-f41d6a12efbdbdef8c9f0395421f304e" aria-selected="false"
+                     tabindex="-1">
+                <span>Xml</span>
+            </button>
+                    <button role="tab" type="button" data-language="php"
+                    aria-controls="configuration-block-tabpanel-5363b6af38d2de7163ee8067b6fd975d" aria-selected="false"
+                     tabindex="-1">
+                <span>Php</span>
+            </button>
+            </div>
 
-.. group-tab:: YAML
-
-    <pre class="code-block-table" id="46927f0321f2d731a8403f2ed3c49a23b7a0c31e"><button
+            <div role="tabpanel" id="configuration-block-tabpanel-4e6876251745752e20dfe0e97d51fe0d" aria-label="Yaml" class="configuration-codeblock" data-language="yaml" style="">
+                <pre class="code-block-table" id="a945f828e8cd9131ffbab923cf309c2ba9aa17b2"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="46927f0321f2d731a8403f2ed3c49a23b7a0c31e"
+                data-copy-element-id="a945f828e8cd9131ffbab923cf309c2ba9aa17b2"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-attr">doctrine_mongodb:</span></code><code class="line language-yaml">    <span class="hljs-attr">connections:</span></code><code class="line language-yaml">        <span class="hljs-attr">default:</span></code><code class="line language-yaml">            <span class="hljs-attr">autoEncryption:</span></code><code class="line language-yaml">                <span class="hljs-attr">encryptedFieldsMap:</span></code><code class="line language-yaml">                    <span class="hljs-attr">"mydatabase.mycollection":</span></code><code class="line language-yaml">                        <span class="hljs-attr">fields:</span></code><code class="line language-yaml">                            <span class="hljs-bullet">-</span> <span class="hljs-attr">keyId:</span> <span class="hljs-string">{</span> <span class="hljs-string">$binary:</span> <span class="hljs-string">{</span> <span class="hljs-attr">base64:</span> <span class="hljs-string">2CSosXLSTEKaYphcSnUuCw==,</span> <span class="hljs-attr">subType:</span> <span class="hljs-string">'04'</span> <span class="hljs-string">}</span> <span class="hljs-string">}</span></code><code class="line language-yaml">                              <span class="hljs-attr">path:</span> <span class="hljs-string">"sensitive_field"</span></code><code class="line language-yaml">                              <span class="hljs-attr">bsonType:</span> <span class="hljs-string">"string"</span></code><code class="empty"></code></pre>.. group-tab:: XML
-
-    <pre class="code-block-table" id="c5197708e3f3a81d950e1e347f8819cefd105574"><button
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-attr">doctrine_mongodb:</span></code><code class="line language-yaml">    <span class="hljs-attr">connections:</span></code><code class="line language-yaml">        <span class="hljs-attr">default:</span></code><code class="line language-yaml">            <span class="hljs-attr">autoEncryption:</span></code><code class="line language-yaml">                <span class="hljs-attr">encryptedFieldsMap:</span></code><code class="line language-yaml">                    <span class="hljs-attr">"app.users":</span></code><code class="line language-yaml">                        <span class="hljs-attr">fields:</span></code><code class="line language-yaml">                            <span class="hljs-bullet">-</span> <span class="hljs-attr">keyId:</span> <span class="hljs-string">{</span> <span class="hljs-string">$binary:</span> <span class="hljs-string">{</span> <span class="hljs-attr">base64:</span> <span class="hljs-string">2CSosXLSTEKaYphcSnUuCw==,</span> <span class="hljs-attr">subType:</span> <span class="hljs-string">'04'</span> <span class="hljs-string">}</span> <span class="hljs-string">}</span></code><code class="line language-yaml">                              <span class="hljs-attr">path:</span> <span class="hljs-string">"sensitive_field"</span></code><code class="line language-yaml">                              <span class="hljs-attr">bsonType:</span> <span class="hljs-string">"string"</span></code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-f41d6a12efbdbdef8c9f0395421f304e" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
+                <pre class="code-block-table" id="cdb1e15dd5f8a807efafa957a80b8df22cdf3b0b"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="c5197708e3f3a81d950e1e347f8819cefd105574"
+                data-copy-element-id="cdb1e15dd5f8a807efafa957a80b8df22cdf3b0b"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine:connection</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:autoEncryption</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:encryptedFieldsMap</span>&gt;</span></code><code class="line language-xml">            &lt;![CDATA[</code><code class="line language-xml">                {</code><code class="line language-xml">                    "mydatabase.mycollection": {</code><code class="line language-xml">                        fields: [</code><code class="line language-xml">                            "keyId": { "$binary": { "base64": "2CSosXLSTEKaYphcSnUuCw==", "subType": "04" } },</code><code class="line language-xml">                            "path": "sensitive_field",</code><code class="line language-xml">                            "bsonType": "string"</code><code class="line language-xml">                        ]</code><code class="line language-xml">                    }</code><code class="line language-xml">                }</code><code class="line language-xml">            ]]&gt;</code><code class="line language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:encryptedFieldsMap</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:autoEncryption</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:connection</span>&gt;</span></code><code class="empty"></code></pre>.. group-tab:: PHP
-
-    <pre class="code-block-table" id="48dd7132bf71f4ed51d1287375b5479f88c69f90"><button
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine:connection</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:autoEncryption</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:encryptedFieldsMap</span>&gt;</span></code><code class="line language-xml">            <span class="hljs-comment">&lt;!-- Use JSON in a CDATA to avoid XML escaping issues --&gt;</span></code><code class="line language-xml">            &lt;![CDATA[</code><code class="line language-xml">                {</code><code class="line language-xml">                    "app.users": {</code><code class="line language-xml">                        fields: [</code><code class="line language-xml">                            "keyId": { "$binary": { "base64": "2CSosXLSTEKaYphcSnUuCw==", "subType": "04" } },</code><code class="line language-xml">                            "path": "sensitive_field",</code><code class="line language-xml">                            "bsonType": "string"</code><code class="line language-xml">                        ]</code><code class="line language-xml">                    }</code><code class="line language-xml">                }</code><code class="line language-xml">            ]]&gt;</code><code class="line language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:encryptedFieldsMap</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:autoEncryption</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:connection</span>&gt;</span></code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-5363b6af38d2de7163ee8067b6fd975d" aria-label="Php" class="configuration-codeblock" data-language="php" style="display: none">
+                <pre class="code-block-table" id="48dd7132bf71f4ed51d1287375b5479f88c69f90"><button
                 type="button"
                 class="copy-to-clipboard"
                 data-copy-element-id="48dd7132bf71f4ed51d1287375b5479f88c69f90"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Config</span>\<span class="hljs-title">DoctrineMongodbConfig</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">return</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(DoctrineMongodbConfig $config)</span>: <span class="hljs-title">void</span> </span>{</code><code class="line language-php">    $config-&gt;connection(<span class="hljs-string">'default'</span>)</code><code class="line language-php">        -&gt;autoEncryption([</code><code class="line language-php">            <span class="hljs-string">'encryptedFieldsMap'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'mydatabase.mycollection'</span> =&gt; [</code><code class="line language-php">                    <span class="hljs-string">'fields'</span> =&gt; [</code><code class="line language-php">                        [</code><code class="line language-php">                            <span class="hljs-string">'path'</span> =&gt; <span class="hljs-string">'sensitive_field'</span>,</code><code class="line language-php">                            <span class="hljs-comment">// Extended JSON representation of a BSON binary type</span></code><code class="line language-php">                            <span class="hljs-comment">// The MongoDB\BSON\Binary class cannot be used here</span></code><code class="line language-php">                            <span class="hljs-string">'keyId'</span> =&gt; [<span class="hljs-string">'$binary'</span> =&gt; [<span class="hljs-string">'base64'</span> =&gt; <span class="hljs-string">'2CSosXLSTEKaYphcSnUuCw=='</span>, <span class="hljs-string">'subType'</span> =&gt; <span class="hljs-string">'04'</span> ] ],</code><code class="line language-php">                            <span class="hljs-string">'bsonType'</span> =&gt; <span class="hljs-string">'string'</span>,</code><code class="line language-php">                        ],</code><code class="line language-php">                    ],</code><code class="line language-php">                ],</code><code class="line language-php">            ],</code><code class="line language-php">        ]);</code><code class="line language-php">};</code><code class="empty"></code></pre>
+        </div>
+    </div>
     </div>
             <div class="section" id="automatic-encryption-shared-library">
             <h2 class="section-header ">
@@ -760,30 +807,50 @@ schema for the collection and uses it instead.</li>
             
     <p>If the driver is not able to find the library, you can specify its path using the <code>cryptSharedLibPath</code> extra option in your connection configuration.</p>
 
-            .. tabs:: 
+            <div class="configuration-block">
+    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-3">
+                    <button role="tab" type="button" data-language="yaml"
+                    aria-controls="configuration-block-tabpanel-512e0d722d004e016d5f91035f453703" aria-selected="true"
+                    data-active="true" >
+                <span>Yaml</span>
+            </button>
+                    <button role="tab" type="button" data-language="xml"
+                    aria-controls="configuration-block-tabpanel-023f3044d381d5f438a8dfb5b9f0a8a0" aria-selected="false"
+                     tabindex="-1">
+                <span>Xml</span>
+            </button>
+                    <button role="tab" type="button" data-language="php"
+                    aria-controls="configuration-block-tabpanel-a776f542032faf24882249387ff74375" aria-selected="false"
+                     tabindex="-1">
+                <span>Php</span>
+            </button>
+            </div>
 
-.. group-tab:: YAML
-
-    <pre class="code-block-table" id="e19afe1b0a6c3a4e282c99aff5c66724ab97cd84"><button
+            <div role="tabpanel" id="configuration-block-tabpanel-512e0d722d004e016d5f91035f453703" aria-label="Yaml" class="configuration-codeblock" data-language="yaml" style="">
+                <pre class="code-block-table" id="e19afe1b0a6c3a4e282c99aff5c66724ab97cd84"><button
                 type="button"
                 class="copy-to-clipboard"
                 data-copy-element-id="e19afe1b0a6c3a4e282c99aff5c66724ab97cd84"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-attr">doctrine_mongodb:</span></code><code class="line language-yaml">    <span class="hljs-attr">connections:</span></code><code class="line language-yaml">        <span class="hljs-attr">default:</span></code><code class="line language-yaml">            <span class="hljs-attr">autoEncryption:</span></code><code class="line language-yaml">                <span class="hljs-attr">extraOptions:</span></code><code class="line language-yaml">                    <span class="hljs-attr">cryptSharedLibPath:</span> <span class="hljs-string">'%kernel.project_dir%/bin/mongo_crypt_v1.so'</span></code><code class="empty"></code></pre>.. group-tab:: XML
-
-    <pre class="code-block-table" id="a363db759cd1e2fbaec52c9c6a1899abd1b55f52"><button
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-attr">doctrine_mongodb:</span></code><code class="line language-yaml">    <span class="hljs-attr">connections:</span></code><code class="line language-yaml">        <span class="hljs-attr">default:</span></code><code class="line language-yaml">            <span class="hljs-attr">autoEncryption:</span></code><code class="line language-yaml">                <span class="hljs-attr">extraOptions:</span></code><code class="line language-yaml">                    <span class="hljs-attr">cryptSharedLibPath:</span> <span class="hljs-string">'%kernel.project_dir%/bin/mongo_crypt_v1.so'</span></code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-023f3044d381d5f438a8dfb5b9f0a8a0" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
+                <pre class="code-block-table" id="a363db759cd1e2fbaec52c9c6a1899abd1b55f52"><button
                 type="button"
                 class="copy-to-clipboard"
                 data-copy-element-id="a363db759cd1e2fbaec52c9c6a1899abd1b55f52"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine:connection</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:autoEncryption</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:extraOptions</span> <span class="hljs-attr">cryptSharedLibPath</span>=<span class="hljs-string">"%kernel.project_dir%/bin/mongo_crypt_v1.so"</span> /&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:autoEncryption</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:connection</span>&gt;</span></code><code class="empty"></code></pre>.. group-tab:: PHP
-
-    <pre class="code-block-table" id="8c53097ba2c4ea4c25927196c903ab7db037740d"><button
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine:connection</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:autoEncryption</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:extraOptions</span> <span class="hljs-attr">cryptSharedLibPath</span>=<span class="hljs-string">"%kernel.project_dir%/bin/mongo_crypt_v1.so"</span> /&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:autoEncryption</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:connection</span>&gt;</span></code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-a776f542032faf24882249387ff74375" aria-label="Php" class="configuration-codeblock" data-language="php" style="display: none">
+                <pre class="code-block-table" id="8c53097ba2c4ea4c25927196c903ab7db037740d"><button
                 type="button"
                 class="copy-to-clipboard"
                 data-copy-element-id="8c53097ba2c4ea4c25927196c903ab7db037740d"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Config</span>\<span class="hljs-title">DoctrineMongodbConfig</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">return</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(DoctrineMongodbConfig $config)</span>: <span class="hljs-title">void</span> </span>{</code><code class="line language-php">    $config-&gt;connection(<span class="hljs-string">'default'</span>)</code><code class="line language-php">        -&gt;autoEncryption([</code><code class="line language-php">            <span class="hljs-string">'extraOptions'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'cryptSharedLibPath'</span> =&gt; <span class="hljs-string">'%kernel.project_dir%/bin/mongo_crypt_v1.so'</span>,</code><code class="line language-php">            ],</code><code class="line language-php">        ]);</code><code class="line language-php">};</code><code class="empty"></code></pre>
+        </div>
+    </div>
     </div>
             <div class="section" id="tls-options">
             <h2 class="section-header ">
@@ -796,30 +863,50 @@ schema for the collection and uses it instead.</li>
     <p>If you are not specifying a custom <code>keyVaultClient</code> service, you can configure
 TLS settings for the internal key vault client using the <code>tlsOptions</code> key:</p>
 
-            .. tabs:: 
+            <div class="configuration-block">
+    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-3">
+                    <button role="tab" type="button" data-language="yaml"
+                    aria-controls="configuration-block-tabpanel-201e0e970b242ef5ec695e1225b455b1" aria-selected="true"
+                    data-active="true" >
+                <span>Yaml</span>
+            </button>
+                    <button role="tab" type="button" data-language="xml"
+                    aria-controls="configuration-block-tabpanel-85f49ba6b3e58183981ab4e5e398de28" aria-selected="false"
+                     tabindex="-1">
+                <span>Xml</span>
+            </button>
+                    <button role="tab" type="button" data-language="php"
+                    aria-controls="configuration-block-tabpanel-92cf8f6e4eb09c116de073ec36a00c0e" aria-selected="false"
+                     tabindex="-1">
+                <span>Php</span>
+            </button>
+            </div>
 
-.. group-tab:: YAML
-
-    <pre class="code-block-table" id="3f0be6b898f94dc7f1b5ee324cbd603cf92ba262"><button
+            <div role="tabpanel" id="configuration-block-tabpanel-201e0e970b242ef5ec695e1225b455b1" aria-label="Yaml" class="configuration-codeblock" data-language="yaml" style="">
+                <pre class="code-block-table" id="3f0be6b898f94dc7f1b5ee324cbd603cf92ba262"><button
                 type="button"
                 class="copy-to-clipboard"
                 data-copy-element-id="3f0be6b898f94dc7f1b5ee324cbd603cf92ba262"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-attr">doctrine_mongodb:</span></code><code class="line language-yaml">    <span class="hljs-attr">connections:</span></code><code class="line language-yaml">        <span class="hljs-attr">default:</span></code><code class="line language-yaml">            <span class="hljs-attr">autoEncryption:</span></code><code class="line language-yaml">                <span class="hljs-attr">tlsOptions:</span></code><code class="line language-yaml">                    <span class="hljs-attr">tlsCAFile:</span> <span class="hljs-string">"/path/to/key-vault-ca.pem"</span></code><code class="line language-yaml">                    <span class="hljs-attr">tlsCertificateKeyFile:</span> <span class="hljs-string">"/path/to/key-vault-client.pem"</span></code><code class="line language-yaml">                    <span class="hljs-attr">tlsCertificateKeyFilePassword:</span> <span class="hljs-string">"keyvaultclientpassword"</span></code><code class="line language-yaml">                    <span class="hljs-attr">tlsDisableOCSPEndpointCheck:</span> <span class="hljs-literal">false</span></code><code class="empty"></code></pre>.. group-tab:: XML
-
-    <pre class="code-block-table" id="bc16c84eadfdae83389e4496605636d51f0cadf6"><button
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-attr">doctrine_mongodb:</span></code><code class="line language-yaml">    <span class="hljs-attr">connections:</span></code><code class="line language-yaml">        <span class="hljs-attr">default:</span></code><code class="line language-yaml">            <span class="hljs-attr">autoEncryption:</span></code><code class="line language-yaml">                <span class="hljs-attr">tlsOptions:</span></code><code class="line language-yaml">                    <span class="hljs-attr">tlsCAFile:</span> <span class="hljs-string">"/path/to/key-vault-ca.pem"</span></code><code class="line language-yaml">                    <span class="hljs-attr">tlsCertificateKeyFile:</span> <span class="hljs-string">"/path/to/key-vault-client.pem"</span></code><code class="line language-yaml">                    <span class="hljs-attr">tlsCertificateKeyFilePassword:</span> <span class="hljs-string">"keyvaultclientpassword"</span></code><code class="line language-yaml">                    <span class="hljs-attr">tlsDisableOCSPEndpointCheck:</span> <span class="hljs-literal">false</span></code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-85f49ba6b3e58183981ab4e5e398de28" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
+                <pre class="code-block-table" id="bc16c84eadfdae83389e4496605636d51f0cadf6"><button
                 type="button"
                 class="copy-to-clipboard"
                 data-copy-element-id="bc16c84eadfdae83389e4496605636d51f0cadf6"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine:connection</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:autoEncryption</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:tlsOptions</span></span></code><code class="line language-xml">            tlsCAFile="/path/to/key-vault-ca.pem"</code><code class="line language-xml">            tlsCertificateKeyFile="/path/to/key-vault-client.pem"</code><code class="line language-xml">            tlsCertificateKeyFilePassword="keyvaultclientpassword"</code><code class="line language-xml">            tlsDisableOCSPEndpointCheck="false"</code><code class="line language-xml">        /&gt;</code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:autoEncryption</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:connection</span>&gt;</span></code><code class="empty"></code></pre>.. group-tab:: PHP
-
-    <pre class="code-block-table" id="b0329105742360abc2060702009915976fbcf9e7"><button
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine:connection</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:autoEncryption</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:tlsOptions</span></span></code><code class="line language-xml">            tlsCAFile="/path/to/key-vault-ca.pem"</code><code class="line language-xml">            tlsCertificateKeyFile="/path/to/key-vault-client.pem"</code><code class="line language-xml">            tlsCertificateKeyFilePassword="keyvaultclientpassword"</code><code class="line language-xml">            tlsDisableOCSPEndpointCheck="false"</code><code class="line language-xml">        /&gt;</code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:autoEncryption</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:connection</span>&gt;</span></code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-92cf8f6e4eb09c116de073ec36a00c0e" aria-label="Php" class="configuration-codeblock" data-language="php" style="display: none">
+                <pre class="code-block-table" id="b0329105742360abc2060702009915976fbcf9e7"><button
                 type="button"
                 class="copy-to-clipboard"
                 data-copy-element-id="b0329105742360abc2060702009915976fbcf9e7"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Config</span>\<span class="hljs-title">DoctrineMongodbConfig</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">return</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(DoctrineMongodbConfig $config)</span>: <span class="hljs-title">void</span> </span>{</code><code class="line language-php">    $config-&gt;connection(<span class="hljs-string">'default'</span>)</code><code class="line language-php">        -&gt;autoEncryption([</code><code class="line language-php">            <span class="hljs-string">'tlsOptions'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'tlsCAFile'</span> =&gt; <span class="hljs-string">'/path/to/key-vault-ca.pem'</span>,</code><code class="line language-php">                <span class="hljs-string">'tlsCertificateKeyFile'</span> =&gt; <span class="hljs-string">'/path/to/key-vault-client.pem'</span>,</code><code class="line language-php">                <span class="hljs-string">'tlsCertificateKeyFilePassword'</span> =&gt; <span class="hljs-string">'keyvaultclientpassword'</span>,</code><code class="line language-php">                <span class="hljs-string">'tlsDisableOCSPEndpointCheck'</span> =&gt; <span class="hljs-keyword">false</span>,</code><code class="line language-php">            ],</code><code class="line language-php">        ]);</code><code class="line language-php">};</code><code class="empty"></code></pre>
+        </div>
+    </div>
     </div>
             <div class="section" id="further-reading">
             <h2 class="section-header ">
@@ -831,6 +918,7 @@ TLS settings for the internal key vault client using the <code>tlsOptions</code>
             
 
 <ul>
+    <li class="dash"><a href="https://www.doctrine-project.org/projects/doctrine-mongodb-odm/en/latest/cookbook/queryable-encryption.html">MongoDB ODM documentation on Queryable Encryption</a></li>
     <li class="dash"><a href="https://www.mongodb.com/docs/manual/core/csfle/">MongoDB CSFLE documentation</a></li>
     <li class="dash"><a href="https://www.php.net/manual/en/mongodb-driver-manager.construct.php">MongoDB PHP driver Manager::__construct</a></li>
     <li class="dash"><a href="config.html">Configuration</a></li>
