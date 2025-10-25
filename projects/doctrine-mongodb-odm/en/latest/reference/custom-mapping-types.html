@@ -347,7 +347,18 @@
     <li class="toc-item opened">
     <a href="#custom-mapping-types">Custom Mapping Types</a>
 
+        <ul class="section-level-1 opened-ul ">
+            <li class="toc-item">
+    <a href="#date-example-mapping-datetimeimmutable-with-timezone">Date Example: Mapping DateTimeImmutable with Timezone</a>
 
+
+</li>
+            <li class="toc-item">
+    <a href="#custom-type-example-mapping-a-money-value-object">Custom Type Example: Mapping a Money Value Object</a>
+
+
+</li>
+                    </ul>
 </li>
     <li class="toc-item">
     <a href="reference-mapping.html#reference-mapping">Reference Mapping</a>
@@ -1834,7 +1845,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-mongodb-odm/en/2.13/reference/custom-mapping-types.html">
-                                                        2.13.0
+                                                        2.13.1
 
                                                                                                                     (current)
                                                         
@@ -1898,18 +1909,25 @@ to replace the existing implementation of a mapping type.</p>
 <code>Doctrine\ODM\MongoDB\Types\Type</code> and implement/override
 the methods.</p>
 
+            <div class="section" id="date-example-mapping-datetimeimmutable-with-timezone">
+            <h2 class="section-header ">
+    <a href="#date-example-mapping-datetimeimmutable-with-timezone">
+        Date Example: Mapping DateTimeImmutable with Timezone
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
             
     <p>The following example defines a custom type that stores <code>DateTimeInterface</code>
 instances as an embedded document containing a BSON date and accompanying
 timezone string. Those same embedded documents are then be translated back into
 a <code>DateTimeImmutable</code> when the data is read from the database.</p>
 
-                <pre class="code-block-table" id="efe467793365baaa4c5e5639d652a92c98ea9ba4"><button
+                <pre class="code-block-table" id="5cc3f75d89a98690ce6d4615d87863e37570dc01"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="efe467793365baaa4c5e5639d652a92c98ea9ba4"
+                data-copy-element-id="5cc3f75d89a98690ce6d4615d87863e37570dc01"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">My</span>\<span class="hljs-title">Project</span>\<span class="hljs-title">Types</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">DateTimeImmutable</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">DateTimeZone</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">ClosureToPHP</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">MongoDB</span>\<span class="hljs-title">BSON</span>\<span class="hljs-title">UTCDateTime</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">RuntimeException</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DateTimeWithTimezoneType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// This trait provides default closureToPHP used during data hydration</span></code><code class="line language-php">    <span class="hljs-keyword">use</span> <span class="hljs-title">ClosureToPHP</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValue</span><span class="hljs-params">($value)</span>: <span class="hljs-title">DateTimeImmutable</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>($value[<span class="hljs-string">'utc'</span>], $value[<span class="hljs-string">'tz'</span>])) {</code><code class="line language-php">            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">'Database value cannot be converted to date with timezone. Expected array with "utc" and "tz" keys.'</span>);</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        $timeZone = <span class="hljs-keyword">new</span> DateTimeZone($value[<span class="hljs-string">'tz'</span>]);</code><code class="line language-php">        $dateTime = $value[<span class="hljs-string">'utc'</span>]</code><code class="line language-php">            -&gt;toDateTime()</code><code class="line language-php">            -&gt;setTimeZone($timeZone);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> DateTimeImmutable::createFromMutable($dateTime);</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">($value)</span>: <span class="hljs-title">array</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (!$value <span class="hljs-keyword">instanceof</span> DateTimeImmutable) {</code><code class="line language-php">            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> \RuntimeException(</code><code class="line language-php">                sprintf(</code><code class="line language-php">                    <span class="hljs-string">'Expected instance of \DateTimeImmutable, got %s'</span>,</code><code class="line language-php">                    gettype($value)</code><code class="line language-php">                )</code><code class="line language-php">            );</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> [</code><code class="line language-php">            <span class="hljs-string">'utc'</span> =&gt; <span class="hljs-keyword">new</span> UTCDateTime($value),</code><code class="line language-php">            <span class="hljs-string">'tz'</span> =&gt; $value-&gt;getTimezone()-&gt;getName(),</code><code class="line language-php">        ];</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">My</span>\<span class="hljs-title">Project</span>\<span class="hljs-title">Types</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">DateTimeImmutable</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">DateTimeZone</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">ClosureToPHP</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">MongoDB</span>\<span class="hljs-title">BSON</span>\<span class="hljs-title">UTCDateTime</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">RuntimeException</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DateTimeWithTimezoneType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// This trait provides default closureToPHP used during data hydration</span></code><code class="line language-php">    <span class="hljs-keyword">use</span> <span class="hljs-title">ClosureToPHP</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">/** <span class="hljs-doctag">@param</span> array{utc: UTCDateTime, tz: string} $value */</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValue</span><span class="hljs-params">($value)</span>: <span class="hljs-title">DateTimeImmutable</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>($value[<span class="hljs-string">'utc'</span>], $value[<span class="hljs-string">'tz'</span>])) {</code><code class="line language-php">            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">'Database value cannot be converted to date with timezone. Expected array with "utc" and "tz" keys.'</span>);</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        $timeZone = <span class="hljs-keyword">new</span> DateTimeZone($value[<span class="hljs-string">'tz'</span>]);</code><code class="line language-php">        $dateTime = $value[<span class="hljs-string">'utc'</span>]</code><code class="line language-php">            -&gt;toDateTime()</code><code class="line language-php">            -&gt;setTimeZone($timeZone);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> DateTimeImmutable::createFromMutable($dateTime);</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">/** <span class="hljs-doctag">@return</span> array{utc: UTCDateTime, tz: string} */</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">($value)</span>: <span class="hljs-title">array</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (!$value <span class="hljs-keyword">instanceof</span> DateTimeImmutable) {</code><code class="line language-php">            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> \RuntimeException(</code><code class="line language-php">                sprintf(</code><code class="line language-php">                    <span class="hljs-string">'Expected instance of \DateTimeImmutable, got %s'</span>,</code><code class="line language-php">                    gettype($value)</code><code class="line language-php">                )</code><code class="line language-php">            );</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> [</code><code class="line language-php">            <span class="hljs-string">'utc'</span> =&gt; <span class="hljs-keyword">new</span> UTCDateTime($value),</code><code class="line language-php">            <span class="hljs-string">'tz'</span> =&gt; $value-&gt;getTimezone()-&gt;getName(),</code><code class="line language-php">        ];</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
             
     <p>Restrictions to keep in mind:</p>
 
@@ -1967,6 +1985,68 @@ specify a unique name for the mapping type and map that to the corresponding
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">field-name</span>=<span class="hljs-string">"field"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"date_with_timezone"</span> /&gt;</span></code><code class="empty"></code></pre>
         </div>
+    </div>
+    </div>
+            <div class="section" id="custom-type-example-mapping-a-money-value-object">
+            <h2 class="section-header ">
+    <a href="#custom-type-example-mapping-a-money-value-object">
+        Custom Type Example: Mapping a Money Value Object
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>You can create a custom mapping type for your own value objects or classes. For
+example, to map a <code>Money</code> value object using the <a href="https://github.com/moneyphp/money">moneyphp/money library</a>, you can
+implement a type that converts between this class and a BSON embedded document format.</p>
+
+            
+    <p>This approach works for any custom class by adapting the conversion logic to your needs.</p>
+
+            
+    <p>Example Implementation (using <code>Money\Money</code>):</p>
+
+                <pre class="code-block-table" id="c7d7bb32d085b3c4793e91a64e59e9a8ace77804"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="c7d7bb32d085b3c4793e91a64e59e9a8ace77804"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">ClosureToPHP</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">InvalidArgumentException</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Money</span>\<span class="hljs-title">Money</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Money</span>\<span class="hljs-title">Currency</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MoneyType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// This trait provides a default closureToPHP used during data hydration</span></code><code class="line language-php">    <span class="hljs-keyword">use</span> <span class="hljs-title">ClosureToPHP</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValue</span><span class="hljs-params">(mixed $value)</span>: ?<span class="hljs-title">Money</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">null</span> === $value) {</code><code class="line language-php">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">if</span> (is_array($value) &amp;&amp; <span class="hljs-keyword">isset</span>($value[<span class="hljs-string">'amount'</span>], $value[<span class="hljs-string">'currency'</span>])) {</code><code class="line language-php">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Money($value[<span class="hljs-string">'amount'</span>], <span class="hljs-keyword">new</span> Currency($value[<span class="hljs-string">'currency'</span>]));</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InvalidArgumentException(sprintf(<span class="hljs-string">'Could not convert database value from "%s" to %s'</span>, get_debug_type($value), Money::class));</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">(mixed $value)</span>: ?<span class="hljs-title">array</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">null</span> === $value) {</code><code class="line language-php">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">if</span> ($value <span class="hljs-keyword">instanceof</span> Money) {</code><code class="line language-php">            <span class="hljs-keyword">return</span> [</code><code class="line language-php">                <span class="hljs-string">'amount'</span> =&gt; $value-&gt;getAmount(),</code><code class="line language-php">                <span class="hljs-string">'currency'</span> =&gt; $value-&gt;getCurrency()-&gt;getCode(),</code><code class="line language-php">            ];</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InvalidArgumentException(sprintf(<span class="hljs-string">'Could not convert database value from "%s" to array'</span>, get_debug_type($value)));</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>Register the type in your bootstrap code:</p>
+
+                <pre class="code-block-table" id="3a72c12ff4056c63a8d478476d19a85d3fec1628"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="3a72c12ff4056c63a8d478476d19a85d3fec1628"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php">Type::addType(Money::class, App\MongoDB\Types\MoneyType::class);</code><code class="empty"></code></pre>
+            
+    <p>By using the <abbr title="Fully-Qualified Class Name">FQCN</abbr> of the value object class as the type name, the type is
+automatically used when encountering a property of that class. This means you
+can omit the <code>type</code> option when defining the field mapping:</p>
+
+                <pre class="code-block-table" id="929d672520798f5f62b9212d6dcdf51686ed04db"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="929d672520798f5f62b9212d6dcdf51686ed04db"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">#[Field]</span></code><code class="line language-php"><span class="hljs-keyword">public</span> ?\Money\Money $price;</code><code class="empty"></code></pre>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>This implementation of <code>MoneyType</code> is kept simple for illustration purposes
+and does not handle all edge cases, but it should give you a good starting
+point for implementing your own custom types.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
     </div>
     </div>
         
