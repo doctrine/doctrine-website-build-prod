@@ -1194,29 +1194,9 @@ contain <code>DateTime</code> or <code>DateTimeImmutable</code> objects.</p>
             <td>
                                                 
     <p>For collections that contain objects, the field name given to <code>Comparison</code> will
-lead to various access methods being tried in sequence. This behavior is deprecated
-as of v2.4.0. Set the <code>$accessRawFieldValues</code> parameter in the <code>Criteria</code> constructor
-to <code>true</code> to opt-in to the new behaviour of using direct (reflection-based) field access only.
-This will be the only option in the next major version.</p>
-
-    <p>Unless you opt in, refer to the <code>ClosureExpressionVisitor::getObjectFieldValue()</code> method
-for the exact order of accessors tried. Roughly speaking, for a field named <code>field</code>,
-the following things will be tried in order:</p>
-
-    
-<ol start="1" type="1">
-    <li value="1"><code>getField()</code>, <code>isField()</code> and <code>field()</code> as getter methods</li>
-    <li value="2">When the object implements a <code>__call</code> magic method, invoke it
-by calling <code>getField()</code></li>
-    <li value="3">When the object implements <code>ArrayAccess</code>, use that to access the
-<code>field</code> offset</li>
-    <li value="4">When the object contains a <code>::$field</code> public property that is not
-<code>null</code>, access it directly</li>
-    <li value="5">Convert snake-case field names to camel case and retry the <code>get</code>, <code>is</code>
-and prefixless accessor methods</li>
-    <li value="6">Direct access to <code>::$field</code>, which must be a public property, as a
-last resort.</li>
-</ol>
+be used to read the raw value (bypassing property hooks) of the property with that name.
+In the case of private properties, the property will be looked up by moving upwards
+through the class inheritance tree and picking the first match.</p>
 
             </td>
         </tr>
