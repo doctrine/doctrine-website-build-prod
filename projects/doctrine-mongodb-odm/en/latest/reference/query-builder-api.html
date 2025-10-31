@@ -2659,8 +2659,7 @@ that is a reference you can pass managed document to the Builder and let ODM bui
 <code>DBRef</code> object for you.</p>
 
             
-    <p>You have several modifier operations
-available to you that make it easy to update documents in Mongo:</p>
+    <p>The following atomic update operators are available through the builder API:</p>
 
             
 
@@ -2677,6 +2676,31 @@ available to you that make it easy to update documents in Mongo:</p>
     <li><code>pullAll($field, array $valueArray)</code></li>
 </ul>
 
+            
+    <p>You can also run <a href="https://www.mongodb.com/docs/manual/tutorial/update-documents-with-aggregation-pipeline/">updates with Aggregation Pipeline</a>
+by using the <code>pipeline()</code> method. You can pass an aggregation builder instance, a <code>Pipeline</code> instance from the
+MongoDB PHP library, or an array of pipeline stages:</p>
+
+                <pre class="code-block-table" id="71782be81c43efee8a31de44400153face39eaae"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="71782be81c43efee8a31de44400153face39eaae"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// The three following are equivalent ways to define the same update pipeline stage</span></code><code class="line language-php"></code><code class="line language-php">$pipeline = $dm-&gt;createAggregationBuilder(User::class)</code><code class="line language-php">    -&gt;set()</code><code class="line language-php">        -&gt;field(<span class="hljs-string">'totalScore'</span>)</code><code class="line language-php">        -&gt;add(<span class="hljs-string">'$score1'</span>, <span class="hljs-string">'$score2'</span>),</code><code class="line language-php">    );</code><code class="line language-php"></code><code class="line language-php">$pipeline = <span class="hljs-keyword">new</span> Pipeline(</code><code class="line language-php">    Stage::set(</code><code class="line language-php">        totalScore: Expression::add(</code><code class="line language-php">            Expression::fieldPath(<span class="hljs-string">'score1'</span>),</code><code class="line language-php">            Expression::fieldPath(<span class="hljs-string">'score2'</span>),</code><code class="line language-php">        ),</code><code class="line language-php">    )</code><code class="line language-php">);</code><code class="line language-php"></code><code class="line language-php">$pipeline = [</code><code class="line language-php">    [<span class="hljs-string">'$set'</span> =&gt; [</code><code class="line language-php">        <span class="hljs-string">'totalScore'</span> =&gt; [<span class="hljs-string">'$add'</span> =&gt; [<span class="hljs-string">'$score1'</span>, <span class="hljs-string">'$score2'</span>]],</code><code class="line language-php">    ]],</code><code class="line language-php">]</code><code class="line language-php"></code><code class="line language-php">$dm-&gt;createQueryBuilder(User::class)</code><code class="line language-php">    -&gt;updateOne()</code><code class="line language-php">    -&gt;field(<span class="hljs-string">'username'</span>)-&gt;equals(<span class="hljs-string">'jwage'</span>)</code><code class="line language-php">    -&gt;pipeline($pipeline)</code><code class="line language-php">    -&gt;getQuery()</code><code class="line language-php">    -&gt;execute();</code><code class="empty"></code></pre>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>Pipeline updates are only available for <code>updateOne</code>, <code>updateMany</code>, and <code>findAndUpdate</code> operations.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
     </div>
     </div>
             <div class="section" id="updating-multiple-documents">
