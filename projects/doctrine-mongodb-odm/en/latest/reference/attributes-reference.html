@@ -850,6 +850,11 @@
 
 </li>
             <li class="toc-item">
+    <a href="#queryresultdocument">#[QueryResultDocument]</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="#readpreference">#[ReadPreference]</a>
 
 
@@ -3026,6 +3031,14 @@ This is only compatible with the <code>int</code> type, and cannot be combined w
 and should not be managed directly. See
 <a href="inheritance-mapping.html#inheritance_mapping">inheritance mapping</a> for additional information.</p>
 
+            
+    <p>Optional arguments:
+-
+   <code>repositoryClass</code> - Specifies a custom repository class to use.
+-
+   <code>collection</code> - By default, the collection name is derived from the
+class name. This option may be used to override that behavior.</p>
+
                 <pre class="code-block-table" id="10b038608433fa8f22fab90c2170e12231024e06"><button
                 type="button"
                 class="copy-to-clipboard"
@@ -3229,6 +3242,37 @@ the method to be registered.</p>
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document]</span></code><code class="line language-php"><span class="hljs-comment">#[HasLifecycleCallbacks]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Article</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// ...</span></code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[PreUpdate]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">preUpdated</span><span class="hljs-params">()</span>: <span class="hljs-title">void</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-comment">// ...</span></code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
             
     <p>See <a href="events.html#lifecycle_events">Lifecycle Events</a> for more information.</p>
+
+    </div>
+            <div class="section" id="queryresultdocument">
+            <h2 class="section-header ">
+    <a href="#queryresultdocument">
+        #[QueryResultDocument]
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>Marks the document as query result document used when hydrating the aggregation query results.
+These documents can use all features regular documents can use but they will not be persisted to the database.</p>
+
+                <pre class="code-block-table" id="1992cfbdfa4b06ba29fbbc8bdafb03dd9963ac1f"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="1992cfbdfa4b06ba29fbbc8bdafb03dd9963ac1f"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[QueryResultDocument]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CompanyTransactions</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[ReferenceOne(targetDocument=Company::class, name="_id")]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> string $company;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Field]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> float $totalAmount;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>Use the <code>hydrate()</code> method of the Aggregation Builder to specify the class
+to use for hydration.</p>
+
+                <pre class="code-block-table" id="f70a01dd5eb6fc8f7ff61c72b8100d949ff3f1ce"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="f70a01dd5eb6fc8f7ff61c72b8100d949ff3f1ce"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php">$builder = $dm-&gt;createAggregationBuilder(Transaction::class);</code><code class="line language-php">$builder</code><code class="line language-php">    -&gt;hydrate(CompanyTransactions::class)</code><code class="line language-php">    -&gt;group()</code><code class="line language-php">        -&gt;field(<span class="hljs-string">'_id'</span>)</code><code class="line language-php">        -&gt;expression(<span class="hljs-string">'$company'</span>)</code><code class="line language-php">        -&gt;field(<span class="hljs-string">'totalAmount'</span>)</code><code class="line language-php">        -&gt;sum(<span class="hljs-string">'$amount'</span>);</code><code class="empty"></code></pre>
+            
+    <p>See <a href="aggregation-builder.html#aggregation_builder_hydration">Hydration</a> for more information.</p>
 
     </div>
             <div class="section" id="readpreference">
