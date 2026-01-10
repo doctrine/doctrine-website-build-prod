@@ -2983,6 +2983,11 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="#modifying-the-output-walker-to-get-the-raw-sql-with-interpolated-parameters">Modifying the Output Walker to get the raw SQL with interpolated parameters</a>
+
+
+</li>
                     </ul>
 </li>
     <li class="toc-item">
@@ -3286,7 +3291,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/3.6/cookbook/dql-custom-walkers.html">
-                                                        3.6.0
+                                                        3.6.1
 
                                                                                                                     (current)
                                                         
@@ -3382,6 +3387,8 @@ example:</p>
             
 
 <ul>
+    <li class="dash">Modify the Output walker to get the raw SQL via <code>Query-&gt;getSQL()</code>
+with interpolated parameters.</li>
     <li class="dash">Modify the AST to generate a Count Query to be used with a
 paginator for any given DQL query.</li>
     <li class="dash">Modify the Output Walker to generate vendor-specific SQL
@@ -3393,7 +3400,7 @@ purposes.</li>
 </ul>
 
             
-    <p>In this cookbook-entry I will show examples of the first two
+    <p>In this cookbook-entry I will show examples of the first three
 points. There are probably much more use-cases.</p>
 
             <div class="section" id="generic-count-query-for-pagination">
@@ -3513,6 +3520,48 @@ huge benefits with using vendor specific features. This would still
 allow you write DQL queries instead of NativeQueries to make use of
 vendor specific features.</p>
 
+    </div>
+            <div class="section" id="modifying-the-output-walker-to-get-the-raw-sql-with-interpolated-parameters">
+            <h2 class="section-header ">
+    <a href="#modifying-the-output-walker-to-get-the-raw-sql-with-interpolated-parameters">
+        Modifying the Output Walker to get the raw SQL with interpolated parameters
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>Sometimes we may want to log or trace the raw SQL being generated from its DQL
+for profiling slow queries afterwards or audit queries that changed many rows
+<code>$query-&gt;getSQL()</code> will give us the prepared statement being passed to database
+with all values of SQL parameters being replaced by positional <code>?</code> or named <code>:name</code>
+as parameters are interpolated into prepared statements by the database while executing the SQL.
+<code>$query-&gt;getParameters()</code> will give us details about SQL parameters that we&#039;ve provided.
+So we can create an output walker to interpolate all SQL parameters that will be
+passed into prepared statement in PHP before database handle them internally:</p>
+
+                <pre class="code-block-table" id="b4dcef7a922da62232eb312693318d5eba63041f"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="b4dcef7a922da62232eb312693318d5eba63041f"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">ArrayParameterType</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">ParameterType</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">BooleanType</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Exception</span>\<span class="hljs-title">ValueNotConvertible</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Query</span>\<span class="hljs-title">AST</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Query</span>\<span class="hljs-title">SqlOutputWalker</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InterpolateParametersSQLOutputWalker</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SqlOutputWalker</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">/** {<span class="hljs-doctag">@inheritdoc</span>} */</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">walkInputParameter</span><span class="hljs-params">(AST\InputParameter $inputParam)</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        $parameter = <span class="hljs-keyword">$this</span>-&gt;getQuery()-&gt;getParameter($inputParam-&gt;name);</code><code class="line language-php">        <span class="hljs-keyword">if</span> ($parameter === <span class="hljs-keyword">null</span>) {</code><code class="line language-php">            <span class="hljs-keyword">return</span> <span class="hljs-string">'?'</span>;</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        $value = $parameter-&gt;getValue();</code><code class="line language-php">        <span class="hljs-comment">/** <span class="hljs-doctag">@var</span> ParameterType|ArrayParameterType|int|string $typeName */</span></code><code class="line language-php">        <span class="hljs-comment">/** <span class="hljs-doctag">@see</span> \Doctrine\ORM\Query\ParameterTypeInferer::inferType() */</span></code><code class="line language-php">        $typeName = $parameter-&gt;getType();</code><code class="line language-php">        $platform = <span class="hljs-keyword">$this</span>-&gt;getConnection()-&gt;getDatabasePlatform();</code><code class="line language-php">        $processParameterType = <span class="hljs-keyword">static</span> fn(ParameterType $type) =&gt; <span class="hljs-keyword">static</span> fn($value): string =&gt;</code><code class="line language-php">            (match ($type) { <span class="hljs-comment">/** <span class="hljs-doctag">@see</span> Type::getBindingType() */</span></code><code class="line language-php">                ParameterType::NULL =&gt; <span class="hljs-string">'NULL'</span>,</code><code class="line language-php">                ParameterType::INTEGER =&gt; $value,</code><code class="line language-php">                ParameterType::BOOLEAN =&gt; (<span class="hljs-keyword">new</span> BooleanType())-&gt;convertToDatabaseValue($value, $platform),</code><code class="line language-php">                ParameterType::STRING, ParameterType::ASCII =&gt; $platform-&gt;quoteStringLiteral($value),</code><code class="line language-php">                <span class="hljs-keyword">default</span> =&gt; <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ValueNotConvertible($value, $type-&gt;name)</code><code class="line language-php">            });</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">if</span> (is_string($typeName) &amp;&amp; Type::hasType($typeName)) {</code><code class="line language-php">            <span class="hljs-keyword">return</span> Type::getType($typeName)-&gt;convertToDatabaseValue($value, $platform);</code><code class="line language-php">        }</code><code class="line language-php">        <span class="hljs-keyword">if</span> ($typeName <span class="hljs-keyword">instanceof</span> ParameterType) {</code><code class="line language-php">            <span class="hljs-keyword">return</span> $processParameterType($typeName)($value);</code><code class="line language-php">        }</code><code class="line language-php">        <span class="hljs-keyword">if</span> ($typeName <span class="hljs-keyword">instanceof</span> ArrayParameterType &amp;&amp; is_array($value)) {</code><code class="line language-php">            $type = ArrayParameterType::toElementParameterType($typeName);</code><code class="line language-php">            <span class="hljs-keyword">return</span> implode(<span class="hljs-string">', '</span>, array_map($processParameterType($type), $value));</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ValueNotConvertible($value, $typeName);</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
+            
+    <p>Then you may get the raw SQL with this output walker:</p>
+
+                <pre class="code-block-table" id="a62c2ca41ce7d7fe9ef776217149ec3693e54ccd"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="a62c2ca41ce7d7fe9ef776217149ec3693e54ccd"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$query</code><code class="line language-php">    -&gt;where(<span class="hljs-string">'t.int IN (:ints)'</span>)-&gt;setParameter(<span class="hljs-string">':ints'</span>, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>])</code><code class="line language-php">    -&gt;orWhere(<span class="hljs-string">'t.string IN (?0)'</span>)-&gt;setParameter(<span class="hljs-number">0</span>, [<span class="hljs-string">'3'</span>, <span class="hljs-string">'4'</span>])</code><code class="line language-php">    -&gt;orWhere(<span class="hljs-string">"t.bool = ?1"</span>)-&gt;setParameter(<span class="hljs-string">'?1'</span>, <span class="hljs-keyword">true</span>)</code><code class="line language-php">    -&gt;orWhere(<span class="hljs-string">"t.string = :string"</span>)-&gt;setParameter(<span class="hljs-string">':string'</span>, <span class="hljs-string">'ABC'</span>)</code><code class="line language-php">    -&gt;setHint(\Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER, InterpolateParametersSQLOutputWalker::class)</code><code class="line language-php">    -&gt;getSQL();</code><code class="empty"></code></pre>
+            
+    <p>The where clause of the returned SQL should be like:</p>
+
+                <pre class="code-block-table" id="b2f325c07e77cdeecec02531180142bf35bd0586"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="b2f325c07e77cdeecec02531180142bf35bd0586"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sql">WHERE t0_.int IN (1, 2)</code><code class="line language-sql">   OR t0_.string IN ('3', '4')</code><code class="line language-sql">   OR t0_.bool = 1</code><code class="line language-sql">   OR t0_.string = 'ABC'</code><code class="empty"></code></pre>
     </div>
     </div>
         
