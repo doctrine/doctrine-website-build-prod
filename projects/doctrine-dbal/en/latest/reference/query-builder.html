@@ -534,7 +534,18 @@
             <li class="toc-item">
     <a href="#common-table-expressions">Common Table Expressions</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="#select-main-query">SELECT main query</a>
 
+
+</li>
+            <li class="toc-item">
+    <a href="#union-main-query-part">UNION main query part</a>
+
+
+</li>
+                    </ul>
 </li>
                     </ul>
 </li>
@@ -1372,7 +1383,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-dbal/en/4.4/reference/query-builder.html">
-                                                        4.4.2
+                                                        4.4.3
 
                                                                                                                     (current)
                                                         
@@ -1777,6 +1788,13 @@ or QueryBuilder instances to one of the following methods:</p>
         <i class="fas fa-link"></i>
     </a>
 </h3>
+            <div class="section" id="select-main-query">
+            <h4 class="section-header ">
+    <a href="#select-main-query">
+        <code>SELECT</code> main query
+        <i class="fas fa-link"></i>
+    </a>
+</h4>
             
     <p>To define Common Table Expressions (CTEs) that can be used in select query.</p>
 
@@ -1798,6 +1816,25 @@ or QueryBuilder instances to one of the following methods:</p>
             
     <p>Values of parameters used in a CTE should be defined in the main QueryBuilder.</p>
 
+    </div>
+            <div class="section" id="union-main-query-part">
+            <h4 class="section-header ">
+    <a href="#union-main-query-part">
+        <code>UNION</code> main query part
+        <i class="fas fa-link"></i>
+    </a>
+</h4>
+            
+    <p>To define Common Table Expressions (CTEs) that can be used in union query the union
+api needs to be used instead of using <code>select()</code>:</p>
+
+                <pre class="code-block-table" id="30beffcaf12a60d8351834266c6fea7b643691e5"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="30beffcaf12a60d8351834266c6fea7b643691e5"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php">$qb = $connection-&gt;createQueryBuilder();</code><code class="line language-php"></code><code class="line language-php">$baseQueryBuilder = $qb-&gt;sub()</code><code class="line language-php">    -&gt;select(<span class="hljs-string">'id'</span>)</code><code class="line language-php">    -&gt;from(<span class="hljs-string">'table_a'</span>);</code><code class="line language-php"></code><code class="line language-php">$unionPart1 = $qb-&gt;sub()</code><code class="line language-php">    -&gt;select(<span class="hljs-string">'id'</span>, $qb-&gt;expr()-&gt;literal(<span class="hljs-string">'first'</span>) . <span class="hljs-string">' AS value'</span>, <span class="hljs-string">'1 AS sort'</span>)</code><code class="line language-php">    -&gt;from(<span class="hljs-string">'cte_base'</span>)</code><code class="line language-php">    -&gt;where($qb-&gt;expr()-&gt;eq(<span class="hljs-string">'id'</span>, <span class="hljs-string">':id1'</span>));</code><code class="line language-php"></code><code class="line language-php">$unionPart2 = $qb-&gt;sub()</code><code class="line language-php">    -&gt;select(<span class="hljs-string">'id'</span>, $qb-&gt;expr()-&gt;literal(<span class="hljs-string">'second'</span>) . <span class="hljs-string">' AS value'</span>, <span class="hljs-string">'2 AS sort'</span>)</code><code class="line language-php">    -&gt;from(<span class="hljs-string">'cte_base'</span>)</code><code class="line language-php">    -&gt;where($qb-&gt;expr()-&gt;eq(<span class="hljs-string">'id'</span>, <span class="hljs-string">':id2'</span>));</code><code class="line language-php"></code><code class="line language-php">$qb-&gt;with(<span class="hljs-string">'cte_base'</span>, $baseQueryBuilder)</code><code class="line language-php">    -&gt;union($unionPart1)</code><code class="line language-php">    -&gt;addUnion($unionPart2)</code><code class="line language-php">    -&gt;orderBy(<span class="hljs-string">'sort'</span>)</code><code class="line language-php">    -&gt;setParameter(<span class="hljs-string">'id1'</span>, <span class="hljs-number">2</span>)</code><code class="line language-php">    -&gt;setParameter(<span class="hljs-string">'id2'</span>, <span class="hljs-number">1</span>);</code><code class="empty"></code></pre>
+    </div>
     </div>
     </div>
             <div class="section" id="building-expressions">
