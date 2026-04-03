@@ -704,6 +704,47 @@
                     </ul>
 </li>
             <li class="toc-item">
+    <a href="#mapping-php-enums">Mapping PHP Enums</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="#defining-an-enum">Defining an Enum</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#single-value-columns">Single-Value Columns</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#storing-collections-of-enums">Storing Collections of Enums</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#nullable-enums">Nullable Enums</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#default-values">Default Values</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#using-enums-in-queries">Using Enums in Queries</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#xml-mapping">XML Mapping</a>
+
+
+</li>
+                    </ul>
+</li>
+            <li class="toc-item">
     <a href="#doctrine-mapping-types">Doctrine Mapping Types</a>
 
 
@@ -3556,7 +3597,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/3.6/reference/basic-mapping.html">
-                                                        3.6.2
+                                                        3.6.3
 
                                                                                                                     (current)
                                                         
@@ -3570,7 +3611,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/2.20/reference/basic-mapping.html">
-                                                        2.20.9
+                                                        2.20.10
 
                                                         
                                                                                                             </a>
@@ -3911,7 +3952,7 @@ Applies only if a string-valued column is used.</li>
     <li class="dash"><code>insertable</code> (default: <code>true</code>): Whether the column should be inserted.</li>
     <li class="dash"><code>updatable</code> (default: <code>true</code>): Whether the column should be updated.</li>
     <li class="dash"><code>generated</code> (default: <code>null</code>): Whether the generated strategy should be <code>&#039;NEVER&#039;</code>, <code>&#039;INSERT&#039;</code> and <code>ALWAYS</code>.</li>
-    <li class="dash"><code>enumType</code> (requires PHP 8.1 and <code>doctrine/orm</code> 2.11): The PHP enum class name to convert the database value into.</li>
+    <li class="dash"><code>enumType</code> (requires PHP 8.1 and <code>doctrine/orm</code> 2.11): The PHP enum class name to convert the database value into. See <a href="#reference-enum-mapping">Mapping PHP Enums</a>.</li>
     <li class="dash"><code>precision</code> (default: 0): The precision for a decimal (exact numeric) column
 (applies only for decimal column),
 which is the maximum number of digits that are stored for the values.</li>
@@ -4047,6 +4088,271 @@ and a custom <code>Doctrine\ORM\Mapping\TypedFieldMapper</code> implementation.<
     <p><a href="typedfieldmapper.html">Read more about TypedFieldMapper</a>.</p>
 
     </div>
+    </div>
+    </div>
+            <div class="section" id="mapping-php-enums">
+            <a id="reference-enum-mapping"></a>
+            <h2 class="section-header ">
+    <a href="#mapping-php-enums">
+        Mapping PHP Enums
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            <div class="alert version-added bg-info text-white">
+    <p class="new-version font-weight-bold"><i class="fas fa-plus-square"></i> New in version 2.11</p>
+    </div>
+
+            
+    <p>Doctrine natively supports mapping PHP backed enums to database columns.
+A backed enum is a PHP enum that the same scalar type (<code>string</code> or <code>int</code>)
+assigned to each case. Doctrine stores the scalar value in the database and
+converts it back to the enum instance when hydrating the entity.</p>
+
+            
+    <p>Using <code>enumType</code> provides three main benefits:</p>
+
+            
+
+<ul>
+    <li class="dash"><strong>Automatic conversion</strong>: Doctrine handles the conversion in both directions
+transparently. When loading an entity, scalar values from the database are
+converted into enum instances. When persisting, enum instances are reduced
+to their scalar <code>-&gt;value</code> before being sent to the database.</li>
+    <li class="dash"><strong>Type-safety</strong>: Entity properties contain enum instances directly. Your
+getters return <code>Suit</code> instead of <code>string</code>, removing the need to call
+<code>Suit::from()</code> manually.</li>
+    <li class="dash"><strong>Validation</strong>: When a database value does not match any enum case, Doctrine
+throws a <code>MappingException</code> during hydration instead of silently returning
+an invalid value.</li>
+</ul>
+
+            
+    <p>This feature works with all database platforms supported by Doctrine (MySQL,
+PostgreSQL, SQLite, etc.) as it relies on standard column types (<code>string</code>,
+<code>integer</code>, <code>json</code>, <code>simple_array</code>) rather than any vendor-specific enum
+type.</p>
+
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>This is unrelated to the MySQL-specific <code>ENUM</code> column type covered in
+<a href="../cookbook/mysql-enums.html">the MySQL Enums cookbook entry</a>.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+            <div class="section" id="defining-an-enum">
+            <h3 class="section-header ">
+    <a href="#defining-an-enum">
+        Defining an Enum
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+                <pre class="code-block-table" id="90ce43eff7c2418da660e91f42c17ec4bf7369b6"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="90ce43eff7c2418da660e91f42c17ec4bf7369b6"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">declare</span>(strict_types=<span class="hljs-number">1</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Entity</span>;</code><code class="line language-php"></code><code class="line language-php">enum Suit: string</code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">case</span> Hearts   = <span class="hljs-string">'hearts'</span>;</code><code class="line language-php">    <span class="hljs-keyword">case</span> Diamonds = <span class="hljs-string">'diamonds'</span>;</code><code class="line language-php">    <span class="hljs-keyword">case</span> Clubs    = <span class="hljs-string">'clubs'</span>;</code><code class="line language-php">    <span class="hljs-keyword">case</span> Spades   = <span class="hljs-string">'spades'</span>;</code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
+            
+    <p>Only backed enums (<code>string</code> or <code>int</code>) are supported. Unit enums (without
+a scalar value) cannot be mapped.</p>
+
+    </div>
+            <div class="section" id="single-value-columns">
+            <h3 class="section-header ">
+    <a href="#single-value-columns">
+        Single-Value Columns
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>Use the <code>enumType</code> option on <code>#[Column]</code> to map a property to a backed enum.
+The underlying database column stores the enum&#039;s scalar value (<code>string</code> or <code>int</code>).</p>
+
+                <pre class="code-block-table" id="35f14fa37f59e09a226e9e8842efa8ba5493e8a6"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="35f14fa37f59e09a226e9e8842efa8ba5493e8a6"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">declare</span>(strict_types=<span class="hljs-number">1</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Entity</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span> <span class="hljs-title">as</span> <span class="hljs-title">ORM</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[ORM\Entity]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Card</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[ORM\Id]</span></code><code class="line language-php">    <span class="hljs-comment">#[ORM\GeneratedValue]</span></code><code class="line language-php">    <span class="hljs-comment">#[ORM\Column]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> int $id;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[ORM\Column(enumType: Suit::class)]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> Suit $suit;</code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
+            
+    <p>When the PHP property is typed with the enum class, Doctrine automatically
+infers the appropriate column type (<code>string</code> for string-backed enums,
+<code>integer</code> for int-backed enums) and sets <code>enumType</code>. You can also specify
+the column <code>type</code> explicitly.</p>
+
+    </div>
+            <div class="section" id="storing-collections-of-enums">
+            <h3 class="section-header ">
+    <a href="#storing-collections-of-enums">
+        Storing Collections of Enums
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>You can store multiple enum values in a single column by combining <code>enumType</code>
+with a collection column type: <code>json</code> or <code>simple_array</code>.</p>
+
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>Automatic type inference does not apply to collection columns. When the
+PHP property is typed as <code>array</code>, Doctrine cannot detect the enum class.
+You must specify both <code>type</code> and <code>enumType</code> explicitly.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+                <pre class="code-block-table" id="309928debbcb5a11751193151482c01b5a05e9d7"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="309928debbcb5a11751193151482c01b5a05e9d7"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">declare</span>(strict_types=<span class="hljs-number">1</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Entity</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span> <span class="hljs-title">as</span> <span class="hljs-title">ORM</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[ORM\Entity]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Player</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[ORM\Id]</span></code><code class="line language-php">    <span class="hljs-comment">#[ORM\GeneratedValue]</span></code><code class="line language-php">    <span class="hljs-comment">#[ORM\Column]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> int $id;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">/** <span class="hljs-doctag">@var</span> list&lt;Suit&gt; */</span></code><code class="line language-php">    <span class="hljs-comment">#[ORM\Column(type: 'json', enumType: Suit::class)]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">array</span> $favouriteSuits = [];</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">/** <span class="hljs-doctag">@var</span> list&lt;Suit&gt; */</span></code><code class="line language-php">    <span class="hljs-comment">#[ORM\Column(type: 'simple_array', enumType: Suit::class)]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">array</span> $allowedSuits = [];</code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
+            
+    <p>With <code>json</code>, the values are stored as a JSON array (e.g. <code>[&quot;hearts&quot;,&quot;spades&quot;]</code>).
+With <code>simple_array</code>, the values are stored as a comma-separated string
+(e.g. <code>hearts,spades</code>).</p>
+
+            
+    <p>In both cases, Doctrine converts each element to and from the enum
+automatically during hydration and persistence.</p>
+
+            <div class="alert -admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas   mr-2"></i></td>
+            <td>
+                                                
+    <p>Use <code>json</code> when enum values may contain commas, when you need to store
+int-backed enums (as it preserves value types), when the column also
+stores complex/nested data structures, or when you want to query individual
+values using database-native JSON operators (e.g. PostgreSQL <code>jsonb</code>).
+Prefer <code>simple_array</code> for a compact, human-readable storage of
+string-backed enums whose values do not contain commas.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+            <table>
+                <thead>
+            <tr>
+                            <th>Column type</th>
+                            <th>Database storage</th>
+                            <th>PHP type</th>
+                    </tr>
+        </thead>
+    <tbody>
+    <tr>
+            <td><code>string</code></td>
+            <td><code>hearts</code></td>
+            <td><code>Suit</code></td>
+    </tr>
+    <tr>
+            <td><code>integer</code></td>
+            <td><code>1</code></td>
+            <td><code>Priority</code></td>
+    </tr>
+    <tr>
+            <td><code>json</code></td>
+            <td><code>[&quot;hearts&quot;,&quot;spades&quot;]</code></td>
+            <td><code>array&lt;Suit&gt;</code></td>
+    </tr>
+    <tr>
+            <td><code>simple_array</code></td>
+            <td><code>hearts,spades</code></td>
+            <td><code>array&lt;Suit&gt;</code></td>
+    </tr>
+</tbody>
+</table>
+    </div>
+            <div class="section" id="nullable-enums">
+            <h3 class="section-header ">
+    <a href="#nullable-enums">
+        Nullable Enums
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>Enum columns can be nullable. When the database value is <code>NULL</code>, Doctrine
+preserves it as <code>null</code> without triggering any validation error.</p>
+
+                <pre class="code-block-table" id="fc1ab777fe055b027da049fb6b032568729d6f13"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="fc1ab777fe055b027da049fb6b032568729d6f13"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">#[ORM\Column(type: 'string', nullable: true, enumType: Suit::class)]</span></code><code class="line language-php"><span class="hljs-keyword">private</span> Suit|<span class="hljs-keyword">null</span> $suit = <span class="hljs-keyword">null</span>;</code><code class="empty"></code></pre>
+    </div>
+            <div class="section" id="default-values">
+            <h3 class="section-header ">
+    <a href="#default-values">
+        Default Values
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>You can specify a database-level default using an enum case directly in the
+column options:</p>
+
+                <pre class="code-block-table" id="6bfb4218d70dbf4f4bca2dd3dac1ff8a3e93820d"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="6bfb4218d70dbf4f4bca2dd3dac1ff8a3e93820d"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">#[ORM\Column(options: ['default' =&gt; Suit::Hearts])]</span></code><code class="line language-php"><span class="hljs-keyword">public</span> Suit $suit;</code><code class="empty"></code></pre>
+    </div>
+            <div class="section" id="using-enums-in-queries">
+            <h3 class="section-header ">
+    <a href="#using-enums-in-queries">
+        Using Enums in Queries
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>Enum instances can be used directly as parameters in DQL, QueryBuilder, and
+repository methods. Doctrine converts them to their scalar value automatically.</p>
+
+                <pre class="code-block-table" id="3634418887d1d0fe85df1d41f8eefb49a70503cf"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="3634418887d1d0fe85df1d41f8eefb49a70503cf"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">// QueryBuilder</span></code><code class="line language-php">$qb = $em-&gt;createQueryBuilder();</code><code class="line language-php">$qb-&gt;select(<span class="hljs-string">'c'</span>)</code><code class="line language-php">    -&gt;from(Card::class, <span class="hljs-string">'c'</span>)</code><code class="line language-php">    -&gt;where(<span class="hljs-string">'c.suit = :suit'</span>)</code><code class="line language-php">    -&gt;setParameter(<span class="hljs-string">'suit'</span>, Suit::Clubs);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Repository</span></code><code class="line language-php">$cards = $em-&gt;getRepository(Card::class)-&gt;findBy([<span class="hljs-string">'suit'</span> =&gt; Suit::Clubs]);</code><code class="empty"></code></pre>
+    </div>
+            <div class="section" id="xml-mapping">
+            <h3 class="section-header ">
+    <a href="#xml-mapping">
+        XML Mapping
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>When using XML mapping, the <code>enum-type</code> attribute is used on <code>&lt;field&gt;</code>
+elements:</p>
+
+                <pre class="code-block-table" id="c39c48ad5055f55220e70afd5eda0e1c4dcb7f60"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="c39c48ad5055f55220e70afd5eda0e1c4dcb7f60"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"suit"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"string"</span> <span class="hljs-attr">enum-type</span>=<span class="hljs-string">"App\Entity\Suit"</span> /&gt;</span></code><code class="empty"></code></pre>
     </div>
     </div>
             <div class="section" id="doctrine-mapping-types">
