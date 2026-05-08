@@ -783,6 +783,11 @@
 
         <ul class="section-level-1">
             <li class="toc-item">
+    <a href="../reference/association-mapping.html#composite-foreign-keys">Composite Foreign Keys</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="../reference/association-mapping.html#many-to-one-unidirectional">Many-To-One, Unidirectional</a>
 
 
@@ -3597,7 +3602,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/3.6/tutorials/composite-primary-keys.html">
-                                                        3.6.3
+                                                        3.6.4
 
                                                                                                                     (current)
                                                         
@@ -3611,7 +3616,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/2.20/tutorials/composite-primary-keys.html">
-                                                        2.20.10
+                                                        2.20.11
 
                                                         
                                                                                                             </a>
@@ -3750,10 +3755,6 @@ and year of production as primary keys:</p>
                 data-copy-element-id="387242cef32bd7ac6c567ce5abe6832b92592350"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">VehicleCatalogue</span>\<span class="hljs-title">Model</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// $em is the EntityManager</span></code><code class="line language-php">$audi = $em-&gt;find(<span class="hljs-string">"VehicleCatalogue\Model\Car"</span>, [<span class="hljs-string">"name"</span> =&gt; <span class="hljs-string">"Audi A8"</span>, <span class="hljs-string">"year"</span> =&gt; <span class="hljs-number">2010</span>]);</code><code class="line language-php"></code><code class="line language-php">$dql = <span class="hljs-string">"SELECT c FROM VehicleCatalogue\Model\Car c WHERE c.name = ?1 AND c.year = ?2"</span>;</code><code class="line language-php">$audi = $em-&gt;createQuery($dql)</code><code class="line language-php">           -&gt;setParameter(<span class="hljs-number">1</span>, <span class="hljs-string">"Audi A8"</span>)</code><code class="line language-php">           -&gt;setParameter(<span class="hljs-number">2</span>, <span class="hljs-number">2010</span>)</code><code class="line language-php">           -&gt;getSingleResult();</code><code class="empty"></code></pre>
-            
-    <p>You can also use this entity in associations. Doctrine will then generate two foreign keys one for <code>name</code>
-and to <code>year</code> to the related entities.</p>
-
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -3769,6 +3770,80 @@ values before <code>EntityManager#persist()</code>: By adding them as mandatory 
         </tbody>
     </table>
 </div>
+            
+    <p>You can also use this entity in associations. Doctrine will then generate a composite foreign key
+using the <code>name</code> and <code>year</code> columns on the related entities.</p>
+
+            
+    <p>To define such an association, you need to use multiple join column mappings, one for each
+column of the composite primary key:</p>
+
+            <div class="configuration-block">
+    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-4">
+                    <button role="tab" type="button" data-language="attribute"
+                    aria-controls="configuration-block-tabpanel-f16bd1cfc0cb646299e9b36a91f338ce" aria-selected="true"
+                    data-active="true" >
+                <span>Attribute</span>
+            </button>
+                    <button role="tab" type="button" data-language="annotation"
+                    aria-controls="configuration-block-tabpanel-c29c50f58bc45f519f2d3672e8feec32" aria-selected="false"
+                     tabindex="-1">
+                <span>Annotation</span>
+            </button>
+                    <button role="tab" type="button" data-language="xml"
+                    aria-controls="configuration-block-tabpanel-fb3cf6a722e0afafcefd85871316aadb" aria-selected="false"
+                     tabindex="-1">
+                <span>Xml</span>
+            </button>
+                    <button role="tab" type="button" data-language="yaml"
+                    aria-controls="configuration-block-tabpanel-785c93d08f31ce205977b39131e1f8da" aria-selected="false"
+                     tabindex="-1">
+                <span>Yaml</span>
+            </button>
+            </div>
+
+            <div role="tabpanel" id="configuration-block-tabpanel-f16bd1cfc0cb646299e9b36a91f338ce" aria-label="Attribute" class="configuration-codeblock" data-language="attribute" style="">
+                <pre class="code-block-table" id="dda85e3d2e8e058f15579120ae28b9be28693ea9"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="dda85e3d2e8e058f15579120ae28b9be28693ea9"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-attribute"><span class="hljs-meta">&lt;?php</span></code><code class="line language-attribute"><span class="hljs-keyword">namespace</span> <span class="hljs-title">VehicleCatalogue</span>\<span class="hljs-title">Model</span>;</code><code class="line language-attribute"></code><code class="line language-attribute"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Column</span>;</code><code class="line language-attribute"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Entity</span>;</code><code class="line language-attribute"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">GeneratedValue</span>;</code><code class="line language-attribute"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Id</span>;</code><code class="line language-attribute"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">JoinColumn</span>;</code><code class="line language-attribute"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ManyToOne</span>;</code><code class="line language-attribute"></code><code class="line language-attribute"><span class="hljs-comment">#[Entity]</span></code><code class="line language-attribute"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Registration</span></span></code><code class="line language-attribute">{</code><code class="line language-attribute">    <span class="hljs-comment">#[Id, Column, GeneratedValue]</span></code><code class="line language-attribute">    <span class="hljs-keyword">private</span> int|<span class="hljs-keyword">null</span> $id = <span class="hljs-keyword">null</span>;</code><code class="line language-attribute"></code><code class="line language-attribute">    <span class="hljs-comment">#[ManyToOne(targetEntity: Car::class)]</span></code><code class="line language-attribute">    <span class="hljs-comment">#[JoinColumn(name: 'car_name', referencedColumnName: 'name')]</span></code><code class="line language-attribute">    <span class="hljs-comment">#[JoinColumn(name: 'car_year', referencedColumnName: 'year')]</span></code><code class="line language-attribute">    <span class="hljs-keyword">private</span> Car|<span class="hljs-keyword">null</span> $car = <span class="hljs-keyword">null</span>;</code><code class="line language-attribute">}</code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-c29c50f58bc45f519f2d3672e8feec32" aria-label="Annotation" class="configuration-codeblock" data-language="annotation" style="display: none">
+                <pre class="code-block-table" id="bd06a94b356ef853a6869f95c67817ab705d5b0d"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="bd06a94b356ef853a6869f95c67817ab705d5b0d"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-annotation"><span class="hljs-meta">&lt;?php</span></code><code class="line language-annotation"><span class="hljs-keyword">namespace</span> <span class="hljs-title">VehicleCatalogue</span>\<span class="hljs-title">Model</span>;</code><code class="line language-annotation"></code><code class="line language-annotation"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span> <span class="hljs-title">as</span> <span class="hljs-title">ORM</span>;</code><code class="line language-annotation"></code><code class="line language-annotation"><span class="hljs-comment">/**</span></code><code class="line language-annotation"> * @ORM\Entity</code><code class="line language-annotation"> */</code><code class="line language-annotation"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Registration</span></span></code><code class="line language-annotation">{</code><code class="line language-annotation">    <span class="hljs-comment">/**</span></code><code class="line language-annotation">     * @ORM\Id</code><code class="line language-annotation">     * @ORM\Column(type=<span class="hljs-string">"integer"</span>)</code><code class="line language-annotation">     * @ORM\GeneratedValue</code><code class="line language-annotation">     */</code><code class="line language-annotation">    <span class="hljs-keyword">private</span> int|<span class="hljs-keyword">null</span> $id = <span class="hljs-keyword">null</span>;</code><code class="line language-annotation"></code><code class="line language-annotation">    <span class="hljs-comment">/**</span></code><code class="line language-annotation">     * @ORM\ManyToOne(targetEntity=<span class="hljs-string">"Car"</span>)</code><code class="line language-annotation">     * @ORM\JoinColumns({</code><code class="line language-annotation">     *     @ORM\JoinColumn(name=<span class="hljs-string">"car_name"</span>, referencedColumnName=<span class="hljs-string">"name"</span>),</code><code class="line language-annotation">     *     @ORM\JoinColumn(name=<span class="hljs-string">"car_year"</span>, referencedColumnName=<span class="hljs-string">"year"</span>)</code><code class="line language-annotation">     * })</code><code class="line language-annotation">     */</code><code class="line language-annotation">    <span class="hljs-keyword">private</span> Car|<span class="hljs-keyword">null</span> $car = <span class="hljs-keyword">null</span>;</code><code class="line language-annotation">}</code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-fb3cf6a722e0afafcefd85871316aadb" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
+                <pre class="code-block-table" id="94bab7d42dcca7587ade0f79cf2fd8e32ea5e2a5"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="94bab7d42dcca7587ade0f79cf2fd8e32ea5e2a5"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mapping</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://doctrine-project.org/schemas/orm/doctrine-mapping"</span></span></code><code class="line language-xml">      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</code><code class="line language-xml">      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping</code><code class="line language-xml">                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd"&gt;</code><code class="line language-xml"></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">entity</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"VehicleCatalogue\Model\Registration"</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"id"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"integer"</span>&gt;</span></code><code class="line language-xml">            <span class="hljs-tag">&lt;<span class="hljs-name">generator</span> <span class="hljs-attr">strategy</span>=<span class="hljs-string">"AUTO"</span> /&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">id</span>&gt;</span></code><code class="line language-xml"></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">many-to-one</span> <span class="hljs-attr">field</span>=<span class="hljs-string">"car"</span> <span class="hljs-attr">target-entity</span>=<span class="hljs-string">"Car"</span>&gt;</span></code><code class="line language-xml">            <span class="hljs-tag">&lt;<span class="hljs-name">join-column</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"car_name"</span> <span class="hljs-attr">referenced-column-name</span>=<span class="hljs-string">"name"</span> /&gt;</span></code><code class="line language-xml">            <span class="hljs-tag">&lt;<span class="hljs-name">join-column</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"car_year"</span> <span class="hljs-attr">referenced-column-name</span>=<span class="hljs-string">"year"</span> /&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">many-to-one</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">entity</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mapping</span>&gt;</span></code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-785c93d08f31ce205977b39131e1f8da" aria-label="Yaml" class="configuration-codeblock" data-language="yaml" style="display: none">
+                <pre class="code-block-table" id="a8b74e237b511ffaf8043683c0585299956c1371"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="a8b74e237b511ffaf8043683c0585299956c1371"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-string">VehicleCatalogue\Model\Registration:</span></code><code class="line language-yaml">  <span class="hljs-attr">type:</span> <span class="hljs-string">entity</span></code><code class="line language-yaml">  <span class="hljs-attr">id:</span></code><code class="line language-yaml">    <span class="hljs-attr">id:</span></code><code class="line language-yaml">      <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span></code><code class="line language-yaml">      <span class="hljs-attr">generator:</span></code><code class="line language-yaml">        <span class="hljs-attr">strategy:</span> <span class="hljs-string">AUTO</span></code><code class="line language-yaml">  <span class="hljs-attr">manyToOne:</span></code><code class="line language-yaml">    <span class="hljs-attr">car:</span></code><code class="line language-yaml">      <span class="hljs-attr">targetEntity:</span> <span class="hljs-string">Car</span></code><code class="line language-yaml">      <span class="hljs-attr">joinColumns:</span></code><code class="line language-yaml">        <span class="hljs-attr">car_name:</span></code><code class="line language-yaml">          <span class="hljs-attr">referencedColumnName:</span> <span class="hljs-string">name</span></code><code class="line language-yaml">        <span class="hljs-attr">car_year:</span></code><code class="line language-yaml">          <span class="hljs-attr">referencedColumnName:</span> <span class="hljs-string">year</span></code><code class="empty"></code></pre>
+        </div>
+    </div>
+            
+    <p>This generates the following SQL:</p>
+
+                <pre class="code-block-table" id="9f62d39fbdb4e551a62ca6331daa1e425ec526b9"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="9f62d39fbdb4e551a62ca6331daa1e425ec526b9"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Registration (</code><code class="line language-sql">    id INT AUTO_INCREMENT NOT NULL,</code><code class="line language-sql">    car_name VARCHAR(255) DEFAULT NULL,</code><code class="line language-sql">    car_year INT DEFAULT NULL,</code><code class="line language-sql">    PRIMARY KEY(id)</code><code class="line language-sql">) ENGINE = InnoDB;</code><code class="line language-sql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> Registration <span class="hljs-keyword">ADD</span> <span class="hljs-keyword">FOREIGN</span> <span class="hljs-keyword">KEY</span> (car_name, car_year) <span class="hljs-keyword">REFERENCES</span> Car(<span class="hljs-keyword">name</span>, <span class="hljs-keyword">year</span>);</code><code class="empty"></code></pre>
     </div>
             <div class="section" id="identity-through-foreign-entities">
             <h2 class="section-header ">
