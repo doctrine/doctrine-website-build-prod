@@ -379,6 +379,11 @@
 
 </li>
             <li class="toc-item">
+    <a href="../tutorials/composite-primary-keys.html#controlling-composite-key-order">Controlling composite key order</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="../tutorials/composite-primary-keys.html#performance-considerations">Performance Considerations</a>
 
 
@@ -408,6 +413,11 @@
     <a href="../tutorials/pagination.html#cursor-based-pagination">Cursor-Based Pagination</a>
 
         <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="../tutorials/pagination.html#constructor">Constructor</a>
+
+
+</li>
             <li class="toc-item">
     <a href="../tutorials/pagination.html#basic-usage">Basic Usage</a>
 
@@ -819,6 +829,11 @@
     <a href="association-mapping.html#association-mapping">Association Mapping</a>
 
         <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="association-mapping.html#composite-foreign-keys">Composite Foreign Keys</a>
+
+
+</li>
             <li class="toc-item">
     <a href="association-mapping.html#many-to-one-unidirectional">Many-To-One, Unidirectional</a>
 
@@ -2667,6 +2682,11 @@
 
         <ul class="section-level-2">
             <li class="toc-item">
+    <a href="../tutorials/pagination.html#constructor">Constructor</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="../tutorials/pagination.html#basic-usage">Basic Usage</a>
 
 
@@ -4063,10 +4083,18 @@ only have effect on supported platforms.</li>
 </h3>
             
     <p>The annotated instance variable will be marked as entity
-identifier, the primary key in the database. This attribute is a
-marker only and has no required or optional attributes. For
-entities that have multiple identifier columns each column has to
-be marked with <code>#[Id]</code>.</p>
+identifier, the primary key in the database. For entities that have
+multiple identifier columns each column has to be marked with <code>#[Id]</code>.</p>
+
+            
+    <p>Optional parameters:</p>
+
+            
+
+<ul>
+    <li class="dash"><strong>position</strong>: Controls the order of fields in a composite identifier.
+Lower values come first. If not specified, the default value is <code>0</code>.</li>
+</ul>
 
             
     <p>Example:</p>
@@ -4467,17 +4495,19 @@ retrieved from the database by using an ORDER BY clause.</p>
             
     <p>Example:</p>
 
-                <pre class="code-block-table" id="f4ab82b435c17ea08f6a8b5edfa94373870e76e6"><button
+                <pre class="code-block-table" id="da4bef26fdfae107b9900bffe46cf4be956bb6ae"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="f4ab82b435c17ea08f6a8b5edfa94373870e76e6"
+                data-copy-element-id="da4bef26fdfae107b9900bffe46cf4be956bb6ae"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">#[ManyToMany(targetEntity: "Group")]</span></code><code class="line language-php"><span class="hljs-comment">#[OrderBy(["name" =&gt; "ASC"])]</span></code><code class="line language-php"><span class="hljs-keyword">private</span> $groups;</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">SortDirection</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[ManyToMany(targetEntity: Group::class)]</span></code><code class="line language-php"><span class="hljs-comment">#[OrderBy([</span></code><code class="line language-php">    <span class="hljs-string">'name'</span> =&gt; SortDirection::Ascending,</code><code class="line language-php">    <span class="hljs-string">'createdAt'</span> =&gt; SortDirection::Descending,</code><code class="line language-php">])]</code><code class="line language-php"><span class="hljs-keyword">private</span> $groups;</code><code class="empty"></code></pre>
             
-    <p>The key in <code>OrderBy</code> is only allowed to consist of
-unqualified, unquoted field names and of an optional <code>ASC</code>/<code>DESC</code>
-positional statement. Multiple Fields are separated by a comma (,).
-The referenced field names have to exist on the <code>targetEntity</code>
+    <p>The keys of the array are only allowed to consist of unqualified,
+unquoted field names and the values can be either a valid <code>SortDirection</code> value,
+or a string with the value <code>ASC</code> or  <code>DESC</code>.</p>
+
+            
+    <p>The referenced field names have to exist on the <code>targetEntity</code>
 class of the <code>#[ManyToMany]</code> or <code>#[OneToMany]</code> attribute.</p>
 
     </div>
