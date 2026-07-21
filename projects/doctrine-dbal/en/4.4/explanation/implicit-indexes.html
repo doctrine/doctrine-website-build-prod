@@ -1357,7 +1357,7 @@
                                                             
                                 <div class="dropdown show d-inline-block">
                                     <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-dbal/en/4.4/explanation/implicit-indexes.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        4.4.3
+                                        4.4.4
                                     </a>
 
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -1379,14 +1379,14 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-dbal/en/4.4/explanation/implicit-indexes.html">
-                                                        4.4.3
+                                                        4.4.4
 
                                                                                                                     (current)
                                                         
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-dbal/en/3.10/explanation/implicit-indexes.html">
-                                                        3.10.5
+                                                        3.10.6
 
                                                         
                                                                                                                     (upcoming)
@@ -1490,11 +1490,24 @@ that responsibility to the user:</p>
 </ul>
 
             
-    <p>Regardless of the behavior of the platform, the DBAL will create an
-index for you and will automatically pick an index name that obeys
-string length constraints of the platform you are using. That way,
-differences between platforms are reduced because you always end up with
-an index.</p>
+    <p>So why does the DBAL create this index on every platform, even the ones
+that neither require it nor create it themselves?</p>
+
+            
+    <p>Because of how the DBAL compares schemas on MySQL and MariaDB. When the
+DBAL reads a table back, it cannot tell an index you added from one the
+database created for the foreign key: the metadata records nothing about
+who created it. So a table you defined without a backing index comes
+back with one. If the DBAL hadn&#039;t created it up-front, the comparison
+would report a change that isn&#039;t real: the migration would drop the
+index, the database would recreate it immediately, and the next
+comparison would report the same change again — a migration that never
+converges. Implicit indexes work around this limitation.</p>
+
+            
+    <p>The DBAL&#039;s schema model is platform-agnostic, so it cannot apply this
+only to MySQL and MariaDB. The index ends up on every database, including
+the ones that never needed it.</p>
 
             
     <p>This is a detail, but these indexes will be prefixed with <code>IDX_</code>, and
@@ -1506,6 +1519,9 @@ typically look like this:</p>
                 data-copy-element-id="42a07b999dcb33499166f6c849ad54f6aab9e269"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">INDEX</span> IDX_885DBAFAA76ED395 <span class="hljs-keyword">ON</span> posts (user_id)</code><code class="empty"></code></pre>
+            
+    <p>The generated name fits within the platform&#039;s identifier-length limit.</p>
+
             
     <p>In the case of MariaDB and MySQL, the creation of that DBAL-defined
 index will result in the RDBMS-defined index being dropped.</p>
