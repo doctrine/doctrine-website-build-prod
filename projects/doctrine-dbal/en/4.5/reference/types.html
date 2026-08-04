@@ -778,6 +778,16 @@
 
 </li>
             <li class="toc-item">
+    <a href="#datetime-utc">datetime_utc</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#datetime-utc-immutable">datetime_utc_immutable</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="#datetimetz">datetimetz</a>
 
 
@@ -2032,6 +2042,56 @@ Values retrieved from the database are always converted to PHP&#039;s <code>\Dat
 object or <code>null</code> if no data is present.</p>
 
     </div>
+            <div class="section" id="datetime-utc">
+            <a id="datetime_utc"></a>
+            <h4 class="section-header ">
+    <a href="#datetime-utc">
+        datetime_utc
+        <i class="fas fa-link"></i>
+    </a>
+</h4>
+            
+    <p>Behaves like the <code>datetime</code> type, but normalizes the timezone on the way in and out of the
+database. Before a value is persisted, it is converted to the UTC timezone, so that no timezone
+information needs to be stored in the database. When a value is read back, it is always interpreted
+as being in the UTC timezone, regardless of the default timezone configured for PHP.</p>
+
+            
+    <p>This lets you work with <code>\DateTime</code> instances in arbitrary timezones in your domain while keeping
+the persisted representation unambiguous. The value passed to this type is not mutated; a copy is
+converted to UTC for storage. Values retrieved from the database are always converted to PHP&#039;s
+<code>\DateTime</code> object (in the UTC timezone) or <code>null</code> if no data is present.</p>
+
+                        <div class="alert warning-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td>
+            <td>
+                                                
+    <p>Passing instances of <code>DateTimeImmutable</code> to this type is not supported. Use
+<a href="#datetime_utc_immutable">datetime_utc_immutable</a> instead.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+    </div>
+            <div class="section" id="datetime-utc-immutable">
+            <a id="datetime_utc_immutable"></a>
+            <h4 class="section-header ">
+    <a href="#datetime-utc-immutable">
+        datetime_utc_immutable
+        <i class="fas fa-link"></i>
+    </a>
+</h4>
+            
+    <p>The immutable variant of the <code>datetime_utc</code> type.
+Values retrieved from the database are always converted to PHP&#039;s <code>\DateTimeImmutable</code>
+object (in the UTC timezone) or <code>null</code> if no data is present.</p>
+
+    </div>
             <div class="section" id="datetimetz">
             <h4 class="section-header ">
     <a href="#datetimetz">
@@ -2164,8 +2224,10 @@ timezones across all the different vendors.</p>
 set by <a href="http://docs.php.net/manual/en/function.date-default-timezone-set.php">date_default_timezone_set()</a>
 or by the php.ini configuration <code>date.timezone</code>.</p>
 
-    <p>If you need specific timezone handling you have to handle this
-in your domain, converting all the values back and forth from UTC.</p>
+    <p>If you need specific timezone handling you can either handle this
+in your domain, converting all the values back and forth from UTC,
+or use the <a href="#datetime_utc">datetime_utc</a> / <a href="#datetime_utc_immutable">datetime_utc_immutable</a>
+types, which store and retrieve the values in the UTC timezone for you.</p>
 
             </td>
         </tr>
@@ -2792,7 +2854,8 @@ Please also notice the mapping specific footnotes for additional information.</p
             <td>&quot;all&quot;</td>
     </tr>
     <tr>
-            <td rowspan="5"><strong>datetime</strong></td>
+            <td rowspan="5"><strong>datetime</strong>,
+<strong>datetime_utc</strong></td>
             <td rowspan="5"><code>\DateTime</code></td>
             <td><strong>MySQL</strong></td>
             <td><em>all</em></td>
