@@ -874,16 +874,26 @@ are missing a test for some code you added.</p>
             
     <p>Rather than starting many containers on a remote infrastructure to
 figure what is wrong with your code, running some of the checks locally
-before pushing is never a bad idea. You can do so by creating a
-<code>.git/hooks/pre-push</code> file or even a <code>.git/hooks/pre-commit</code> file
-with the following content:</p>
+before pushing is never a bad idea. You can do so by creating
+<code>pre-push</code> or even <code>pre-commit</code> hooks. Here is an example with
+<code>pre-push</code> hooks:</p>
 
-                <pre class="code-block-table" id="f6a922c3b0c0baa1947ba57299a13a34ef415eea"><button
-                type="button"
-                class="copy-to-clipboard"
-                data-copy-element-id="f6a922c3b0c0baa1947ba57299a13a34ef415eea"
-                title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-bash"><span class="hljs-meta">#!/bin/bash</span></code><code class="line language-bash"><span class="hljs-built_in">set</span> -e</code><code class="line language-bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">''</span>|vendor/bin/phpcs</code><code class="line language-bash">vendor/bin/phpstan</code><code class="line language-bash">vendor/bin/phpunit</code><code class="empty"></code></pre>
+                <div class="console">
+        <pre><code class="console">$ git config hook.jobs 3
+$ git config hook.phpcs.event pre-push
+$ git config hook.phpcs.command &quot;sh -c \&quot;echo &#039;&#039;|vendor/bin/phpcs\&quot;&quot;
+$ git config hook.phpcs.parallel true
+$ git config hook.phpstan.event pre-push
+$ git config hook.phpstan.command &quot;sh -c &#039;vendor/bin/phpstan&#039;&quot;
+$ git config hook.phpstan.parallel true
+$ git config hook.phpunit.event pre-push
+$ git config hook.phpunit.command &quot;sh -c &#039;vendor/bin/phpunit&#039;&quot;
+$ git config hook.phpunit.parallel true</code></pre>
+    </div>
+
+            
+    <p>Note that you cannot use parallelism with <code>pre-commit</code> hooks.</p>
+
     </div>
     </div>
             <div class="section" id="getting-your-pr-reviewed">
