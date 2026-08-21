@@ -407,7 +407,23 @@
             <li class="toc-item">
     <a href="#offset-based-pagination">Offset-Based Pagination</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="#how-offset-pagination-works">How Offset Pagination Works</a>
 
+
+</li>
+            <li class="toc-item">
+    <a href="#api-reference">API Reference</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#legacy-paginator">Legacy Paginator</a>
+
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="#cursor-based-pagination">Cursor-Based Pagination</a>
@@ -429,7 +445,7 @@
 
 </li>
             <li class="toc-item">
-    <a href="#api-reference">API Reference</a>
+    <a href="#api-reference-1">API Reference</a>
 
 
 </li>
@@ -449,6 +465,11 @@
 
 </li>
                     </ul>
+</li>
+            <li class="toc-item">
+    <a href="#writing-strategy-agnostic-code">Writing Strategy-Agnostic Code</a>
+
+
 </li>
                     </ul>
 </li>
@@ -2680,7 +2701,23 @@
             <li class="toc-item">
     <a href="#offset-based-pagination">Offset-Based Pagination</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="#how-offset-pagination-works">How Offset Pagination Works</a>
 
+
+</li>
+            <li class="toc-item">
+    <a href="#api-reference">API Reference</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#legacy-paginator">Legacy Paginator</a>
+
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="#cursor-based-pagination">Cursor-Based Pagination</a>
@@ -2702,7 +2739,7 @@
 
 </li>
             <li class="toc-item">
-    <a href="#api-reference">API Reference</a>
+    <a href="#api-reference-1">API Reference</a>
 
 
 </li>
@@ -2722,6 +2759,11 @@
 
 </li>
                     </ul>
+</li>
+            <li class="toc-item">
+    <a href="#writing-strategy-agnostic-code">Writing Strategy-Agnostic Code</a>
+
+
 </li>
                     </ul>
 </li>
@@ -3499,7 +3541,7 @@ the low-level SQL plumbing, but they make different trade-offs:</p>
                 <thead>
             <tr>
                             <th>Feature</th>
-                            <th>Offset <code>Paginator</code></th>
+                            <th><code>OffsetPaginator</code></th>
                             <th><code>CursorPaginator</code></th>
                     </tr>
         </thead>
@@ -3549,16 +3591,41 @@ cost of an extra <code>COUNT</code> query.</p>
     </a>
 </h2>
             
-    <p>Doctrine ORM ships with a Paginator for DQL queries. It
-has a very simple API and implements the SPL interfaces <code>Countable</code> and
-<code>IteratorAggregate</code>.</p>
+    <p>Doctrine ORM ships with the <code>OffsetPaginator</code> for offset-based pagination of
+DQL queries. The query and the pagination position — a <code>Window</code> value object,
+which carries both a first result and a page size — are both passed to
+<code>paginate()</code>, which returns an immutable, iterable <code>WindowPage</code>. This mirrors
+the <code>CursorPaginator</code> API.</p>
 
-                <pre class="code-block-table" id="53cecb34fe85649d5635e75b84a1d06084a9a87b"><button
+                <pre class="code-block-table" id="447e1ab0797ea1f2500825e2357fba99aaa5b53c"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="53cecb34fe85649d5635e75b84a1d06084a9a87b"
+                data-copy-element-id="447e1ab0797ea1f2500825e2357fba99aaa5b53c"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">Paginator</span>;</code><code class="line language-php"></code><code class="line language-php">$dql = <span class="hljs-string">"SELECT p, c FROM BlogPost p JOIN p.comments c"</span>;</code><code class="line language-php">$query = $entityManager-&gt;createQuery($dql)</code><code class="line language-php">                       -&gt;setFirstResult(<span class="hljs-number">0</span>)</code><code class="line language-php">                       -&gt;setMaxResults(<span class="hljs-number">100</span>);</code><code class="line language-php"></code><code class="line language-php">$paginator = <span class="hljs-keyword">new</span> Paginator($query, fetchJoinCollection: <span class="hljs-keyword">true</span>);</code><code class="line language-php"></code><code class="line language-php">$c = count($paginator);</code><code class="line language-php"><span class="hljs-keyword">foreach</span> ($paginator <span class="hljs-keyword">as</span> $post) {</code><code class="line language-php">    <span class="hljs-keyword">echo</span> $post-&gt;getHeadline() . <span class="hljs-string">"\n"</span>;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">OffsetPaginator</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">Window</span>;</code><code class="line language-php"></code><code class="line language-php">$dql   = <span class="hljs-string">'SELECT p, c FROM BlogPost p JOIN p.comments c ORDER BY p.id ASC'</span>;</code><code class="line language-php">$query = $entityManager-&gt;createQuery($dql);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// new Window($firstResult, $maxResults), or Window::fromPageNumberAndSize($pageNumber, $pageSize)</span></code><code class="line language-php">$page = (<span class="hljs-keyword">new</span> OffsetPaginator())-&gt;paginate($query, Window::fromPageNumberAndSize(<span class="hljs-number">1</span>, <span class="hljs-number">25</span>));</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">echo</span> $page-&gt;getTotalCount() . <span class="hljs-string">" result(s), page {$page-&gt;getPageNumber()} of {$page-&gt;getPageCount()}\n"</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">foreach</span> ($page <span class="hljs-keyword">as</span> $post) {</code><code class="line language-php">    <span class="hljs-keyword">echo</span> $post-&gt;getHeadline() . <span class="hljs-string">"\n"</span>;</code><code class="line language-php">}</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">if</span> ($page-&gt;hasNextPage()) {</code><code class="line language-php">    $nextWindow = $page-&gt;getNextWindow(); <span class="hljs-comment">// Window for the next page</span></code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>The paginator itself holds no query and no position, only configuration: a
+single instance is stateless and can be reused — or registered as a service —
+for any query and any page.</p>
+
+                <pre class="code-block-table" id="a19df2c0f93c68353918cd7705a6dac8fae210df"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="a19df2c0f93c68353918cd7705a6dac8fae210df"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$paginator = <span class="hljs-keyword">new</span> OffsetPaginator();</code><code class="line language-php"></code><code class="line language-php">$firstPage  = $paginator-&gt;paginate($query, Window::fromPageNumberAndSize(<span class="hljs-number">1</span>, <span class="hljs-number">25</span>));</code><code class="line language-php">$secondPage = $paginator-&gt;paginate($query, $firstPage-&gt;getNextWindow());</code><code class="empty"></code></pre>
+            
+    <p>Because the returned <code>WindowPage</code> is immutable and carries no temporal
+coupling, its accessors can be called in any order, and building another page
+never affects a page you already hold.</p>
+
+            <div class="section" id="how-offset-pagination-works">
+            <h3 class="section-header ">
+    <a href="#how-offset-pagination-works">
+        How Offset Pagination Works
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
             
     <p>Paginating Doctrine queries is not as simple as you might think in the
 beginning. If you have complex fetch-join scenarios with one-to-many or
@@ -3566,8 +3633,7 @@ many-to-many associations using the &quot;default&quot; LIMIT functionality of d
 vendors is not sufficient to get the correct results.</p>
 
             
-    <p>By default the pagination extension does the following steps to compute the
-correct result:</p>
+    <p>By default the paginator does the following steps to compute the correct result:</p>
 
             
 
@@ -3579,10 +3645,9 @@ correct result:</p>
 
             
     <p>This behavior is only necessary if you actually fetch join a to-many
-collection. You can disable this behavior by setting the
-<code>fetchJoinCollection</code> argument to <code>false</code>; in that case only 2 instead of the 3 queries
-described are executed. We hope to automate the detection for this in
-the future.</p>
+collection. You can disable it by setting the <code>fetchJoinCollection</code>
+constructor argument to <code>false</code>; in that case only 2 instead of the 3
+queries described are executed.</p>
 
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
@@ -3591,7 +3656,8 @@ the future.</p>
             <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
             <td>
                                                 
-    <p><code>fetchJoinCollection</code> argument set to <code>true</code> might affect results if you use aggregations in your query.</p>
+    <p><code>fetchJoinCollection</code> set to <code>true</code> might affect results if you use
+aggregations in your query.</p>
 
             </td>
         </tr>
@@ -3599,16 +3665,90 @@ the future.</p>
     </table>
 </div>
             
-    <p>By using the <code>Paginator::HINT_ENABLE_DISTINCT</code> you can instruct doctrine that the query to be executed
-will not produce &quot;duplicate&quot; rows (only to-one relations are joined), thus the SQL limit will work as expected.
-In this way the <code>DISTINCT</code> keyword will be omitted and can bring important performance improvements.</p>
+    <p>Alternatively, the <code>Paginator::HINT_ENABLE_DISTINCT</code> query hint instructs
+Doctrine that the query will not produce &quot;duplicate&quot; rows (only to-one relations
+are joined), so the <code>DISTINCT</code> keyword is omitted, which can bring important
+performance improvements:</p>
 
-                <pre class="code-block-table" id="2afcc13031928f66ad9d083e084fdbba66509548"><button
+                <pre class="code-block-table" id="3ff2cd9e7ebeaaeb4bbce34d3522cbd000681536"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="2afcc13031928f66ad9d083e084fdbba66509548"
+                data-copy-element-id="3ff2cd9e7ebeaaeb4bbce34d3522cbd000681536"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">Paginator</span>;</code><code class="line language-php"></code><code class="line language-php">$dql = <span class="hljs-string">"SELECT u, p FROM User u JOIN u.mainPicture p"</span>;</code><code class="line language-php">$query = $entityManager-&gt;createQuery($dql)</code><code class="line language-php">                       -&gt;setHint(Paginator::HINT_ENABLE_DISTINCT, <span class="hljs-keyword">false</span>)</code><code class="line language-php">                       -&gt;setFirstResult(<span class="hljs-number">0</span>)</code><code class="line language-php">                       -&gt;setMaxResults(<span class="hljs-number">100</span>);</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">OffsetPaginator</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">Paginator</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">Window</span>;</code><code class="line language-php"></code><code class="line language-php">$dql   = <span class="hljs-string">'SELECT u, p FROM User u JOIN u.mainPicture p ORDER BY u.id ASC'</span>;</code><code class="line language-php">$query = $entityManager-&gt;createQuery($dql)</code><code class="line language-php">                       -&gt;setHint(Paginator::HINT_ENABLE_DISTINCT, <span class="hljs-keyword">false</span>);</code><code class="line language-php"></code><code class="line language-php">$page = (<span class="hljs-keyword">new</span> OffsetPaginator())-&gt;paginate($query, <span class="hljs-keyword">new</span> Window(<span class="hljs-number">0</span>, <span class="hljs-number">100</span>));</code><code class="empty"></code></pre>
+    </div>
+            <div class="section" id="api-reference">
+            <h3 class="section-header ">
+    <a href="#api-reference">
+        API Reference
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            <dl>
+                        <dt><code>OffsetPaginator::paginate(Query|QueryBuilder $query, Window $position): WindowPage</code></dt>
+        
+        <dd>Executes the query for the given <code>Window</code> and returns an immutable
+<code>WindowPage</code>. All page accessors below live on the returned page. Throws an
+<code>InvalidArgumentException</code> if <code>$position</code> is not a <code>Window</code>.</dd>
+                                <dt><code>WindowPage::getItems(): array</code></dt>
+        
+        <dd>Returns the raw entity array for the current page.</dd>
+                                <dt><code>WindowPage::count(): int</code></dt>
+        
+        <dd>Returns the number of items on the current page (SPL <code>Countable</code>).</dd>
+                                <dt><code>WindowPage::getTotalCount(): int</code></dt>
+        
+        <dd>Returns the total number of matching root entities, ignoring the window.</dd>
+                                <dt><code>WindowPage::getPageNumber(): int</code> / <code>WindowPage::getPageCount(): int</code></dt>
+        
+        <dd>Return the 1-based number of the current page and the total number of pages.
+<code>getPageCount()</code> is at least <code>1</code>, even for an empty result set.</dd>
+                                <dt><code>WindowPage::hasNextPage(): bool</code> / <code>WindowPage::hasPreviousPage(): bool</code></dt>
+        
+        <dd>Return whether a next / previous page is available.</dd>
+                                <dt><code>WindowPage::hasToPaginate(): bool</code></dt>
+        
+        <dd>Returns whether the result set spans more than one page.</dd>
+                                <dt><code>WindowPage::getNextWindow(): Window</code> / <code>WindowPage::getPreviousWindow(): Window</code></dt>
+        
+        <dd>Return the <code>Window</code> for the next / previous page. Throw a <code>LogicException</code>
+if there is none — call <code>hasNextPage()</code> / <code>hasPreviousPage()</code> first.</dd>
+                                <dt><code>WindowPage::getLastWindow(): Window</code></dt>
+        
+        <dd>Returns the <code>Window</code> of the last page, keeping the same page size. Unlike
+the two methods above, it never throws: an empty result set has a single,
+empty first page.</dd>
+                                <dt><code>WindowPage::getWindow(): Window</code></dt>
+        
+        <dd>Returns the <code>Window</code> that produced this page.</dd>
+                                <dt><code>Window::fromPageNumberAndSize(int $pageNumber, int $pageSize): Window</code></dt>
+        
+        <dd>Builds a <code>Window</code> from a 1-based page number and a page size.</dd>
+                                <dt><code>Window::getPageNumber(): int</code></dt>
+        
+        <dd>Returns the 1-based page number the window points at.</dd>
+            </dl>
+    </div>
+            <div class="section" id="legacy-paginator">
+            <h3 class="section-header ">
+    <a href="#legacy-paginator">
+        Legacy <code>Paginator</code>
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+            
+    <p>The legacy <code>Paginator</code> reads the offset implicitly from the query
+(<code>setFirstResult()</code> / <code>setMaxResults()</code>) and implements the SPL interfaces
+<code>Countable</code> and <code>IteratorAggregate</code>:</p>
+
+                <pre class="code-block-table" id="53cecb34fe85649d5635e75b84a1d06084a9a87b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="53cecb34fe85649d5635e75b84a1d06084a9a87b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">Paginator</span>;</code><code class="line language-php"></code><code class="line language-php">$dql = <span class="hljs-string">"SELECT p, c FROM BlogPost p JOIN p.comments c"</span>;</code><code class="line language-php">$query = $entityManager-&gt;createQuery($dql)</code><code class="line language-php">                       -&gt;setFirstResult(<span class="hljs-number">0</span>)</code><code class="line language-php">                       -&gt;setMaxResults(<span class="hljs-number">100</span>);</code><code class="line language-php"></code><code class="line language-php">$paginator = <span class="hljs-keyword">new</span> Paginator($query, fetchJoinCollection: <span class="hljs-keyword">true</span>);</code><code class="line language-php"></code><code class="line language-php">$c = count($paginator);</code><code class="line language-php"><span class="hljs-keyword">foreach</span> ($paginator <span class="hljs-keyword">as</span> $post) {</code><code class="line language-php">    <span class="hljs-keyword">echo</span> $post-&gt;getHeadline() . <span class="hljs-string">"\n"</span>;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+    </div>
     </div>
             <div class="section" id="cursor-based-pagination">
             <h2 class="section-header ">
@@ -3647,21 +3787,32 @@ A common pattern is to sort by a timestamp and then by primary key as a tie-brea
         <i class="fas fa-link"></i>
     </a>
 </h3>
-                <pre class="code-block-table" id="56bfe7e0a8a68266be768cc9a034317b5266a972"><button
+                <pre class="code-block-table" id="a74de46042b1f2b7c283bae741cda3fac30391e5"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="56bfe7e0a8a68266be768cc9a034317b5266a972"
+                data-copy-element-id="a74de46042b1f2b7c283bae741cda3fac30391e5"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">new</span> CursorPaginator(</code><code class="line language-php">    Query|QueryBuilder $query,</code><code class="line language-php">    bool $queryProducesDuplicates = <span class="hljs-keyword">true</span>,</code><code class="line language-php">)</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">new</span> CursorPaginator(</code><code class="line language-php">    int $limit,</code><code class="line language-php">    bool $queryProducesDuplicates = <span class="hljs-keyword">true</span>,</code><code class="line language-php">)</code><code class="empty"></code></pre>
+            
+    <p>The paginator only holds configuration: the query and the cursor are passed to
+<code>paginate()</code>, which returns an immutable <code>CursorPage</code> — symmetric with the
+offset-based <code>OffsetPaginator</code>. A single instance is stateless and can be
+reused, or registered as a service, for any query and any page.</p>
+
             <dl>
-                        <dt><code>$queryProducesDuplicates</code></dt>
+                        <dt><code>$limit</code></dt>
+        
+        <dd>The maximum number of results per page. Unlike <code>Window</code>, which carries its
+own page size, a <code>Cursor</code> is a pure position: the page size is paginator
+configuration and therefore never comes from user input.</dd>
+                                <dt><code>$queryProducesDuplicates</code></dt>
         
         <dd>Set to <code>true</code> (default) when the query joins a to-many collection.
 The paginator then uses a two-query strategy (ID subquery + <code>WHERE IN</code>)
 to return the correct number of root entities despite duplicate rows.
 Set to <code>false</code> when only to-one joins are present — this avoids the
 subquery overhead and is equivalent to passing <code>fetchJoinCollection: false</code>
-to the offset-based <code>Paginator</code>.
+to the <code>OffsetPaginator</code>.
 However, passing <code>false</code> on a query that joins a to-many relation is not
 detected — arbitrary joins can produce duplicate root entities silently,
 leading to a corrupt result set.</dd>
@@ -3675,7 +3826,7 @@ leading to a corrupt result set.</dd>
     </a>
 </h3>
             
-    <p>The <code>$cursor</code> parameter accepts either an encoded string produced by a previous call to
+    <p>The <code>$position</code> parameter of <code>paginate()</code> accepts either an encoded string produced by a previous call to
 <code>getNextCursorAsString()</code> or <code>getPreviousCursorAsString()</code>, or a <code>Cursor</code> instance
 returned by <code>getNextCursor()</code> or <code>getPreviousCursor()</code>. On the first request it is
 <code>null</code> or an empty string <code>&#039;&#039;</code> — both are treated identically as the first page.
@@ -3687,12 +3838,12 @@ It is typically read from the incoming HTTP query string:</p>
                 data-copy-element-id="fbfd705d73701e1c8906081bb8f646ab327097e7"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php">$cursor = $_GET[<span class="hljs-string">'cursor'</span>] ?? <span class="hljs-keyword">null</span>; <span class="hljs-comment">// null or '' on the first page</span></code><code class="empty"></code></pre>
-                <pre class="code-block-table" id="6e0e9d1e9d3ad5b71a476a41fb2af4785be5214c"><button
+                <pre class="code-block-table" id="e8fc9c94917ba4230b35f012c8a1bb9cd7afd6d7"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="6e0e9d1e9d3ad5b71a476a41fb2af4785be5214c"
+                data-copy-element-id="e8fc9c94917ba4230b35f012c8a1bb9cd7afd6d7"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">CursorPaginator</span>;</code><code class="line language-php"></code><code class="line language-php">$dql = <span class="hljs-string">'SELECT p FROM BlogPost p ORDER BY p.createdAt DESC, p.id DESC'</span>;</code><code class="line language-php">$query = $entityManager-&gt;createQuery($dql);</code><code class="line language-php"></code><code class="line language-php">$paginator = (<span class="hljs-keyword">new</span> CursorPaginator($query))</code><code class="line language-php">    -&gt;paginate(cursor: $cursor, limit: <span class="hljs-number">15</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">foreach</span> ($paginator <span class="hljs-keyword">as</span> $post) {</code><code class="line language-php">    <span class="hljs-keyword">echo</span> $post-&gt;getTitle() . <span class="hljs-string">"\n"</span>;</code><code class="line language-php">}</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">echo</span> $paginator-&gt;getPreviousCursorAsString(); <span class="hljs-comment">// previous encoded cursor string</span></code><code class="line language-php"><span class="hljs-keyword">echo</span> $paginator-&gt;getNextCursorAsString();     <span class="hljs-comment">// next encoded cursor string</span></code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">CursorPaginator</span>;</code><code class="line language-php"></code><code class="line language-php">$dql = <span class="hljs-string">'SELECT p FROM BlogPost p ORDER BY p.createdAt DESC, p.id DESC'</span>;</code><code class="line language-php">$query = $entityManager-&gt;createQuery($dql);</code><code class="line language-php"></code><code class="line language-php">$paginator = <span class="hljs-keyword">new</span> CursorPaginator(limit: <span class="hljs-number">15</span>);</code><code class="line language-php">$page      = $paginator-&gt;paginate($query, $cursor);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">foreach</span> ($page <span class="hljs-keyword">as</span> $post) {</code><code class="line language-php">    <span class="hljs-keyword">echo</span> $post-&gt;getTitle() . <span class="hljs-string">"\n"</span>;</code><code class="line language-php">}</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">echo</span> $page-&gt;getPreviousCursorAsString(); <span class="hljs-comment">// previous encoded cursor string</span></code><code class="line language-php"><span class="hljs-keyword">echo</span> $page-&gt;getNextCursorAsString();     <span class="hljs-comment">// next encoded cursor string</span></code><code class="empty"></code></pre>
     </div>
             <div class="section" id="navigating-pages">
             <h3 class="section-header ">
@@ -3702,74 +3853,74 @@ It is typically read from the incoming HTTP query string:</p>
     </a>
 </h3>
             
-    <p>Pass the encoded cursor back on subsequent requests to move forward or backward:</p>
+    <p>Pass the encoded cursor back on subsequent requests to move forward or backward,
+reusing the same paginator:</p>
 
-                <pre class="code-block-table" id="b4b874c71653cd0086ca1f83d216c090a4b6b419"><button
+                <pre class="code-block-table" id="0bbde9d97cbefb339f16d3fcc8dccac998455299"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="b4b874c71653cd0086ca1f83d216c090a4b6b419"
+                data-copy-element-id="0bbde9d97cbefb339f16d3fcc8dccac998455299"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">// Next page</span></code><code class="line language-php">$paginator-&gt;paginate(cursor: $nextCursor, limit: <span class="hljs-number">15</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Previous page</span></code><code class="line language-php">$paginator-&gt;paginate(cursor: $previousCursor, limit: <span class="hljs-number">15</span>);</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">// Next page</span></code><code class="line language-php">$page = $paginator-&gt;paginate($query, $nextCursor);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Previous page</span></code><code class="line language-php">$page = $paginator-&gt;paginate($query, $previousCursor);</code><code class="empty"></code></pre>
             
     <p>The cursor is an encoded string containing the location at which the next query should begin fetching results, along with the navigation direction.</p>
 
     </div>
-            <div class="section" id="api-reference">
+            <div class="section" id="api-reference-1">
             <h3 class="section-header ">
-    <a href="#api-reference">
+    <a href="#api-reference-1">
         API Reference
         <i class="fas fa-link"></i>
     </a>
 </h3>
             <dl>
-                        <dt><code>CursorPaginator::paginate(Cursor|string|null $cursor, int $limit): self</code></dt>
+                        <dt><code>CursorPaginator::paginate(Query|QueryBuilder $query, Cursor|string|null $position): CursorPage</code></dt>
         
-        <dd>Executes the query and stores the results. Accepts either an encoded cursor
-string or a <code>Cursor</code> instance directly. Fetches <code>$limit + 1</code> rows to
-detect whether a further page exists, then trims the extra row. Returns
-<code>$this</code> for chaining.</dd>
-                                <dt><code>CursorPaginator::getNextCursor(): Cursor</code></dt>
+        <dd>Executes the query for the given cursor and returns an immutable
+<code>CursorPage</code>. Fetches <code>$limit + 1</code> rows to detect whether a further page
+exists, then trims the extra row. All accessors below live on the returned
+<code>CursorPage</code>.</dd>
+                                <dt><code>CursorPage::getNextCursor(): Cursor</code></dt>
         
         <dd>Returns the <code>Cursor</code> object for the next page. Throws a <code>LogicException</code>
 if there is no next page — call <code>hasNextPage()</code> first.</dd>
-                                <dt><code>CursorPaginator::getPreviousCursor(): Cursor</code></dt>
+                                <dt><code>CursorPage::getPreviousCursor(): Cursor</code></dt>
         
         <dd>Returns the <code>Cursor</code> object for the previous page. Throws a <code>LogicException</code>
 if there is no previous page — call <code>hasPreviousPage()</code> first.</dd>
-                                <dt><code>CursorPaginator::getNextCursorAsString(): string</code></dt>
+                                <dt><code>CursorPage::getNextCursorAsString(): string</code></dt>
         
         <dd>Returns the encoded cursor to retrieve the next page. Throws a
 <code>LogicException</code> if there is no next page — call <code>hasNextPage()</code> first.</dd>
-                                <dt><code>CursorPaginator::getPreviousCursorAsString(): string</code></dt>
+                                <dt><code>CursorPage::getPreviousCursorAsString(): string</code></dt>
         
         <dd>Returns the encoded cursor to retrieve the previous page. Throws a
 <code>LogicException</code> if there is no previous page — call <code>hasPreviousPage()</code> first.</dd>
-                                <dt><code>CursorPaginator::hasNextPage(): bool</code></dt>
+                                <dt><code>CursorPage::hasNextPage(): bool</code></dt>
         
         <dd>Returns whether a next page is available.</dd>
-                                <dt><code>CursorPaginator::hasPreviousPage(): bool</code></dt>
+                                <dt><code>CursorPage::hasPreviousPage(): bool</code></dt>
         
         <dd>Returns whether a previous page is available.</dd>
-                                <dt><code>CursorPaginator::hasToPaginate(): bool</code></dt>
+                                <dt><code>CursorPage::hasToPaginate(): bool</code></dt>
         
         <dd>Returns whether either a next or previous page exists (i.e. the result
 set spans more than one page).</dd>
-                                <dt><code>CursorPaginator::getValues(): array</code></dt>
+                                <dt><code>CursorPage::getItems(): array</code></dt>
         
         <dd>Returns the raw entity array for the current page.</dd>
-                                <dt><code>CursorPaginator::getItems(): array</code></dt>
+                                <dt><code>CursorPage::getItemsWithCursors(): array</code></dt>
         
         <dd>Returns an array of <code>CursorItem</code> objects, each wrapping an entity and its
 individual <code>Cursor</code>. Useful when you need per-row cursors.</dd>
-                                <dt><code>CursorPaginator::getCursorForItem(mixed $item, bool $isNext = true): Cursor</code></dt>
+                                <dt><code>CursorPage::getCursorForItem(mixed $item, bool $isNext = true): Cursor</code></dt>
         
         <dd>Builds a <code>Cursor</code> pointing at a specific entity. <code>$isNext = true</code> means
 &quot;start <em>after</em> this item&quot;; <code>false</code> means &quot;start <em>before</em> this item&quot;.</dd>
-                                <dt><code>CursorPaginator::countPageItems(): int</code></dt>
+                                <dt><code>CursorPage::count(): int</code></dt>
         
-        <dd>Returns the number of items on the current page. Throws a <code>LogicException</code>
-if <code>paginate()</code> has not been called yet.</dd>
-                                <dt><code>CursorPaginator::getTotalCount(): int</code></dt>
+        <dd>Returns the number of items on the current page.</dd>
+                                <dt><code>CursorPage::getTotalCount(): int</code></dt>
         
         <dd>Executes an extra <code>COUNT</code> query and returns the total number of matching
 root entities, ignoring the cursor and limit. Use this when you need to
@@ -3805,12 +3956,12 @@ display a total result count alongside previous/next navigation.</dd>
     <p>The following example shows how to render a paginated list with previous/next
 navigation links using the <code>CursorPaginator</code> in a PHP template:</p>
 
-                <pre class="code-block-table" id="ffa284ff27c167e9da38a9639b9ce3c4c2939a07"><button
+                <pre class="code-block-table" id="520109ba4e635b43c601905da1f7d07c9788c96b"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="ffa284ff27c167e9da38a9639b9ce3c4c2939a07"
+                data-copy-element-id="520109ba4e635b43c601905da1f7d07c9788c96b"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">CursorPaginator</span>;</code><code class="line language-php"></code><code class="line language-php">$cursor = $_GET[<span class="hljs-string">'cursor'</span>] ?? <span class="hljs-keyword">null</span>;</code><code class="line language-php"></code><code class="line language-php">$query = $entityManager-&gt;createQuery(<span class="hljs-string">'SELECT p FROM BlogPost p ORDER BY p.createdAt DESC, p.id DESC'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">/** <span class="hljs-doctag">@var</span> CursorPaginator&lt;BlogPost&gt; $paginator */</span></code><code class="line language-php">$paginator = (<span class="hljs-keyword">new</span> CursorPaginator($query))</code><code class="line language-php">    -&gt;paginate(cursor: $cursor, limit: <span class="hljs-number">15</span>);</code><code class="line language-php"><span class="hljs-meta">?&gt;</span></code><code class="line language-php">&lt;p&gt;<span class="hljs-meta">&lt;?</span>= $paginator-&gt;getTotalCount() <span class="hljs-meta">?&gt;</span> result(s) in total, <span class="hljs-meta">&lt;?</span>= $paginator-&gt;countPageItems() <span class="hljs-meta">?&gt;</span> on this page.&lt;/p&gt;</code><code class="line language-php"></code><code class="line language-php">&lt;ul&gt;</code><code class="line language-php">    <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">foreach</span> ($paginator <span class="hljs-keyword">as</span> $post): <span class="hljs-meta">?&gt;</span></code><code class="line language-php">        &lt;li&gt;<span class="hljs-meta">&lt;?</span>= escape($post-&gt;getTitle()) <span class="hljs-meta">?&gt;</span>&lt;/li&gt;</code><code class="line language-php">    <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">endforeach</span> <span class="hljs-meta">?&gt;</span></code><code class="line language-php">&lt;/ul&gt;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">if</span> ($paginator-&gt;hasToPaginate()): <span class="hljs-meta">?&gt;</span></code><code class="line language-php">    &lt;nav&gt;</code><code class="line language-php">        <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">if</span> ($paginator-&gt;hasPreviousPage()): <span class="hljs-meta">?&gt;</span></code><code class="line language-php">            &lt;a href=<span class="hljs-string">"?cursor=&lt;?= escape($paginator-&gt;getPreviousCursorAsString()) ?&gt;"</span>&gt;Previous&lt;/a&gt;</code><code class="line language-php">        <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">endif</span> <span class="hljs-meta">?&gt;</span></code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">if</span> ($paginator-&gt;hasNextPage()): <span class="hljs-meta">?&gt;</span></code><code class="line language-php">            &lt;a href=<span class="hljs-string">"?cursor=&lt;?= escape($paginator-&gt;getNextCursorAsString()) ?&gt;"</span>&gt;Next&lt;/a&gt;</code><code class="line language-php">        <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">endif</span> <span class="hljs-meta">?&gt;</span></code><code class="line language-php">    &lt;/nav&gt;</code><code class="line language-php"><span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">endif</span> <span class="hljs-meta">?&gt;</span></code><code class="line language-php"></code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">CursorPaginator</span>;</code><code class="line language-php"></code><code class="line language-php">$cursor = $_GET[<span class="hljs-string">'cursor'</span>] ?? <span class="hljs-keyword">null</span>;</code><code class="line language-php"></code><code class="line language-php">$query = $entityManager-&gt;createQuery(<span class="hljs-string">'SELECT p FROM BlogPost p ORDER BY p.createdAt DESC, p.id DESC'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">/** <span class="hljs-doctag">@var</span> CursorPaginator&lt;BlogPost&gt; $paginator */</span></code><code class="line language-php">$paginator = <span class="hljs-keyword">new</span> CursorPaginator(limit: <span class="hljs-number">15</span>);</code><code class="line language-php"></code><code class="line language-php">$page = $paginator-&gt;paginate($query, $cursor);</code><code class="line language-php"><span class="hljs-meta">?&gt;</span></code><code class="line language-php">&lt;p&gt;<span class="hljs-meta">&lt;?</span>= $page-&gt;getTotalCount() <span class="hljs-meta">?&gt;</span> result(s) in total, <span class="hljs-meta">&lt;?</span>= $page-&gt;count() <span class="hljs-meta">?&gt;</span> on this page.&lt;/p&gt;</code><code class="line language-php"></code><code class="line language-php">&lt;ul&gt;</code><code class="line language-php">    <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">foreach</span> ($page <span class="hljs-keyword">as</span> $post): <span class="hljs-meta">?&gt;</span></code><code class="line language-php">        &lt;li&gt;<span class="hljs-meta">&lt;?</span>= escape($post-&gt;getTitle()) <span class="hljs-meta">?&gt;</span>&lt;/li&gt;</code><code class="line language-php">    <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">endforeach</span> <span class="hljs-meta">?&gt;</span></code><code class="line language-php">&lt;/ul&gt;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">if</span> ($page-&gt;hasToPaginate()): <span class="hljs-meta">?&gt;</span></code><code class="line language-php">    &lt;nav&gt;</code><code class="line language-php">        <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">if</span> ($page-&gt;hasPreviousPage()): <span class="hljs-meta">?&gt;</span></code><code class="line language-php">            &lt;a href=<span class="hljs-string">"?cursor=&lt;?= escape($page-&gt;getPreviousCursorAsString()) ?&gt;"</span>&gt;Previous&lt;/a&gt;</code><code class="line language-php">        <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">endif</span> <span class="hljs-meta">?&gt;</span></code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">if</span> ($page-&gt;hasNextPage()): <span class="hljs-meta">?&gt;</span></code><code class="line language-php">            &lt;a href=<span class="hljs-string">"?cursor=&lt;?= escape($page-&gt;getNextCursorAsString()) ?&gt;"</span>&gt;Next&lt;/a&gt;</code><code class="line language-php">        <span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">endif</span> <span class="hljs-meta">?&gt;</span></code><code class="line language-php">    &lt;/nav&gt;</code><code class="line language-php"><span class="hljs-meta">&lt;?php</span> <span class="hljs-keyword">endif</span> <span class="hljs-meta">?&gt;</span></code><code class="line language-php"></code><code class="empty"></code></pre>
     </div>
             <div class="section" id="cursor-encoding">
             <h3 class="section-header ">
@@ -3859,6 +4010,45 @@ computed columns in <code>ORDER BY</code> are not supported.</li>
 </ul>
 
     </div>
+    </div>
+            <div class="section" id="writing-strategy-agnostic-code">
+            <h2 class="section-header ">
+    <a href="#writing-strategy-agnostic-code">
+        Writing Strategy-Agnostic Code
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>Both strategies share two interfaces, so code that only lists results can be
+written once and work with either one:</p>
+
+            <dl>
+                        <dt><code>PaginatorInterface&lt;T, TPosition&gt;</code></dt>
+        
+        <dd>Implemented by <code>OffsetPaginator</code> (a <code>PaginatorInterface&lt;T, Window&gt;</code>) and
+<code>CursorPaginator</code> (a <code>PaginatorInterface&lt;T, Cursor|string|null&gt;</code>). Its
+single method is
+<code>paginate(Query|QueryBuilder $query, mixed $position = null): Page</code>.
+The native type of <code>$position</code> is <code>mixed</code> because the position type is
+strategy specific; the <code>TPosition</code> template parameter narrows it for static
+analysis.</dd>
+                                <dt><code>Page&lt;T&gt;</code></dt>
+        
+        <dd>Implemented by <code>WindowPage</code> and <code>CursorPage</code>. It extends <code>Countable</code> and
+<code>IteratorAggregate</code> and exposes <code>getItems()</code>, <code>getTotalCount()</code>,
+<code>hasPreviousPage()</code>, <code>hasNextPage()</code> and <code>hasToPaginate()</code>.</dd>
+            </dl>
+            
+    <p>Navigating to another page is deliberately left out of <code>Page</code>, since
+the position types differ: <code>WindowPage::getNextWindow()</code> returns a <code>Window</code>,
+<code>CursorPage::getNextCursor()</code> a <code>Cursor</code>.</p>
+
+                <pre class="code-block-table" id="63cef8f5bfa46a23dada73e1442cee515968326b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="63cef8f5bfa46a23dada73e1442cee515968326b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Query</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Tools</span>\<span class="hljs-title">Pagination</span>\<span class="hljs-title">PaginatorInterface</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderTitles</span><span class="hljs-params">(PaginatorInterface $paginator, Query $query, mixed $position)</span>: <span class="hljs-title">void</span></span></code><code class="line language-php">{</code><code class="line language-php">    $page = $paginator-&gt;paginate($query, $position);</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">echo</span> $page-&gt;getTotalCount() . <span class="hljs-string">" result(s), "</span> . count($page) . <span class="hljs-string">" on this page\n"</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">foreach</span> ($page <span class="hljs-keyword">as</span> $post) {</code><code class="line language-php">        <span class="hljs-keyword">echo</span> $post-&gt;getTitle() . <span class="hljs-string">"\n"</span>;</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
     </div>
     </div>
         
