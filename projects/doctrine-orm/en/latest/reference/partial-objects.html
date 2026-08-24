@@ -407,7 +407,23 @@
             <li class="toc-item">
     <a href="../tutorials/pagination.html#offset-based-pagination">Offset-Based Pagination</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="../tutorials/pagination.html#how-offset-pagination-works">How Offset Pagination Works</a>
 
+
+</li>
+            <li class="toc-item">
+    <a href="../tutorials/pagination.html#api-reference">API Reference</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../tutorials/pagination.html#legacy-paginator">Legacy Paginator</a>
+
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="../tutorials/pagination.html#cursor-based-pagination">Cursor-Based Pagination</a>
@@ -429,7 +445,7 @@
 
 </li>
             <li class="toc-item">
-    <a href="../tutorials/pagination.html#api-reference">API Reference</a>
+    <a href="../tutorials/pagination.html#api-reference-1">API Reference</a>
 
 
 </li>
@@ -449,6 +465,11 @@
 
 </li>
                     </ul>
+</li>
+            <li class="toc-item">
+    <a href="../tutorials/pagination.html#writing-strategy-agnostic-code">Writing Strategy-Agnostic Code</a>
+
+
 </li>
                     </ul>
 </li>
@@ -2005,6 +2026,11 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="#transparent-lazy-loading-on-php-8-4">Transparent lazy loading on PHP 8.4</a>
+
+
+</li>
                     </ul>
 </li>
     <li class="toc-item">
@@ -2675,7 +2701,23 @@
             <li class="toc-item">
     <a href="../tutorials/pagination.html#offset-based-pagination">Offset-Based Pagination</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="../tutorials/pagination.html#how-offset-pagination-works">How Offset Pagination Works</a>
 
+
+</li>
+            <li class="toc-item">
+    <a href="../tutorials/pagination.html#api-reference">API Reference</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../tutorials/pagination.html#legacy-paginator">Legacy Paginator</a>
+
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="../tutorials/pagination.html#cursor-based-pagination">Cursor-Based Pagination</a>
@@ -2697,7 +2739,7 @@
 
 </li>
             <li class="toc-item">
-    <a href="../tutorials/pagination.html#api-reference">API Reference</a>
+    <a href="../tutorials/pagination.html#api-reference-1">API Reference</a>
 
 
 </li>
@@ -2717,6 +2759,11 @@
 
 </li>
                     </ul>
+</li>
+            <li class="toc-item">
+    <a href="../tutorials/pagination.html#writing-strategy-agnostic-code">Writing Strategy-Agnostic Code</a>
+
+
 </li>
                     </ul>
 </li>
@@ -2792,6 +2839,11 @@
 </li>
             <li class="toc-item">
     <a href="advanced-configuration.html#metadata-cache-recommended">Metadata Cache (RECOMMENDED)</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="advanced-configuration.html#default-string-type-schema-length-optional">Default String Type Schema Length (OPTIONAL)</a>
 
 
 </li>
@@ -3483,11 +3535,17 @@ etc.</p>
             <td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td>
             <td>
                                                 
-    <p>Use of partial objects is tricky. Fields that are not retrieved
-from the database will not be updated by the UnitOfWork even if they
-get changed in your objects. You can only promote a partial object
-to a fully-loaded object by calling <code>EntityManager#refresh()</code>
-or a DQL query with the refresh flag.</p>
+    <p>On PHP versions before 8.4 (or when native lazy objects are not
+enabled), use of partial objects is tricky. Fields that are not
+retrieved from the database will not be updated by the UnitOfWork
+even if they get changed in your objects. You can only promote a
+partial object to a fully-loaded object by calling
+<code>EntityManager#refresh()</code> or a DQL query with the refresh flag.</p>
+
+    <p>On PHP 8.4 with native lazy objects enabled, unloaded fields are
+transparently fetched from the database on first access, so this
+limitation no longer applies. See <a href="#transparent-lazy-loading-on-php-8-4">Transparent lazy loading on PHP 8.4</a>
+below.</p>
 
             </td>
         </tr>
@@ -3528,9 +3586,9 @@ objects is if the programming language/platform allows the ORM tool
 to hook deeply into the object and instrument it in such a way that
 individual fields (not only associations) can be loaded lazily on
 first access. This is possible in Java, for example, through
-bytecode instrumentation. In PHP though this is not possible, so
-there is no way to have &quot;secure&quot; partial objects in an ORM with
-transparent persistence.</p>
+bytecode instrumentation. In PHP this became possible in PHP 8.4
+through native lazy ghost objects. See <a href="#transparent-lazy-loading-on-php-8-4">Transparent lazy loading on PHP 8.4</a>
+for details.</p>
 
             
     <p>Doctrine, by default, does not allow partial objects. That means,
@@ -3575,6 +3633,51 @@ All other fields are null.</p>
 optimization as partial objects lead to potentially more fragile
 code.</p>
 
+    </div>
+            <div class="section" id="transparent-lazy-loading-on-php-8-4">
+            <h2 class="section-header ">
+    <a href="#transparent-lazy-loading-on-php-8-4">
+        Transparent lazy loading on PHP 8.4
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>Partial objects returned by DQL queries behave as <strong>lazy ghosts</strong>: only
+the fields listed in the <code>PARTIAL</code> clause are loaded eagerly from the
+database. All other scalar fields remain uninitialized in the ghost
+object.</p>
+
+            
+    <p>On first access to any uninitialized field, Doctrine automatically issues
+a <code>SELECT</code> to load the full entity from the database, transparently
+initializing the ghost. From that point the object is indistinguishable
+from one loaded by a normal (non-partial) query.</p>
+
+                <pre class="code-block-table" id="82f8574576ede79b60ca8b6facab87a478358c0b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="82f8574576ede79b60ca8b6facab87a478358c0b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">// Only id and name are fetched initially.</span></code><code class="line language-php">$q = $em-&gt;createQuery(<span class="hljs-string">"SELECT PARTIAL u.{id, name} FROM MyApp\Domain\User u"</span>);</code><code class="line language-php">$user = $q-&gt;getSingleResult();</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Accessing a loaded field — no additional query fired.</span></code><code class="line language-php"><span class="hljs-keyword">echo</span> $user-&gt;name;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Accessing a non-loaded field — Doctrine fetches the full entity now.</span></code><code class="line language-php"><span class="hljs-keyword">echo</span> $user-&gt;email; <span class="hljs-comment">// triggers SELECT, then returns the value</span></code><code class="empty"></code></pre>
+            
+    <p>This means the usual caveats about partial objects (broken invariants,
+null-vs-not-loaded ambiguity) no longer apply when native lazy objects
+are enabled: the object always presents complete, correct state to the
+caller, and the initial partial load serves purely as a performance
+optimisation that defers the cost of fetching remaining columns until
+(and unless) they are actually needed.</p>
+
+            
+    <p>Mutating a loaded field <strong>before</strong> the lazy initializer fires is safe.
+The in-memory value is preserved and not overwritten when the ghost is
+eventually initialized:</p>
+
+                <pre class="code-block-table" id="4ec41f0aae69a7ab6b65710b7028b36964256a9a"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="4ec41f0aae69a7ab6b65710b7028b36964256a9a"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$user = $em-&gt;createQuery(<span class="hljs-string">"SELECT PARTIAL u.{id, name} FROM MyApp\Domain\User u"</span>)</code><code class="line language-php">           -&gt;getSingleResult();</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// 'name' was loaded; change it before accessing any unloaded field.</span></code><code class="line language-php">$user-&gt;name = <span class="hljs-string">'Bob'</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Accessing 'email' triggers the lazy load, but 'name' is NOT reset</span></code><code class="line language-php"><span class="hljs-comment">// to the database value — the in-memory change is preserved.</span></code><code class="line language-php"><span class="hljs-keyword">echo</span> $user-&gt;email;</code><code class="line language-php"><span class="hljs-keyword">echo</span> $user-&gt;name; <span class="hljs-comment">// 'Bob'</span></code><code class="empty"></code></pre>
     </div>
     </div>
         
