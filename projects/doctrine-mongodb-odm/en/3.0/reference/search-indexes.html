@@ -536,6 +536,11 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="#creating-and-waiting-for-search-indexes">Creating and Waiting for Search Indexes</a>
+
+
+</li>
                     </ul>
 </li>
     <li class="toc-item">
@@ -2106,6 +2111,32 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="../cookbook/vector-search.html#automated-embeddings">Automated Embeddings</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="../cookbook/vector-search.html#step-1-define-the-model">Step 1: Define the Model</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/vector-search.html#step-2-insert-documents">Step 2: Insert Documents</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/vector-search.html#step-3-create-the-index-and-wait">Step 3: Create the Index and Wait</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../cookbook/vector-search.html#step-4-run-a-semantic-search">Step 4: Run a Semantic Search</a>
+
+
+</li>
+                    </ul>
+</li>
                     </ul>
 </li>
     </ul>
@@ -2191,7 +2222,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item" href="/projects/doctrine-mongodb-odm/en/latest/reference/search-indexes.html">
-                                                        2.17
+                                                        2.17.0
 
                                                         
                                                                                                                     (upcoming)
@@ -2420,6 +2451,70 @@ mapping:</p>
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mongo-mapping</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://doctrine-project.org/schemas/orm/doctrine-mongo-mapping"</span></span></code><code class="line language-xml">      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</code><code class="line language-xml">      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mongo-mapping</code><code class="line language-xml">                    http://doctrine-project.org/schemas/orm/doctrine-mongo-mapping.xsd"&gt;</code><code class="line language-xml"></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">document</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"Documents\BlogPost"</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">search-indexes</span>&gt;</span></code><code class="line language-xml">            <span class="hljs-tag">&lt;<span class="hljs-name">search-index</span> <span class="hljs-attr">dynamic</span>=<span class="hljs-string">"true"</span> /&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">search-indexes</span>&gt;</span></code><code class="line language-xml"></code><code class="line language-xml">        <span class="hljs-comment">&lt;!-- ... --&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">document</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mongo-mapping</span>&gt;</span></code><code class="empty"></code></pre>
         </div>
     </div>
+    </div>
+            <div class="section" id="creating-and-waiting-for-search-indexes">
+            <h2 class="section-header ">
+    <a href="#creating-and-waiting-for-search-indexes">
+        Creating and Waiting for Search Indexes
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>Search indexes are built asynchronously on the server: the create and update
+commands submit index definitions and return immediately, before the indexes
+are queryable. When you need the indexes to be ready before continuing (CI
+pipelines, deployment scripts, integration test seeding), use the <code>--wait</code>
+option of <code>odm:schema:create</code> and <code>odm:schema:update</code>:</p>
+
+                <div class="console">
+        <pre><code class="console">$ php mongodb.php odm:schema:create --search-index --wait
+$ php mongodb.php odm:schema:update --wait=1minute
+$ php mongodb.php odm:schema:create --search-index --wait=&quot;30 seconds&quot;
+$ php mongodb.php odm:schema:create --search-index --wait=5000</code></pre>
+    </div>
+
+            
+    <p>The option accepts a duration string parsable by <code>strtotime()</code> (for example
+<code>30 seconds</code>, <code>1minute</code>, <code>1 hour</code>) or a positive integer number of
+milliseconds. This is a maximum wait duration: the command returns as soon as
+the indexes are ready, without waiting out the rest of the duration. When
+<code>--wait</code> is passed without a value, a default timeout of 5 minutes is used.
+The command exits with an error if the indexes are not queryable within the
+given time.</p>
+
+            
+    <p>The wait is skipped automatically when no mapped class declares a search
+index.</p>
+
+            
+    <p>From PHP, you can also wait for search indexes to become queryable using the
+<code class="phpmethod">SchemaManager::waitForSearchIndexes</code> method:</p>
+
+                <pre class="code-block-table" id="6667f61ff83749c831859bb6ac1ae71a01e87a69"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="6667f61ff83749c831859bb6ac1ae71a01e87a69"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php">$schemaManager-&gt;createSearchIndexes();</code><code class="line language-php">$schemaManager-&gt;waitForSearchIndexes();</code><code class="empty"></code></pre>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>Waiting only reports when the index itself is queryable. When documents
+are inserted after the index is created, there is no reliable way to
+know when the background indexer has caught up with those inserts. If
+your workflow needs to wait for the index to reflect a specific set of
+documents, insert those documents <strong>before</strong> creating the search index,
+then wait for the index to become queryable.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
     </div>
     </div>
         

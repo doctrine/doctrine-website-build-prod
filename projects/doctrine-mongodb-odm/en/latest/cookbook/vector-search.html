@@ -536,6 +536,11 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="../reference/search-indexes.html#creating-and-waiting-for-search-indexes">Creating and Waiting for Search Indexes</a>
+
+
+</li>
                     </ul>
 </li>
     <li class="toc-item">
@@ -2202,7 +2207,7 @@
                                                             
                                 <div class="dropdown show d-inline-block">
                                     <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-mongodb-odm/en/latest/cookbook/vector-search.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        2.17
+                                        2.17.0
                                     </a>
 
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -2217,7 +2222,7 @@
                                                                                                             </a>
                                                                                                                                                                                                 
                                                     <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-mongodb-odm/en/latest/cookbook/vector-search.html">
-                                                        2.17
+                                                        2.17.0
 
                                                         
                                                                                                                     (upcoming)
@@ -2364,7 +2369,7 @@ in search results.</p>
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php">$schemaManager-&gt;createDocumentSearchIndexes(Guide::class);</code><code class="empty"></code></pre>
             
-    <p>If the vector search index created after inserting documents, the index is
+    <p>If the vector search index is created after inserting documents, the index is
 marked as &quot;READY&quot; when all existing documents are indexed. You can wait for
 the index to be ready using the following code:</p>
 
@@ -2374,6 +2379,41 @@ the index to be ready using the following code:</p>
                 data-copy-element-id="8249cf548ff5a72444d4227d0d5fc86bff39b102"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php">$schemaManager-&gt;waitForSearchIndexes([Guide::class]);</code><code class="empty"></code></pre>
+            
+    <p>From the command line, <code>odm:schema:create</code> and <code>odm:schema:update</code> accept
+a <code>--wait</code> option that submits the search index definitions and waits for
+them to become queryable before returning. The value is a maximum wait
+duration: the command returns as soon as the indexes are ready, without
+waiting out the rest of the duration.</p>
+
+                <div class="console">
+        <pre><code class="console">$ php mongodb.php odm:schema:create --search-index --wait=1minute</code></pre>
+    </div>
+
+            
+    <p>The value accepts a duration such as <code>30 seconds</code>, <code>1minute</code> or
+<code>1 hour</code>, or a positive integer number of milliseconds. When <code>--wait</code> is
+passed without a value, a default timeout of 5 minutes is used.</p>
+
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>Waiting is reliable only for indexes created before documents are
+inserted: the &quot;queryable&quot; flag reports when the index itself is ready,
+not when the background indexer has caught up with subsequent writes. If
+you need the index to reflect a known set of documents before running
+queries, insert those documents <strong>before</strong> creating the index and then
+wait for it to become queryable.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
     </div>
             <div class="section" id="step-5-run-a-vector-search-aggregation">
             <h2 class="section-header ">
@@ -2497,6 +2537,15 @@ No <code>numDimensions</code> or <code>similarity</code> are required — they a
                 data-copy-element-id="cdc93add8f6c06d935adf2373b2f5e7dc5e03825"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php">$schemaManager = $dm-&gt;getSchemaManager();</code><code class="line language-php">$schemaManager-&gt;createDocumentSearchIndexes(Article::class);</code><code class="line language-php">$schemaManager-&gt;waitForSearchIndexes([Article::class]);</code><code class="empty"></code></pre>
+            
+    <p>Or from the command line, which is convenient for CI and deployment scripts
+because the initial embedding backfill for automated embeddings can take
+minutes:</p>
+
+                <div class="console">
+        <pre><code class="console">$ php mongodb.php odm:schema:create --search-index --class=Article --wait=5minutes</code></pre>
+    </div>
+
     </div>
             <div class="section" id="step-4-run-a-semantic-search">
             <h3 class="section-header ">
