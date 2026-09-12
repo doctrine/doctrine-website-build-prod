@@ -548,19 +548,30 @@
 
         <ul class="section-level-1 opened-ul ">
             <li class="toc-item">
-    <a href="#mapped-superclasses">Mapped Superclasses</a>
-
-
-</li>
-            <li class="toc-item">
     <a href="#single-collection-inheritance">Single Collection Inheritance</a>
 
 
 </li>
             <li class="toc-item">
-    <a href="#collection-per-class-inheritance">Collection Per Class Inheritance</a>
+    <a href="#sharing-common-fields">Sharing Common Fields</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="#abstract-parent-class">Abstract parent class</a>
 
 
+</li>
+            <li class="toc-item">
+    <a href="#php-trait">PHP trait</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#mapped-superclass">Mapped Superclass</a>
+
+
+</li>
+                    </ul>
 </li>
                     </ul>
 </li>
@@ -2269,78 +2280,18 @@
     </a>
 </h1>
             
-    <p>Doctrine currently offers two supported methods of inheritance:
-<a href="#single_collection_inheritance">single collection</a> and
-<a href="#collection_per_class_inheritance">collection per class</a> inheritance.</p>
-
-            <div class="section" id="mapped-superclasses">
-            <h2 class="section-header ">
-    <a href="#mapped-superclasses">
-        Mapped Superclasses
-        <i class="fas fa-link"></i>
-    </a>
-</h2>
-            
-    <p>A mapped superclass is an abstract or concrete class that provides mapping
-information for its subclasses, but is not itself a document. Typically, the
-purpose of such a mapped superclass is to define state and mapping information
-that is common to multiple document classes.</p>
+    <p>Doctrine supports two approaches to inheritance:</p>
 
             
-    <p>Just like non-mapped classes, mapped superclasses may appear in the middle of
-an otherwise mapped inheritance hierarchy (through
-<a href="#single_collection_inheritance">single collection</a> or
-<a href="#collection_per_class_inheritance">collection per class</a>) inheritance.</p>
 
-                        <div class="alert note-admonition bg-light-yellow text-dark border ">
-    <table width="100%">
-        <tbody>
-        <tr>
-            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
-            <td>
-                                                
-    <p>A mapped superclass cannot be a document and is not queryable.</p>
+<ul>
+    <li class="dash"><a href="#single_collection_inheritance">Single collection</a> inheritance, where
+all classes in the hierarchy are stored in the same collection and a
+discriminator field identifies each document type.</li>
+    <li class="dash"><a href="#sharing_common_fields">Sharing common fields</a> across document classes
+stored in different collections, using PHP inheritance or traits.</li>
+</ul>
 
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-            
-    <p>Example:</p>
-
-            <div class="configuration-block">
-    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-2">
-                    <button role="tab" type="button" data-language="php"
-                    aria-controls="configuration-block-tabpanel-0825d0fa1122e0854b7d41f1f9871429" aria-selected="true"
-                    data-active="true" >
-                <span>Php</span>
-            </button>
-                    <button role="tab" type="button" data-language="xml"
-                    aria-controls="configuration-block-tabpanel-c4fda8b47b667aa25f7a6fdc48368006" aria-selected="false"
-                     tabindex="-1">
-                <span>Xml</span>
-            </button>
-            </div>
-
-            <div role="tabpanel" id="configuration-block-tabpanel-0825d0fa1122e0854b7d41f1f9871429" aria-label="Php" class="configuration-codeblock" data-language="php" style="">
-                <pre class="code-block-table" id="55c7c3f214e712f3939ac1ea4aca0b5d16764dea"><button
-                type="button"
-                class="copy-to-clipboard"
-                data-copy-element-id="55c7c3f214e712f3939ac1ea4aca0b5d16764dea"
-                title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[MappedSuperclass]</span></code><code class="line language-php"><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BaseDocument</span></span></code><code class="line language-php">{</code><code class="line language-php">}</code><code class="empty"></code></pre>
-        </div>
-            <div role="tabpanel" id="configuration-block-tabpanel-c4fda8b47b667aa25f7a6fdc48368006" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
-                <pre class="code-block-table" id="ca85ea448a97d034382ec8abf2236579234e87db"><button
-                type="button"
-                class="copy-to-clipboard"
-                data-copy-element-id="ca85ea448a97d034382ec8abf2236579234e87db"
-                title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mongo-mapping</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"</span></span></code><code class="line language-xml">                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</code><code class="line language-xml">                xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping</code><code class="line language-xml">                http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd"&gt;</code><code class="line language-xml">  <span class="hljs-tag">&lt;<span class="hljs-name">mapped-superclass</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"Documents\BaseDocument"</span>&gt;</span></code><code class="line language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">mapped-superclass</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mongo-mapping</span>&gt;</span></code><code class="empty"></code></pre>
-        </div>
-    </div>
-    </div>
             <div class="section" id="single-collection-inheritance">
             <a id="single_collection_inheritance"></a>
             <h2 class="section-header ">
@@ -2443,54 +2394,111 @@ discriminator field:</p>
         </div>
     </div>
     </div>
-            <div class="section" id="collection-per-class-inheritance">
-            <a id="collection_per_class_inheritance"></a>
+            <div class="section" id="sharing-common-fields">
+            <a id="sharing_common_fields"></a>
             <h2 class="section-header ">
-    <a href="#collection-per-class-inheritance">
-        Collection Per Class Inheritance
+    <a href="#sharing-common-fields">
+        Sharing Common Fields
         <i class="fas fa-link"></i>
     </a>
 </h2>
             
+    <p>To share common fields across multiple document classes stored in different
+collections, use a PHP abstract parent class or a trait. ODM reads field
+mappings from all properties of a class through reflection, whether they are
+declared in the class itself, a parent class, or a trait.</p>
+
             
-    <p>With collection per class inheritance, each document is stored in its own
-collection and contains all inherited fields:</p>
+    <p>Each class is stored in its own collection. Unlike <a href="#single_collection_inheritance">single collection
+inheritance</a>, there is no discriminator field
+and documents are not polymorphically queryable across classes.</p>
+
+            <div class="section" id="abstract-parent-class">
+            <h3 class="section-header ">
+    <a href="#abstract-parent-class">
+        Abstract parent class
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+                <pre class="code-block-table" id="018831431c91cd1130443cccc770f3c37c1387bc"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="018831431c91cd1130443cccc770f3c37c1387bc"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BaseDocument</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[Field]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> string $createdBy;</code><code class="line language-php">}</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document(collection: 'articles')]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Article</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseDocument</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// inherits $createdBy</span></code><code class="line language-php">}</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document(collection: 'comments')]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Comment</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseDocument</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// inherits $createdBy</span></code><code class="line language-php">}</code><code class="empty"></code></pre>
+    </div>
+            <div class="section" id="php-trait">
+            <h3 class="section-header ">
+    <a href="#php-trait">
+        PHP trait
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+                <pre class="code-block-table" id="9919f0ea1463ff6ee8c7c8eac62e52f0e1498f1b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="9919f0ea1463ff6ee8c7c8eac62e52f0e1498f1b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">trait</span> Timestamps</code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[Field]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> DateTimeImmutable $createdAt;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Field]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> DateTimeImmutable $updatedAt;</code><code class="line language-php">}</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document(collection: 'articles')]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Article</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">use</span> <span class="hljs-title">Timestamps</span>;</code><code class="line language-php">}</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document(collection: 'comments')]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Comment</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">use</span> <span class="hljs-title">Timestamps</span>;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+    </div>
+            <div class="section" id="mapped-superclass">
+            <h3 class="section-header ">
+    <a href="#mapped-superclass">
+        Mapped Superclass
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>When using XML mapping, each class requires its own mapping file. To share
+fields from a parent class, declare it as a <code>mapped-superclass</code> so the driver
+knows to load its mapping file:</p>
 
             <div class="configuration-block">
     <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-2">
                     <button role="tab" type="button" data-language="php"
-                    aria-controls="configuration-block-tabpanel-dc36335a3411ccd4d13442c8c032a8be" aria-selected="true"
+                    aria-controls="configuration-block-tabpanel-919cbe7bad589ba947e0fd4f56be46b5" aria-selected="true"
                     data-active="true" >
                 <span>Php</span>
             </button>
                     <button role="tab" type="button" data-language="xml"
-                    aria-controls="configuration-block-tabpanel-2b31c05df76beafed1256f4091d08318" aria-selected="false"
+                    aria-controls="configuration-block-tabpanel-53c09e5cba54c61f3cfa04beb8300f82" aria-selected="false"
                      tabindex="-1">
                 <span>Xml</span>
             </button>
             </div>
 
-            <div role="tabpanel" id="configuration-block-tabpanel-dc36335a3411ccd4d13442c8c032a8be" aria-label="Php" class="configuration-codeblock" data-language="php" style="">
-                <pre class="code-block-table" id="3758e1034b8affe1b74615df2674a645a1a4a7fe"><button
+            <div role="tabpanel" id="configuration-block-tabpanel-919cbe7bad589ba947e0fd4f56be46b5" aria-label="Php" class="configuration-codeblock" data-language="php" style="">
+                <pre class="code-block-table" id="6c9ad695d133e237a9f97edbcf646a64c9b00b1d"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="3758e1034b8affe1b74615df2674a645a1a4a7fe"
+                data-copy-element-id="6c9ad695d133e237a9f97edbcf646a64c9b00b1d"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document]</span></code><code class="line language-php"><span class="hljs-comment">#[InheritanceType('COLLECTION_PER_CLASS')]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// ...</span></code><code class="line language-php">}</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Employee</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Person</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// ...</span></code><code class="line language-php">}</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Documents</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[MappedSuperclass]</span></code><code class="line language-php"><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BaseDocument</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[Field]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> string $createdBy;</code><code class="line language-php">}</code><code class="empty"></code></pre>
         </div>
-            <div role="tabpanel" id="configuration-block-tabpanel-2b31c05df76beafed1256f4091d08318" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
-                <pre class="code-block-table" id="1500c2207073057ecea019e49372389823dd3239"><button
+            <div role="tabpanel" id="configuration-block-tabpanel-53c09e5cba54c61f3cfa04beb8300f82" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
+                <pre class="code-block-table" id="51e9486184653ec3f32702edc9dd10f562659679"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="1500c2207073057ecea019e49372389823dd3239"
+                data-copy-element-id="51e9486184653ec3f32702edc9dd10f562659679"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mongo-mapping</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"</span></span></code><code class="line language-xml">                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</code><code class="line language-xml">                xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping</code><code class="line language-xml">                http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd"&gt;</code><code class="line language-xml">  <span class="hljs-tag">&lt;<span class="hljs-name">document</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"Documents\Person"</span> <span class="hljs-attr">inheritance-type</span>=<span class="hljs-string">"COLLECTION_PER_CLASS"</span>&gt;</span></code><code class="line language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">document</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mongo-mapping</span>&gt;</span></code><code class="line language-xml"></code><code class="line language-xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mongo-mapping</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"</span></span></code><code class="line language-xml">                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</code><code class="line language-xml">                xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping</code><code class="line language-xml">                http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd"&gt;</code><code class="line language-xml">  <span class="hljs-tag">&lt;<span class="hljs-name">document</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"Documents\Employee"</span>&gt;</span></code><code class="line language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">document</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mongo-mapping</span>&gt;</span></code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mongo-mapping</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"</span></span></code><code class="line language-xml">                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</code><code class="line language-xml">                xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping</code><code class="line language-xml">                http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd"&gt;</code><code class="line language-xml">  <span class="hljs-tag">&lt;<span class="hljs-name">mapped-superclass</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"Documents\BaseDocument"</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">fieldName</span>=<span class="hljs-string">"createdBy"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"string"</span> /&gt;</span></code><code class="line language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">mapped-superclass</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mongo-mapping</span>&gt;</span></code><code class="empty"></code></pre>
         </div>
     </div>
-            
-    <p>A discriminator is not needed with this type of inheritance since the data is
-separated in different collections.</p>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>A mapped superclass cannot be a document and is not queryable.</p>
 
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+    </div>
     </div>
     </div>
         
