@@ -3694,17 +3694,23 @@ performance improvements:</p>
         <dd>Returns the number of items on the current page (SPL <code>Countable</code>).</dd>
                                 <dt><code>WindowPage::getTotalCount(): int</code></dt>
         
-        <dd>Returns the total number of matching root entities, ignoring the window.</dd>
+        <dd>Executes an extra <code>COUNT</code> query and returns the total number of matching
+root entities, ignoring the window. The query only runs when this method is
+called, and its result is memoized: paginating without ever asking for the
+total, as &quot;load more&quot; navigation does, costs no <code>COUNT</code> query at all.</dd>
                                 <dt><code>WindowPage::getPageNumber(): int</code> / <code>WindowPage::getPageCount(): int</code></dt>
         
         <dd>Return the 1-based number of the current page and the total number of pages.
-<code>getPageCount()</code> is at least <code>1</code>, even for an empty result set.</dd>
+<code>getPageCount()</code> is at least <code>1</code>, even for an empty result set, and
+relies on <code>getTotalCount()</code>.</dd>
                                 <dt><code>WindowPage::hasNextPage(): bool</code> / <code>WindowPage::hasPreviousPage(): bool</code></dt>
         
-        <dd>Return whether a next / previous page is available.</dd>
+        <dd>Return whether a next / previous page is available. <code>hasNextPage()</code> relies
+on <code>getTotalCount()</code>.</dd>
                                 <dt><code>WindowPage::hasToPaginate(): bool</code></dt>
         
-        <dd>Returns whether the result set spans more than one page.</dd>
+        <dd>Returns whether the result set spans more than one page. Relies on
+<code>getTotalCount()</code>.</dd>
                                 <dt><code>WindowPage::getNextWindow(): Window</code> / <code>WindowPage::getPreviousWindow(): Window</code></dt>
         
         <dd>Return the <code>Window</code> for the next / previous page. Throw a <code>LogicException</code>
