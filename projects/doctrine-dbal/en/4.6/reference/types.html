@@ -860,7 +860,13 @@
             <li class="toc-item">
     <a href="#custom-mapping-types">Custom Mapping Types</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="#lazy-loading-types">Lazy-loading types</a>
 
+
+</li>
+                    </ul>
 </li>
                     </ul>
 </li>
@@ -3236,15 +3242,79 @@ need to pass parameters to your instance:</p>
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">My</span>\<span class="hljs-title">Project</span>\<span class="hljs-title">Types</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Platforms</span>\<span class="hljs-title">AbstractPlatform</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StringReplacingType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">StringType</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">/**</span></code><code class="line language-php">     * @param <span class="hljs-keyword">array</span>&lt;string, string&gt; $replacements</code><code class="line language-php">     */</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(</span></span></code><code class="line language-php">        <span class="hljs-keyword">private</span> <span class="hljs-keyword">array</span> $replacements,</code><code class="line language-php">    ) {</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">($value, AbstractPlatform $platform)</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> strtr($value, <span class="hljs-keyword">$this</span>-&gt;replacements);</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
             
-    <p>To do that, you can obtain the <code>TypeRegistry</code> singleton from <code>Type</code>
-and register your type in it:</p>
+    <p>To do that, build a <code>TypeRegistry</code> containing your type instance and set it on the
+connection <code>Configuration</code>:</p>
 
-                <pre class="code-block-table" id="ef64437f0441122528842dbb16f25b59201b7238"><button
+                <pre class="code-block-table" id="129902b0b4c0d7dae47cd054be474ff449999e9c"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="ef64437f0441122528842dbb16f25b59201b7238"
+                data-copy-element-id="129902b0b4c0d7dae47cd054be474ff449999e9c"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">Type::getTypeRegistry()-&gt;register(<span class="hljs-string">'emojifyingType'</span>, <span class="hljs-keyword">new</span> StringReplacingType(</code><code class="line language-php">    [</code><code class="line language-php">        <span class="hljs-string">':)'</span> =&gt; <span class="hljs-string">'😊'</span>,</code><code class="line language-php">        <span class="hljs-string">':('</span> =&gt; <span class="hljs-string">'😞'</span>,</code><code class="line language-php">        <span class="hljs-string">':D'</span> =&gt; <span class="hljs-string">'😄'</span>,</code><code class="line language-php">        <span class="hljs-string">':P'</span> =&gt; <span class="hljs-string">'😛'</span>,</code><code class="line language-php">    ]</code><code class="line language-php">));</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Configuration</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">DriverManager</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">TypeRegistry</span>;</code><code class="line language-php"></code><code class="line language-php">$configuration = <span class="hljs-keyword">new</span> Configuration();</code><code class="line language-php">$configuration-&gt;setTypeProvider(<span class="hljs-keyword">new</span> TypeRegistry([</code><code class="line language-php">    <span class="hljs-string">'emojifyingType'</span> =&gt; <span class="hljs-keyword">new</span> StringReplacingType(</code><code class="line language-php">        [</code><code class="line language-php">            <span class="hljs-string">':)'</span> =&gt; <span class="hljs-string">'😊'</span>,</code><code class="line language-php">            <span class="hljs-string">':('</span> =&gt; <span class="hljs-string">'😞'</span>,</code><code class="line language-php">            <span class="hljs-string">':D'</span> =&gt; <span class="hljs-string">'😄'</span>,</code><code class="line language-php">            <span class="hljs-string">':P'</span> =&gt; <span class="hljs-string">'😛'</span>,</code><code class="line language-php">        ]</code><code class="line language-php">    ),</code><code class="line language-php">]));</code><code class="line language-php"></code><code class="line language-php">$connection = DriverManager::getConnection($params, $configuration);</code><code class="line language-php"></code><code class="empty"></code></pre>
+            
+    <p>Types registered this way are scoped to the connections using that <code>Configuration</code>,
+so they cannot affect the rest of the application.</p>
+
+            
+    <p>A registry always contains all built-in types. Names passed to the constructor
+override the built-in type of the same name.</p>
+
+            
+    <p><code>Configuration</code> accepts any <code>Doctrine\DBAL\Types\TypeProvider</code>, so <code>TypeRegistry</code> can
+be replaced with your own implementation. A provider only has to answer <code>get()</code> and
+<code>has()</code>, and to yield its types when iterated:</p>
+
+                <pre class="code-block-table" id="f2e1a92897ef16300c74acdcd8e990c0abbcf4f9"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="f2e1a92897ef16300c74acdcd8e990c0abbcf4f9"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">foreach</span> ($connection-&gt;getConfiguration()-&gt;getTypeProvider() <span class="hljs-keyword">as</span> $typeName =&gt; $type) {</code><code class="line language-php">    <span class="hljs-comment">// ...</span></code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
+            <div class="section" id="lazy-loading-types">
+            <h3 class="section-header ">
+    <a href="#lazy-loading-types">
+        Lazy-loading types
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>A type can be registered by its class name instead of an instance. It is then instantiated
+only on the first <code>get()</code>:</p>
+
+                <pre class="code-block-table" id="27674e2bf4e56c93fe96fb95fd6377fd46d54f7b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="27674e2bf4e56c93fe96fb95fd6377fd46d54f7b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$registry = <span class="hljs-keyword">new</span> TypeRegistry([</code><code class="line language-php">    <span class="hljs-string">'money'</span>     =&gt; MoneyType::class,</code><code class="line language-php">    <span class="hljs-string">'encrypted'</span> =&gt; EncryptedType::class,</code><code class="line language-php">]);</code><code class="line language-php"></code><code class="empty"></code></pre>
+            
+    <p>For types that have dependencies, inject a
+<code>Symfony\Contracts\Service\ServiceProviderInterface</code>, such as a Symfony service locator.
+The provider must be keyed by type name:</p>
+
+                <pre class="code-block-table" id="0447388429002a30a8d3662f70cad07803dd6459"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="0447388429002a30a8d3662f70cad07803dd6459"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$registry = <span class="hljs-keyword">new</span> TypeRegistry($serviceLocator);</code><code class="line language-php"></code><code class="empty"></code></pre>
+            <div class="alert -admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas   mr-2"></i></td>
+            <td>
+                                                
+    <p>When using Symfony with DoctrineBundle, custom types can be registered as services through
+the <code>#[AsDbalType]</code> attribute or the <code>doctrine.dbal.type</code> tag, which wires them into a
+per-connection <code>TypeRegistry</code> automatically. See the <a href="https://www.doctrine-project.org/projects/doctrine-bundle/en/current/dbal-type.html">DoctrineBundle documentation</a>.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+    </div>
     </div>
     </div>
         
