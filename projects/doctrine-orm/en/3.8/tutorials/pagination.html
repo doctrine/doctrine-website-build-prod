@@ -3615,6 +3615,18 @@ for any query and any page.</p>
 coupling, its accessors can be called in any order, and building another page
 never affects a page you already hold.</p>
 
+            
+    <p>When only the total is needed — to clamp a requested page number before
+fetching it, to display an &quot;N results&quot; badge, or to cache the total separately
+from the pages — <code>getTotalCount()</code> runs the <code>COUNT</code> query alone, without
+fetching any row:</p>
+
+                <pre class="code-block-table" id="50c2eac844be4889e452978ab12d7b9d7077e1eb"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="50c2eac844be4889e452978ab12d7b9d7077e1eb"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$paginator = <span class="hljs-keyword">new</span> OffsetPaginator();</code><code class="line language-php"></code><code class="line language-php">$total    = $paginator-&gt;getTotalCount($query);</code><code class="line language-php">$lastPage = max(<span class="hljs-number">1</span>, (int) ceil($total / <span class="hljs-number">25</span>));</code><code class="line language-php"></code><code class="line language-php">$page = $paginator-&gt;paginate($query, Window::fromPageNumberAndSize(min($requestedPage, $lastPage), <span class="hljs-number">25</span>));</code><code class="empty"></code></pre>
             <div class="section" id="how-offset-pagination-works">
             <h3 class="section-header ">
     <a href="#how-offset-pagination-works">
@@ -3686,6 +3698,11 @@ performance improvements:</p>
         <dd>Executes the query for the given <code>Window</code> and returns an immutable
 <code>WindowPage</code>. All page accessors below live on the returned page. Throws an
 <code>InvalidArgumentException</code> if <code>$position</code> is not a <code>Window</code>.</dd>
+                                <dt><code>OffsetPaginator::getTotalCount(Query|QueryBuilder $query): int</code></dt>
+        
+        <dd>Executes the <code>COUNT</code> query only and returns the total number of matching
+root entities, without fetching any row. It is the same query as the one
+<code>WindowPage::getTotalCount()</code> runs.</dd>
                                 <dt><code>WindowPage::getItems(): array</code></dt>
         
         <dd>Returns the raw entity array for the current page.</dd>

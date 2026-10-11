@@ -285,7 +285,13 @@
     <li class="toc-item opened">
     <a href="#event-listeners">Event Listeners</a>
 
+        <ul class="section-level-1 opened-ul ">
+            <li class="toc-item">
+    <a href="#ordering-listeners">Ordering Listeners</a>
 
+
+</li>
+                    </ul>
 </li>
     <li class="toc-item">
     <a href="installation.html#installation">Installation</a>
@@ -501,6 +507,38 @@ attribute to tag the service.</p>
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// config/services.php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">DependencyInjection</span>\<span class="hljs-title">Loader</span>\<span class="hljs-title">Configurator</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">EventListener</span>\<span class="hljs-title">SearchIndexer</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">return</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(ContainerConfigurator $configurator)</span> </span>{</code><code class="line language-php">    $services = $configurator-&gt;services();</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">// listeners are applied by default to all Doctrine connections</span></code><code class="line language-php">    $services-&gt;set(SearchIndexer::class)</code><code class="line language-php">        -&gt;tag(<span class="hljs-string">'doctrine.event_listener'</span>, [</code><code class="line language-php">            <span class="hljs-comment">// this is the only required option for the lifecycle listener tag</span></code><code class="line language-php">            <span class="hljs-string">'event'</span> =&gt; <span class="hljs-string">'postPersist'</span>,</code><code class="line language-php"></code><code class="line language-php">            <span class="hljs-comment">// listeners can define their priority in case multiple subscribers or listeners are associated</span></code><code class="line language-php">            <span class="hljs-comment">// to the same event (default priority = 0; higher numbers = listener is run earlier)</span></code><code class="line language-php">            <span class="hljs-string">'priority'</span> =&gt; <span class="hljs-number">500</span>,</code><code class="line language-php"></code><code class="line language-php">            <span class="hljs-comment">// you can also restrict listeners to a specific Doctrine connection</span></code><code class="line language-php">            <span class="hljs-string">'connection'</span> =&gt; <span class="hljs-string">'default'</span>,</code><code class="line language-php">        ])</code><code class="line language-php">    ;</code><code class="line language-php">};</code><code class="empty"></code></pre>
         </div>
+    </div>
+            <div class="section" id="ordering-listeners">
+            <h2 class="section-header ">
+    <a href="#ordering-listeners">
+        Ordering Listeners
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>With <code>symfony/doctrine-bridge</code> 8.2 or higher, a listener can specify which
+other listeners of the same event it should run <code>before</code> or <code>after</code>, as
+service ids or classes, instead of relying on the <code>priority</code> option:</p>
+
+                <pre class="code-block-table" id="2bb7cf98e06088d24ddda6806a56f5595b88c2b6"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="2bb7cf98e06088d24ddda6806a56f5595b88c2b6"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">#[AsDoctrineListener('postPersist', after: AuditLogger::class)]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SearchIndexer</span></span></code><code class="empty"></code></pre>
+            
+    <p>The <code>doctrine.event_listener</code> tag accepts the same <code>before</code> and <code>after</code>
+options. With older versions of <code>symfony/doctrine-bridge</code>, the tag ignores
+them, and the attribute throws an exception.</p>
+
+            
+    <p>When declared, <code>priority</code> is kept: <code>before</code> and <code>after</code> only change the
+order of listeners that have the same priority. The container fails to compile
+when they contradict the priorities, for example when a listener should run
+before another one that has a higher priority. A listener without a
+<code>priority</code> is placed according to its <code>before</code> and <code>after</code> options.
+<code>before</code> and <code>after</code> ignore the listeners of other events and connections.</p>
+
     </div>
     </div>
         
