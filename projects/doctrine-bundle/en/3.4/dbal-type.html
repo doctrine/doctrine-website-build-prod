@@ -260,7 +260,28 @@
 
         <ul class="section-level-1 opened-ul ">
             <li class="toc-item">
-    <a href="#manual-registration">Manual Registration</a>
+    <a href="#registering-a-type-with-the-attribute">Registering a Type with the Attribute</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="#dependency-injection">Dependency Injection</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#restricting-a-type-to-a-connection">Restricting a Type to a Connection</a>
+
+
+</li>
+                    </ul>
+</li>
+            <li class="toc-item">
+    <a href="#registering-a-type-as-a-service">Registering a Type as a Service</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#registering-a-type-with-the-configuration">Registering a Type with the Configuration</a>
 
 
 </li>
@@ -465,48 +486,226 @@
     </a>
 </h1>
             
-    <p>Custom DBAL types can be registered using the <code>AsDbalType</code> attribute. This
-attribute allows you to define a name for your custom type directly in the class
-definition. If the name is not provided, the class name will be used as the default.</p>
+    <p><a href="https://www.doctrine-project.org/projects/doctrine-dbal/en/current/reference/types.html#custom-mapping-types">Custom DBAL types</a> let you map a database column to a PHP value of your choice.
+The recommended way to register one is the <code>#[AsDbalType]</code> attribute, which
+declares the type directly on its class.</p>
 
-            
-    <p>To register a custom DBAL type, create a class that extends
-<code>Doctrine\DBAL\Types\Type</code> and add the <code>#[AsDbalType]</code> attribute to it:</p>
-
-                <pre class="code-block-table" id="89c53cdeebee9fbc1c82f7d07f72346219657e46"><button
-                type="button"
-                class="copy-to-clipboard"
-                data-copy-element-id="89c53cdeebee9fbc1c82f7d07f72346219657e46"
-                title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Doctrine</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Bundle</span>\<span class="hljs-title">DoctrineBundle</span>\<span class="hljs-title">Attribute</span>\<span class="hljs-title">AsDbalType</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Platforms</span>\<span class="hljs-title">AbstractPlatform</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[AsDbalType(name: 'money')]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MoneyType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSQLDeclaration</span><span class="hljs-params">(array $column, AbstractPlatform $platform)</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> $platform-&gt;getDecimalTypeDeclarationSQL($column);</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValue</span><span class="hljs-params">(mixed $value, AbstractPlatform $platform)</span>: <span class="hljs-title">mixed</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> $value;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">(mixed $value, AbstractPlatform $platform)</span>: <span class="hljs-title">mixed</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> $value;</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
-            
-    <p>When using the <code>AsDbalType</code> attribute, the type will be automatically
-registered with Doctrine.</p>
-
-            <div class="section" id="manual-registration">
+            <div class="section" id="registering-a-type-with-the-attribute">
             <h2 class="section-header ">
-    <a href="#manual-registration">
-        Manual Registration
+    <a href="#registering-a-type-with-the-attribute">
+        Registering a Type with the Attribute
         <i class="fas fa-link"></i>
     </a>
 </h2>
             
-    <p>Alternatively, you can register custom types in your configuration:</p>
+    <p>Create a class that extends <code>Doctrine\DBAL\Types\Type</code> and add the
+<code>#[AsDbalType]</code> attribute to it:</p>
+
+                <pre class="code-block-table" id="9266df4ec620e647da90e3ab3a78f765bb8087bc"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="9266df4ec620e647da90e3ab3a78f765bb8087bc"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// src/Doctrine/Type/MoneyType.php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Doctrine</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Bundle</span>\<span class="hljs-title">DoctrineBundle</span>\<span class="hljs-title">Attribute</span>\<span class="hljs-title">AsDbalType</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Platforms</span>\<span class="hljs-title">AbstractPlatform</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[AsDbalType]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MoneyType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSQLDeclaration</span><span class="hljs-params">(array $column, AbstractPlatform $platform)</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> $platform-&gt;getDecimalTypeDeclarationSQL($column);</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValue</span><span class="hljs-params">(mixed $value, AbstractPlatform $platform)</span>: <span class="hljs-title">mixed</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> $value;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">(mixed $value, AbstractPlatform $platform)</span>: <span class="hljs-title">mixed</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> $value;</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>The type is then available in your mappings. When no name is given, it defaults
+to the fully-qualified class name, so you can reference the type by its class:</p>
+
+                <pre class="code-block-table" id="273edf27fd4c7e72041316b096c0818dcdfbcc6b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="273edf27fd4c7e72041316b096c0818dcdfbcc6b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// src/Entity/Product.php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Entity</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Doctrine</span>\<span class="hljs-title">Type</span>\<span class="hljs-title">MoneyType</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span> <span class="hljs-title">as</span> <span class="hljs-title">ORM</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[ORM\Entity]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Product</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[ORM\Column(type: MoneyType::class)]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> Money $price;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>To use a shorter name instead, pass it to the attribute and reference that name
+in the mapping:</p>
+
+                <pre class="code-block-table" id="ed38e8a68bee9009500d2364d5e8ecbf1314b645"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="ed38e8a68bee9009500d2364d5e8ecbf1314b645"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">#[AsDbalType(name: 'money')]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MoneyType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// ...</span></code><code class="line language-php">}</code><code class="empty"></code></pre>
+                <pre class="code-block-table" id="c2f091aa8654954a7dc838a73d7e3db2a881f60f"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="c2f091aa8654954a7dc838a73d7e3db2a881f60f"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">#[ORM\Column(type: 'money')]</span></code><code class="line language-php"><span class="hljs-keyword">private</span> Money $price;</code><code class="empty"></code></pre>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>The <code>#[AsDbalType]</code> attribute and the <code>doctrine.dbal.type</code> tag require
+DoctrineBundle &gt;= 3.3. Dependency injection, the <code>connection</code> argument and
+repeatable attributes require DoctrineBundle &gt;= 3.4.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>With DBAL &gt;= 4.6 the type is registered on the connections instead of the
+global type registry. The ORM resolves it when it reads the type provider of
+the connection, which requires Doctrine ORM &gt;= 3.8. Types that other code
+registers globally with <code>Type::addType()</code> stay available, because the
+connection provider falls back to the global registry.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+            <div class="section" id="dependency-injection">
+            <h3 class="section-header ">
+    <a href="#dependency-injection">
+        Dependency Injection
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>The type is registered as a service, so its constructor can declare dependencies
+that are resolved by the container:</p>
+
+                <pre class="code-block-table" id="91abe3a442fde947491b542acce70e9916ade496"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="91abe3a442fde947491b542acce70e9916ade496"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">#[AsDbalType]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MoneyType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(private readonly ExchangeRateProvider $rates)</span></span></code><code class="line language-php">    {</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">// ...</span></code><code class="line language-php">}</code><code class="empty"></code></pre>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>Dependency injection requires DBAL &gt;= 4.6, where the type is resolved lazily
+from a per-connection registry. On older DBAL versions the type is registered
+in the global registry and created by DBAL, so a constructor with required
+parameters fails when a connection is created.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+    </div>
+            <div class="section" id="restricting-a-type-to-a-connection">
+            <h3 class="section-header ">
+    <a href="#restricting-a-type-to-a-connection">
+        Restricting a Type to a Connection
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>By default the type is registered on every connection. Use the <code>connection</code>
+parameter to restrict it to a single connection. The attribute is repeatable, so
+a type can be registered on several connections with different names:</p>
+
+                <pre class="code-block-table" id="ea96dcd4a8ea39a5d67556b9014db31aceaa0368"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="ea96dcd4a8ea39a5d67556b9014db31aceaa0368"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">#[AsDbalType(name: 'money', connection: 'default')]</span></code><code class="line language-php"><span class="hljs-comment">#[AsDbalType(name: 'money', connection: 'reporting')]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MoneyType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// ...</span></code><code class="line language-php">}</code><code class="empty"></code></pre>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>Restricting a type to a connection requires DBAL &gt;= 4.6. On older versions
+the <code>connection</code> is ignored and the type is registered globally.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+    </div>
+    </div>
+            <div class="section" id="registering-a-type-as-a-service">
+            <h2 class="section-header ">
+    <a href="#registering-a-type-as-a-service">
+        Registering a Type as a Service
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>The attribute is autoconfigured to the <code>doctrine.dbal.type</code> tag, so tagging a
+service is equivalent to using the attribute. This is useful when
+autoconfiguration is disabled, or to register the same class several times with
+different dependencies. The <code>type_name</code> attribute sets the type name; when
+omitted, the service id is used:</p>
 
             <div class="configuration-block">
-    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-3">
+    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-2">
+                    <button role="tab" type="button" data-language="yaml"
+                    aria-controls="configuration-block-tabpanel-86d6760539b1c35c007d21e08ad67f45" aria-selected="true"
+                    data-active="true" >
+                <span>Yaml</span>
+            </button>
+                    <button role="tab" type="button" data-language="php"
+                    aria-controls="configuration-block-tabpanel-4f6951383ceff919411024a2e3963d0f" aria-selected="false"
+                     tabindex="-1">
+                <span>Php</span>
+            </button>
+            </div>
+
+            <div role="tabpanel" id="configuration-block-tabpanel-86d6760539b1c35c007d21e08ad67f45" aria-label="Yaml" class="configuration-codeblock" data-language="yaml" style="">
+                <pre class="code-block-table" id="cf0f20ee8f3121a487287f05bba8b9e36a13955b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="cf0f20ee8f3121a487287f05bba8b9e36a13955b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-comment"># config/services.yaml</span></code><code class="line language-yaml"><span class="hljs-attr">services:</span></code><code class="line language-yaml">    <span class="hljs-string">App\Doctrine\Type\MoneyType:</span></code><code class="line language-yaml">        <span class="hljs-attr">tags:</span></code><code class="line language-yaml">            <span class="hljs-bullet">-</span> <span class="hljs-string">{</span> <span class="hljs-attr">name:</span> <span class="hljs-string">doctrine.dbal.type,</span> <span class="hljs-attr">type_name:</span> <span class="hljs-string">money,</span> <span class="hljs-attr">connection:</span> <span class="hljs-string">reporting</span> <span class="hljs-string">}</span></code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-4f6951383ceff919411024a2e3963d0f" aria-label="Php" class="configuration-codeblock" data-language="php" style="display: none">
+                <pre class="code-block-table" id="3e2a34ac8d23c12b6d6420ea5cede36df4a3767b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="3e2a34ac8d23c12b6d6420ea5cede36df4a3767b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// config/services.php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">DependencyInjection</span>\<span class="hljs-title">Loader</span>\<span class="hljs-title">Configurator</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Doctrine</span>\<span class="hljs-title">Type</span>\<span class="hljs-title">MoneyType</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">return</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(ContainerConfigurator $container)</span>: <span class="hljs-title">void</span> </span>{</code><code class="line language-php">    $container-&gt;services()</code><code class="line language-php">        -&gt;set(MoneyType::class)</code><code class="line language-php">        -&gt;tag(<span class="hljs-string">'doctrine.dbal.type'</span>, [<span class="hljs-string">'type_name'</span> =&gt; <span class="hljs-string">'money'</span>, <span class="hljs-string">'connection'</span> =&gt; <span class="hljs-string">'reporting'</span>]);</code><code class="line language-php">};</code><code class="empty"></code></pre>
+        </div>
+    </div>
+    </div>
+            <div class="section" id="registering-a-type-with-the-configuration">
+            <h2 class="section-header ">
+    <a href="#registering-a-type-with-the-configuration">
+        Registering a Type with the Configuration
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>When you do not need dependency injection, a type can be registered by mapping a
+name to its class name under <code>doctrine.dbal.types</code>. This is supported on all
+DBAL versions and does not turn the type into a service. With DBAL &gt;= 4.6 the
+type is registered both in the global registry and in the type provider of each
+connection, so the two registrations hold separate instances of the type:</p>
+
+            <div class="configuration-block">
+    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-2">
                     <button role="tab" type="button" data-language="yaml"
                     aria-controls="configuration-block-tabpanel-ed4c121d12c6faa5ca20c5005d6db39d" aria-selected="true"
                     data-active="true" >
                 <span>Yaml</span>
             </button>
-                    <button role="tab" type="button" data-language="xml"
-                    aria-controls="configuration-block-tabpanel-bc5c95441c428999b3e0c4b4ffa7e792" aria-selected="false"
-                     tabindex="-1">
-                <span>Xml</span>
-            </button>
                     <button role="tab" type="button" data-language="php"
-                    aria-controls="configuration-block-tabpanel-4efc08d5822955550c68ac6019d85274" aria-selected="false"
+                    aria-controls="configuration-block-tabpanel-8396396186623760927ed30e95aa6c5b" aria-selected="false"
                      tabindex="-1">
                 <span>Php</span>
             </button>
@@ -520,21 +719,13 @@ registered with Doctrine.</p>
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-yaml"><span class="hljs-comment"># config/packages/doctrine.yaml</span></code><code class="line language-yaml"><span class="hljs-attr">doctrine:</span></code><code class="line language-yaml">    <span class="hljs-attr">dbal:</span></code><code class="line language-yaml">        <span class="hljs-attr">types:</span></code><code class="line language-yaml">            <span class="hljs-attr">money:</span> <span class="hljs-string">App\Doctrine\Type\MoneyType</span></code><code class="empty"></code></pre>
         </div>
-            <div role="tabpanel" id="configuration-block-tabpanel-bc5c95441c428999b3e0c4b4ffa7e792" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
-                <pre class="code-block-table" id="7d07791276e61bbfb8bef882cceda35e86556f8b"><button
+            <div role="tabpanel" id="configuration-block-tabpanel-8396396186623760927ed30e95aa6c5b" aria-label="Php" class="configuration-codeblock" data-language="php" style="display: none">
+                <pre class="code-block-table" id="3dae18a3af4ee3d70843a8c65ca197eee4f2d1b6"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="7d07791276e61bbfb8bef882cceda35e86556f8b"
+                data-copy-element-id="3dae18a3af4ee3d70843a8c65ca197eee4f2d1b6"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-comment">&lt;!-- config/packages/doctrine.xml --&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">container</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://symfony.com/schema/dic/services"</span></span></code><code class="line language-xml">    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</code><code class="line language-xml">    xmlns:doctrine="http://symfony.com/schema/dic/doctrine"</code><code class="line language-xml">    xsi:schemaLocation="http://symfony.com/schema/dic/services</code><code class="line language-xml">        http://symfony.com/schema/dic/services/services-1.0.xsd</code><code class="line language-xml">        http://symfony.com/schema/dic/doctrine</code><code class="line language-xml">        http://symfony.com/schema/dic/doctrine/doctrine-1.0.xsd"&gt;</code><code class="line language-xml"></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:config</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:dbal</span>&gt;</span></code><code class="line language-xml">            <span class="hljs-tag">&lt;<span class="hljs-name">doctrine:type</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"money"</span>&gt;</span>App\Doctrine\Type\MoneyType<span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:type</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:dbal</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">doctrine:config</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">container</span>&gt;</span></code><code class="empty"></code></pre>
-        </div>
-            <div role="tabpanel" id="configuration-block-tabpanel-4efc08d5822955550c68ac6019d85274" aria-label="Php" class="configuration-codeblock" data-language="php" style="display: none">
-                <pre class="code-block-table" id="c702826bedf550b36e330f8cae905c89495f0f06"><button
-                type="button"
-                class="copy-to-clipboard"
-                data-copy-element-id="c702826bedf550b36e330f8cae905c89495f0f06"
-                title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// config/packages/doctrine.php</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Doctrine</span>\<span class="hljs-title">Type</span>\<span class="hljs-title">MoneyType</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">DependencyInjection</span>\<span class="hljs-title">Loader</span>\<span class="hljs-title">Configurator</span>\<span class="hljs-title">ContainerConfigurator</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">return</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(ContainerConfigurator $containerConfigurator)</span>: <span class="hljs-title">void</span> </span>{</code><code class="line language-php">    $containerConfigurator-&gt;extension(<span class="hljs-string">'doctrine'</span>, [</code><code class="line language-php">        <span class="hljs-string">'dbal'</span> =&gt; [</code><code class="line language-php">            <span class="hljs-string">'types'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'money'</span> =&gt; MoneyType::class,</code><code class="line language-php">            ],</code><code class="line language-php">        ],</code><code class="line language-php">    ]);</code><code class="line language-php">};</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// config/packages/doctrine.php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">DependencyInjection</span>\<span class="hljs-title">Loader</span>\<span class="hljs-title">Configurator</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Doctrine</span>\<span class="hljs-title">Type</span>\<span class="hljs-title">MoneyType</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">return</span> App::config([</code><code class="line language-php">    <span class="hljs-string">'doctrine'</span> =&gt; [</code><code class="line language-php">        <span class="hljs-string">'dbal'</span> =&gt; [</code><code class="line language-php">            <span class="hljs-string">'types'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'money'</span> =&gt; MoneyType::class,</code><code class="line language-php">            ],</code><code class="line language-php">        ],</code><code class="line language-php">    ],</code><code class="line language-php">]);</code><code class="empty"></code></pre>
         </div>
     </div>
     </div>

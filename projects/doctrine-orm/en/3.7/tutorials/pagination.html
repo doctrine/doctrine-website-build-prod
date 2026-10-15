@@ -3915,21 +3915,32 @@ display a total result count alongside previous/next navigation.</dd>
             
     <p><strong>Next page</strong></p>
 
-                <pre class="code-block-table" id="f22f8627d630becf68780b68350e8a59959eb209"><button
+                <pre class="code-block-table" id="bbb418439c94cff6396e3f19d79f27926944f527"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="f22f8627d630becf68780b68350e8a59959eb209"
+                data-copy-element-id="bbb418439c94cff6396e3f19d79f27926944f527"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sql"><span class="hljs-keyword">SELECT</span> ...</code><code class="line language-sql">FROM   post p</code><code class="line language-sql">WHERE  (p.created_at &lt; :cursor_val_0)</code><code class="line language-sql">   OR  (p.created_at = :cursor_val_0 AND p.id &lt; :cursor_id_1)</code><code class="line language-sql">ORDER  BY p.created_at DESC, p.id DESC</code><code class="line language-sql">LIMIT  16   <span class="hljs-comment">-- limit + 1</span></code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sql"><span class="hljs-keyword">SELECT</span> ...</code><code class="line language-sql">FROM   post p</code><code class="line language-sql">WHERE  p.created_at &lt;= :dctrn_cursor_0</code><code class="line language-sql">  AND  (   (p.created_at &lt; :dctrn_cursor_0)</code><code class="line language-sql">        OR (p.created_at = :dctrn_cursor_0 AND p.id &lt; :dctrn_cursor_1))</code><code class="line language-sql">ORDER  BY p.created_at DESC, p.id DESC</code><code class="line language-sql">LIMIT  16   <span class="hljs-comment">-- limit + 1</span></code><code class="empty"></code></pre>
             
     <p><strong>Previous page</strong></p>
 
-                <pre class="code-block-table" id="6427b08725d37f9640a0426ed1d8b8562d202530"><button
+                <pre class="code-block-table" id="c5cf0f970012608ec98540d71e16d0c424110eb5"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="6427b08725d37f9640a0426ed1d8b8562d202530"
+                data-copy-element-id="c5cf0f970012608ec98540d71e16d0c424110eb5"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sql"><span class="hljs-keyword">SELECT</span> ...</code><code class="line language-sql">FROM   post p</code><code class="line language-sql">WHERE  (p.created_at &gt; :cursor_val_0)</code><code class="line language-sql">   OR  (p.created_at = :cursor_val_0 AND p.id &gt; :cursor_id_1)</code><code class="line language-sql">ORDER  BY p.created_at ASC, p.id ASC   <span class="hljs-comment">-- reversed</span></code><code class="line language-sql">LIMIT  16</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sql"><span class="hljs-keyword">SELECT</span> ...</code><code class="line language-sql">FROM   post p</code><code class="line language-sql">WHERE  p.created_at &gt;= :dctrn_cursor_0</code><code class="line language-sql">  AND  (   (p.created_at &gt; :dctrn_cursor_0)</code><code class="line language-sql">        OR (p.created_at = :dctrn_cursor_0 AND p.id &gt; :dctrn_cursor_1))</code><code class="line language-sql">ORDER  BY p.created_at ASC, p.id ASC   <span class="hljs-comment">-- reversed</span></code><code class="line language-sql">LIMIT  16</code><code class="empty"></code></pre>
+            
+    <p>When the query is ordered by more than one column, the paginator puts an
+inclusive bound on the first <code>ORDER BY</code> column in front of the cursor
+condition (<code>p.created_at &lt;= :dctrn_cursor_0</code> above). The bound is redundant;
+every row that matches the <code>OR</code> condition already satisfies it, so it does not
+change which rows are returned. It is there for performance. Some platforms,
+PostgreSQL among them, cannot derive an index range from the <code>OR</code> condition
+alone and filter rows one by one, so a page gets slower the deeper it is in the
+result set. The leading bound gives them a range to seek to on an index that
+covers the <code>ORDER BY</code> columns.</p>
+
     </div>
             <div class="section" id="html-template-example">
             <h3 class="section-header ">
