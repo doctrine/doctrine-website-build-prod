@@ -512,6 +512,11 @@ That may be in files, attributes, yaml, xml, etc.</p>
     <p>The Doctrine Persistence project offers a few base implementations that
 make it easy to implement your own XML, Attributes or YAML drivers.</p>
 
+            
+    <p>In the following examples, <code>$classMetadata</code> is an instance of your mapper&#039;s
+implementation of <code>ClassMetadata</code> for <code>User</code>. <code>ClassMetadata</code> itself is
+an interface and cannot be instantiated.</p>
+
             <div class="section" id="filedriver">
             <h2 class="section-header ">
     <a href="#filedriver">
@@ -528,30 +533,30 @@ correspond to the full class name, including namespace, with the namespace delim
     <p>Extend the <code>Doctrine\Persistence\Mapping\Driver\FileDriver</code> class to implement your own file driver.
 Here is an example JSON file driver implementation.</p>
 
-                <pre class="code-block-table" id="3157df57fd2b74356cd4ef860978bd03889343fa"><button
+                <pre class="code-block-table" id="3ff5f3d7c10aee5a556bce8ea9eb3085685e533a"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="3157df57fd2b74356cd4ef860978bd03889343fa"
+                data-copy-element-id="3ff5f3d7c10aee5a556bce8ea9eb3085685e533a"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Driver</span>\<span class="hljs-title">FileDriver</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JSONFileDriver</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FileDriver</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadMetadataForClass</span><span class="hljs-params">($className, ClassMetadata $metadata)</span></span></code><code class="line language-php">    {</code><code class="line language-php">        $mappingFileData = <span class="hljs-keyword">$this</span>-&gt;getElement($className);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// use the array of mapping information from the file to populate the $metadata instance</span></code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadMappingFile</span><span class="hljs-params">($file)</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> json_decode($file, <span class="hljs-keyword">true</span>);</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ClassMetadata</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Driver</span>\<span class="hljs-title">FileDriver</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JSONFileDriver</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FileDriver</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadMetadataForClass</span><span class="hljs-params">(string $className, ClassMetadata $metadata)</span>: <span class="hljs-title">void</span></span></code><code class="line language-php">    {</code><code class="line language-php">        $mappingFileData = <span class="hljs-keyword">$this</span>-&gt;getElement($className);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// use the array of mapping information from the file to populate the $metadata instance</span></code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadMappingFile</span><span class="hljs-params">(string $file)</span>: <span class="hljs-title">array</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> json_decode(file_get_contents($file), <span class="hljs-keyword">true</span>);</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
             
     <p>Now you can use it like the following.</p>
 
-                <pre class="code-block-table" id="f9c635d13da9f6963ab918060fa894af6db8c1fa"><button
+                <pre class="code-block-table" id="382a19751c55f4050643c3fb9dbf26dbb12e029b"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="f9c635d13da9f6963ab918060fa894af6db8c1fa"
+                data-copy-element-id="382a19751c55f4050643c3fb9dbf26dbb12e029b"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Driver</span>\<span class="hljs-title">DefaultFileLocator</span>;</code><code class="line language-php"></code><code class="line language-php">$fileLocator = <span class="hljs-keyword">new</span> DefaultFileLocator(<span class="hljs-string">'/path/to/mapping/files'</span>, <span class="hljs-string">'json'</span>);</code><code class="line language-php"></code><code class="line language-php">$jsonFileDriver = <span class="hljs-keyword">new</span> JSONFileDriver($fileLocator);</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Driver</span>\<span class="hljs-title">DefaultFileLocator</span>;</code><code class="line language-php"></code><code class="line language-php">$fileLocator = <span class="hljs-keyword">new</span> DefaultFileLocator(<span class="hljs-string">'/path/to/mapping/files'</span>, <span class="hljs-string">'.json'</span>);</code><code class="line language-php"></code><code class="line language-php">$jsonFileDriver = <span class="hljs-keyword">new</span> JSONFileDriver($fileLocator);</code><code class="empty"></code></pre>
             
     <p>Now if you have a class named <code>App\Model\User</code> and you can load the mapping information like this.</p>
 
-                <pre class="code-block-table" id="d28b6eda7fcd36a2c6feb13fd8d8d609f595563b"><button
+                <pre class="code-block-table" id="4525187c5ad2132360fc5a4e20efb7e881db2391"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="d28b6eda7fcd36a2c6feb13fd8d8d609f595563b"
+                data-copy-element-id="4525187c5ad2132360fc5a4e20efb7e881db2391"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Model</span>\<span class="hljs-title">User</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ClassMetadata</span>;</code><code class="line language-php"></code><code class="line language-php">$classMetadata = <span class="hljs-keyword">new</span> ClassMetadata();</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// looks for a file at /path/to/mapping/files/App.Model.User.json</span></code><code class="line language-php">$jsonFileDriver-&gt;loadMetadataForClass(User::class, $classMetadata);</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Model</span>\<span class="hljs-title">User</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ClassMetadata</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// looks for a file at /path/to/mapping/files/App.Model.User.json</span></code><code class="line language-php">$jsonFileDriver-&gt;loadMetadataForClass(User::class, $classMetadata);</code><code class="empty"></code></pre>
     </div>
             <div class="section" id="phpdriver">
             <h2 class="section-header ">
@@ -572,12 +577,12 @@ Here is an example JSON file driver implementation.</p>
             
     <p>Now you can use it like the following:</p>
 
-                <pre class="code-block-table" id="ca9370dcb0fb637279cd12b7407a972827b77833"><button
+                <pre class="code-block-table" id="ad4bc6c9426f2aa4dc8d102d5ffa88af75dca417"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="ca9370dcb0fb637279cd12b7407a972827b77833"
+                data-copy-element-id="ad4bc6c9426f2aa4dc8d102d5ffa88af75dca417"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Model</span>\<span class="hljs-title">User</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ClassMetadata</span>;</code><code class="line language-php"></code><code class="line language-php">$classMetadata = <span class="hljs-keyword">new</span> ClassMetadata();</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// looks for a PHP file at /path/to/mapping/files/App.Model.User.php</span></code><code class="line language-php">$phpDriver-&gt;loadMetadataForClass(User::class, $classMetadata);</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Model</span>\<span class="hljs-title">User</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ClassMetadata</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// looks for a PHP file at /path/to/mapping/files/App.Model.User.php</span></code><code class="line language-php">$phpDriver-&gt;loadMetadataForClass(User::class, $classMetadata);</code><code class="empty"></code></pre>
             
     <p>Inside the <code>/path/to/mapping/files/App.Model.User.php</code> file you can write raw PHP code to populate a <code>ClassMetadata</code>
 instance. You will have access to a variable named <code>$metadata</code> inside the file that you can use to populate the
@@ -601,12 +606,12 @@ mapping metadata.</p>
     <p>The StaticPHPDriver calls a static <code>loadMetadata()</code> method on your model classes where you can manually populate the
 <code>ClassMetadata</code> instance.</p>
 
-                <pre class="code-block-table" id="eaa86b073441f905e443c6b67a051b3269198566"><button
+                <pre class="code-block-table" id="be4921ad100ee51b725adb393ce26e25472ee38c"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="eaa86b073441f905e443c6b67a051b3269198566"
+                data-copy-element-id="be4921ad100ee51b725adb393ce26e25472ee38c"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php">$staticPHPDriver = <span class="hljs-keyword">new</span> StaticPHPDriver(<span class="hljs-string">'/path/to/classes'</span>);</code><code class="line language-php"></code><code class="line language-php">$classMetadata = <span class="hljs-keyword">new</span> ClassMetadata();</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// looks for a PHP file at /path/to/classes/App/Model/User.php</span></code><code class="line language-php">$phpDriver-&gt;loadMetadataForClass(User::class, $classMetadata);</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Driver</span>\<span class="hljs-title">StaticPHPDriver</span>;</code><code class="line language-php"></code><code class="line language-php">$staticPHPDriver = <span class="hljs-keyword">new</span> StaticPHPDriver(<span class="hljs-string">'/path/to/classes'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// calls User::loadMetadata() to populate $classMetadata</span></code><code class="line language-php">$staticPHPDriver-&gt;loadMetadataForClass(User::class, $classMetadata);</code><code class="empty"></code></pre>
             
     <p>Your class in <code>App\Model\User</code> would look like the following.</p>
 
