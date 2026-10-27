@@ -474,64 +474,12 @@ affect mix:lastModified but not mix:created.</p>
     <p>The document looks exactly the same as above. To update the modification
 date, write an event listener as follows and register it with the EventManager:</p>
 
-                <div class="console">
-        <pre><code class="console">use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-use Doctrine\ODM\PHPCR\DocumentManager;
-
-/**
- * This listener ensures that the jcr:lastModified property is updated
- * on prePersist and preUpdate events.
- *
- * @author Thierry Marianne &lt;thierry.marianne@weaving-the-web.org&gt;
- */
-class LastModified
-{
-    public function prePersist(LifecycleEventArgs $e): void
-    {
-        $this-&gt;updateLastModifiedProperty($e);
-    }
-
-    public function preUpdate(LifecycleEventArgs $e): void
-    {
-        $this-&gt;updateLastModifiedProperty($e);
-    }
-
-    /**
-     * If the document has the mixin mix:lastModified then update the field
-     * that is mapped to jcr:lastModified.
-     */
-    private function updateLastModifiedProperty(LifecycleEventArgs $e): void
-    {
-        $document = $e-&gt;getObject();
-
-        /**
-         * @var DocumentManager $dm
-         */
-        $dm = $e-&gt;getObjectManager();
-
-        $metadata = $dm-&gt;getClassMetadata(get_class($document));
-        $mixins = $metadata-&gt;getMixins();
-
-        if (!in_array(&#039;mix:lastModified&#039;, $mixins)) {
-            return;
-        }
-
-        // custom logic to determine if we need to update the lastModified date goes here.
-        // ...
-
-        // look for the field mapped to jcr:lastModified and update
-        foreach ($metadata-&gt;getFieldNames() as $fieldName) {
-            $field = $metadata-&gt;getField($fieldName);
-            if (&#039;jcr:lastModified&#039; == $field[&#039;property&#039;]) {
-                $metadata-&gt;setFieldValue($document, $fieldName, new \DateTime());
-                break;
-            }
-        }
-    }
-}
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="324b449dbde9dae999d3f7d261c643ee7cad41c4"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="324b449dbde9dae999d3f7d261c643ee7cad41c4"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">Event</span>\<span class="hljs-title">LifecycleEventArgs</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">DocumentManager</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">/**</span></code><code class="line language-php"> * This listener ensures that the jcr:lastModified property is updated</code><code class="line language-php"> * on prePersist <span class="hljs-keyword">and</span> preUpdate events.</code><code class="line language-php"> *</code><code class="line language-php"> * @author Thierry Marianne &lt;thierry.marianne@weaving-the-web.org&gt;</code><code class="line language-php"> */</code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LastModified</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">prePersist</span><span class="hljs-params">(LifecycleEventArgs $e)</span>: <span class="hljs-title">void</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;updateLastModifiedProperty($e);</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">preUpdate</span><span class="hljs-params">(LifecycleEventArgs $e)</span>: <span class="hljs-title">void</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;updateLastModifiedProperty($e);</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">/**</span></code><code class="line language-php">     * <span class="hljs-keyword">If</span> the document has the mixin mix:lastModified then update the field</code><code class="line language-php">     * that is mapped to jcr:lastModified.</code><code class="line language-php">     */</code><code class="line language-php">    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateLastModifiedProperty</span><span class="hljs-params">(LifecycleEventArgs $e)</span>: <span class="hljs-title">void</span></span></code><code class="line language-php">    {</code><code class="line language-php">        $document = $e-&gt;getObject();</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">/**</span></code><code class="line language-php">         * @<span class="hljs-keyword">var</span> DocumentManager $dm</code><code class="line language-php">         */</code><code class="line language-php">        $dm = $e-&gt;getObjectManager();</code><code class="line language-php"></code><code class="line language-php">        $metadata = $dm-&gt;getClassMetadata(get_class($document));</code><code class="line language-php">        $mixins = $metadata-&gt;getMixins();</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">if</span> (!in_array(<span class="hljs-string">'mix:lastModified'</span>, $mixins)) {</code><code class="line language-php">            <span class="hljs-keyword">return</span>;</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// custom logic to determine if we need to update the lastModified date goes here.</span></code><code class="line language-php">        <span class="hljs-comment">// ...</span></code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// look for the field mapped to jcr:lastModified and update</span></code><code class="line language-php">        <span class="hljs-keyword">foreach</span> ($metadata-&gt;getFieldNames() <span class="hljs-keyword">as</span> $fieldName) {</code><code class="line language-php">            $field = $metadata-&gt;getField($fieldName);</code><code class="line language-php">            <span class="hljs-keyword">if</span> (<span class="hljs-string">'jcr:lastModified'</span> == $field[<span class="hljs-string">'property'</span>]) {</code><code class="line language-php">                $metadata-&gt;setFieldValue($document, $fieldName, <span class="hljs-keyword">new</span> \DateTime());</code><code class="line language-php">                <span class="hljs-keyword">break</span>;</code><code class="line language-php">            }</code><code class="line language-php">        }</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
             
     <p>If you need to update lastModifiedBy, follow the same pattern.</p>
 

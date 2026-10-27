@@ -681,7 +681,8 @@
                             
                             
 
-            <div class="section" id="maintaining-data-in-the-repository">
+            
+                <div class="section" id="maintaining-data-in-the-repository" data-guides-index-terms="Initializers,DoctrinePHPCRBundle,Fixtures,Migrators">
             <h1 class="section-header ">
     <a href="#maintaining-data-in-the-repository">
         Maintaining Data in the Repository
@@ -810,54 +811,12 @@ specific documents, you need your own Initializer. The interesting method
 to overwrite is the <code>init</code> method. It is passed the <code>ManagerRegistry</code>,
 from which you can retrieve the PHPCR session but also the document manager:</p>
 
-                <div class="console">
-        <pre><code class="console">// src/App/Initializer/SiteInitializer.php
-namespace App\Initializer;
-
-use App\Documents\Site;
-use Doctrine\Bundle\PHPCRBundle\Initializer\InitializerInterface;
-use Doctrine\Bundle\PHPCRBundle\ManagerRegistry;
-use PHPCR\SessionInterface;
-use PHPCR\Util\NodeHelper;
-
-class SiteInitializer implements InitializerInterface
-{
-    private $basePath;
-
-    public function __construct($basePath = &#039;/cms&#039;)
-    {
-        $this-&gt;basePath = $basePath;
-    }
-
-    public function init(ManagerRegistry $registry)
-    {
-        $dm = $registry-&gt;getManagerForClass(Site::class);
-        if ($dm-&gt;find(null, $this-&gt;basePath)) {
-            return;
-        }
-
-        $site = new Site();
-        $site-&gt;setId($this-&gt;basePath);
-        $dm-&gt;persist($site);
-        $dm-&gt;flush();
-
-        $session = $registry-&gt;getConnection();
-        // create the &#039;cms&#039;, &#039;pages&#039;, and &#039;posts&#039; nodes
-        NodeHelper::createPath($session, &#039;/cms/pages&#039;);
-        NodeHelper::createPath($session, &#039;/cms/posts&#039;);
-        NodeHelper::createPath($session, &#039;/cms/routes&#039;);
-
-        $session-&gt;save();
-    }
-
-    public function getName()
-    {
-        return &#039;Site Initializer&#039;;
-    }
-}
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="cc387ba7ada444d2d549f9a59c9e10dadfa3511b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="cc387ba7ada444d2d549f9a59c9e10dadfa3511b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// src/App/Initializer/SiteInitializer.php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Initializer</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">App</span>\<span class="hljs-title">Documents</span>\<span class="hljs-title">Site</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Bundle</span>\<span class="hljs-title">PHPCRBundle</span>\<span class="hljs-title">Initializer</span>\<span class="hljs-title">InitializerInterface</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Bundle</span>\<span class="hljs-title">PHPCRBundle</span>\<span class="hljs-title">ManagerRegistry</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">PHPCR</span>\<span class="hljs-title">SessionInterface</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">PHPCR</span>\<span class="hljs-title">Util</span>\<span class="hljs-title">NodeHelper</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SiteInitializer</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">InitializerInterface</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">private</span> $basePath;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">($basePath = <span class="hljs-string">'/cms'</span>)</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;basePath = $basePath;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">init</span><span class="hljs-params">(ManagerRegistry $registry)</span></span></code><code class="line language-php">    {</code><code class="line language-php">        $dm = $registry-&gt;getManagerForClass(Site::class);</code><code class="line language-php">        <span class="hljs-keyword">if</span> ($dm-&gt;find(<span class="hljs-keyword">null</span>, <span class="hljs-keyword">$this</span>-&gt;basePath)) {</code><code class="line language-php">            <span class="hljs-keyword">return</span>;</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        $site = <span class="hljs-keyword">new</span> Site();</code><code class="line language-php">        $site-&gt;setId(<span class="hljs-keyword">$this</span>-&gt;basePath);</code><code class="line language-php">        $dm-&gt;persist($site);</code><code class="line language-php">        $dm-&gt;flush();</code><code class="line language-php"></code><code class="line language-php">        $session = $registry-&gt;getConnection();</code><code class="line language-php">        <span class="hljs-comment">// create the 'cms', 'pages', and 'posts' nodes</span></code><code class="line language-php">        NodeHelper::createPath($session, <span class="hljs-string">'/cms/pages'</span>);</code><code class="line language-php">        NodeHelper::createPath($session, <span class="hljs-string">'/cms/posts'</span>);</code><code class="line language-php">        NodeHelper::createPath($session, <span class="hljs-string">'/cms/routes'</span>);</code><code class="line language-php"></code><code class="line language-php">        $session-&gt;save();</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getName</span><span class="hljs-params">()</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-string">'Site Initializer'</span>;</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
             
     <p>Define a service for your Initializer as follows:</p>
 
@@ -1021,29 +980,12 @@ don&#039;t specify a path in the command.</p>
             
     <p>A simple example fixture class looks like this:</p>
 
-                <div class="console">
-        <pre><code class="console">// src/App/DataFixtures/PHPCR/LoadPageData.php
-namespace App\DataFixtures\PHPCR;
-
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\FixtureInterface;
-use Doctrine\ODM\PHPCR\DocumentManager;
-
-class LoadPageData implements FixtureInterface
-{
-    public function load(ObjectManager $manager)
-    {
-        if (!$manager instanceof DocumentManager) {
-            $class = get_class($manager);
-            throw new \RuntimeException(&quot;Fixture requires a PHPCR ODM DocumentManager instance, instance of &#039;$class&#039; given.&quot;);
-        }
-
-        // ... create and persist your data here
-    }
-}
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="a452dd7944cec02e515f2e69eda92b6e80a384d4"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="a452dd7944cec02e515f2e69eda92b6e80a384d4"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// src/App/DataFixtures/PHPCR/LoadPageData.php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">DataFixtures</span>\<span class="hljs-title">PHPCR</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">ObjectManager</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Common</span>\<span class="hljs-title">DataFixtures</span>\<span class="hljs-title">FixtureInterface</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">DocumentManager</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LoadPageData</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">FixtureInterface</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">load</span><span class="hljs-params">(ObjectManager $manager)</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (!$manager <span class="hljs-keyword">instanceof</span> DocumentManager) {</code><code class="line language-php">            $class = get_class($manager);</code><code class="line language-php">            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> \RuntimeException(<span class="hljs-string">"Fixture requires a PHPCR ODM DocumentManager instance, instance of '$class' given."</span>);</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// ... create and persist your data here</span></code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
             
     <p>For more on fixtures, see the documentation of the <a href="https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html">DoctrineFixturesBundle</a>.</p>
 

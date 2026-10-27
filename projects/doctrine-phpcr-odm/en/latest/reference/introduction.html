@@ -1830,61 +1830,12 @@ which is a content management framework built on top of Doctrine PHPCR-ODM and S
     <p>Now we bootstrap Doctrine PHPCR-ODM. Create a file called <code>bootstrap.php</code> in
 your project root directory:</p>
 
-                <div class="console">
-        <pre><code class="console">// bootstrap.php
-
-$vendorDir = __DIR__.&#039;/vendor&#039;;
-
-$file = $vendorDir.&#039;/autoload.php&#039;;
-if (file_exists($file)) {
-    $autoload = require_once $file;
-} else {
-    throw new RuntimeException(&#039;Install dependencies with composer.&#039;);
-}
-
-$params = [
-    &#039;driver&#039;    =&gt; &#039;pdo_mysql&#039;,
-    &#039;host&#039;      =&gt; &#039;localhost&#039;,
-    &#039;user&#039;      =&gt; &#039;root&#039;,
-    &#039;password&#039;  =&gt; &#039;&#039;,
-    &#039;dbname&#039;    =&gt; &#039;phpcr_odm_tutorial&#039;,
-    &#039;charset&#039;   =&gt; &#039;utf8mb4&#039;,
-];
-
-$workspace = &#039;default&#039;;
-$user = &#039;admin&#039;;
-$pass = &#039;admin&#039;;
-
-/* --- transport implementation specific code begin --- */
-// for more options, see https://github.com/jackalope/jackalope-doctrine-dbal#bootstrapping
-$dbConn = \Doctrine\DBAL\DriverManager::getConnection($params);
-$parameters = [&#039;jackalope.doctrine_dbal_connection&#039; =&gt; $dbConn];
-$repository = \Jackalope\RepositoryFactoryDoctrineDBAL::getRepository($parameters);
-$credentials = new \PHPCR\SimpleCredentials(null, null);
-/* --- transport implementation specific code  ends --- */
-
-$session = $repository-&gt;login($credentials, $workspace);
-
-/* prepare the doctrine configuration */
-use Doctrine\ODM\PHPCR\Mapping\Driver\AttributeDriver;
-use Doctrine\ODM\PHPCR\Configuration;
-use Doctrine\ODM\PHPCR\DocumentManager;
-
-$driver = new AttributeDriver([
-    // this is a list of all folders containing document classes
-    &#039;vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Document&#039;,
-    &#039;src/Demo&#039;,
-]);
-
-$config = new Configuration();
-$config-&gt;setMetadataDriverImpl($driver);
-
-$documentManager = DocumentManager::create($session, $config);
-
-return $autoload;
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="eafd5237095d407e691edf7a194389b5f44c673e"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="eafd5237095d407e691edf7a194389b5f44c673e"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// bootstrap.php</span></code><code class="line language-php"></code><code class="line language-php">$vendorDir = <span class="hljs-keyword">__DIR__</span>.<span class="hljs-string">'/vendor'</span>;</code><code class="line language-php"></code><code class="line language-php">$file = $vendorDir.<span class="hljs-string">'/autoload.php'</span>;</code><code class="line language-php"><span class="hljs-keyword">if</span> (file_exists($file)) {</code><code class="line language-php">    $autoload = <span class="hljs-keyword">require_once</span> $file;</code><code class="line language-php">} <span class="hljs-keyword">else</span> {</code><code class="line language-php">    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">'Install dependencies with composer.'</span>);</code><code class="line language-php">}</code><code class="line language-php"></code><code class="line language-php">$params = [</code><code class="line language-php">    <span class="hljs-string">'driver'</span>    =&gt; <span class="hljs-string">'pdo_mysql'</span>,</code><code class="line language-php">    <span class="hljs-string">'host'</span>      =&gt; <span class="hljs-string">'localhost'</span>,</code><code class="line language-php">    <span class="hljs-string">'user'</span>      =&gt; <span class="hljs-string">'root'</span>,</code><code class="line language-php">    <span class="hljs-string">'password'</span>  =&gt; <span class="hljs-string">''</span>,</code><code class="line language-php">    <span class="hljs-string">'dbname'</span>    =&gt; <span class="hljs-string">'phpcr_odm_tutorial'</span>,</code><code class="line language-php">    <span class="hljs-string">'charset'</span>   =&gt; <span class="hljs-string">'utf8mb4'</span>,</code><code class="line language-php">];</code><code class="line language-php"></code><code class="line language-php">$workspace = <span class="hljs-string">'default'</span>;</code><code class="line language-php">$user = <span class="hljs-string">'admin'</span>;</code><code class="line language-php">$pass = <span class="hljs-string">'admin'</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">/* --- transport implementation specific code begin --- */</span></code><code class="line language-php"><span class="hljs-comment">// for more options, see https://github.com/jackalope/jackalope-doctrine-dbal#bootstrapping</span></code><code class="line language-php">$dbConn = \Doctrine\DBAL\DriverManager::getConnection($params);</code><code class="line language-php">$parameters = [<span class="hljs-string">'jackalope.doctrine_dbal_connection'</span> =&gt; $dbConn];</code><code class="line language-php">$repository = \Jackalope\RepositoryFactoryDoctrineDBAL::getRepository($parameters);</code><code class="line language-php">$credentials = <span class="hljs-keyword">new</span> \PHPCR\SimpleCredentials(<span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>);</code><code class="line language-php"><span class="hljs-comment">/* --- transport implementation specific code  ends --- */</span></code><code class="line language-php"></code><code class="line language-php">$session = $repository-&gt;login($credentials, $workspace);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">/* prepare the doctrine configuration */</span></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Driver</span>\<span class="hljs-title">AttributeDriver</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">Configuration</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">DocumentManager</span>;</code><code class="line language-php"></code><code class="line language-php">$driver = <span class="hljs-keyword">new</span> AttributeDriver([</code><code class="line language-php">    <span class="hljs-comment">// this is a list of all folders containing document classes</span></code><code class="line language-php">    <span class="hljs-string">'vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Document'</span>,</code><code class="line language-php">    <span class="hljs-string">'src/Demo'</span>,</code><code class="line language-php">]);</code><code class="line language-php"></code><code class="line language-php">$config = <span class="hljs-keyword">new</span> Configuration();</code><code class="line language-php">$config-&gt;setMetadataDriverImpl($driver);</code><code class="line language-php"></code><code class="line language-php">$documentManager = DocumentManager::create($session, $config);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">return</span> $autoload;</code><code class="line language-php"></code><code class="empty"></code></pre>
             
     <p>To enable the command line, copy the cli-config.&lt;implementation&gt;.php.dist
 to cli-config.php in your vendor directory and adjust it to match your
@@ -1912,71 +1863,12 @@ from your bootstrap.php file.</p>
     <p>Models are plain PHP classes. Note that you have several ways to define the mapping.
 For easy readability, we use the attribute mapping with PHPCR namespace in this tutorial:</p>
 
-                <div class="console">
-        <pre><code class="console">// src/Demo/Document.php
-namespace Demo;
-
-use Doctrine\ODM\PHPCR\Mapping\Attributes as PHPCR;
-use Doctrine\ODM\PHPCR\ChildrenCollection;
-
-#[PHPCR\Document]
-class MyDocument
-{
-    #[PHPCR\Id]
-    private string $id;
-
-    #[PHPCR\ParentDocument]
-    private object $parent;
-
-    #[PHPCR\Nodename]
-    private string $name;
-
-    #[PHPCR\Children]
-    private ChildrenCollection $children;
-
-    #[PHPCR\Field(type: &#039;string&#039;)]
-    private string $title;
-
-    #[PHPCR\Field(type: &#039;string&#039;)]
-    private string $content;
-
-    public function getId(): string
-    {
-        return $this-&gt;id;
-    }
-    public function getChildren(): ChildrenCollection
-    {
-        return $this-&gt;children;
-    }
-    public function setParent(object $parent): void
-    {
-        $this-&gt;parent = $parent;
-    }
-    public function setName(string $name): void
-    {
-        $this-&gt;name = $name;
-    }
-
-    public function setTitle(string $title): void
-    {
-        $this-&gt;title = $title;
-    }
-    public function getTitle(): string
-    {
-        return $this-&gt;title;
-    }
-    public function setContent(string $content): void
-    {
-        $this-&gt;content = $content;
-    }
-    public function getContent(): string
-    {
-        return $this-&gt;content;
-    }
-}
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="0facb39a889ab3cb721e86d63efaabeff0ef9dea"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="0facb39a889ab3cb721e86d63efaabeff0ef9dea"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// src/Demo/Document.php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Demo</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Attributes</span> <span class="hljs-title">as</span> <span class="hljs-title">PHPCR</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">ChildrenCollection</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[PHPCR\Document]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyDocument</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[PHPCR\Id]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> string $id;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[PHPCR\ParentDocument]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> object $parent;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[PHPCR\Nodename]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> string $name;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[PHPCR\Children]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> ChildrenCollection $children;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[PHPCR\Field(type: 'string')]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> string $title;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[PHPCR\Field(type: 'string')]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> string $content;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getId</span><span class="hljs-params">()</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;id;</code><code class="line language-php">    }</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getChildren</span><span class="hljs-params">()</span>: <span class="hljs-title">ChildrenCollection</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;children;</code><code class="line language-php">    }</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setParent</span><span class="hljs-params">(object $parent)</span>: <span class="hljs-title">void</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;parent = $parent;</code><code class="line language-php">    }</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setName</span><span class="hljs-params">(string $name)</span>: <span class="hljs-title">void</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;name = $name;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setTitle</span><span class="hljs-params">(string $title)</span>: <span class="hljs-title">void</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;title = $title;</code><code class="line language-php">    }</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getTitle</span><span class="hljs-params">()</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;title;</code><code class="line language-php">    }</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setContent</span><span class="hljs-params">(string $content)</span>: <span class="hljs-title">void</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;content = $content;</code><code class="line language-php">    }</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getContent</span><span class="hljs-params">()</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;content;</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
             
     <p>If you are familiar with Doctrine ORM, this code should look pretty familiar to you. The
 only important difference are the hierarchy related mappings <code>ParentDocument</code>, <code>Name</code> and <code>Children</code>.
@@ -2041,38 +1933,12 @@ another command to let Doctrine set up the repository for using it:</p>
             
     <p>We write a simple PHP script to generate some sample data:</p>
 
-                <div class="console">
-        <pre><code class="console">// src/generate.php
-
-require_once &#039;../bootstrap.php&#039;;
-
-// get the root node to add our data to it
-$rootDocument = $documentManager-&gt;find(null, &#039;/&#039;);
-
-// create a new document
-$doc = new \Demo\Document();
-$doc-&gt;setParent($rootDocument);
-$doc-&gt;setName(&#039;doc&#039;);
-$doc-&gt;setTitle(&#039;My first document&#039;);
-$doc-&gt;setContent(&#039;The document content&#039;);
-
-// create a second document
-$childDocument = new \Demo\Document();
-$childDocument-&gt;setParent($doc);
-$childDocument-&gt;setName(&#039;child&#039;);
-$childDocument-&gt;setTitle(&#039;My child document&#039;);
-$childDocument-&gt;setContent(&#039;The child document content&#039;);
-
-
-// make the documents known to the document manager
-$documentManager-&gt;persist($doc);
-$documentManager-&gt;persist($childDocument);
-
-// store all changes, insertions, etc. with the storage backend
-$documentManager-&gt;flush();
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="0a1ce30781fcc903a0bdbb3226415c92a5c00a7e"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="0a1ce30781fcc903a0bdbb3226415c92a5c00a7e"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// src/generate.php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">require_once</span> <span class="hljs-string">'../bootstrap.php'</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// get the root node to add our data to it</span></code><code class="line language-php">$rootDocument = $documentManager-&gt;find(<span class="hljs-keyword">null</span>, <span class="hljs-string">'/'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// create a new document</span></code><code class="line language-php">$doc = <span class="hljs-keyword">new</span> \Demo\Document();</code><code class="line language-php">$doc-&gt;setParent($rootDocument);</code><code class="line language-php">$doc-&gt;setName(<span class="hljs-string">'doc'</span>);</code><code class="line language-php">$doc-&gt;setTitle(<span class="hljs-string">'My first document'</span>);</code><code class="line language-php">$doc-&gt;setContent(<span class="hljs-string">'The document content'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// create a second document</span></code><code class="line language-php">$childDocument = <span class="hljs-keyword">new</span> \Demo\Document();</code><code class="line language-php">$childDocument-&gt;setParent($doc);</code><code class="line language-php">$childDocument-&gt;setName(<span class="hljs-string">'child'</span>);</code><code class="line language-php">$childDocument-&gt;setTitle(<span class="hljs-string">'My child document'</span>);</code><code class="line language-php">$childDocument-&gt;setContent(<span class="hljs-string">'The child document content'</span>);</code><code class="line language-php"></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// make the documents known to the document manager</span></code><code class="line language-php">$documentManager-&gt;persist($doc);</code><code class="line language-php">$documentManager-&gt;persist($childDocument);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// store all changes, insertions, etc. with the storage backend</span></code><code class="line language-php">$documentManager-&gt;flush();</code><code class="line language-php"></code><code class="empty"></code></pre>
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -2099,19 +1965,12 @@ to script generating content.</p>
             
     <p>This script will simply echo the data to the console:</p>
 
-                <div class="console">
-        <pre><code class="console">// src/read.php
-
-require_once &#039;../bootstrap.php&#039;;
-
-$doc = $documentManager-&gt;find(null, &#039;/doc&#039;);
-
-echo &#039;Found &#039;.$doc-&gt;getId() .&quot;\n&quot;;
-echo &#039;Title: &#039;.$doc-&gt;getTitle().&quot;\n&quot;;
-echo &#039;Content: &#039;.$doc-&gt;getContent().&quot;\n&quot;;
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="379cbf71ad5f48132a43c9e8a8fc05b021e999da"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="379cbf71ad5f48132a43c9e8a8fc05b021e999da"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// src/read.php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">require_once</span> <span class="hljs-string">'../bootstrap.php'</span>;</code><code class="line language-php"></code><code class="line language-php">$doc = $documentManager-&gt;find(<span class="hljs-keyword">null</span>, <span class="hljs-string">'/doc'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">echo</span> <span class="hljs-string">'Found '</span>.$doc-&gt;getId() .<span class="hljs-string">"\n"</span>;</code><code class="line language-php"><span class="hljs-keyword">echo</span> <span class="hljs-string">'Title: '</span>.$doc-&gt;getTitle().<span class="hljs-string">"\n"</span>;</code><code class="line language-php"><span class="hljs-keyword">echo</span> <span class="hljs-string">'Content: '</span>.$doc-&gt;getContent().<span class="hljs-string">"\n"</span>;</code><code class="line language-php"></code><code class="empty"></code></pre>
             
     <p>The DocumentManager will automatically determine the document class when
 you pass <code>null</code> as first argument to <code>find()</code>.</p>
@@ -2134,21 +1993,12 @@ to determine the position in the tree, together with <code>Nodename</code>.</p>
     <p>As the children of our sample document are mapped with <code>Children</code>,
 we can traverse them:</p>
 
-                <div class="console">
-        <pre><code class="console">use Demo\MyDocument;
-
-$doc = $documentManager-&gt;find(null, &#039;/doc&#039;);
-
-foreach($doc-&gt;getChildren() as $child) {
-    if ($child instanceof MyDocument) {
-        echo &#039;Has child &#039;.$child-&gt;getId() . &quot;\n&quot;;
-    } else {
-        echo &#039;Unexpected child &#039;.get_class($child).&quot;\n&quot;;
-    }
-}
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="5493eab5ad1fbe3291d343dc369ffb0e9081e421"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="5493eab5ad1fbe3291d343dc369ffb0e9081e421"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Demo</span>\<span class="hljs-title">MyDocument</span>;</code><code class="line language-php"></code><code class="line language-php">$doc = $documentManager-&gt;find(<span class="hljs-keyword">null</span>, <span class="hljs-string">'/doc'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">foreach</span>($doc-&gt;getChildren() <span class="hljs-keyword">as</span> $child) {</code><code class="line language-php">    <span class="hljs-keyword">if</span> ($child <span class="hljs-keyword">instanceof</span> MyDocument) {</code><code class="line language-php">        <span class="hljs-keyword">echo</span> <span class="hljs-string">'Has child '</span>.$child-&gt;getId() . <span class="hljs-string">"\n"</span>;</code><code class="line language-php">    } <span class="hljs-keyword">else</span> {</code><code class="line language-php">        <span class="hljs-keyword">echo</span> <span class="hljs-string">'Unexpected child '</span>.get_class($child).<span class="hljs-string">"\n"</span>;</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
                         <div class="alert warning-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -2175,11 +2025,12 @@ specify the child name from which to start the slice.</p>
     <p>Even if children are not mapped, you can use the document manager to get all
 flushed children of a document:</p>
 
-                <div class="console">
-        <pre><code class="console">$children = $documentManager-&gt;getChildren($parent);
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="983df62f369e9007b9e9cb682b245db450bd403a"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="983df62f369e9007b9e9cb682b245db450bd403a"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php">$children = $documentManager-&gt;getChildren($parent);</code><code class="line language-php"></code><code class="empty"></code></pre>
                         <div class="alert note-admonition bg-light-yellow text-dark border ">
     <table width="100%">
         <tbody>
@@ -2223,67 +2074,31 @@ but is readonly.</p>
             
     <p>Lets look at an example of document <code>A</code> referencing <code>B</code>:</p>
 
-                <div class="console">
-        <pre><code class="console">// src/Demo/A.php
-
-namespace Demo;
-
-use Doctrine\ODM\PHPCR\Mapping\Attributes as PHPCR;
-use Doctrine\ODM\PHPCR\ReferrersCollection;
-
-#[PHPCR\Document]
-class A
-{
-    #[PHPCR\ReferenceOne]
-    private object $ref;
-
-    ...
-}
-
-#[PHPCR\Document]
-class B
-{
-    #[PHPCR\Referrers(referringDocument: A::class, referencedBy: &#039;ref&#039;)]
-    private ReferrersCollection $referrers;
-}
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="d642c3f86a835cb2e844b933e757c634e8ba26d8"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="d642c3f86a835cb2e844b933e757c634e8ba26d8"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// src/Demo/A.php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Demo</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">Attributes</span> <span class="hljs-title">as</span> <span class="hljs-title">PHPCR</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">ReferrersCollection</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[PHPCR\Document]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[PHPCR\ReferenceOne]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> object $ref;</code><code class="line language-php"></code><code class="line language-php">    ...</code><code class="line language-php">}</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[PHPCR\Document]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[PHPCR\Referrers(referringDocument: A::class, referencedBy: 'ref')]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> ReferrersCollection $referrers;</code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
             
     <p>We can now create a reference with the following code:</p>
 
-                <div class="console">
-        <pre><code class="console">$parent = $dm-&gt;find(null, &#039;/&#039;);
-$a = new A();
-$a-&gt;setParent($parent);
-$a-&gt;setNodename(&#039;a&#039;);
-$dm-&gt;persist($a);
-$b = new B();
-$b-&gt;setParent($parent);
-$b-&gt;setNodename(&#039;b&#039;);
-
-$a-&gt;setRef($b);
-
-$dm-&gt;flush();
-$dm-&gt;clear();
-
-$b = $dm-&gt;find(null, &#039;/b&#039;);
-
-// output Demo\A
-var_dump(get_class($b-&gt;getReferrers()));
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="c7c3422ec6593465cf1cd76e98dd95a73e2d0b8c"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="c7c3422ec6593465cf1cd76e98dd95a73e2d0b8c"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php">$parent = $dm-&gt;find(<span class="hljs-keyword">null</span>, <span class="hljs-string">'/'</span>);</code><code class="line language-php">$a = <span class="hljs-keyword">new</span> A();</code><code class="line language-php">$a-&gt;setParent($parent);</code><code class="line language-php">$a-&gt;setNodename(<span class="hljs-string">'a'</span>);</code><code class="line language-php">$dm-&gt;persist($a);</code><code class="line language-php">$b = <span class="hljs-keyword">new</span> B();</code><code class="line language-php">$b-&gt;setParent($parent);</code><code class="line language-php">$b-&gt;setNodename(<span class="hljs-string">'b'</span>);</code><code class="line language-php"></code><code class="line language-php">$a-&gt;setRef($b);</code><code class="line language-php"></code><code class="line language-php">$dm-&gt;flush();</code><code class="line language-php">$dm-&gt;clear();</code><code class="line language-php"></code><code class="line language-php">$b = $dm-&gt;find(<span class="hljs-keyword">null</span>, <span class="hljs-string">'/b'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// output Demo\A</span></code><code class="line language-php">var_dump(get_class($b-&gt;getReferrers()));</code><code class="line language-php"></code><code class="empty"></code></pre>
             
     <p>If referrers are not mapped on a document, you can use the document
 manager to get all flushed referrers of a document:</p>
 
-                <div class="console">
-        <pre><code class="console">$referrers = $documentManager-&gt;getReferrers($b);
-
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="b858a728ae2330ec82f951ec943c5fa7b1f85b9b"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="b858a728ae2330ec82f951ec943c5fa7b1f85b9b"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php">$referrers = $documentManager-&gt;getReferrers($b);</code><code class="line language-php"></code><code class="line language-php"></code><code class="empty"></code></pre>
     </div>
             <div class="section" id="removing-documents">
             <h2 class="section-header ">
@@ -2295,21 +2110,12 @@ manager to get all flushed referrers of a document:</p>
             
     <p>To delete a document, call the <code>remove</code> method on the <code>DocumentManager</code>:</p>
 
-                <div class="console">
-        <pre><code class="console">// src/manipulate.php
-
-require_once &#039;../bootstrap.php&#039;;
-
-// remove a document
-$doc = $documentManager-&gt;find(null, &#039;/doc&#039;);
-$documentManager-&gt;remove($doc);
-
-// persist all operations
-$documentManager-&gt;flush();
-
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="7d15950485facc9c38ea3ece34b665b3eae556be"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="7d15950485facc9c38ea3ece34b665b3eae556be"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// src/manipulate.php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">require_once</span> <span class="hljs-string">'../bootstrap.php'</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// remove a document</span></code><code class="line language-php">$doc = $documentManager-&gt;find(<span class="hljs-keyword">null</span>, <span class="hljs-string">'/doc'</span>);</code><code class="line language-php">$documentManager-&gt;remove($doc);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// persist all operations</span></code><code class="line language-php">$documentManager-&gt;flush();</code><code class="line language-php"></code><code class="line language-php"></code><code class="empty"></code></pre>
     </div>
             <div class="section" id="other-helpful-methods-on-the-documentmanager">
             <h2 class="section-header ">
@@ -2323,21 +2129,12 @@ $documentManager-&gt;flush();
 Alternatively, you can assign a different Parent and/or Nodename to move
 by assignment. The latter is for example handy with Symfony forms:</p>
 
-                <div class="console">
-        <pre><code class="console">// src/manipulate.php
-
-require_once &#039;../bootstrap.php&#039;;
-
-// we move a node
-$child = $documentManager-&gt;find(null, &#039;/doc/child&#039;);
-$documentManager-&gt;move($child, &#039;/newpath&#039;);
-
-// persist all operations
-$documentManager-&gt;flush();
-
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="fc840c4adb7d755729716f0bac751327a90caccb"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="fc840c4adb7d755729716f0bac751327a90caccb"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">// src/manipulate.php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">require_once</span> <span class="hljs-string">'../bootstrap.php'</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// we move a node</span></code><code class="line language-php">$child = $documentManager-&gt;find(<span class="hljs-keyword">null</span>, <span class="hljs-string">'/doc/child'</span>);</code><code class="line language-php">$documentManager-&gt;move($child, <span class="hljs-string">'/newpath'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// persist all operations</span></code><code class="line language-php">$documentManager-&gt;flush();</code><code class="line language-php"></code><code class="line language-php"></code><code class="empty"></code></pre>
     </div>
             <div class="section" id="conclusion">
             <h2 class="section-header ">

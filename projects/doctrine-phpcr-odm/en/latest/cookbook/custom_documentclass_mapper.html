@@ -377,70 +377,22 @@ determined when loading it again.</p>
     <p>An example mapper from the <a href="https://github.com/symfony-cmf/cmf-sandbox/tree/magnolia_integration">symfony cmf sandbox</a>
 (<code>magnolia_integration</code> branch):</p>
 
-                <div class="console">
-        <pre><code class="console">namespace Sandbox\MagnoliaBundle\Document;
-
-use Doctrine\ODM\PHPCR\DocumentClassMapper;
-use Doctrine\ODM\PHPCR\DocumentManager;
-use Doctrine\ODM\PHPCR\Document\Generic;
-
-use PHPCR\NodeInterface;
-use PHPCR\PropertyType;
-
-class MagnoliaDocumentClassMapper extends DocumentClassMapper
-{
-    public function __construct(
-        /**
-         * @var array&lt;string, string&gt; map from mgnl:template values to document class names
-         */
-        private array $templateMap
-    ) {
-    }
-
-    /**
-     * Determine the class name from a given node
-     *
-     * @throws \RuntimeException if no class name could be determined
-     */
-    public function getClassName(DocumentManager $dm, NodeInterface $node, string $className = null): string
-    {
-        $className = parent::getClassName($dm, $node, $className);
-        if (Generic::class === $className) {
-            if ($node-&gt;hasNode(&#039;MetaData&#039;)) {
-                $metaData = $node-&gt;getNode(&#039;MetaData&#039;);
-                if ($metaData-&gt;hasProperty(&#039;mgnl:template&#039;)) {
-                    if (isset($this-&gt;templateMap[$metaData-&gt;getPropertyValue(&#039;mgnl:template&#039;)])) {
-                        return $this-&gt;templateMap[$metaData-&gt;getPropertyValue(&#039;mgnl:template&#039;)];
-                    }
-                }
-            }
-        }
-
-        return $className;
-    }
-}
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="6d9c52030a098957ae75e49af0683293274c4913"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="6d9c52030a098957ae75e49af0683293274c4913"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Sandbox</span>\<span class="hljs-title">MagnoliaBundle</span>\<span class="hljs-title">Document</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">DocumentClassMapper</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">DocumentManager</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">PHPCR</span>\<span class="hljs-title">Document</span>\<span class="hljs-title">Generic</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">PHPCR</span>\<span class="hljs-title">NodeInterface</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">PHPCR</span>\<span class="hljs-title">PropertyType</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MagnoliaDocumentClassMapper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">DocumentClassMapper</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(</span></span></code><code class="line language-php">        <span class="hljs-comment">/**</span></code><code class="line language-php">         * @<span class="hljs-keyword">var</span> <span class="hljs-keyword">array</span>&lt;string, string&gt; map from mgnl:template values to document <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">names</span></span></code><code class="line language-php">         */</code><code class="line language-php">        <span class="hljs-keyword">private</span> <span class="hljs-keyword">array</span> $templateMap</code><code class="line language-php">    ) {</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">/**</span></code><code class="line language-php">     * Determine the <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">name</span> <span class="hljs-title">from</span> <span class="hljs-title">a</span> <span class="hljs-title">given</span> <span class="hljs-title">node</span></span></code><code class="line language-php">     *</code><code class="line language-php">     * @throws \RuntimeException <span class="hljs-keyword">if</span> no <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">name</span> <span class="hljs-title">could</span> <span class="hljs-title">be</span> <span class="hljs-title">determined</span></span></code><code class="line language-php">     */</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getClassName</span><span class="hljs-params">(DocumentManager $dm, NodeInterface $node, string $className = null)</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        $className = <span class="hljs-keyword">parent</span>::getClassName($dm, $node, $className);</code><code class="line language-php">        <span class="hljs-keyword">if</span> (Generic::class === $className) {</code><code class="line language-php">            <span class="hljs-keyword">if</span> ($node-&gt;hasNode(<span class="hljs-string">'MetaData'</span>)) {</code><code class="line language-php">                $metaData = $node-&gt;getNode(<span class="hljs-string">'MetaData'</span>);</code><code class="line language-php">                <span class="hljs-keyword">if</span> ($metaData-&gt;hasProperty(<span class="hljs-string">'mgnl:template'</span>)) {</code><code class="line language-php">                    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>(<span class="hljs-keyword">$this</span>-&gt;templateMap[$metaData-&gt;getPropertyValue(<span class="hljs-string">'mgnl:template'</span>)])) {</code><code class="line language-php">                        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;templateMap[$metaData-&gt;getPropertyValue(<span class="hljs-string">'mgnl:template'</span>)];</code><code class="line language-php">                    }</code><code class="line language-php">                }</code><code class="line language-php">            }</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> $className;</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="line language-php"></code><code class="empty"></code></pre>
             
     <p>Then adjust your <a href="../reference/introduction.html#intro-bootstrap">bootstrap code</a> to use the
 custom mapper:</p>
 
-                <div class="console">
-        <pre><code class="console">/* prepare the doctrine configuration */
-$config = new \Doctrine\ODM\PHPCR\Configuration();
-$map = [
-    &#039;standard-templating-kit:pages/stkSection&#039; =&gt; \Sandbox\MagnoliaBundle\Document\Section::class,
-];
-$mapper = new MagnoliaDocumentClassMapper($map);
-$config-&gt;setDocumentClassMapper($mapper);
-
-$documentManager = \Doctrine\ODM\PHPCR\DocumentManager::create($session, $config);
-
-...
-</code></pre>
-    </div>
-
+                <pre class="code-block-table" id="bd39518f6d36b7825e6c68109186ba4f7906470e"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="bd39518f6d36b7825e6c68109186ba4f7906470e"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-comment">/* prepare the doctrine configuration */</span></code><code class="line language-php">$config = <span class="hljs-keyword">new</span> \Doctrine\ODM\PHPCR\Configuration();</code><code class="line language-php">$map = [</code><code class="line language-php">    <span class="hljs-string">'standard-templating-kit:pages/stkSection'</span> =&gt; \Sandbox\MagnoliaBundle\Document\Section::class,</code><code class="line language-php">];</code><code class="line language-php">$mapper = <span class="hljs-keyword">new</span> MagnoliaDocumentClassMapper($map);</code><code class="line language-php">$config-&gt;setDocumentClassMapper($mapper);</code><code class="line language-php"></code><code class="line language-php">$documentManager = \Doctrine\ODM\PHPCR\DocumentManager::create($session, $config);</code><code class="line language-php"></code><code class="line language-php">...</code><code class="line language-php"></code><code class="empty"></code></pre>
             <div class="section" id="symfony-integration">
             <h2 class="section-header ">
     <a href="#symfony-integration">
