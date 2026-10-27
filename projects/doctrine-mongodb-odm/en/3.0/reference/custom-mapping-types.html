@@ -377,7 +377,13 @@
             <li class="toc-item">
     <a href="#date-example-mapping-datetimeimmutable-with-timezone">Date Example: Mapping DateTimeImmutable with Timezone</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="#lazy-loading-types-from-a-container">Lazy-loading types from a container</a>
 
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="#custom-type-example-mapping-a-money-value-object">Custom Type Example: Mapping a Money Value Object</a>
@@ -2321,14 +2327,58 @@ method that did not change in the request.</li>
 
             
     <p>When you have implemented the type you still need to let Doctrine
-know about it:</p>
+know about it. You can create a <code>TypeRegistry</code> and inject it into the
+<code>Configuration</code>:</p>
 
-                <pre class="code-block-table" id="d43ae92998395f45fbdf92b3345ab11596350ff6"><button
+                <pre class="code-block-table" id="77c4205fc8611cd13f7d9580a5f3e5ee9f026965"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="d43ae92998395f45fbdf92b3345ab11596350ff6"
+                data-copy-element-id="77c4205fc8611cd13f7d9580a5f3e5ee9f026965"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// in bootstrapping code</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Adds a type. This results in an exception if type with given name is already registered</span></code><code class="line language-php">Type::addType(<span class="hljs-string">'date_with_timezone'</span>, \My\Project\Types\DateTimeWithTimezoneType::class);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Overrides a type. This results in an exception if type with given name is not registered</span></code><code class="line language-php">Type::overrideType(<span class="hljs-string">'date_immutable'</span>, \My\Project\Types\DateTimeWithTimezoneType::class);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Registers a type without checking whether it was already registered</span></code><code class="line language-php">Type::registerType(<span class="hljs-string">'date_immutable'</span>, \My\Project\Types\DateTimeWithTimezoneType::class);</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// in bootstrapping code</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Configuration</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ODM</span>\<span class="hljs-title">MongoDB</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">TypeRegistry</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// A registry always contains all built-in types. Types passed to the constructor are</span></code><code class="line language-php"><span class="hljs-comment">// registered on top and override the built-in type of the same name.</span></code><code class="line language-php">$typeRegistry = <span class="hljs-keyword">new</span> TypeRegistry([</code><code class="line language-php">    <span class="hljs-string">'date_with_timezone'</span> =&gt; <span class="hljs-keyword">new</span> \My\Project\Types\DateTimeWithTimezoneType(),</code><code class="line language-php">    <span class="hljs-string">'date_immutable'</span> =&gt; <span class="hljs-keyword">new</span> \My\Project\Types\DateTimeWithTimezoneType(),</code><code class="line language-php">]);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Types can also be added afterwards, by instance or by class name.</span></code><code class="line language-php"><span class="hljs-comment">// Registering an existing name replaces the type, it does not throw.</span></code><code class="line language-php">$typeRegistry-&gt;register(<span class="hljs-string">'date_with_timezone'</span>, \My\Project\Types\DateTimeWithTimezoneType::class);</code><code class="line language-php"></code><code class="line language-php">$config = <span class="hljs-keyword">new</span> Configuration();</code><code class="line language-php">$config-&gt;setTypeProvider($typeRegistry);</code><code class="empty"></code></pre>
+            
+    <p>Types registered this way are scoped to the <code>DocumentManager</code> instances using that
+<code>Configuration</code>, so they cannot affect the rest of the application. The registry can
+only be set once on a <code>Configuration</code>, before any metadata is loaded.</p>
+
+            
+    <p><code>Configuration</code> accepts any <code>Doctrine\ODM\MongoDB\Types\TypeProvider</code>, so
+<code>TypeRegistry</code> can be replaced with your own implementation. A provider only has to
+answer <code>get()</code> and <code>has()</code>, and to yield its types when iterated:</p>
+
+                <pre class="code-block-table" id="9948f5d76521d67102db032e5b9d591be73aa2f2"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="9948f5d76521d67102db032e5b9d591be73aa2f2"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">foreach</span> ($dm-&gt;getConfiguration()-&gt;getTypeProvider() <span class="hljs-keyword">as</span> $typeName =&gt; $type) {</code><code class="line language-php">    <span class="hljs-comment">// ...</span></code><code class="line language-php">}</code><code class="empty"></code></pre>
+            <div class="section" id="lazy-loading-types-from-a-container">
+            <h3 class="section-header ">
+    <a href="#lazy-loading-types-from-a-container">
+        Lazy-loading types from a container
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>When types have their own dependencies, instantiating them all up front is wasteful.
+Pass a service provider to resolve each type on first use and then cache it:</p>
+
+                <pre class="code-block-table" id="969d01c898364e1ab5690e1cad4fc7ca48d2c97f"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="969d01c898364e1ab5690e1cad4fc7ca48d2c97f"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// $container implements Symfony\Contracts\Service\ServiceProviderInterface</span></code><code class="line language-php">$typeRegistry = <span class="hljs-keyword">new</span> TypeRegistry($container);</code><code class="empty"></code></pre>
+            
+    <p>The service ID is the type name, and the provider lists the types it exposes through
+<code>getProvidedServices()</code>. The container is not queried during construction, and
+<code>has()</code> only asks it whether a service exists, without resolving it. Iterating the
+registry does resolve every type.</p>
+
+            
+    <p><code>ServiceProviderInterface</code> is the PSR-11 container interface extended with that one
+method, so a Symfony service locator can be passed as-is.</p>
+
             
     <p>As can be seen above, when registering the custom types in the configuration you
 specify a unique name for the mapping type and map that to the corresponding
@@ -2366,6 +2416,7 @@ specify a unique name for the mapping type and map that to the corresponding
         </div>
     </div>
     </div>
+    </div>
             <div class="section" id="custom-type-example-mapping-a-money-value-object">
             <h2 class="section-header ">
     <a href="#custom-type-example-mapping-a-money-value-object">
@@ -2393,12 +2444,12 @@ implement a type that converts between this class and a BSON embedded document f
             
     <p>Register the type in your bootstrap code:</p>
 
-                <pre class="code-block-table" id="3a72c12ff4056c63a8d478476d19a85d3fec1628"><button
+                <pre class="code-block-table" id="9e665a0ee424274845a310057560b9d950c899ea"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="3a72c12ff4056c63a8d478476d19a85d3fec1628"
+                data-copy-element-id="9e665a0ee424274845a310057560b9d950c899ea"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php">Type::addType(Money::class, App\MongoDB\Types\MoneyType::class);</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php">$typeRegistry = <span class="hljs-keyword">new</span> TypeRegistry([</code><code class="line language-php">    Money::class =&gt; <span class="hljs-keyword">new</span> App\MongoDB\Types\MoneyType(),</code><code class="line language-php">]);</code><code class="empty"></code></pre>
             
     <p>By using the <abbr title="Fully-Qualified Class Name">FQCN</abbr> of the value object class as the type name, the type is
 automatically used when encountering a property of that class. This means you
