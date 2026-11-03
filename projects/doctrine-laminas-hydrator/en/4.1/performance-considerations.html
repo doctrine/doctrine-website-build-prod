@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>        Performance Considerations - Doctrine Doctrine Laminas Hydrators
+    </title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="description" content="Doctrine Doctrine Laminas Hydrators Documentation: Performance Considerations ">
+
+        <meta name="keywords" content="                    doctrine,hydrator,laminas,documentation,performance,considerations
+    ">
+
+                    <meta name="robots" content="index, follow">
+        
+        
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-laminas-hydrator/en/4.0/performance-considerations.html" />
+    
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://www.doctrine-project.org/frontend/css/index.css?616291"
+                        integrity="sha384-1fIIoWG3Br1/xxeZbR5Y9l8ky9NUJ4tU8fLexK/qxhW0et02ePPFAanJnTDxB1w7"
+                        crossorigin="anonymous"
+        />
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.doctrine-project.org/images/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.doctrine-project.org/images/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.doctrine-project.org/images/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.doctrine-project.org/images/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://www.doctrine-project.org/images/apple-touch-icon-60x60.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://www.doctrine-project.org/images/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://www.doctrine-project.org/images/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://www.doctrine-project.org/images/apple-touch-icon-152x152.png" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-196x196.png" sizes="196x196" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="https://www.doctrine-project.org/images/favicon-128.png" sizes="128x128" />
+        <meta name="application-name" content="Doctrine"/>
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="msapplication-TileImage" content="https://www.doctrine-project.org/images/mstile-144x144.png" />
+        <meta name="msapplication-square70x70logo" content="https://www.doctrine-project.org/images/mstile-70x70.png" />
+        <meta name="msapplication-square150x150logo" content="https://www.doctrine-project.org/images/mstile-150x150.png" />
+        <meta name="msapplication-wide310x150logo" content="https://www.doctrine-project.org/images/mstile-310x150.png" />
+        <meta name="msapplication-square310x310logo" content="https://www.doctrine-project.org/images/mstile-310x310.png" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@doctrineproject" />
+        <meta name="twitter:creator" content="@doctrineproject" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.doctrine-project.org/projects/doctrine-laminas-hydrator/en/4.1/performance-considerations.html" />
+        <meta property="og:title" content="        Performance Considerations - Doctrine Doctrine Laminas Hydrators
+    " />
+        <meta property="og:description" content="Doctrine Doctrine Laminas Hydrators Documentation: Performance Considerations " />
+        <meta property="og:image" content="https://www.doctrine-project.org/images/og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+
+        <link rel="alternate" type="application/atom+xml" href="https://www.doctrine-project.org/atom.xml" title="Doctrine activity feed" />
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "url": "https://www.doctrine-project.org",
+            "logo": "https://www.doctrine-project.org/logos/doctrine-logo.svg"
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://www.doctrine-project.org",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.doctrine-project.org?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Doctrine",
+            "url": "https://www.doctrine-project.org",
+            "sameAs": [
+                "https://twitter.com/doctrineproject"
+            ]
+        }
+        </script>
+
+                    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Doctrine Doctrine Laminas Hydrators",
+            "description": "Performance Considerations",
+            "provider": {
+                "@type": "Organization",
+                "name": "Doctrine",
+                "sameAs": "https://www.doctrine-project.org"
+            }
+        }
+        </script>
+    
+        
+            </head>
+    <body>
+                    
+            <nav class="doctrine-navbar navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap">
+                <a class="navbar-brand text-hide" href="/index.html"><img src="https://www.doctrine-project.org/logos/doctrine-logo.svg?1a5b7c" />Doctrine</a>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="/projects.html" id="navbarProjectsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Projects
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarProjectsDropdown">
+                                                                    <a class="dropdown-item" href="/projects/orm.html">ORM</a>
+                                                                    <a class="dropdown-item" href="/projects/dbal.html">DBAL</a>
+                                                                    <a class="dropdown-item" href="/projects/mongodb-odm.html">MongoDB ODM</a>
+                                                                    <a class="dropdown-item" href="/projects/coding-standard.html">Coding Standard</a>
+                                                                    <a class="dropdown-item" href="/projects/collections.html">Collections</a>
+                                                                    <a class="dropdown-item" href="/projects/common.html">Common</a>
+                                                                    <a class="dropdown-item" href="/projects/data-fixtures.html">Data fixtures</a>
+                                                                    <a class="dropdown-item" href="/projects/event-manager.html">Event Manager</a>
+                                                                    <a class="dropdown-item" href="/projects/inflector.html">Inflector</a>
+                                                                    <a class="dropdown-item" href="/projects/instantiator.html">Instantiator</a>
+                                                                    <a class="dropdown-item" href="/projects/lexer.html">Lexer</a>
+                                                                    <a class="dropdown-item" href="/projects/migrations.html">Migrations</a>
+                                                                    <a class="dropdown-item" href="/projects/phpcr-odm.html">PHPCR ODM</a>
+                                                                    <a class="dropdown-item" href="/projects/persistence.html">Persistence</a>
+                                                                    <a class="dropdown-item" href="/projects/rst-parser.html">RST Parser</a>
+                                                                <a class="dropdown-item bg-secondary text-white font-weight-bold" href="/projects.html">View All</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="/contribute/index.html" id="navbarDevelopmentDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Development</a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarContributeDropdown">
+                                <a class="dropdown-item" href="/community/index.html">Community</a>
+                                <a class="dropdown-item" href="/contribute/index.html">Contributor Workflow</a>
+                                <a class="dropdown-item" href="/contribute/maintainer/index.html">Maintainer Workflow</a>
+                                <a class="dropdown-item" href="/contribute/website/index.html">Contribute to Website</a>
+                                <a class="dropdown-item" href="/policies.html">Policies</a>
+                                <a class="dropdown-item" href="https://github.com/doctrine" target="_blank" rel="noopener noreferrer">GitHub</a>
+                                <a class="dropdown-item" href="/styleguide.html">Styleguide</a>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/sponsorship.html">Sponsorship</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/partners.html">Partners</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/blog/index.html">Blog</a>
+                        </li>
+                    </ul>
+
+                    <div class="layout-edit-button d-inline-block mr-2">
+                                                    <a href="https://github.com/doctrine/doctrine-laminas-hydrator/edit/4.1.x/docs/en/performance-considerations.rst" class="btn btn-light" target="_blank" rel="noopener noreferrer">Edit</a>
+                                            </div>
+                </div>
+                <div class="nav-outbound">
+                    <div id="search-box">
+                        <!-- SearchBox widget will appear here -->
+                    </div>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </nav>
+
+            <div class="search-results rounded">
+                <div id="hits">
+                    <!-- Hits widget will appear here -->
+                </div>
+
+                <a href="https://www.algolia.com" target="_blank" rel="noopener noreferrer"><img src="https://www.doctrine-project.org/images/search-by-algolia.png" class="float-right" style="width: 150px;" /></a>
+            </div>
+        
+            <div class="container-wrapper container">
+        <div class="row row-offcanvas row-offcanvas-right">
+                            <nav class="col-md-3 d-sm-block bg-light sidebar sidebar-offcanvas" id="sidebar">
+                    <div class="sidebar-sticky">
+                        <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7D553W&placement=wwwdoctrine-projectorg" id="_carbonads_js"></script>
+
+                        
+
+            <div class="toc">
+            <p class="caption">Doctrine Laminas Hydrator</p>
+    <ul class="menu-level">
+    <li class="toc-item">
+    <a href="index.html#introduction">Introduction</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="index.html#installation">Installation</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="index.html#next-steps">Next Steps</a>
+
+
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
+    <a href="basic-usage.html#basic-usage">Basic Usage</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="basic-usage.html#create-a-hydrator">Create a Hydrator</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="basic-usage.html#hydrating-and-extracting-an-entity">Hydrating and Extracting an Entity</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="basic-usage.html#by-value-and-by-reference">By Value and By Reference</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="basic-usage.html#strategies-filters-and-naming-strategies">Strategies, Filters and Naming Strategies</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="basic-usage.html#using-a-custom-inflector-or-instantiator">Using a Custom Inflector or Instantiator</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="basic-usage.html#next-steps">Next Steps</a>
+
+
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
+    <a href="associations.html#working-with-associations">Working with Associations</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="associations.html#onetoone-and-manytoone-associations">OneToOne and ManyToOne Associations</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="associations.html#existing-entity-in-the-association">Existing Entity in the Association</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="associations.html#non-existing-entity-in-the-association">Non-existing Entity in the Association</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="associations.html#creating-new-associated-entities-1">Creating New Associated Entities</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="associations.html#handling-of-null-values">Handling of Null Values</a>
+
+
+</li>
+                    </ul>
+</li>
+            <li class="toc-item">
+    <a href="associations.html#onetomany-and-manytomany-associations">OneToMany and ManyToMany Associations</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="associations.html#existing-entities-in-the-association">Existing Entities in the Association</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="associations.html#non-existing-entities-in-the-association">Non-existing Entities in the Association</a>
+
+
+</li>
+                    </ul>
+</li>
+            <li class="toc-item">
+    <a href="associations.html#collection-strategies-1">Collection Strategies</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="associations.html#changing-the-strategy">Changing the Strategy</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="associations.html#custom-strategies">Custom Strategies</a>
+
+
+</li>
+                    </ul>
+</li>
+            <li class="toc-item">
+    <a href="associations.html#extracting-associations-1">Extracting Associations</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="associations.html#identifiers">Identifiers</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="associations.html#nested-arrays">Nested Arrays</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="associations.html#further-notes">Further Notes</a>
+
+
+</li>
+                    </ul>
+</li>
+            <li class="toc-item">
+    <a href="associations.html#configuring-associated-entities">Configuring Associated Entities</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="associations.html#configuring-the-hydrator-of-a-class">Configuring the Hydrator of a Class</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="associations.html#replacing-the-hydrator-of-a-class">Replacing the Hydrator of a Class</a>
+
+
+</li>
+                    </ul>
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
+    <a href="embeddables.html#working-with-embeddables">Working with Embeddables</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="embeddables.html#embeddables-as-objects">Embeddables as Objects</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="embeddables.html#embeddables-as-arrays">Embeddables as Arrays</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="embeddables.html#embeddables-in-forms">Embeddables in Forms</a>
+
+
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
+    <a href="type-conversion.html#converting-custom-dbal-types">Converting Custom DBAL Types</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="type-conversion.html#default-conversions">Default Conversions</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="type-conversion.html#enums">Enums</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="type-conversion.html#converting-values-when-extracting">Converting Values when Extracting</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="type-conversion.html#custom-conversions">Custom Conversions</a>
+
+
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
+    <a href="laminas-form.html#example-usage-with-laminas-form">Example Usage with Laminas Form</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="laminas-form.html#the-entities">The Entities</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="laminas-form.html#fieldsets">Fieldsets</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="laminas-form.html#form">Form</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="laminas-form.html#embeddables">Embeddables</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="laminas-form.html#controller">Controller</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="laminas-form.html#creation">Creation</a>
+
+
+</li>
+                    </ul>
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
+    <a href="api-usage.html#example-usage-in-an-api-context">Example Usage in an API Context</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="api-usage.html#the-entities">The Entities</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="api-usage.html#configuring-the-hydrator">Configuring the Hydrator</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="api-usage.html#reading-entities">Reading Entities</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="api-usage.html#writing-entities">Writing Entities</a>
+
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="api-usage.html#nested-data">Nested Data</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="api-usage.html#invalid-data">Invalid Data</a>
+
+
+</li>
+                    </ul>
+</li>
+                    </ul>
+</li>
+    <li class="toc-item opened">
+    <a href="#performance-considerations">Performance Considerations</a>
+
+        <ul class="section-level-1 opened-ul ">
+            <li class="toc-item">
+    <a href="#unwanted-side-effects">Unwanted Side-Effects</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#extracting-associations">Extracting Associations</a>
+
+
+</li>
+                    </ul>
+</li>
+    <li class="toc-item">
+    <a href="upgrading.html#upgrading-to-v4">Upgrading to v4</a>
+
+        <ul class="section-level-1">
+            <li class="toc-item">
+    <a href="upgrading.html#requirements">Requirements</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="upgrading.html#doctrineobject-is-final">DoctrineObject is Final</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="upgrading.html#type-conversion">Type Conversion</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="upgrading.html#collection-strategies">Collection Strategies</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="upgrading.html#associated-entities">Associated Entities</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="upgrading.html#null-values-for-associations">Null Values for Associations</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="upgrading.html#embeddables">Embeddables</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="upgrading.html#new-features">New Features</a>
+
+
+</li>
+                    </ul>
+</li>
+    </ul>
+</div>
+    
+
+                    </div>
+                </nav>
+            
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-9 pt-3 px-4">
+                <div class="row">
+                                        
+                                                                <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+                {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Projects",
+            "item": "https://www.doctrine-project.org/projects.html"
+        },                {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Doctrine Laminas Hydrators",
+            "item": "https://www.doctrine-project.org/projects/doctrine-laminas-hydrator.html"
+        },                {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Documentation",
+            "item": "https://www.doctrine-project.org/projects/doctrine-laminas-hydrator/en/4.1/index.html"
+        },                {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "Performance Considerations",
+            "item": "https://www.doctrine-project.org/projects/doctrine-laminas-hydrator/en/4.1/performance-considerations.html"
+        }            ]
+}
+</script>
+
+<nav class="breadcrumbs d-none d-sm-block d-md-block d-lg-block d-xl-block" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects.html">Projects</a></li>
+                                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine-laminas-hydrator.html">Doctrine Laminas Hydrators</a></li>
+                                                <li class="breadcrumb-item"><a href="https://www.doctrine-project.org/projects/doctrine-laminas-hydrator/en/4.1/index.html">Documentation</a></li>
+                                                <li class="breadcrumb-item active" aria-current="page">Performance Considerations</li>
+                        </ol>
+</nav>
+                                    </div>
+
+                    
+    <div class="alert caution bg-light-yellow text-dark border">
+    <table width="100%">
+        <tr>
+            <td width="10" class="align-top">
+                <i class="fas fa-exclamation-circle text-warning mr-2"></i>
+            </td>
+            <td><p>You are browsing a version that has not yet been released.</p></td>
+        </tr>
+    </table>
+</div>
+
+                <div class="row">
+                    <div class="col-12">
+                                                    <button type="button" class="btn btn-primary btn-sm float-right toc-toggle" data-toggle="offcanvas" id="toc-toggle">Table of Contents</button>
+
+                                                            
+                                <div class="dropdown show d-inline-block">
+                                    <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-laminas-hydrator/en/4.1/performance-considerations.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        4.1
+                                    </a>
+
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                                                    <h6 class="dropdown-header">Maintained</h6>
+
+                                                                                                                                                
+                                                    <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-laminas-hydrator/en/4.1/performance-considerations.html">
+                                                        4.1
+
+                                                        
+                                                                                                                    (upcoming)
+                                                                                                            </a>
+                                                                                                                                                                                                
+                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-laminas-hydrator/en/4.0/performance-considerations.html">
+                                                        4.0.1
+
+                                                                                                                    (current)
+                                                        
+                                                                                                            </a>
+                                                                                                                                                                                                
+                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-laminas-hydrator/en/3.7/performance-considerations.html">
+                                                        3.7.1
+
+                                                        
+                                                                                                            </a>
+                                                                                                                                    
+                                        
+                                                                                    <h6 class="dropdown-header">Unmaintained</h6>
+
+                                                                                                                                                
+                                                    <a class="dropdown-item" href="/projects/doctrine-laminas-hydrator/en/3.6/performance-considerations.html">3.6</a>
+                                                                                                                                                                                                
+                                                    <a class="dropdown-item" href="/projects/doctrine-laminas-hydrator/en/3.5/performance-considerations.html">3.5</a>
+                                                                                                                                                                                                
+                                                    <a class="dropdown-item" href="/projects/doctrine-laminas-hydrator/en/3.4/performance-considerations.html">3.4</a>
+                                                                                                                                                                                                
+                                                    <a class="dropdown-item" href="/projects/doctrine-laminas-hydrator/en/3.3/performance-considerations.html">3.3</a>
+                                                                                                                                                                                                
+                                                    <a class="dropdown-item" href="/projects/doctrine-laminas-hydrator/en/3.2/performance-considerations.html">3.2</a>
+                                                                                                                                                                                                
+                                                    <a class="dropdown-item" href="/projects/doctrine-laminas-hydrator/en/3.1/performance-considerations.html">3.1</a>
+                                                                                                                                                                                                
+                                                    <a class="dropdown-item" href="/projects/doctrine-laminas-hydrator/en/3.0/performance-considerations.html">3.0</a>
+                                                                                                                                                                                                
+                                                    <a class="dropdown-item" href="/projects/doctrine-laminas-hydrator/en/2.2/performance-considerations.html">2.2</a>
+                                                                                                                                                                                                                                                                                                                                                                </div>
+                                </div>
+                            
+                            
+
+            <div class="section" id="performance-considerations">
+            <h1 class="section-header ">
+    <a href="#performance-considerations">
+        Performance Considerations
+        <i class="fas fa-link"></i>
+    </a>
+</h1>
+            
+    <p>Using this hydrator abstracts most of the tedious tasks, but be
+aware that it can lead to performance issues in some situations.</p>
+
+            <div class="section" id="unwanted-side-effects">
+            <h2 class="section-header ">
+    <a href="#unwanted-side-effects">
+        Unwanted Side-Effects
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>Be careful when using Doctrine hydrator with
+complex entities that contain a lot of associations because a lot of
+unnecessary calls to the database may be made if you are not aware
+of what is happening under the hood. To explain this problem,
+take the following entity:</p>
+
+                <pre class="code-block-table" id="d589d0dc409107125e9eb4594ae726789cb0abc1"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="d589d0dc409107125e9eb4594ae726789cb0abc1"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Application</span>\<span class="hljs-title">Entity</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span> <span class="hljs-title">as</span> <span class="hljs-title">ORM</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[ORM\Entity]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[ORM\Id]</span></code><code class="line language-php">    <span class="hljs-comment">#[ORM\Column(type: 'integer')]</span></code><code class="line language-php">    <span class="hljs-comment">#[ORM\GeneratedValue(strategy: 'AUTO')]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> ?int $id = <span class="hljs-keyword">null</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[ORM\Column(type: 'string', length: 48)]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> ?string $name = <span class="hljs-keyword">null</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[ORM\OneToOne(targetEntity: City::class)]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> ?City $city = <span class="hljs-keyword">null</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">// … getter and setters are defined …</span></code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>This simple entity contains an id, a string property, and a OneToOne
+relationship.  When using Laminas forms the correct way, there may be
+a fieldset for every entity; so a 1:1 mapping
+between entities and fieldsets.  Here are fieldsets for User and
+City entities:</p>
+
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>More information on Laminas fieldsets may be found in
+<a href="https://docs.laminas.dev/laminas-form/collections/">the Laminas
+documentation</a>.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+            
+    <p>First, the User fieldset:</p>
+
+                <pre class="code-block-table" id="9853530761588cc15d3ca00760b19649fa3d3a73"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="9853530761588cc15d3ca00760b19649fa3d3a73"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Application</span>\<span class="hljs-title">Form</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Application</span>\<span class="hljs-title">Entity</span>\<span class="hljs-title">User</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Laminas</span>\<span class="hljs-title">Hydrator</span>\<span class="hljs-title">DoctrineObject</span> <span class="hljs-title">as</span> <span class="hljs-title">DoctrineHydrator</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">ObjectManager</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Laminas</span>\<span class="hljs-title">Form</span>\<span class="hljs-title">Element</span>\<span class="hljs-title">Text</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Laminas</span>\<span class="hljs-title">Form</span>\<span class="hljs-title">Fieldset</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Laminas</span>\<span class="hljs-title">InputFilter</span>\<span class="hljs-title">InputFilterProviderInterface</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserFieldset</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Fieldset</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">InputFilterProviderInterface</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(ObjectManager $objectManager)</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">parent</span>::__construct(<span class="hljs-string">'user'</span>);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;setHydrator(<span class="hljs-keyword">new</span> DoctrineHydrator($objectManager))</code><code class="line language-php">             -&gt;setObject(<span class="hljs-keyword">new</span> User());</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;add([</code><code class="line language-php">            <span class="hljs-string">'type'</span>    =&gt; Text::class,</code><code class="line language-php">            <span class="hljs-string">'name'</span>    =&gt; <span class="hljs-string">'name'</span>,</code><code class="line language-php">            <span class="hljs-string">'options'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'label'</span> =&gt; <span class="hljs-string">'Your name'</span>,</code><code class="line language-php">            ],</code><code class="line language-php">            <span class="hljs-string">'attributes'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'required'</span> =&gt; <span class="hljs-string">'required'</span>,</code><code class="line language-php">            ],</code><code class="line language-php">        ]);</code><code class="line language-php"></code><code class="line language-php">        $cityFieldset = <span class="hljs-keyword">new</span> CityFieldset($objectManager);</code><code class="line language-php">        $cityFieldset-&gt;setLabel(<span class="hljs-string">'Your city'</span>);</code><code class="line language-php">        $cityFieldset-&gt;setName(<span class="hljs-string">'city'</span>);</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;add($cityFieldset);</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getInputFilterSpecification</span><span class="hljs-params">()</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> [</code><code class="line language-php">            <span class="hljs-string">'name'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'required'</span> =&gt; <span class="hljs-keyword">true</span>,</code><code class="line language-php">            ],</code><code class="line language-php">        ];</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>And, now, the City fieldset:</p>
+
+                <pre class="code-block-table" id="3b0e906ce6b3e5a700c787d7414404c875daaa05"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="3b0e906ce6b3e5a700c787d7414404c875daaa05"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Application</span>\<span class="hljs-title">Form</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Application</span>\<span class="hljs-title">Entity</span>\<span class="hljs-title">City</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Laminas</span>\<span class="hljs-title">Hydrator</span>\<span class="hljs-title">DoctrineObject</span> <span class="hljs-title">as</span> <span class="hljs-title">DoctrineHydrator</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">ObjectManager</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Laminas</span>\<span class="hljs-title">Form</span>\<span class="hljs-title">Element</span>\<span class="hljs-title">Text</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Laminas</span>\<span class="hljs-title">Form</span>\<span class="hljs-title">Fieldset</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Laminas</span>\<span class="hljs-title">InputFilter</span>\<span class="hljs-title">InputFilterProviderInterface</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CityFieldset</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Fieldset</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">InputFilterProviderInterface</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(ObjectManager $objectManager)</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">parent</span>::__construct(<span class="hljs-string">'city'</span>);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;setHydrator(<span class="hljs-keyword">new</span> DoctrineHydrator($objectManager))</code><code class="line language-php">             -&gt;setObject(<span class="hljs-keyword">new</span> City());</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;add([</code><code class="line language-php">            <span class="hljs-string">'type'</span>    =&gt; Text::class,</code><code class="line language-php">            <span class="hljs-string">'name'</span>    =&gt; <span class="hljs-string">'name'</span>,</code><code class="line language-php">            <span class="hljs-string">'options'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'label'</span> =&gt; <span class="hljs-string">'Name of your city'</span>,</code><code class="line language-php">            ],</code><code class="line language-php">            <span class="hljs-string">'attributes'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'required'</span> =&gt; <span class="hljs-string">'required'</span>,</code><code class="line language-php">            ],</code><code class="line language-php">        ]);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;add([</code><code class="line language-php">            <span class="hljs-string">'type'</span>    =&gt; Text::class,</code><code class="line language-php">            <span class="hljs-string">'name'</span>    =&gt; <span class="hljs-string">'postCode'</span>,</code><code class="line language-php">            <span class="hljs-string">'options'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'label'</span> =&gt; <span class="hljs-string">'Postcode of your city'</span>,</code><code class="line language-php">            ],</code><code class="line language-php">            <span class="hljs-string">'attributes'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'required'</span> =&gt; <span class="hljs-string">'required'</span>,</code><code class="line language-php">            ],</code><code class="line language-php">        ]);</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getInputFilterSpecification</span><span class="hljs-params">()</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> [</code><code class="line language-php">            <span class="hljs-string">'name'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'required'</span> =&gt; <span class="hljs-keyword">true</span>,</code><code class="line language-php">            ],</code><code class="line language-php">            <span class="hljs-string">'postCode'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'required'</span> =&gt; <span class="hljs-keyword">true</span>,</code><code class="line language-php">            ],</code><code class="line language-php">        ];</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>For a form where an authenticated user may only change their name,
+and it does not allow the user to change the city,
+and the fields of the city are not rendered in the form,
+the form would look like this:</p>
+
+                <pre class="code-block-table" id="82cba2231e4dcb74e5f6352f835dda6a3a9024a2"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="82cba2231e4dcb74e5f6352f835dda6a3a9024a2"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Application</span>\<span class="hljs-title">Form</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Laminas</span>\<span class="hljs-title">Hydrator</span>\<span class="hljs-title">DoctrineObject</span> <span class="hljs-title">as</span> <span class="hljs-title">DoctrineHydrator</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">ObjectManager</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Laminas</span>\<span class="hljs-title">Form</span>\<span class="hljs-title">Form</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EditNameForm</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Form</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(ObjectManager $objectManager)</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">parent</span>::__construct(<span class="hljs-string">'edit-name-form'</span>);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;setHydrator(<span class="hljs-keyword">new</span> DoctrineHydrator($objectManager));</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// Add the user fieldset, and set it as the base fieldset</span></code><code class="line language-php">        $userFieldset = <span class="hljs-keyword">new</span> UserFieldset($objectManager);</code><code class="line language-php">        $userFieldset-&gt;setName(<span class="hljs-string">'user'</span>);</code><code class="line language-php">        $userFieldset-&gt;setUseAsBaseFieldset(<span class="hljs-keyword">true</span>);</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;add($userFieldset);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// … add CSRF and submit elements …</span></code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// Set the validation group so that we don't care about city</span></code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;setValidationGroup([</code><code class="line language-php">            <span class="hljs-string">'csrf'</span>, <span class="hljs-comment">// assume we added a CSRF element</span></code><code class="line language-php">            <span class="hljs-string">'user'</span> =&gt; [</code><code class="line language-php">                <span class="hljs-string">'name'</span>,</code><code class="line language-php">            ],</code><code class="line language-php">        ]);</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>For more information on Laminas Form and collections, please
+read the <a href="https://docs.laminas.dev/laminas-form/collections/">Laminas documentation</a>.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+            
+    <p>With the <code>EditNameForm</code> above, because we set
+the validation group, all the inputs related to city (postCode and name
+of the city) won’t be validated, which is exactly what we want. The
+action will look something like this:</p>
+
+                <pre class="code-block-table" id="1d3b23e3ccb511a3da242db616fb2a667b0d761e"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="1d3b23e3ccb511a3da242db616fb2a667b0d761e"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">editNameAction</span><span class="hljs-params">()</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// Create the form and inject the Entity Manager</span></code><code class="line language-php">    $form = <span class="hljs-keyword">new</span> EditNameForm(<span class="hljs-keyword">$this</span>-&gt;entityManager);</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">// Get the logged user (for more information about userIdentity(), please read the Authentication doc)</span></code><code class="line language-php">    $loggedUser = <span class="hljs-keyword">$this</span>-&gt;userIdentity();</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">// We bind the logged user to the form, so that the name is pre-filled with previous data</span></code><code class="line language-php">    $form-&gt;bind($loggedUser);</code><code class="line language-php"></code><code class="line language-php">    $request = <span class="hljs-keyword">$this</span>-&gt;request;</code><code class="line language-php">    <span class="hljs-keyword">if</span> ($request-&gt;isPost()) {</code><code class="line language-php">        <span class="hljs-comment">// Set data from post</span></code><code class="line language-php">        $form-&gt;setData($request-&gt;getPost());</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">if</span> ($form-&gt;isValid()) {</code><code class="line language-php">            <span class="hljs-comment">// You can now safely save $loggedUser</span></code><code class="line language-php">        }</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>This looks good, yes? But, a check for the queries that are
+made (for instance using the
+<a href="https://github.com/laminas/laminas-developer-tools">Laminas\\DeveloperTools module</a>),
+shows that a request is made to fetch data for the City
+relationship of the user, and we have an unneeded
+database call because this information is not rendered by the form.</p>
+
+            
+    <p><em>Why?</em> We set the validation group, <em>but</em> the problem
+happens during the extracting phase. When an
+object is bound to the form, the form iterates through all its
+fields and tries to extract the data from the object that is bound.
+From this example:</p>
+
+            
+    
+<ol start="1" type="1">
+    <li value="1">It first arrives at the UserFieldset. The inputs are &quot;name&quot; (which is
+a string field), and &quot;city&quot; which is another fieldset (in our User
+entity, this is a OneToOne relationship to another entity). The
+hydrator will extract both the name and the city.  The city will be a
+Doctrine proxy object.</li>
+    <li value="2">Because the UserFieldset contains a reference to another Fieldset (in
+this case, a CityFieldset), it will, in turn, try to extract the
+values of the City to populate the values of the CityFieldset. And
+here is the problem: City is a Proxy, and hence because the hydrator
+tries to extract its values (the name and postcode field), Doctrine
+will automatically fetch the object from the database in order to
+please the hydrator.</li>
+</ol>
+
+            
+    <p>This is absolutely normal; this is how Laminas forms work and what make them
+so useful, but in this specific case it can lead to disastrous
+consequences. When you have complex entities with many
+OneToMany collections, imagine how many unnecessary calls may be made
+(e.g. after discovering this problem, the author realized that their
+application was doing 10 unnecessary database calls).</p>
+
+            
+    <p>The fix is simple: if you don’t need specific fieldsets
+in a form, remove them. Here is a fixed EditNameForm:</p>
+
+                <pre class="code-block-table" id="eac1d6da25d1dbd154af06f9f66d287e67f91d51"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="eac1d6da25d1dbd154af06f9f66d287e67f91d51"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Application</span>\<span class="hljs-title">Form</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Laminas</span>\<span class="hljs-title">Hydrator</span>\<span class="hljs-title">DoctrineObject</span> <span class="hljs-title">as</span> <span class="hljs-title">DoctrineHydrator</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">Persistence</span>\<span class="hljs-title">ObjectManager</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Laminas</span>\<span class="hljs-title">Form</span>\<span class="hljs-title">Form</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EditNameForm</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Form</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(ObjectManager $objectManager)</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">parent</span>::__construct(<span class="hljs-string">'edit-name-form'</span>);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;setHydrator(<span class="hljs-keyword">new</span> DoctrineHydrator($objectManager));</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// Add the user fieldset, and set it as the base fieldset</span></code><code class="line language-php">        $userFieldset = <span class="hljs-keyword">new</span> UserFieldset($objectManager);</code><code class="line language-php">        $userFieldset-&gt;setName(<span class="hljs-string">'user'</span>);</code><code class="line language-php">        $userFieldset-&gt;setUseAsBaseFieldset(<span class="hljs-keyword">true</span>);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// We don't want City relationship, so remove it!!</span></code><code class="line language-php">        $userFieldset-&gt;remove(<span class="hljs-string">'city'</span>);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;add($userFieldset);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// … add CSRF and submit elements …</span></code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// We don't even need the validation group as the City fieldset does not</span></code><code class="line language-php">        <span class="hljs-comment">// exist anymore</span></code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>Because the UserFieldset no longer contains the CityFieldset
+relation, it won’t be extracted.</p>
+
+            
+    <p>As a rule of thumb, try to remove any unnecessary fieldset relationships,
+and always look at which database calls are made.</p>
+
+    </div>
+            <div class="section" id="extracting-associations">
+            <h2 class="section-header ">
+    <a href="#extracting-associations">
+        Extracting Associations
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>The same applies when extracting associations into arrays with
+<code>AssociationExtraction::Array</code> (see
+<a href="associations.html#extracting-associations">Extracting Associations</a>): every associated entity
+that is extracted is loaded from the database, and every nested
+collection is initialized. Extracting a list of entities this way can
+easily lead to one query per entity and association.</p>
+
+            
+    <p>Keep the maximum depth as low as possible, exclude associations you do
+not need with filters, or fetch the associations upfront with a join in
+your query. Filters for associations of associated entities are added to
+their hydrators, see
+<a href="associations.html#association-hydrators">Configuring Associated Entities</a>. If identifiers are sufficient, prefer
+<code>AssociationExtraction::Identifier</code>: identifiers of OneToOne and
+ManyToOne associations are read from the proxy without loading the
+associated entity, only collections still need to be initialized.</p>
+
+    </div>
+    </div>
+        
+
+                                                </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+        <button id="back-to-top" title="Go to top">Top</button>
+
+                
+        <script id="instantsearch-template" type="text/template">
+            
+    <a href="{{url}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{{_highlightResult.projectName.value}}}: {{{_highlightResult.h1.value}}}</h5>
+        </div>
+
+        {{#h2}}
+            <p class="mb-1">
+                <i class="far fa-arrow-alt-circle-right text-primary"></i>
+
+                {{{_highlightResult.h2.value}}}
+
+                {{#h3}}
+                    > {{{_highlightResult.h3.value}}}
+                {{/h3}}
+
+                {{#h4}}
+                    > {{{_highlightResult.h4.value}}}
+                {{/h4}}
+
+                {{#h5}}
+                    > {{{_highlightResult.h5.value}}}
+                {{/h5}}
+            </p>
+        {{/h2}}
+
+        {{#content}}
+            <div class="content p-2 rounded" style="background-color: rgba(0,0,0,.125);">
+                {{{_highlightResult.content.value}}}
+            </div>
+        {{/content}}
+    </a>
+
+        </script>
+
+        <script
+            src="https://www.doctrine-project.org/frontend/js/bundle.js?794a90"
+                            integrity="sha384-XY64ovvRXsl2gRSIhxtAbyt56nNRMvhYk0vtBsEL/20yutvGRATJx135BHpuEdl6"
+                        crossorigin="anonymous">
+        </script>
+
+                
+        <script type="text/javascript">
+            var projectSlug = 'doctrine-laminas-hydrator';
+            var versionSlug = '4.1';
+
+            var searchBoxSettings = {
+                container: '#search-box',
+                placeholder: 'Search Doctrine Laminas Hydrators 4.1'
+            };
+
+            function googleAnalyticsEvent(eventCategory, eventAction, eventLabel, eventValue, fieldsObject) {
+                                ga('send', 'event', eventCategory, eventAction, eventLabel, eventValue, fieldsObject);
+                            }
+        </script>
+
+        
+                    <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-288343-7', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+            </body>
+</html>
