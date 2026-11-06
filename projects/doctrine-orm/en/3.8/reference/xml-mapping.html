@@ -2983,6 +2983,11 @@
 
         <ul class="section-level-2">
             <li class="toc-item">
+    <a href="second-level-cache.html#installation">Installation</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="second-level-cache.html#enable-second-level-cache">Enable Second Level Cache</a>
 
 
@@ -3868,10 +3873,8 @@ manually set the identifier before calling
 <code>NONE</code> strategy.</p>
 
             
-    <p>If you want to switch the identifier generation strategy you have
-to nest a <code>&lt;generator /&gt;</code> element inside the id-element. This of
-course only works for surrogate keys. For composite keys you always
-have to use the <code>NONE</code> strategy.</p>
+    <p>You can choose an identifier generation strategy with a <code>&lt;generator /&gt;</code> element inside the <code>&lt;id /&gt;</code> element.
+For composite identifiers, you must use <code>NONE</code>.</p>
 
                 <pre class="code-block-table" id="2069c5454f7e21cc24b945dbed559cde22912371"><button
                 type="button"
@@ -3893,7 +3896,21 @@ available to Doctrine AFTER the INSERT statement has been executed.</li>
     <li class="dash">SEQUENCE - Use of a database sequence to retrieve the
 entity-ids. This is possible before the INSERT statement is
 executed.</li>
+    <li class="dash">CUSTOM - Use the class configured by <code>&lt;custom-id-generator /&gt;</code>.</li>
+    <li class="dash">NONE - Assign the identifier yourself before calling <code>EntityManager#persist()</code>.</li>
 </ul>
+
+            
+    <p>You can use a custom ID generator by adding a <code>&lt;custom-id-generator /&gt;</code> element:</p>
+
+                <pre class="code-block-table" id="bf0e19bf5cb08ef42c40b7fe3636ddbfae91765e"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="bf0e19bf5cb08ef42c40b7fe3636ddbfae91765e"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">entity</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"MyProject\User"</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">id</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"id"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"integer"</span> <span class="hljs-attr">column</span>=<span class="hljs-string">"user_id"</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">custom-id-generator</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"MyProject\MyIdGenerator"</span> /&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">id</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">entity</span>&gt;</span></code><code class="empty"></code></pre>
+            
+    <p>If you omit <code>&lt;generator /&gt;</code>, the strategy defaults to <code>CUSTOM</code>. An explicit <code>&lt;generator /&gt;</code> takes precedence, including <code>strategy=&quot;NONE&quot;</code> for identifiers you assign yourself.</p>
 
             
     <p>If you are using the SEQUENCE strategy you can define an additional

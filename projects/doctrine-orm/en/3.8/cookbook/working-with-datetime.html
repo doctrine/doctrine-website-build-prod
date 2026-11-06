@@ -2983,6 +2983,11 @@
 
         <ul class="section-level-2">
             <li class="toc-item">
+    <a href="../reference/second-level-cache.html#installation">Installation</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="../reference/second-level-cache.html#enable-second-level-cache">Enable Second Level Cache</a>
 
 
@@ -3640,10 +3645,10 @@ requiring timezoned datetimes:</p>
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Shipping</span>;</code><code class="line language-php"></code><code class="line language-php"> <span class="hljs-comment">#[Entity]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Event</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[Column(type: 'datetime')]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> $created;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Column(type: 'string')]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> $timezone;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">/**</span></code><code class="line language-php">     * @<span class="hljs-keyword">var</span> bool</code><code class="line language-php">     */</code><code class="line language-php">    <span class="hljs-keyword">private</span> $localized = <span class="hljs-keyword">false</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(\DateTime $createDate)</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;localized = <span class="hljs-keyword">true</span>;</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;created = $createDate;</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;timezone = $createDate-&gt;getTimeZone()-&gt;getName();</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getCreated</span><span class="hljs-params">()</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">$this</span>-&gt;localized) {</code><code class="line language-php">            <span class="hljs-keyword">$this</span>-&gt;created-&gt;setTimeZone(<span class="hljs-keyword">new</span> \DateTimeZone(<span class="hljs-keyword">$this</span>-&gt;timezone));</code><code class="line language-php">        }</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;created;</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
             
-    <p>This snippet makes use of the previously discussed &quot;changeset by reference only&quot; property of
-objects. That means a new DateTime will only be used during updating if the reference
-changes between retrieval and flush operation. This means we can easily go and modify
-the instance by setting the previous local timezone.</p>
+    <p>This snippet makes use of the fact that in-place modifications of a date object
+are not detected by the change set computation: the UnitOfWork keeps the same
+instance as the original value. This means we can modify the instance by setting
+the previous local timezone without triggering an update.</p>
 
     </div>
     </div>
