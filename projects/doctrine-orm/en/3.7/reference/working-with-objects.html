@@ -1106,7 +1106,13 @@
             <li class="toc-item">
     <a href="#by-simple-conditions">By Simple Conditions</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="#magic-finders">Magic Finders</a>
 
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="#by-criteria">By Criteria</a>
@@ -1561,6 +1567,11 @@
 </li>
             <li class="toc-item">
     <a href="dql-doctrine-query-language.html#named-and-positional-parameters">Named and Positional Parameters</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="dql-doctrine-query-language.html#string-literals">String Literals</a>
 
 
 </li>
@@ -2669,6 +2680,11 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="limitations-and-known-issues.html#objects-as-identifier-values">Objects as identifier values</a>
+
+
+</li>
                     </ul>
 </li>
             <li class="toc-item">
@@ -3339,6 +3355,11 @@
 
         <ul class="section-level-1">
             <li class="toc-item">
+    <a href="../cookbook/mysql-enums.html#recommended-php-enums-and-the-dbal-enum-type">Recommended: PHP enums and the DBAL enum type</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="../cookbook/mysql-enums.html#solution-1-mapping-to-varchars">Solution 1: Mapping to Varchars</a>
 
 
@@ -3610,6 +3631,40 @@ code:</p>
                 data-copy-element-id="f92c8932c3b70830cbd4975ab111d01d0eaee742"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">if</span> ($article === $article2) {</code><code class="line language-php">    <span class="hljs-keyword">echo</span> <span class="hljs-string">"Yes we are the same!"</span>;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>The identity map is only consulted when an entity is looked up by its
+identifier, with <code>EntityManager#find()</code>, <code>EntityManager#getReference()</code>
+or <code>EntityRepository#find()</code>. All other ways of retrieving entities, like
+<code>findBy()</code>, <code>findOneBy()</code>, <code>count()</code>, <code>matching()</code> or DQL queries, are never
+answered from the identity map alone. They send a query to the database, unless the
+result is served from the <a href="second-level-cache.html">second-level cache</a> or a result
+cache. The identity map is then only used to return the already known instance for
+each row of the result.</p>
+
+            
+    <p>This has consequences for entities whose state has not been flushed yet:</p>
+
+            
+
+<ul>
+    <li class="dash">A new entity that was passed to <code>persist()</code> is only added to the identity
+map when its identifier is known before the flush, for example with an
+assigned identifier or a sequence based generator. Such an entity can be returned by <code>find()</code> before
+<code>flush()</code> is called, while <code>findBy()</code> and DQL queries will not find it,
+because it is not in the database yet.</li>
+    <li class="dash">Changes to managed entities that were not flushed yet are not taken into
+account by queries. <code>findBy([&#039;headline&#039; =&gt; &#039;Hello World dude!&#039;])</code> in the
+example above does not return the modified article before <code>flush()</code>, but
+if the query finds the article by its old headline, the returned instance
+contains the modified headline.</li>
+    <li class="dash">Entities that were passed to <code>remove()</code> can still be returned by queries
+until the removal is flushed.</li>
+</ul>
+
+            
+    <p>Call <code>EntityManager#flush()</code> before running queries when they should take
+pending changes into account.</p>
+
             
     <p>Sometimes you want to clear the identity map of an EntityManager to
 start over. We use this regularly in our unit-tests to enforce
@@ -4410,17 +4465,6 @@ methods on a repository as follows:</p>
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$users = $em-&gt;getRepository(<span class="hljs-string">'MyProject\Domain\User'</span>)-&gt;findBy(<span class="hljs-keyword">array</span>(<span class="hljs-string">'age'</span> =&gt; <span class="hljs-keyword">array</span>(<span class="hljs-number">20</span>, <span class="hljs-number">30</span>, <span class="hljs-number">40</span>)));</code><code class="line language-php"><span class="hljs-comment">// translates roughly to: SELECT * FROM users WHERE age IN (20, 30, 40)</span></code><code class="empty"></code></pre>
             
-    <p>An EntityRepository also provides a mechanism for more concise
-calls through its use of <code>__call</code>. Thus, the following two
-examples are equivalent:</p>
-
-                <pre class="code-block-table" id="4475b871b206e13990ceca1dd8f606ccda15da9f"><button
-                type="button"
-                class="copy-to-clipboard"
-                data-copy-element-id="4475b871b206e13990ceca1dd8f606ccda15da9f"
-                title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">// A single user by its nickname</span></code><code class="line language-php">$user = $em-&gt;getRepository(<span class="hljs-string">'MyProject\Domain\User'</span>)-&gt;findOneBy(<span class="hljs-keyword">array</span>(<span class="hljs-string">'nickname'</span> =&gt; <span class="hljs-string">'romanb'</span>));</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// A single user by its nickname (__call magic)</span></code><code class="line language-php">$user = $em-&gt;getRepository(<span class="hljs-string">'MyProject\Domain\User'</span>)-&gt;findOneByNickname(<span class="hljs-string">'romanb'</span>);</code><code class="empty"></code></pre>
-            
     <p>Additionally, you can just count the result of the provided conditions when you don&#039;t really need the data:</p>
 
                 <pre class="code-block-table" id="83bd33adacc1ed7df69f301c9500494edbe28609"><button
@@ -4429,6 +4473,48 @@ examples are equivalent:</p>
                 data-copy-element-id="83bd33adacc1ed7df69f301c9500494edbe28609"
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">// Check there is no user with nickname</span></code><code class="line language-php">$availableNickname = <span class="hljs-number">0</span> === $em-&gt;getRepository(<span class="hljs-string">'MyProject\Domain\User'</span>)-&gt;count([<span class="hljs-string">'nickname'</span> =&gt; <span class="hljs-string">'nonexistent'</span>]);</code><code class="empty"></code></pre>
+            <div class="section" id="magic-finders">
+            <a id="reference-magic-finders"></a>
+            <h4 class="section-header ">
+    <a href="#magic-finders">
+        Magic Finders
+        <i class="fas fa-link"></i>
+    </a>
+</h4>
+            
+    <p>An <code>EntityRepository</code> also provides &quot;magic finders&quot; through its <code>__call()</code>
+method: calls to methods that start with <code>findBy</code>, <code>findOneBy</code> or <code>countBy</code>
+followed by the name of a field or association are translated to calls of
+<code>findBy()</code>, <code>findOneBy()</code> and <code>count()</code> with a single criterion on that field.
+The part after the prefix is converted to camel case to determine the field name,
+so <code>findOneByNickname</code> and <code>findOneByUserName</code> look for the fields <code>nickname</code>
+and <code>userName</code>.</p>
+
+                <pre class="code-block-table" id="3f3e1d728a0aa107b685246ac83dcdd2a71cf2ea"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="3f3e1d728a0aa107b685246ac83dcdd2a71cf2ea"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$repository = $em-&gt;getRepository(<span class="hljs-string">'MyProject\Domain\User'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Equivalent to $repository-&gt;findOneBy(['nickname' =&gt; 'romanb'])</span></code><code class="line language-php">$user = $repository-&gt;findOneByNickname(<span class="hljs-string">'romanb'</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Equivalent to $repository-&gt;findBy(['age' =&gt; 20], ['name' =&gt; 'ASC'], 10, 0)</span></code><code class="line language-php">$users = $repository-&gt;findByAge(<span class="hljs-number">20</span>, [<span class="hljs-string">'name'</span> =&gt; <span class="hljs-string">'ASC'</span>], <span class="hljs-number">10</span>, <span class="hljs-number">0</span>);</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">// Equivalent to $repository-&gt;count(['status' =&gt; 'active'])</span></code><code class="line language-php">$activeUsers = $repository-&gt;countByStatus(<span class="hljs-string">'active'</span>);</code><code class="empty"></code></pre>
+            
+    <p>The first argument is the value to search for. Any further arguments are passed on
+to the underlying method, for example orderings, limit and offset for <code>findBy()</code>.</p>
+
+            
+    <p>A magic finder throws a <code>Doctrine\ORM\Repository\Exception\InvalidMagicMethodCall</code>
+exception when it is called without a value or when the entity has no field or
+association with that name, and a <code>BadMethodCallException</code> when the method name
+does not start with one of the supported prefixes.</p>
+
+            
+    <p>Magic finders can only search on a single field. Since they are resolved at runtime,
+IDEs and static analysis tools do not know about them unless you declare them with
+<code>@method</code> annotations on a custom repository class. For full IDE and static
+analysis support, call <code>findBy()</code>, <code>findOneBy()</code> or <code>count()</code> directly, or
+add an explicit method to a
+<a href="#working-with-objects-custom-repositories">custom repository</a>.</p>
+
+    </div>
     </div>
             <div class="section" id="by-criteria">
             <h3 class="section-header ">
@@ -4556,6 +4642,7 @@ More information about native queries can be found in
 
     </div>
             <div class="section" id="custom-repositories">
+            <a id="working-with-objects-custom-repositories"></a>
             <h3 class="section-header ">
     <a href="#custom-repositories">
         Custom Repositories

@@ -1106,7 +1106,13 @@
             <li class="toc-item">
     <a href="working-with-objects.html#by-simple-conditions">By Simple Conditions</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="working-with-objects.html#magic-finders">Magic Finders</a>
 
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="working-with-objects.html#by-criteria">By Criteria</a>
@@ -1561,6 +1567,11 @@
 </li>
             <li class="toc-item">
     <a href="dql-doctrine-query-language.html#named-and-positional-parameters">Named and Positional Parameters</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="dql-doctrine-query-language.html#string-literals">String Literals</a>
 
 
 </li>
@@ -2669,6 +2680,11 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="limitations-and-known-issues.html#objects-as-identifier-values">Objects as identifier values</a>
+
+
+</li>
                     </ul>
 </li>
             <li class="toc-item">
@@ -3339,6 +3355,11 @@
 
         <ul class="section-level-1">
             <li class="toc-item">
+    <a href="../cookbook/mysql-enums.html#recommended-php-enums-and-the-dbal-enum-type">Recommended: PHP enums and the DBAL enum type</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="../cookbook/mysql-enums.html#solution-1-mapping-to-varchars">Solution 1: Mapping to Varchars</a>
 
 
@@ -3570,12 +3591,12 @@ inheritance root. This is necessary to avoid edge cases that would break the SQL
             
     <p>The <code>SQLFilter#getParameter()</code> function takes care of the proper quoting of parameters.</p>
 
-                <pre class="code-block-table" id="f859e8cfb8ecdf92677038be32c071a4a9485179"><button
+                <pre class="code-block-table" id="4567bf3fb638cac134a255ea1c90885f2060ee12"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="f859e8cfb8ecdf92677038be32c071a4a9485179"
+                data-copy-element-id="4567bf3fb638cac134a255ea1c90885f2060ee12"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Example</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ClassMetadata</span>,</code><code class="line language-php">    Doctrine\ORM\Query\Filter\SQLFilter;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyLocaleFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SQLFilter</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addFilterConstraint</span><span class="hljs-params">(ClassMetadata $targetEntity, $targetTableAlias)</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-comment">// Check if the entity implements the LocalAware interface</span></code><code class="line language-php">        <span class="hljs-keyword">if</span> (!$targetEntity-&gt;reflClass-&gt;implementsInterface(<span class="hljs-string">'LocaleAware'</span>)) {</code><code class="line language-php">            <span class="hljs-keyword">return</span> <span class="hljs-string">""</span>;</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> $targetTableAlias.<span class="hljs-string">'.locale = '</span> . <span class="hljs-keyword">$this</span>-&gt;getParameter(<span class="hljs-string">'locale'</span>); <span class="hljs-comment">// getParameter applies quoting automatically</span></code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">Example</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Mapping</span>\<span class="hljs-title">ClassMetadata</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Query</span>\<span class="hljs-title">Filter</span>\<span class="hljs-title">SQLFilter</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyLocaleFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SQLFilter</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addFilterConstraint</span><span class="hljs-params">(ClassMetadata $targetEntity, string $targetTableAlias)</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-comment">// Only filter entities that implement the LocaleAware interface and map a "locale" field</span></code><code class="line language-php">        <span class="hljs-keyword">if</span> (! $targetEntity-&gt;reflClass-&gt;implementsInterface(LocaleAware::class) || ! $targetEntity-&gt;hasField(<span class="hljs-string">'locale'</span>)) {</code><code class="line language-php">            <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-comment">// Resolve the column name from the metadata instead of assuming it,</span></code><code class="line language-php">        <span class="hljs-comment">// getParameter() applies quoting automatically</span></code><code class="line language-php">        <span class="hljs-keyword">return</span> $targetTableAlias . <span class="hljs-string">'.'</span> . $targetEntity-&gt;getColumnName(<span class="hljs-string">'locale'</span>) . <span class="hljs-string">' = '</span> . <span class="hljs-keyword">$this</span>-&gt;getParameter(<span class="hljs-string">'locale'</span>);</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
             
     <p>If the parameter is an array and should be quoted as a list of values for an IN query
 this is possible with the alternative <code>SQLFilter#setParameterList()</code> and

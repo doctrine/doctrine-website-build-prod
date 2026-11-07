@@ -1106,7 +1106,13 @@
             <li class="toc-item">
     <a href="../reference/working-with-objects.html#by-simple-conditions">By Simple Conditions</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="../reference/working-with-objects.html#magic-finders">Magic Finders</a>
 
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="../reference/working-with-objects.html#by-criteria">By Criteria</a>
@@ -1561,6 +1567,11 @@
 </li>
             <li class="toc-item">
     <a href="../reference/dql-doctrine-query-language.html#named-and-positional-parameters">Named and Positional Parameters</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../reference/dql-doctrine-query-language.html#string-literals">String Literals</a>
 
 
 </li>
@@ -2669,6 +2680,11 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="../reference/limitations-and-known-issues.html#objects-as-identifier-values">Objects as identifier values</a>
+
+
+</li>
                     </ul>
 </li>
             <li class="toc-item">
@@ -3339,6 +3355,11 @@
 
         <ul class="section-level-1 opened-ul ">
             <li class="toc-item">
+    <a href="#recommended-php-enums-and-the-dbal-enum-type">Recommended: PHP enums and the DBAL enum type</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="#solution-1-mapping-to-varchars">Solution 1: Mapping to Varchars</a>
 
 
@@ -3525,7 +3546,7 @@ This is because Enums contain state (their allowed values) and Doctrine
 types don&#039;t.</p>
 
             
-    <p>This cookbook entry shows two possible solutions to work with MySQL enums.
+    <p>This cookbook entry shows several possible solutions to work with MySQL enums.
 But first a word of warning. The MySQL Enum type has considerable downsides:</p>
 
             
@@ -3540,6 +3561,44 @@ settings. You can easily replicate the &quot;allow only some values&quot; requir
 in your Doctrine entities.</li>
 </ul>
 
+            <div class="section" id="recommended-php-enums-and-the-dbal-enum-type">
+            <h2 class="section-header ">
+    <a href="#recommended-php-enums-and-the-dbal-enum-type">
+        Recommended: PHP enums and the DBAL <code>enum</code> type
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>Since DBAL 4.2, the <code>Doctrine\DBAL\Types\Types::ENUM</code> type is available and
+generates a native <code>ENUM(...)</code> column on MySQL and MariaDB (and a <code>VARCHAR</code>
+column on other platforms). Combined with <a href="../reference/basic-mapping.html#reference-enum-mapping">PHP backed enums</a>, the ORM fills in the allowed values from the enum
+cases, converts between the database value and the enum instance and validates
+the values for you:</p>
+
+                <pre class="code-block-table" id="023fe151adbea1968bce25c3e1fd745858c90206"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="023fe151adbea1968bce25c3e1fd745858c90206"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">enum Visibility: string</code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">case</span> Visible = <span class="hljs-string">'visible'</span>;</code><code class="line language-php">    <span class="hljs-keyword">case</span> Invisible = <span class="hljs-string">'invisible'</span>;</code><code class="line language-php">}</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Entity]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Article</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[Column(type: Types::ENUM, enumType: Visibility::class)]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> Visibility $status;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>Without a PHP enum, the allowed values can be passed with the <code>values</code> option:</p>
+
+                <pre class="code-block-table" id="14def58605387f1cafec8055aaf8ce32c4cfd701"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="14def58605387f1cafec8055aaf8ce32c4cfd701"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-comment">#[Entity]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Article</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[Column(type: Types::ENUM, options: ['values' =&gt; ['visible', 'invisible']])]</span></code><code class="line language-php">    <span class="hljs-keyword">private</span> string $status;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>If you do not need a native <code>ENUM</code> column, mapping a PHP backed enum to a
+regular <code>string</code> column with <code>enumType</code> gives you the same type-safety while
+avoiding the downsides listed above.</p>
+
+            
+    <p>The following solutions are only needed when you cannot use DBAL 4.2 or newer.</p>
+
+    </div>
             <div class="section" id="solution-1-mapping-to-varchars">
             <h2 class="section-header ">
     <a href="#solution-1-mapping-to-varchars">
@@ -3594,12 +3653,12 @@ the <strong>columnDefinition</strong> attribute.</p>
     <p>You can make a stateless ENUM type by creating a type class for each unique set of ENUM values.
 For example for the previous enum type:</p>
 
-                <pre class="code-block-table" id="f152c86f061cdb723c52fb830b726511b77071dc"><button
+                <pre class="code-block-table" id="64f12f2ce5a045d563f3f20a8945e4f25cbd930b"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="f152c86f061cdb723c52fb830b726511b77071dc"
+                data-copy-element-id="64f12f2ce5a045d563f3f20a8945e4f25cbd930b"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">MyProject</span>\<span class="hljs-title">DBAL</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Platforms</span>\<span class="hljs-title">AbstractPlatform</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EnumVisibilityType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> ENUM_VISIBILITY = <span class="hljs-string">'enumvisibility'</span>;</code><code class="line language-php">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> STATUS_VISIBLE = <span class="hljs-string">'visible'</span>;</code><code class="line language-php">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> STATUS_INVISIBLE = <span class="hljs-string">'invisible'</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSQLDeclaration</span><span class="hljs-params">(array $fieldDeclaration, AbstractPlatform $platform)</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-string">"ENUM('visible', 'invisible')"</span>;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValue</span><span class="hljs-params">(mixed $value, AbstractPlatform $platform)</span>: <span class="hljs-title">mixed</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> $value;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">(mixed $value, AbstractPlatform $platform)</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (!in_array($value, [<span class="hljs-keyword">self</span>::STATUS_VISIBLE, <span class="hljs-keyword">self</span>::STATUS_INVISIBLE], <span class="hljs-keyword">true</span>)) {</code><code class="line language-php">            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> \InvalidArgumentException(<span class="hljs-string">"Invalid status"</span>);</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> $value;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getName</span><span class="hljs-params">()</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>::ENUM_VISIBILITY;</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">MyProject</span>\<span class="hljs-title">DBAL</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Platforms</span>\<span class="hljs-title">AbstractPlatform</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EnumVisibilityType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> ENUM_VISIBILITY = <span class="hljs-string">'enumvisibility'</span>;</code><code class="line language-php">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> STATUS_VISIBLE = <span class="hljs-string">'visible'</span>;</code><code class="line language-php">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> STATUS_INVISIBLE = <span class="hljs-string">'invisible'</span>;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSQLDeclaration</span><span class="hljs-params">(array $fieldDeclaration, AbstractPlatform $platform)</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-string">"ENUM('visible', 'invisible')"</span>;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValue</span><span class="hljs-params">(mixed $value, AbstractPlatform $platform)</span>: <span class="hljs-title">mixed</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> $value;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">(mixed $value, AbstractPlatform $platform)</span>: ?<span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> ($value === <span class="hljs-keyword">null</span>) {</code><code class="line language-php">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">if</span> (!in_array($value, [<span class="hljs-keyword">self</span>::STATUS_VISIBLE, <span class="hljs-keyword">self</span>::STATUS_INVISIBLE], <span class="hljs-keyword">true</span>)) {</code><code class="line language-php">            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> \InvalidArgumentException(<span class="hljs-string">"Invalid status"</span>);</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> $value;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getName</span><span class="hljs-params">()</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>::ENUM_VISIBILITY;</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
             
     <p>You can register this type with <code>Type::addType(&#039;enumvisibility&#039;, &#039;MyProject\DBAL\EnumVisibilityType&#039;);</code>.
 Then in your entity you can just use this type:</p>
@@ -3613,12 +3672,16 @@ Then in your entity you can just use this type:</p>
             
     <p>You can generalize this approach easily to create a base class for enums:</p>
 
-                <pre class="code-block-table" id="749b09d7f8cb31860dd48af9626a5f94818c5215"><button
+                <pre class="code-block-table" id="1788455de97c36b8f308746d803745cf02da45a3"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="749b09d7f8cb31860dd48af9626a5f94818c5215"
+                data-copy-element-id="1788455de97c36b8f308746d803745cf02da45a3"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">MyProject</span>\<span class="hljs-title">DBAL</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Platforms</span>\<span class="hljs-title">AbstractPlatform</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EnumType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">protected</span> $name;</code><code class="line language-php">    <span class="hljs-keyword">protected</span> $values = [];</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSQLDeclaration</span><span class="hljs-params">(array $fieldDeclaration, AbstractPlatform $platform)</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        $values = array_map(fn($val) =&gt; <span class="hljs-string">"'"</span>.$val.<span class="hljs-string">"'"</span>, <span class="hljs-keyword">$this</span>-&gt;values);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-string">"ENUM("</span>.implode(<span class="hljs-string">", "</span>, $values).<span class="hljs-string">")"</span>;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValue</span><span class="hljs-params">(mixed $value, AbstractPlatform $platform)</span>: <span class="hljs-title">mixed</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> $value;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">(mixed $value, AbstractPlatform $platform)</span>: <span class="hljs-title">mixed</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> (!in_array($value, <span class="hljs-keyword">$this</span>-&gt;values, <span class="hljs-keyword">true</span>)) {</code><code class="line language-php">            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> \InvalidArgumentException(<span class="hljs-string">"Invalid '"</span>.<span class="hljs-keyword">$this</span>-&gt;name.<span class="hljs-string">"' value."</span>);</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> $value;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getName</span><span class="hljs-params">()</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;name;</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">MyProject</span>\<span class="hljs-title">DBAL</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Platforms</span>\<span class="hljs-title">AbstractPlatform</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EnumType</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Type</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">protected</span> $name;</code><code class="line language-php">    <span class="hljs-keyword">protected</span> $values = [];</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSQLDeclaration</span><span class="hljs-params">(array $fieldDeclaration, AbstractPlatform $platform)</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        $values = array_map(fn($val) =&gt; <span class="hljs-string">"'"</span>.$val.<span class="hljs-string">"'"</span>, <span class="hljs-keyword">$this</span>-&gt;values);</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-string">"ENUM("</span>.implode(<span class="hljs-string">", "</span>, $values).<span class="hljs-string">")"</span>;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToPHPValue</span><span class="hljs-params">(mixed $value, AbstractPlatform $platform)</span>: <span class="hljs-title">mixed</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> $value;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">convertToDatabaseValue</span><span class="hljs-params">(mixed $value, AbstractPlatform $platform)</span>: <span class="hljs-title">mixed</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">if</span> ($value === <span class="hljs-keyword">null</span>) {</code><code class="line language-php">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">if</span> (!in_array($value, <span class="hljs-keyword">$this</span>-&gt;values, <span class="hljs-keyword">true</span>)) {</code><code class="line language-php">            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> \InvalidArgumentException(<span class="hljs-string">"Invalid '"</span>.<span class="hljs-keyword">$this</span>-&gt;name.<span class="hljs-string">"' value."</span>);</code><code class="line language-php">        }</code><code class="line language-php"></code><code class="line language-php">        <span class="hljs-keyword">return</span> $value;</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getName</span><span class="hljs-params">()</span>: <span class="hljs-title">string</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;name;</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>The <code>null</code> checks allow the type to be used for nullable columns, since
+Doctrine passes <code>null</code> to the type when the field has no value.</p>
+
             
     <p>With this base class you can define an enum as easily as:</p>
 

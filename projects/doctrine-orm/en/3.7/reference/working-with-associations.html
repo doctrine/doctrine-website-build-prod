@@ -1106,7 +1106,13 @@
             <li class="toc-item">
     <a href="working-with-objects.html#by-simple-conditions">By Simple Conditions</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="working-with-objects.html#magic-finders">Magic Finders</a>
 
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="working-with-objects.html#by-criteria">By Criteria</a>
@@ -1561,6 +1567,11 @@
 </li>
             <li class="toc-item">
     <a href="dql-doctrine-query-language.html#named-and-positional-parameters">Named and Positional Parameters</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="dql-doctrine-query-language.html#string-literals">String Literals</a>
 
 
 </li>
@@ -2669,6 +2680,11 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="limitations-and-known-issues.html#objects-as-identifier-values">Objects as identifier values</a>
+
+
+</li>
                     </ul>
 </li>
             <li class="toc-item">
@@ -3339,6 +3355,11 @@
 
         <ul class="section-level-1">
             <li class="toc-item">
+    <a href="../cookbook/mysql-enums.html#recommended-php-enums-and-the-dbal-enum-type">Recommended: PHP enums and the DBAL enum type</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="../cookbook/mysql-enums.html#solution-1-mapping-to-varchars">Solution 1: Mapping to Varchars</a>
 
 
@@ -3964,9 +3985,49 @@ entity <code>B</code> should also be removed, because it is not used anymore.</p
             <td>
                                                 
     <p>When using the <code>orphanRemoval=true</code> option Doctrine makes the assumption
-that the entities are privately owned and will <strong>NOT</strong> be reused by other entities.
-If you neglect this assumption your entities will get deleted by Doctrine even if
-you assigned the orphaned entity to another one.</p>
+that the entities are privately owned: each instance of <code>B</code> belongs to exactly one
+instance of <code>A</code> at a time, like the lines of an order or the addresses of a contact.
+Removing an instance of <code>B</code> from the association is interpreted as &quot;this instance
+is not needed anymore&quot;, and Doctrine deletes it during the next flush.</p>
+
+    <p>Moving an instance of <code>B</code> from one <code>A</code> to another is supported. Removing an
+element from a collection schedules its orphan removal, and adding it to a managed
+collection cancels a removal that is already scheduled. The order of the calls
+matters: first remove the element from the collection of the old owner, then add it
+to the collection of the new owner before flushing:</p>
+    <pre class="code-block-table" id="e94467eb3ac9e7d098b833c2640f3d762d615514"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="e94467eb3ac9e7d098b833c2640f3d762d615514"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$oldOwner-&gt;getChildren()-&gt;removeElement($child);</code><code class="line language-php">$newOwner-&gt;getChildren()-&gt;add($child);</code><code class="line language-php">$child-&gt;setOwner($newOwner);</code><code class="line language-php">$em-&gt;flush();</code><code class="empty"></code></pre>
+    <p>Calling <code>add()</code> first and <code>removeElement()</code> afterwards schedules the removal
+again, and the child is deleted. The child is also deleted if it is only referenced
+from somewhere else (for example from an unrelated association, or by only setting
+the owning side of the association) without being added to a managed collection.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+                        <div class="alert note-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-sticky-note text-primary mr-2"></i></td>
+            <td>
+                                                
+    <p>Replacing the whole collection of a one-to-many association, for example with
+<code>$contact-&gt;setAddresses(new ArrayCollection([...]))</code>, schedules a deletion of the
+previous collection. With <code>orphanRemoval=true</code> this deletes <strong>all</strong> entities of the
+previous collection, including entities that are also contained in the new collection.
+To keep existing elements, modify the existing collection with <code>add()</code>,
+<code>removeElement()</code> or <code>clear()</code> instead of replacing it.</p>
+
+    <p>For many-to-many associations, replacing the collection only deletes the rows of the
+join table, and the links of the new collection are inserted afterwards. The target
+entities themselves are not deleted in this case.</p>
 
             </td>
         </tr>

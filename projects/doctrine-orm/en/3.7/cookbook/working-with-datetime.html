@@ -1106,7 +1106,13 @@
             <li class="toc-item">
     <a href="../reference/working-with-objects.html#by-simple-conditions">By Simple Conditions</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="../reference/working-with-objects.html#magic-finders">Magic Finders</a>
 
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="../reference/working-with-objects.html#by-criteria">By Criteria</a>
@@ -1561,6 +1567,11 @@
 </li>
             <li class="toc-item">
     <a href="../reference/dql-doctrine-query-language.html#named-and-positional-parameters">Named and Positional Parameters</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../reference/dql-doctrine-query-language.html#string-literals">String Literals</a>
 
 
 </li>
@@ -2669,6 +2680,11 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="../reference/limitations-and-known-issues.html#objects-as-identifier-values">Objects as identifier values</a>
+
+
+</li>
                     </ul>
 </li>
             <li class="toc-item">
@@ -3339,6 +3355,11 @@
 
         <ul class="section-level-1">
             <li class="toc-item">
+    <a href="mysql-enums.html#recommended-php-enums-and-the-dbal-enum-type">Recommended: PHP enums and the DBAL enum type</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="mysql-enums.html#solution-1-mapping-to-varchars">Solution 1: Mapping to Varchars</a>
 
 
@@ -3612,12 +3633,20 @@ to the current timezone that the passed DateTime instance has.</p>
     <p>To actually use this new type instead of the default <code>datetime</code> type, you need to run following
 code before bootstrapping the ORM:</p>
 
-                <pre class="code-block-table" id="bb9978436a6cb0d83436ae40c31d5566261daa6f"><button
+                <pre class="code-block-table" id="8fa8b49243a52c75bed1ab50ce8a9fabca3a5f99"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="bb9978436a6cb0d83436ae40c31d5566261daa6f"
+                data-copy-element-id="8fa8b49243a52c75bed1ab50ce8a9fabca3a5f99"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">DoctrineExtensions</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">UTCDateTimeType</span>;</code><code class="line language-php"></code><code class="line language-php">Type::overrideType(<span class="hljs-string">'datetime'</span>, UTCDateTimeType::class);</code><code class="line language-php">Type::overrideType(<span class="hljs-string">'datetimetz'</span>, UTCDateTimeType::class);</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">DoctrineExtensions</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">UTCDateTimeType</span>;</code><code class="line language-php"></code><code class="line language-php">Type::overrideType(<span class="hljs-string">'datetime'</span>, UTCDateTimeType::class);</code><code class="empty"></code></pre>
+            
+    <p>Do not override the <code>datetimetz</code> type with this class. <code>UTCDateTimeType</code> extends
+<code>DateTimeType</code> and uses its SQL declaration and format, while <code>datetimetz</code> columns
+are declared with a timezone (for example <code>TIMESTAMP(0) WITH TIME ZONE</code> on PostgreSQL)
+and use a format that includes the offset. Overriding it changes the generated schema
+and breaks reading existing <code>datetimetz</code> values. If you need the same behavior for
+<code>datetimetz</code> columns, create a separate type that extends <code>DateTimeTzType</code>.</p>
+
             
     <p>To be able to transform these values
 back into their real timezone you have to save the timezone in a separate field of the entity
@@ -3635,6 +3664,31 @@ objects. That means a new DateTime will only be used during updating if the refe
 changes between retrieval and flush operation. This means we can easily go and modify
 the instance by setting the previous local timezone.</p>
 
+                        <div class="alert warning-admonition bg-light-yellow text-dark border ">
+    <table width="100%">
+        <tbody>
+        <tr>
+            <td width="10" class="align-top"><i class="fas fa-exclamation-circle text-warning mr-2"></i></td>
+            <td>
+                                                
+    <p>Converting to UTC is only safe for points in time that are in the past or
+near future, like the creation date of an event. The rules of a timezone (its
+UTC offset and daylight saving time) are defined by the timezone database and can
+change after the value was stored. When this happens, a UTC value that was
+computed for a future local time, like a meeting at 10:00 in Europe/Berlin next
+year, no longer corresponds to the intended local time when it is converted back.</p>
+
+    <p>For future local times, store the local date and time without conversion (for
+example as a string or in a <code>datetime</code> column that is not converted to UTC)
+together with the timezone name, and only compute the UTC value when it is needed.
+See <a href="https://andreas.heigl.org/2016/12/22/why-not-to-convert-a-datetime-to-timestamp/">Why not to convert a datetime to timestamp</a>
+for a longer explanation.</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
     </div>
     </div>
         

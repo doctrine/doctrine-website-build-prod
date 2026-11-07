@@ -1106,7 +1106,13 @@
             <li class="toc-item">
     <a href="working-with-objects.html#by-simple-conditions">By Simple Conditions</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="working-with-objects.html#magic-finders">Magic Finders</a>
 
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="working-with-objects.html#by-criteria">By Criteria</a>
@@ -1561,6 +1567,11 @@
 </li>
             <li class="toc-item">
     <a href="#named-and-positional-parameters">Named and Positional Parameters</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="#string-literals">String Literals</a>
 
 
 </li>
@@ -2669,6 +2680,11 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="limitations-and-known-issues.html#objects-as-identifier-values">Objects as identifier values</a>
+
+
+</li>
                     </ul>
 </li>
             <li class="toc-item">
@@ -3339,6 +3355,11 @@
 
         <ul class="section-level-1">
             <li class="toc-item">
+    <a href="../cookbook/mysql-enums.html#recommended-php-enums-and-the-dbal-enum-type">Recommended: PHP enums and the DBAL enum type</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="../cookbook/mysql-enums.html#solution-1-mapping-to-varchars">Solution 1: Mapping to Varchars</a>
 
 
@@ -3804,6 +3825,30 @@ are specified with &quot;:name1&quot;, &quot;:name2&quot; and so on.</p>
     <p>When referencing the parameters in <code>Query#setParameter($param, $value)</code>
 both named and positional parameters are used <strong>without</strong> their prefixes.</p>
 
+    </div>
+            <div class="section" id="string-literals">
+            <h3 class="section-header ">
+    <a href="#string-literals">
+        String Literals
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>String literals in DQL are enclosed in single quotes, for example
+<code>&#039;foo&#039;</code>. A single quote inside a string literal is escaped by doubling
+it: <code>&#039;bar&#039;&#039;s house&#039;</code>. Unlike some SQL dialects, DQL does not support
+double quotes for string literals; <code>&quot;foo&quot;</code> results in a syntax error.</p>
+
+            
+    <p>Prefer passing values as parameters instead of embedding them into the
+query string, which also takes care of any quoting:</p>
+
+                <pre class="code-block-table" id="4e93f4b1128050b20e82987e42c5844cc2f1ae45"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="4e93f4b1128050b20e82987e42c5844cc2f1ae45"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$query = $em-&gt;createQuery(<span class="hljs-string">'SELECT u FROM MyProject\Model\User u WHERE u.name = :name'</span>);</code><code class="line language-php">$query-&gt;setParameter(<span class="hljs-string">'name'</span>, <span class="hljs-string">"bar's house"</span>);</code><code class="empty"></code></pre>
     </div>
             <div class="section" id="dql-select-examples">
             <h3 class="section-header ">
@@ -4983,12 +5028,12 @@ is thrown. If no object is found, <code>null</code> will be returned.</p>
     <p>You can easily add your own custom hydration modes by first
 creating a class which extends <code>AbstractHydrator</code>:</p>
 
-                <pre class="code-block-table" id="902b2e955d4d7d082d15d22a26ae87ffb4fee124"><button
+                <pre class="code-block-table" id="62e1d68a1ce32e5f91477bf529c6861b0bc90b87"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="902b2e955d4d7d082d15d22a26ae87ffb4fee124"
+                data-copy-element-id="62e1d68a1ce32e5f91477bf529c6861b0bc90b87"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">MyProject</span>\<span class="hljs-title">Hydrators</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Internal</span>\<span class="hljs-title">Hydration</span>\<span class="hljs-title">AbstractHydrator</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomHydrator</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractHydrator</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_hydrateAll</span><span class="hljs-params">()</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;_stmt-&gt;fetchAllAssociative();</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"><span class="hljs-keyword">namespace</span> <span class="hljs-title">MyProject</span>\<span class="hljs-title">Hydrators</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">ORM</span>\<span class="hljs-title">Internal</span>\<span class="hljs-title">Hydration</span>\<span class="hljs-title">AbstractHydrator</span>;</code><code class="line language-php"></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomHydrator</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractHydrator</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-keyword">protected</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hydrateAllData</span><span class="hljs-params">()</span>: <span class="hljs-title">array</span></span></code><code class="line language-php">    {</code><code class="line language-php">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">$this</span>-&gt;stmt-&gt;fetchAllAssociative();</code><code class="line language-php">    }</code><code class="line language-php">}</code><code class="empty"></code></pre>
             
     <p>Next you just need to add the class to the ORM configuration:</p>
 
