@@ -563,6 +563,11 @@
 </li>
                     </ul>
 </li>
+            <li class="toc-item">
+    <a href="#comments">Comments</a>
+
+
+</li>
                     </ul>
 </li>
             <li class="toc-item">
@@ -1868,6 +1873,46 @@ api needs to be used instead of using <code>select()</code>:</p>
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php">$qb = $connection-&gt;createQueryBuilder();</code><code class="line language-php"></code><code class="line language-php">$baseQueryBuilder = $qb-&gt;sub()</code><code class="line language-php">    -&gt;select(<span class="hljs-string">'id'</span>)</code><code class="line language-php">    -&gt;from(<span class="hljs-string">'table_a'</span>);</code><code class="line language-php"></code><code class="line language-php">$unionPart1 = $qb-&gt;sub()</code><code class="line language-php">    -&gt;select(<span class="hljs-string">'id'</span>, $qb-&gt;expr()-&gt;literal(<span class="hljs-string">'first'</span>) . <span class="hljs-string">' AS value'</span>, <span class="hljs-string">'1 AS sort'</span>)</code><code class="line language-php">    -&gt;from(<span class="hljs-string">'cte_base'</span>)</code><code class="line language-php">    -&gt;where($qb-&gt;expr()-&gt;eq(<span class="hljs-string">'id'</span>, <span class="hljs-string">':id1'</span>));</code><code class="line language-php"></code><code class="line language-php">$unionPart2 = $qb-&gt;sub()</code><code class="line language-php">    -&gt;select(<span class="hljs-string">'id'</span>, $qb-&gt;expr()-&gt;literal(<span class="hljs-string">'second'</span>) . <span class="hljs-string">' AS value'</span>, <span class="hljs-string">'2 AS sort'</span>)</code><code class="line language-php">    -&gt;from(<span class="hljs-string">'cte_base'</span>)</code><code class="line language-php">    -&gt;where($qb-&gt;expr()-&gt;eq(<span class="hljs-string">'id'</span>, <span class="hljs-string">':id2'</span>));</code><code class="line language-php"></code><code class="line language-php">$qb-&gt;with(<span class="hljs-string">'cte_base'</span>, $baseQueryBuilder)</code><code class="line language-php">    -&gt;union($unionPart1)</code><code class="line language-php">    -&gt;addUnion($unionPart2)</code><code class="line language-php">    -&gt;orderBy(<span class="hljs-string">'sort'</span>)</code><code class="line language-php">    -&gt;setParameter(<span class="hljs-string">'id1'</span>, <span class="hljs-number">2</span>)</code><code class="line language-php">    -&gt;setParameter(<span class="hljs-string">'id2'</span>, <span class="hljs-number">1</span>);</code><code class="empty"></code></pre>
     </div>
+    </div>
+            <div class="section" id="comments">
+            <h3 class="section-header ">
+    <a href="#comments">
+        Comments
+        <i class="fas fa-link"></i>
+    </a>
+</h3>
+            
+    <p>To add comments to the query, use the <code>addComment()</code> method which
+will add the comment above the query:</p>
+
+                <pre class="code-block-table" id="44028ad0014717ddcc6e476246e740b5335365da"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="44028ad0014717ddcc6e476246e740b5335365da"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php">$queryBuilder</code><code class="line language-php">    -&gt;select(<span class="hljs-string">'id'</span>, <span class="hljs-string">'name'</span>)</code><code class="line language-php">    -&gt;from(<span class="hljs-string">'users'</span>)</code><code class="line language-php">    -&gt;addComment(<span class="hljs-string">'This is a comment'</span>);</code><code class="line language-php"><span class="hljs-comment">// -- This is a comment</span></code><code class="line language-php"><span class="hljs-comment">//</span></code><code class="line language-php"><span class="hljs-comment">// SELECT id, name FROM users</span></code><code class="empty"></code></pre>
+            
+    <p>Multiple comments can be added by calling the method multiple times.
+They are rendered on their own line, in the order they were added:</p>
+
+                <pre class="code-block-table" id="9acb0f5cd871dedd06479a12575b2a9e33197fab"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="9acb0f5cd871dedd06479a12575b2a9e33197fab"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php">$queryBuilder</code><code class="line language-php">    -&gt;select(<span class="hljs-string">'id'</span>, <span class="hljs-string">'name'</span>)</code><code class="line language-php">    -&gt;from(<span class="hljs-string">'users'</span>)</code><code class="line language-php">    -&gt;addComment(<span class="hljs-string">'Comment 1'</span>)</code><code class="line language-php">    -&gt;addComment(<span class="hljs-string">'Comment 2'</span>);</code><code class="line language-php"><span class="hljs-comment">// -- Comment 1</span></code><code class="line language-php"><span class="hljs-comment">// -- Comment 2</span></code><code class="line language-php"><span class="hljs-comment">//</span></code><code class="line language-php"><span class="hljs-comment">// SELECT id, name FROM users</span></code><code class="empty"></code></pre>
+            
+    <p>Comments are rendered using the double-hyphen syntax, which terminates at the
+end of the line. A comment may still span multiple lines: the delimiter is
+repeated on each of them, so nothing the comment contains can end up in the
+query as SQL.</p>
+
+                <pre class="code-block-table" id="a5eb234158127808b045edea86adf665a4a47b8e"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="a5eb234158127808b045edea86adf665a4a47b8e"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php">$queryBuilder</code><code class="line language-php">    -&gt;select(<span class="hljs-string">'id'</span>, <span class="hljs-string">'name'</span>)</code><code class="line language-php">    -&gt;from(<span class="hljs-string">'users'</span>)</code><code class="line language-php">    -&gt;addComment(<span class="hljs-string">"This comment\nspans two lines"</span>);</code><code class="line language-php"><span class="hljs-comment">// -- This comment</span></code><code class="line language-php"><span class="hljs-comment">// -- spans two lines</span></code><code class="line language-php"><span class="hljs-comment">//</span></code><code class="line language-php"><span class="hljs-comment">// SELECT id, name FROM users</span></code><code class="empty"></code></pre>
     </div>
     </div>
             <div class="section" id="building-expressions">

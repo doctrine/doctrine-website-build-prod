@@ -517,6 +517,11 @@
 
 </li>
             <li class="toc-item">
+    <a href="#text-indexes">Text Indexes</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="#partial-indexes">Partial indexes</a>
 
 
@@ -2675,6 +2680,103 @@ options structures manually:</p>
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">indexes</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">index</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">key</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"coordinates"</span> <span class="hljs-attr">order</span>=<span class="hljs-string">"2d"</span> /&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">index</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">indexes</span>&gt;</span></code><code class="empty"></code></pre>
         </div>
     </div>
+    </div>
+            <div class="section" id="text-indexes">
+            <h2 class="section-header ">
+    <a href="#text-indexes">
+        Text Indexes
+        <i class="fas fa-link"></i>
+    </a>
+</h2>
+            
+    <p>A text index is required to run text searches with the <code>$text</code> query
+operator. To create one, set the value of each key you want to search to
+<code>text</code>:</p>
+
+            <div class="configuration-block">
+    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-2">
+                    <button role="tab" type="button" data-language="php"
+                    aria-controls="configuration-block-tabpanel-e0555c382694b66fe272cac2f98adc6a" aria-selected="true"
+                    data-active="true" >
+                <span>Php</span>
+            </button>
+                    <button role="tab" type="button" data-language="xml"
+                    aria-controls="configuration-block-tabpanel-3f35a7a33d664e7fc62b75f3d6893218" aria-selected="false"
+                     tabindex="-1">
+                <span>Xml</span>
+            </button>
+            </div>
+
+            <div role="tabpanel" id="configuration-block-tabpanel-e0555c382694b66fe272cac2f98adc6a" aria-label="Php" class="configuration-codeblock" data-language="php" style="">
+                <pre class="code-block-table" id="926fe1265dee4181fd68e60bd82a0cc061a45313"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="926fe1265dee4181fd68e60bd82a0cc061a45313"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document]</span></code><code class="line language-php"><span class="hljs-comment">#[Index(keys: ['title' =&gt; 'text', 'description' =&gt; 'text'])]</span></code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Article</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">#[Id]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> string $id;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Field(type: 'string')]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> string $title;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Field(type: 'string')]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> string $description;</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-comment">#[Field(type: 'float', notSaved: true)]</span></code><code class="line language-php">    <span class="hljs-keyword">public</span> float $score;</code><code class="line language-php">}</code><code class="empty"></code></pre>
+        </div>
+            <div role="tabpanel" id="configuration-block-tabpanel-3f35a7a33d664e7fc62b75f3d6893218" aria-label="Xml" class="configuration-codeblock" data-language="xml" style="display: none">
+                <pre class="code-block-table" id="aeff4275accc0f67ba87d52e972efff8bf8d685e"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="aeff4275accc0f67ba87d52e972efff8bf8d685e"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">indexes</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">index</span>&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">key</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"title"</span> <span class="hljs-attr">order</span>=<span class="hljs-string">"text"</span> /&gt;</span></code><code class="line language-xml">        <span class="hljs-tag">&lt;<span class="hljs-name">key</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"description"</span> <span class="hljs-attr">order</span>=<span class="hljs-string">"text"</span> /&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">index</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">indexes</span>&gt;</span></code><code class="empty"></code></pre>
+        </div>
+    </div>
+            
+    <p>A collection can have at most one text index, so put all the fields you want
+to search in the same index.</p>
+
+            
+    <p>Text indexes accept additional options, which you pass in the <code>options</code>
+argument:</p>
+
+            
+
+<ul>
+    <li class="dash"><strong>weights</strong> - The weight of each field relative to the other fields in the
+index. A match in a field with a higher weight contributes more to the text
+score. Fields without a weight have a weight of 1.</li>
+    <li class="dash"><strong>default_language</strong> - The language used for stemming and stop words. If
+not set, MongoDB uses <code>english</code>.</li>
+    <li class="dash"><strong>language_override</strong> - The name of the document field that can set the
+language for each document. If not set, MongoDB uses <code>language</code>. Set it
+to another field name if your documents already use a <code>language</code> field
+for something else.</li>
+    <li class="dash"><strong>textIndexVersion</strong> - The version of the text index format. Leave it unset
+unless you need to force a specific version.</li>
+</ul>
+
+                <pre class="code-block-table" id="3dd979babbb654e6f0f396e285b9992e128fe7d0"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="3dd979babbb654e6f0f396e285b9992e128fe7d0"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php"><span class="hljs-comment">#[Document]</span></code><code class="line language-php"><span class="hljs-comment">#[Index(</span></code><code class="line language-php">    keys: [<span class="hljs-string">'title'</span> =&gt; <span class="hljs-string">'text'</span>, <span class="hljs-string">'description'</span> =&gt; <span class="hljs-string">'text'</span>],</code><code class="line language-php">    options: [</code><code class="line language-php">        <span class="hljs-string">'weights'</span> =&gt; [<span class="hljs-string">'title'</span> =&gt; <span class="hljs-number">10</span>],</code><code class="line language-php">        <span class="hljs-string">'default_language'</span> =&gt; <span class="hljs-string">'german'</span>,</code><code class="line language-php">        <span class="hljs-string">'language_override'</span> =&gt; <span class="hljs-string">'idioma'</span>,</code><code class="line language-php">    ],</code><code class="line language-php">)]</code><code class="line language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Article</span></span></code><code class="line language-php">{</code><code class="line language-php">    <span class="hljs-comment">// ...</span></code><code class="line language-php">}</code><code class="empty"></code></pre>
+            
+    <p>In XML mapping, you can set <code>default_language</code>, <code>language_override</code> and
+<code>textIndexVersion</code> with <code>&lt;option name=&quot;default_language&quot; value=&quot;german&quot; /&gt;</code>
+elements. The <code>weights</code> option cannot be set in XML mapping, because
+<code>&lt;option&gt;</code> only accepts scalar values.</p>
+
+            
+    <p>If you change the fields or weights of a text index, or set a different
+<code>default_language</code>, <code>language_override</code> or <code>textIndexVersion</code>,
+<code>odm:schema:update</code> drops the existing text index and creates the new one.</p>
+
+            
+    <p>To query the index, use <code>text()</code> in the
+<a href="query-builder-api.html">query builder</a>. <code>sortMeta()</code> sorts the results by
+their text score and adds the score to the projection, which is hydrated into
+the mapped <code>score</code> field:</p>
+
+                <pre class="code-block-table" id="4dc213d4b3bc41bfbbea3306ac812bdd87368faf"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="4dc213d4b3bc41bfbbea3306ac812bdd87368faf"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php"></code><code class="line language-php">$articles = $dm-&gt;createQueryBuilder(Article::class)</code><code class="line language-php">    -&gt;text(<span class="hljs-string">'mongodb indexes'</span>)</code><code class="line language-php">    -&gt;sortMeta(<span class="hljs-string">'score'</span>, <span class="hljs-string">'textScore'</span>)</code><code class="line language-php">    -&gt;getQuery()</code><code class="line language-php">    -&gt;execute();</code><code class="empty"></code></pre>
     </div>
             <div class="section" id="partial-indexes">
             <h2 class="section-header ">
