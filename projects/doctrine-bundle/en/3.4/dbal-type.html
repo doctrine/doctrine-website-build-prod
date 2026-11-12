@@ -563,10 +563,20 @@ repeatable attributes require DoctrineBundle &gt;= 3.4.</p>
             <td>
                                                 
     <p>With DBAL &gt;= 4.6 the type is registered on the connections instead of the
-global type registry. The ORM resolves it when it reads the type provider of
-the connection, which requires Doctrine ORM &gt;= 3.8. Types that other code
-registers globally with <code>Type::addType()</code> stay available, because the
-connection provider falls back to the global registry.</p>
+global type registry. Doctrine ORM &gt;= 3.8 resolves it when it reads the type
+provider of the connection. Types that other code registers globally with
+<code>Type::addType()</code> stay available, including the built-in types overridden
+with <code>Type::overrideType()</code>, because the connection provider falls back to
+the global registry. A type declared for the connection takes precedence over
+the global registry.</p>
+
+    <p>With an older ORM, which reads the types from the global registry, the
+bundle registers the tagged types there instead, when the first connection
+is created, and the connections receive no type provider. It registers the
+instances built by the container, so dependency injection keeps working. The
+global registry is shared by every connection, so the <code>connection</code>
+argument does not apply there, and two services cannot declare the same type
+name.</p>
 
             </td>
         </tr>
@@ -602,6 +612,10 @@ from a per-connection registry. On older DBAL versions the type is registered
 in the global registry and created by DBAL, so a constructor with required
 parameters fails when a connection is created.</p>
 
+    <p>With Doctrine ORM before 3.8, the instance built by the container is
+registered in the global registry, so the dependencies are injected there
+too.</p>
+
             </td>
         </tr>
         </tbody>
@@ -635,6 +649,10 @@ a type can be registered on several connections with different names:</p>
                                                 
     <p>Restricting a type to a connection requires DBAL &gt;= 4.6. On older versions
 the <code>connection</code> is ignored and the type is registered globally.</p>
+
+    <p>With Doctrine ORM before 3.8, the type is registered in the global registry
+instead of the connections, so the <code>connection</code> argument does not keep it
+away from the other connections.</p>
 
             </td>
         </tr>
@@ -701,7 +719,8 @@ omitted, the service id is used:</p>
 name to its class name under <code>doctrine.dbal.types</code>. This is supported on all
 DBAL versions and does not turn the type into a service. With DBAL &gt;= 4.6 the
 type is registered both in the global registry and in the type provider of each
-connection, so the two registrations hold separate instances of the type:</p>
+connection, so the two registrations hold separate instances of the type. With
+Doctrine ORM before 3.8 the global registry is the only registration:</p>
 
             <div class="configuration-block">
     <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-2">
