@@ -17,7 +17,7 @@
                     <meta name="robots" content="index, follow">
         
         
-                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-orm/en/3.7/reference/transactions-and-concurrency.html" />
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-orm/en/3.8/reference/transactions-and-concurrency.html" />
     
         <link
             rel="stylesheet"
@@ -1106,7 +1106,13 @@
             <li class="toc-item">
     <a href="working-with-objects.html#by-simple-conditions">By Simple Conditions</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="working-with-objects.html#magic-finders">Magic Finders</a>
 
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="working-with-objects.html#by-criteria">By Criteria</a>
@@ -1561,6 +1567,11 @@
 </li>
             <li class="toc-item">
     <a href="dql-doctrine-query-language.html#named-and-positional-parameters">Named and Positional Parameters</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="dql-doctrine-query-language.html#string-literals">String Literals</a>
 
 
 </li>
@@ -2669,6 +2680,11 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="limitations-and-known-issues.html#objects-as-identifier-values">Objects as identifier values</a>
+
+
+</li>
                     </ul>
 </li>
             <li class="toc-item">
@@ -3344,6 +3360,11 @@
 
         <ul class="section-level-1">
             <li class="toc-item">
+    <a href="../cookbook/mysql-enums.html#recommended-php-enums-and-the-dbal-enum-type">Recommended: PHP enums and the DBAL enum type</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="../cookbook/mysql-enums.html#solution-1-mapping-to-varchars">Solution 1: Mapping to Varchars</a>
 
 
@@ -3452,17 +3473,7 @@
 </nav>
                                     </div>
 
-                    
-    <div class="alert caution bg-light-yellow text-dark border">
-    <table width="100%">
-        <tr>
-            <td width="10" class="align-top">
-                <i class="fas fa-exclamation-circle text-warning mr-2"></i>
-            </td>
-            <td><p>You are browsing a version that has not yet been released.</p></td>
-        </tr>
-    </table>
-</div>
+                
 
                 <div class="row">
                     <div class="col-12">
@@ -3471,7 +3482,7 @@
                                                             
                                 <div class="dropdown show d-inline-block">
                                     <a class="project-version-switcher btn btn-secondary btn-sm dropdown-toggle" href="/projects/doctrine-orm/en/3.8/reference/transactions-and-concurrency.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        3.8
+                                        3.8.0
                                     </a>
 
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -3485,15 +3496,15 @@
                                                                                                                     (upcoming)
                                                                                                             </a>
                                                                                                                                                                                                 
-                                                    <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-orm/en/3.8/reference/transactions-and-concurrency.html">
-                                                        3.8
+                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/3.9/reference/transactions-and-concurrency.html">
+                                                        3.9
 
                                                         
                                                                                                                     (upcoming)
                                                                                                             </a>
                                                                                                                                                                                                 
-                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/3.7/reference/transactions-and-concurrency.html">
-                                                        3.7.6
+                                                    <a class="project-version-switcher dropdown-item active" href="/projects/doctrine-orm/en/3.8/reference/transactions-and-concurrency.html">
+                                                        3.8.0
 
                                                                                                                     (current)
                                                         
@@ -3507,6 +3518,8 @@
                                                                                     <h6 class="dropdown-header">Unmaintained</h6>
 
                                                                                                                                                 
+                                                    <a class="dropdown-item" href="/projects/doctrine-orm/en/3.7/reference/transactions-and-concurrency.html">3.7</a>
+                                                                                                                                                                                                
                                                     <a class="dropdown-item" href="/projects/doctrine-orm/en/3.6/reference/transactions-and-concurrency.html">3.6</a>
                                                                                                                                                                                                 
                                                     <a class="dropdown-item" href="/projects/doctrine-orm/en/2.19/reference/transactions-and-concurrency.html">2.19</a>
@@ -3792,6 +3805,15 @@ timestamp or datetime):</p>
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">doctrine-mapping</span>&gt;</span></code><code class="line language-xml">  <span class="hljs-tag">&lt;<span class="hljs-name">entity</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"User"</span>&gt;</span></code><code class="line language-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">field</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"version"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"datetime"</span> <span class="hljs-attr">version</span>=<span class="hljs-string">"true"</span> /&gt;</span></code><code class="line language-xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">entity</span>&gt;</span></code><code class="line language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">doctrine-mapping</span>&gt;</span></code><code class="empty"></code></pre>
         </div>
     </div>
+            
+    <p>The version column is never part of the <code>INSERT</code> statement. Its initial
+value is set by the database through the column default, and Doctrine reads
+it back after the insert. When the schema is generated with the
+<a href="tools.html">SchemaTool</a>, Doctrine adds the default automatically: <code>1</code> for
+integer types and <code>CURRENT_TIMESTAMP</code> for the <code>datetime</code> type. If you manage
+your schema in a different way, make sure the version column has such a
+default, otherwise inserting new entities fails with a <code>NOT NULL</code> violation.</p>
+
             
     <p>Version numbers (not timestamps) should however be preferred as
 they can not potentially conflict in a highly concurrent

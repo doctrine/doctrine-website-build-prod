@@ -17,7 +17,7 @@
                     <meta name="robots" content="index, follow">
         
         
-                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-orm/en/3.7/tutorials/pagination.html" />
+                    <link rel="canonical" href="https://www.doctrine-project.org/projects/doctrine-orm/en/3.8/tutorials/pagination.html" />
     
         <link
             rel="stylesheet"
@@ -1101,7 +1101,13 @@
             <li class="toc-item">
     <a href="../reference/working-with-objects.html#by-simple-conditions">By Simple Conditions</a>
 
+        <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="../reference/working-with-objects.html#magic-finders">Magic Finders</a>
 
+
+</li>
+                    </ul>
 </li>
             <li class="toc-item">
     <a href="../reference/working-with-objects.html#by-criteria">By Criteria</a>
@@ -1556,6 +1562,11 @@
 </li>
             <li class="toc-item">
     <a href="../reference/dql-doctrine-query-language.html#named-and-positional-parameters">Named and Positional Parameters</a>
+
+
+</li>
+            <li class="toc-item">
+    <a href="../reference/dql-doctrine-query-language.html#string-literals">String Literals</a>
 
 
 </li>
@@ -2664,6 +2675,11 @@
 
 
 </li>
+            <li class="toc-item">
+    <a href="../reference/limitations-and-known-issues.html#objects-as-identifier-values">Objects as identifier values</a>
+
+
+</li>
                     </ul>
 </li>
             <li class="toc-item">
@@ -2942,6 +2958,11 @@
     <a href="../reference/second-level-cache.html#configuration">Configuration</a>
 
         <ul class="section-level-2">
+            <li class="toc-item">
+    <a href="../reference/second-level-cache.html#installation">Installation</a>
+
+
+</li>
             <li class="toc-item">
     <a href="../reference/second-level-cache.html#enable-second-level-cache">Enable Second Level Cache</a>
 
@@ -3299,6 +3320,11 @@
 
         <ul class="section-level-1">
             <li class="toc-item">
+    <a href="../cookbook/mysql-enums.html#recommended-php-enums-and-the-dbal-enum-type">Recommended: PHP enums and the DBAL enum type</a>
+
+
+</li>
+            <li class="toc-item">
     <a href="../cookbook/mysql-enums.html#solution-1-mapping-to-varchars">Solution 1: Mapping to Varchars</a>
 
 
@@ -3440,15 +3466,15 @@
                                                                                                                     (upcoming)
                                                                                                             </a>
                                                                                                                                                                                                 
-                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/3.8/tutorials/pagination.html">
-                                                        3.8
+                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/3.9/tutorials/pagination.html">
+                                                        3.9
 
                                                         
                                                                                                                     (upcoming)
                                                                                                             </a>
                                                                                                                                                                                                 
-                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/3.7/tutorials/pagination.html">
-                                                        3.7.6
+                                                    <a class="project-version-switcher dropdown-item" href="/projects/doctrine-orm/en/3.8/tutorials/pagination.html">
+                                                        3.8.0
 
                                                                                                                     (current)
                                                         
@@ -3462,6 +3488,8 @@
                                                                                     <h6 class="dropdown-header">Unmaintained</h6>
 
                                                                                                                                                 
+                                                    <a class="dropdown-item" href="/projects/doctrine-orm/en/3.7/tutorials/pagination.html">3.7</a>
+                                                                                                                                                                                                
                                                     <a class="dropdown-item" href="/projects/doctrine-orm/en/3.6/tutorials/pagination.html">3.6</a>
                                                                                                                                                                                                 
                                                     <a class="dropdown-item" href="/projects/doctrine-orm/en/2.19/tutorials/pagination.html">2.19</a>
@@ -3567,6 +3595,18 @@ for any query and any page.</p>
 coupling, its accessors can be called in any order, and building another page
 never affects a page you already hold.</p>
 
+            
+    <p>When only the total is needed — to clamp a requested page number before
+fetching it, to display an &quot;N results&quot; badge, or to cache the total separately
+from the pages — <code>getTotalCount()</code> runs the <code>COUNT</code> query alone, without
+fetching any row:</p>
+
+                <pre class="code-block-table" id="50c2eac844be4889e452978ab12d7b9d7077e1eb"><button
+                type="button"
+                class="copy-to-clipboard"
+                data-copy-element-id="50c2eac844be4889e452978ab12d7b9d7077e1eb"
+                title="Copy to Clipboard"
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-meta">&lt;?php</span></code><code class="line language-php">$paginator = <span class="hljs-keyword">new</span> OffsetPaginator();</code><code class="line language-php"></code><code class="line language-php">$total    = $paginator-&gt;getTotalCount($query);</code><code class="line language-php">$lastPage = max(<span class="hljs-number">1</span>, (int) ceil($total / <span class="hljs-number">25</span>));</code><code class="line language-php"></code><code class="line language-php">$page = $paginator-&gt;paginate($query, Window::fromPageNumberAndSize(min($requestedPage, $lastPage), <span class="hljs-number">25</span>));</code><code class="empty"></code></pre>
             <div class="section" id="how-offset-pagination-works">
             <h3 class="section-header ">
     <a href="#how-offset-pagination-works">
@@ -3638,25 +3678,37 @@ performance improvements:</p>
         <dd>Executes the query for the given <code>Window</code> and returns an immutable
 <code>WindowPage</code>. All page accessors below live on the returned page. Throws an
 <code>InvalidArgumentException</code> if <code>$position</code> is not a <code>Window</code>.</dd>
+                                <dt><code>OffsetPaginator::getTotalCount(Query|QueryBuilder $query): int</code></dt>
+        
+        <dd>Executes the <code>COUNT</code> query only and returns the total number of matching
+root entities, without fetching any row. It is the same query as the one
+<code>WindowPage::getTotalCount()</code> runs.</dd>
                                 <dt><code>WindowPage::getItems(): array</code></dt>
         
-        <dd>Returns the raw entity array for the current page.</dd>
+        <dd>Returns the raw entity array for the current page. The result keys are
+preserved, so a query using DQL <code>INDEX BY</code> keeps its keys.</dd>
                                 <dt><code>WindowPage::count(): int</code></dt>
         
         <dd>Returns the number of items on the current page (SPL <code>Countable</code>).</dd>
                                 <dt><code>WindowPage::getTotalCount(): int</code></dt>
         
-        <dd>Returns the total number of matching root entities, ignoring the window.</dd>
+        <dd>Executes an extra <code>COUNT</code> query and returns the total number of matching
+root entities, ignoring the window. The query only runs when this method is
+called, and its result is memoized: paginating without ever asking for the
+total, as &quot;load more&quot; navigation does, costs no <code>COUNT</code> query at all.</dd>
                                 <dt><code>WindowPage::getPageNumber(): int</code> / <code>WindowPage::getPageCount(): int</code></dt>
         
         <dd>Return the 1-based number of the current page and the total number of pages.
-<code>getPageCount()</code> is at least <code>1</code>, even for an empty result set.</dd>
+<code>getPageCount()</code> is at least <code>1</code>, even for an empty result set, and
+relies on <code>getTotalCount()</code>.</dd>
                                 <dt><code>WindowPage::hasNextPage(): bool</code> / <code>WindowPage::hasPreviousPage(): bool</code></dt>
         
-        <dd>Return whether a next / previous page is available.</dd>
+        <dd>Return whether a next / previous page is available. <code>hasNextPage()</code> relies
+on <code>getTotalCount()</code>.</dd>
                                 <dt><code>WindowPage::hasToPaginate(): bool</code></dt>
         
-        <dd>Returns whether the result set spans more than one page.</dd>
+        <dd>Returns whether the result set spans more than one page. Relies on
+<code>getTotalCount()</code>.</dd>
                                 <dt><code>WindowPage::getNextWindow(): Window</code> / <code>WindowPage::getPreviousWindow(): Window</code></dt>
         
         <dd>Return the <code>Window</code> for the next / previous page. Throw a <code>LogicException</code>
@@ -3836,7 +3888,7 @@ if there is no previous page — call <code>hasPreviousPage()</code> first.</dd>
 set spans more than one page).</dd>
                                 <dt><code>CursorPage::getItems(): array</code></dt>
         
-        <dd>Returns the raw entity array for the current page.</dd>
+        <dd>Returns the raw entity array for the current page, as a list.</dd>
                                 <dt><code>CursorPage::getItemsWithCursors(): array</code></dt>
         
         <dd>Returns an array of <code>CursorItem</code> objects, each wrapping an entity and its
@@ -3857,21 +3909,32 @@ display a total result count alongside previous/next navigation.</dd>
             
     <p><strong>Next page</strong></p>
 
-                <pre class="code-block-table" id="f22f8627d630becf68780b68350e8a59959eb209"><button
+                <pre class="code-block-table" id="bbb418439c94cff6396e3f19d79f27926944f527"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="f22f8627d630becf68780b68350e8a59959eb209"
+                data-copy-element-id="bbb418439c94cff6396e3f19d79f27926944f527"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sql"><span class="hljs-keyword">SELECT</span> ...</code><code class="line language-sql">FROM   post p</code><code class="line language-sql">WHERE  (p.created_at &lt; :cursor_val_0)</code><code class="line language-sql">   OR  (p.created_at = :cursor_val_0 AND p.id &lt; :cursor_id_1)</code><code class="line language-sql">ORDER  BY p.created_at DESC, p.id DESC</code><code class="line language-sql">LIMIT  16   <span class="hljs-comment">-- limit + 1</span></code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sql"><span class="hljs-keyword">SELECT</span> ...</code><code class="line language-sql">FROM   post p</code><code class="line language-sql">WHERE  p.created_at &lt;= :dctrn_cursor_0</code><code class="line language-sql">  AND  (   (p.created_at &lt; :dctrn_cursor_0)</code><code class="line language-sql">        OR (p.created_at = :dctrn_cursor_0 AND p.id &lt; :dctrn_cursor_1))</code><code class="line language-sql">ORDER  BY p.created_at DESC, p.id DESC</code><code class="line language-sql">LIMIT  16   <span class="hljs-comment">-- limit + 1</span></code><code class="empty"></code></pre>
             
     <p><strong>Previous page</strong></p>
 
-                <pre class="code-block-table" id="6427b08725d37f9640a0426ed1d8b8562d202530"><button
+                <pre class="code-block-table" id="c5cf0f970012608ec98540d71e16d0c424110eb5"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="6427b08725d37f9640a0426ed1d8b8562d202530"
+                data-copy-element-id="c5cf0f970012608ec98540d71e16d0c424110eb5"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sql"><span class="hljs-keyword">SELECT</span> ...</code><code class="line language-sql">FROM   post p</code><code class="line language-sql">WHERE  (p.created_at &gt; :cursor_val_0)</code><code class="line language-sql">   OR  (p.created_at = :cursor_val_0 AND p.id &gt; :cursor_id_1)</code><code class="line language-sql">ORDER  BY p.created_at ASC, p.id ASC   <span class="hljs-comment">-- reversed</span></code><code class="line language-sql">LIMIT  16</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-sql"><span class="hljs-keyword">SELECT</span> ...</code><code class="line language-sql">FROM   post p</code><code class="line language-sql">WHERE  p.created_at &gt;= :dctrn_cursor_0</code><code class="line language-sql">  AND  (   (p.created_at &gt; :dctrn_cursor_0)</code><code class="line language-sql">        OR (p.created_at = :dctrn_cursor_0 AND p.id &gt; :dctrn_cursor_1))</code><code class="line language-sql">ORDER  BY p.created_at ASC, p.id ASC   <span class="hljs-comment">-- reversed</span></code><code class="line language-sql">LIMIT  16</code><code class="empty"></code></pre>
+            
+    <p>When the query is ordered by more than one column, the paginator puts an
+inclusive bound on the first <code>ORDER BY</code> column in front of the cursor
+condition (<code>p.created_at &lt;= :dctrn_cursor_0</code> above). The bound is redundant;
+every row that matches the <code>OR</code> condition already satisfies it, so it does not
+change which rows are returned. It is there for performance. Some platforms,
+PostgreSQL among them, cannot derive an index range from the <code>OR</code> condition
+alone and filter rows one by one, so a page gets slower the deeper it is in the
+result set. The leading bound gives them a range to seek to on an index that
+covers the <code>ORDER BY</code> columns.</p>
+
     </div>
             <div class="section" id="html-template-example">
             <h3 class="section-header ">
