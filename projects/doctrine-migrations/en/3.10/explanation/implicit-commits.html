@@ -616,7 +616,7 @@ statements (<code>CREATE TABLE</code>, <code>ALTER TABLE</code>, etc.) in transa
             
     <p>The issue existed before PHP 8 but is now made visible by e.g. PDO,
 which now produces the above error message when this library attempts to
-commit a transaction that has already been commited before.</p>
+commit a transaction that has already been committed before.</p>
 
             
     <p>Consider the following migration.</p>
@@ -629,7 +629,7 @@ commit a transaction that has already been commited before.</p>
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">up</span><span class="hljs-params">(Schema $schema)</span>: <span class="hljs-title">void</span></span></code><code class="line language-php">{</code><code class="line language-php">    $users = [</code><code class="line language-php">        [<span class="hljs-string">'name'</span> =&gt; <span class="hljs-string">'mike'</span>, <span class="hljs-string">'id'</span> =&gt; <span class="hljs-number">1</span>],</code><code class="line language-php">        [<span class="hljs-string">'name'</span> =&gt; <span class="hljs-string">'jwage'</span>, <span class="hljs-string">'id'</span> =&gt; <span class="hljs-number">2</span>],</code><code class="line language-php">        [<span class="hljs-string">'name'</span> =&gt; <span class="hljs-string">'ocramius'</span>, <span class="hljs-string">'id'</span> =&gt; <span class="hljs-number">3</span>],</code><code class="line language-php">    ];</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">foreach</span> ($users <span class="hljs-keyword">as</span> $user) {</code><code class="line language-php">        <span class="hljs-keyword">$this</span>-&gt;addSql(<span class="hljs-string">'UPDATE user SET happy = true WHERE name = :name AND id = :id'</span>, $user);</code><code class="line language-php">    }</code><code class="line language-php"></code><code class="line language-php">    <span class="hljs-keyword">$this</span>-&gt;addSql(<span class="hljs-string">'CREATE TABLE example_table (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))'</span>);</code><code class="line language-php">}</code><code class="empty"></code></pre>
             
     <p>When you run that migration, what actually happens with some platforms
-is you get the updates inside an implicitly commited transaction, then
+is you get the updates inside an implicitly committed transaction, then
 the <code>CREATE TABLE</code> happens outside that transaction, and then there is
 an attempt to commit a non-existent transaction.</p>
 
@@ -650,7 +650,7 @@ to do this or not.</p>
 
             
     <p>At the moment, this library checks if there is an active transaction
-before commiting it, which means you should not encouter the error
+before committing it, which means you should not encounter the error
 described above. It will not be the case in the next major version
 though, and you should prepare for that.</p>
 
