@@ -1519,11 +1519,11 @@ full representation:</p>
                 title="Copy to Clipboard"
         ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-number">2010</span><span class="hljs-number">-10</span><span class="hljs-number">-10</span> <span class="hljs-number">10</span>:<span class="hljs-number">10</span>:<span class="hljs-number">10.123456</span> (Y-m-d H:i:s.u)</code><code class="empty"></code></pre>
             
-    <p>Using the DateTime, DateTimeTz or Time type (and immutable variants) with microseconds
-enabled columns can lead to errors because internally types expect
-the exact format &#039;Y-m-d H:i:s&#039; in combination with
-<code>DateTime::createFromFormat()</code>. This method is twice as fast as
-passing the date to the constructor of <code>DateTime</code>.</p>
+    <p>Using the <code>datetime_immutable</code>, <code>datetimetz_immutable</code> or
+<code>time_immutable</code> type with microseconds enabled columns can lead to
+errors because internally types expect the exact format &#039;Y-m-d H:i:s&#039; in
+combination with <code>DateTimeImmutable::createFromFormat()</code>. This method is
+twice as fast as passing the date to the constructor of <code>DateTimeImmutable</code>.</p>
 
             
     <p>This is why Doctrine always wants to create the time related types
@@ -1532,23 +1532,22 @@ without microseconds:</p>
             
 
 <ul>
-    <li class="dash">DateTime to <code>TIMESTAMP(0) WITHOUT TIME ZONE</code></li>
-    <li class="dash">DateTimeTz to <code>TIMESTAMP(0) WITH TIME ZONE</code></li>
-    <li class="dash">Time to <code>TIME(0) WITHOUT TIME ZONE</code></li>
+    <li class="dash"><code>datetime_immutable</code> to <code>TIMESTAMP(0) WITHOUT TIME ZONE</code></li>
+    <li class="dash"><code>datetimetz_immutable</code> to <code>TIMESTAMP(0) WITH TIME ZONE</code></li>
+    <li class="dash"><code>time_immutable</code> to <code>TIME(0) WITHOUT TIME ZONE</code></li>
 </ul>
 
             
     <p>If you do not let Doctrine create the date column types and rather
-use types with microseconds you have replace the &quot;DateTime&quot;,
-&quot;DateTimeTz&quot; and &quot;Time&quot; types (and immutable variants) with a more
+use types with microseconds you have replace the datetime types with a more
 liberal DateTime parser that detects the format automatically:</p>
 
-                <pre class="code-block-table" id="afc9b4b7ccae9cb8aa2a5cdc0494e2e5a99ed0c5"><button
+                <pre class="code-block-table" id="f74c32111f45850185d7fb3fa442b9088f5585aa"><button
                 type="button"
                 class="copy-to-clipboard"
-                data-copy-element-id="afc9b4b7ccae9cb8aa2a5cdc0494e2e5a99ed0c5"
+                data-copy-element-id="f74c32111f45850185d7fb3fa442b9088f5585aa"
                 title="Copy to Clipboard"
-        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"></code><code class="line language-php">Type::overrideType(<span class="hljs-string">'datetime'</span>, <span class="hljs-string">'Doctrine\DBAL\Types\VarDateTimeType'</span>);</code><code class="line language-php">Type::overrideType(<span class="hljs-string">'datetimetz'</span>, <span class="hljs-string">'Doctrine\DBAL\Types\VarDateTimeType'</span>);</code><code class="line language-php">Type::overrideType(<span class="hljs-string">'time'</span>, <span class="hljs-string">'Doctrine\DBAL\Types\VarDateTimeType'</span>);</code><code class="line language-php"></code><code class="line language-php">Type::overrideType(<span class="hljs-string">'datetime_immutable'</span>, <span class="hljs-string">'Doctrine\DBAL\Types\VarDateTimeImmutableType'</span>);</code><code class="line language-php">Type::overrideType(<span class="hljs-string">'datetimetz_immutable'</span>, <span class="hljs-string">'Doctrine\DBAL\Types\VarDateTimeImmutableType'</span>);</code><code class="line language-php">Type::overrideType(<span class="hljs-string">'time_immutable'</span>, <span class="hljs-string">'Doctrine\DBAL\Types\VarDateTimeImmutableType'</span>);</code><code class="empty"></code></pre>
+        ><i class="fas fa-copy"></i></button><code class="empty"></code><code class="line language-php"><span class="hljs-keyword">use</span> <span class="hljs-title">Doctrine</span>\<span class="hljs-title">DBAL</span>\<span class="hljs-title">Types</span>\<span class="hljs-title">Type</span>;</code><code class="line language-php"></code><code class="line language-php">Type::overrideType(<span class="hljs-string">'datetime_immutable'</span>, <span class="hljs-string">'Doctrine\DBAL\Types\VarDateTimeImmutableType'</span>);</code><code class="line language-php">Type::overrideType(<span class="hljs-string">'datetimetz_immutable'</span>, <span class="hljs-string">'Doctrine\DBAL\Types\VarDateTimeImmutableType'</span>);</code><code class="line language-php">Type::overrideType(<span class="hljs-string">'time_immutable'</span>, <span class="hljs-string">'Doctrine\DBAL\Types\VarDateTimeImmutableType'</span>);</code><code class="empty"></code></pre>
     </div>
             <div class="section" id="timezones-and-datetimetz">
             <h3 class="section-header ">
